@@ -5,6 +5,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import NativeSelect from '@material-ui/core/NativeSelect';
+import { Hash } from 'crypto';
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -16,39 +17,46 @@ const useStyles = makeStyles(theme => ({
     },
   }));
 
-export default function AppDropdown() {
+interface AppDropdownProps {
+    data: Array<string>;
+    setUserSelection: Function;
+    selectedMetric: string;
+    userSelection: Object;
+}
+
+export default function AppDropdown(props: AppDropdownProps) {
     const classes = useStyles();
-    const [state, setState] = React.useState<{ age: string | number; name: string }>({
-        age: '',
-        name: 'hai',
-    });
+    const [state, setState] = React.useState('');
+    const data = props.data
+    const setUserSelection = props.setUserSelection
+    const selectedMetric = props.selectedMetric
+    const userSelection = props.userSelection
 
-
-    const handleChange = (name: keyof typeof state) => (
+    const handleChange = (
         event: React.ChangeEvent<{ value: unknown }>,
     ) => {
-        setState({
-        ...state,
-        [name]: event.target.value,
-        });
+        setState(`${event.target.value}`);
+        // console.log(`Name: ${selectedMetric}`)
+        // console.log(`Value: ${event.target.value}`)
+        setUserSelection({...userSelection, [selectedMetric]: event.target.value})
     };
 
     return (
         <FormControl style={{marginTop: "0"}} fullWidth variant="outlined" className={classes.formControl}>
                 <Select
                     native
-                    value={state.age}
-                    onChange={handleChange('age')}
+                    value={state}
+                    onChange={handleChange}
                     inputProps={{
                         'aria-label': 'age',
                         id: 'outlined-age-native-simple',
                     }}
                     className={classes.selectEmpty}
                 >
-                <option value="">Select...</option>
-                <option value={10}>Calendar</option>
-                <option value={20}>Wallet</option>
-                <option value={30}>Kyber Network</option>
+                    <option value="">Select...</option>
+                    {data.map((value, key) =>
+                        <option key={key} value={value}>{value}</option>
+                    )}
                 </Select>
         </FormControl>
 
