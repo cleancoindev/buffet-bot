@@ -5,9 +5,47 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.App {
+  height: 100vh;
+  background: #000000;
+  font: 11px menlo;
+  color: #fff;
+  /* new */
+  position: relative;
+}
+
+.container {
+  background: inherit;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  min-height: 100%;
+  width: 100%;
+  @media (min-width: 576px) {
+    max-width: 540px;
+  };
+  @media (min-width: 768px) {
+    max-width: 720px;
+  };
+  @media (min-width: 992px) {
+    max-width: 960px;
+  };
+  @media (min-width: 1200px) {
+    max-width: 1140px;
+  };
+}
+
+/*
+
+Heder
+
+*/
