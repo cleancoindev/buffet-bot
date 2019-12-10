@@ -16,11 +16,40 @@ interface MatchParams {
     name: string;
 }
 
+interface StepperProps {
+    app: string;
+    title: string;
+    inputs: Array<string>;
+    // Stepper details
+    activeSteps: number;
+    handleNext: Function;
+    handleBack: Function;
+
+}
+
 interface MatchProps extends RouteComponentProps<MatchParams> {}
 
 
 export default function Create({match}: MatchProps) {
-    console.log(match)
+    // console.log(match)
+
+    // Stepper State
+	const [activeStep, setActiveStep] = React.useState(0);
+	// const steps = getSteps();
+
+    // Stepper Functions
+	const handleNext = () => {
+		setActiveStep(prevActiveStep => prevActiveStep + 1);
+	};
+
+	const handleBack = () => {
+		setActiveStep(prevActiveStep => prevActiveStep - 1);
+	};
+
+	const handleReset = () => {
+		setActiveStep(0);
+    };
+
     return (
         <React.Fragment>
             <Grid

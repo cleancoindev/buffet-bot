@@ -33,7 +33,7 @@ export default function DotsMobileStepper() {
       activeStep={activeStep}
       className={classes.root}
       nextButton={
-        <Button size="small" onClick={handleNext} disabled={activeStep === 5}>
+        <Button size="small" onClick={handleNext} disabled={activeStep === 3}>
           Next
           {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
         </Button>

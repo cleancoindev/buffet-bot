@@ -17,11 +17,13 @@ import Container from '@material-ui/core/Container';
 // CSS
 import CssBaseline from '@material-ui/core/CssBaseline';
 
+// Contexts
+import GlobalStateProvider from './state/GlobalState'
 
 
 function App() {
   return (
-    <React.Fragment>
+    <GlobalStateProvider>
       <CssBaseline />
       <Router>
         <div className="App">
@@ -36,12 +38,11 @@ function App() {
                 <Route path="/" component={Configurator}/>
               </Switch>
             </Container>
-
           </div>
         </div>
       </Router>
 
-    </React.Fragment>
+    </GlobalStateProvider>
   );
 }
 

@@ -1,22 +1,3 @@
-interface AppData {
-	conditions: Record<string, string>;
-	actions: Record<string, string>;
-}
-
-interface NestedMap {
-	conditions: Map<string, Map<string, Map<string, string>>>;
-}
-
-interface List {
-	conditions: string;
-	company?: {
-		name: string;
-		address?: {
-			city: string;
-		};
-	};
-}
-
 export const APPS = {
 	conditions: ["Wallet", "Calendar", "Kyber"],
 	actions: ["Wallet", "Kyber", "Fulcrum"]

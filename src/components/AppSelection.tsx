@@ -1,8 +1,12 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 
 // Routing
 import { Link } from 'react-router-dom'
 
+// Context API
+import { useIcedTxContext } from '../state/GlobalState'
+
+// Material UI components
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
@@ -17,6 +21,9 @@ import { ATYPES, CTYPES, APPS } from '../constants/whitelist'
 import Dropdown from './Dropdown'
 import { string } from 'prop-types';
 
+// Import Interfaces
+import { ConditionOrAction, IcedTx, WhitelistData, UserSelection } from '../constants/interfaces';
+
 
 const defaultWhitelistData = {
     id: 0,
@@ -27,33 +34,8 @@ const defaultWhitelistData = {
 
 }
 
-interface WhitelistData {
-    id: number;
-    app: string;
-    title: string;
-    address: string;
-    inputs: Array<string>;
-}
-
-interface UserSelection {
-    conditionApp: string;
-    actionApp: string;
-    conditionType: Array<WhitelistData>;
-    actionType: Array<WhitelistData>;
-}
-
-interface CreateData {
-    condition: WhitelistData;
-    action: WhitelistData;
-}
-
-enum Part {
-    Condition,
-    Action,
-}
-
 export default function AppSelection() {
-
+    const { updateIcedTx, icedTxState } = useIcedTxContext()
     // Run every time
     // useEffect( () => {
     //     test()
@@ -61,23 +43,19 @@ export default function AppSelection() {
     const [userSelection, setUserSelection] = React.useState<UserSelection> ({
         conditionApp: "",
         actionApp: "",
-        conditionType: [],
-        actionType: []
+        conditionAppFunctions: [],
+        actionAppFunctions: []
     })
 
-    const [data, setData] = React.useState<CreateData>({
+    const [data, setData] = React.useState<IcedTx>({
         condition: defaultWhitelistData,
         action: defaultWhitelistData
     })
 
-    function updateDataSelection(varName: string, chosenData: WhitelistData) {
-        setData({...data, [varName]: chosenData})
-    }
-
-    function updateTypes(part: Part, app: string) {
+    function updateTypes(selectedConditionOrAction: ConditionOrAction, app: string) {
         const result: Array<WhitelistData> = []
         const conditionOrAction = {app: "", type: ""};
-        if (part === Part.Condition)
+        if (selectedConditionOrAction === ConditionOrAction.Condition)
         {
             CTYPES.forEach(type => {
                 if (type.app === app)
@@ -86,9 +64,9 @@ export default function AppSelection() {
                 }
             })
             conditionOrAction.app = "conditionApp"
-            conditionOrAction.type = "conditionType"
+            conditionOrAction.type = "conditionAppFunctions"
         }
-        else if (part === Part.Action)
+        else if (selectedConditionOrAction === ConditionOrAction.Action)
         {
             ATYPES.forEach(type => {
                 if (type.app === app)
@@ -97,31 +75,32 @@ export default function AppSelection() {
                 }
             })
             conditionOrAction.app = "actionApp"
-            conditionOrAction.type = "actionType"
+            conditionOrAction.type = "actionAppFunctions"
         }
         setUserSelection({...userSelection, [conditionOrAction.app]: app, [conditionOrAction.type]: result})
     }
 
-    function updateTypes2(part: Part, id: string) {
-        let varName = ""
-        let updatedData: WhitelistData = defaultWhitelistData
-        if (part === Part.Condition)
-        {
-            userSelection.conditionType.map(type => {
-                if (type.id === parseInt(id)) {updatedData = type}
-            })
-            varName="condition"
+    function updateTypes2(selectedConditionOrAction: ConditionOrAction, id: string) {
+        updateIcedTx(id, selectedConditionOrAction)
+        // let varName = ""
+        // let updatedData: WhitelistData = defaultWhitelistData
+        // if (selectedConditionOrAction === ConditionOrAction.Condition)
+        // {
+        //     userSelection.conditionAppFunctions.map(type => {
+        //         if (type.id === parseInt(id)) {updatedData = type}
+        //     })
+        //     varName="condition"
 
-        }
-        else if (part === Part.Action)
-        {
-            userSelection.actionType.forEach(type => {
-                if (type.id === parseInt(id)) {updatedData = type}
-            })
-            varName="action"
+        // }
+        // else if (selectedConditionOrAction === ConditionOrAction.Action)
+        // {
+        //     userSelection.actionAppFunctions.forEach(type => {
+        //         if (type.id === parseInt(id)) {updatedData = type}
+        //     })
+        //     varName="action"
 
-        }
-        setData({...data, [varName]: updatedData})
+        // }
+        // setData({...data, [varName]: updatedData})
     }
 
     return (
@@ -145,7 +124,7 @@ export default function AppSelection() {
             >
                 <Grid container item justify="flex-start" style={{background: "yellow"}}>
                     <p style={{marginLeft: "10px", color: "black"}}>Listen to this dApp</p>
-                    <Dropdown app userSelection={userSelection} selectedMetric={Part.Condition} updateTypes={updateTypes} data={CTYPES}/>
+                    <Dropdown app userSelection={userSelection} selectedMetric={ConditionOrAction.Condition} updateTypes={updateTypes} data={CTYPES}/>
                 </Grid>
                 {/* <Grid container item justify="flex-start" style={{background: "yellow"}}>
                     <Dropdown/>
@@ -182,7 +161,7 @@ export default function AppSelection() {
             >
                 <Grid container item justify="flex-start" style={{background: "yellow"}}>
                     <p style={{marginLeft: "10px", color: "black"}}>Send Transactions to this dApp</p>
-                    <Dropdown app userSelection={userSelection} selectedMetric={Part.Action} updateTypes={updateTypes} data={ATYPES}/>
+                    <Dropdown app userSelection={userSelection} selectedMetric={ConditionOrAction.Action} updateTypes={updateTypes} data={ATYPES}/>
                 </Grid>
             </Grid>
         </Grid>
@@ -207,7 +186,7 @@ export default function AppSelection() {
                 >
                     <Grid container item justify="flex-start" style={{background: "yellow"}}>
                         <p style={{marginLeft: "10px", color: "black"}}>Select Condition</p>
-                        <Dropdown app={false} userSelection={userSelection} selectedMetric={Part.Condition} updateTypes={updateTypes2} data={userSelection.conditionType}/>
+                        <Dropdown app={false} userSelection={userSelection} selectedMetric={ConditionOrAction.Condition} updateTypes={updateTypes2} data={userSelection.conditionAppFunctions}/>
                     </Grid>
                 </Grid>
                 <Grid
@@ -241,10 +220,10 @@ export default function AppSelection() {
                 >
                     <Grid container item justify="flex-start" style={{background: "yellow"}}>
                         <p style={{marginLeft: "10px", color: "black"}}>Select Action</p>
-                        <Dropdown app={false} userSelection={userSelection} selectedMetric={Part.Action} updateTypes={updateTypes2} data={userSelection.actionType}/>
+                        <Dropdown app={false} userSelection={userSelection} selectedMetric={ConditionOrAction.Action} updateTypes={updateTypes2} data={userSelection.actionAppFunctions}/>
                     </Grid>
                 </Grid>
-                    { (userSelection.conditionApp !== "" && userSelection.actionApp !== "" && userSelection.conditionType !== [] && userSelection.actionType !== [] &&
+                    { (userSelection.conditionApp !== "" && userSelection.actionApp !== "" && icedTxState.condition.id !== 0 && icedTxState.action.id !== 0 &&
 
                     <Grid
                         container
@@ -255,7 +234,7 @@ export default function AppSelection() {
                         alignItems="stretch"
                         style={{background: "pink", height: "50px", marginTop: "16px"}}
                     >
-                        <Link to={`create/if-${userSelection.conditionType}-on-${userSelection.conditionApp}/${userSelection.actionType}-on-${userSelection.actionApp}`}>
+                        <Link to={`create/condition-${icedTxState.condition.id}/action-${icedTxState.action.id}`}>
                             <Button style={{background: "white", minWidth: "100px"}}>Create</Button>
                         </Link>
                     </Grid>
