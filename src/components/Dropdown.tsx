@@ -17,29 +17,49 @@ const useStyles = makeStyles(theme => ({
     },
   }));
 
+interface WhitelistData {
+    id: number;
+    app: string;
+    title: string;
+    address: string;
+    inputs: Array<string>;
+}
+
 interface AppDropdownProps {
-    data: Array<string>;
-    setUserSelection: Function;
-    selectedMetric: string;
+    data: Array<WhitelistData> ;
+    updateTypes: Function;
+    selectedMetric: number;
     userSelection: Object;
+    app: boolean;
 }
 
 export default function AppDropdown(props: AppDropdownProps) {
     const classes = useStyles();
     const [state, setState] = React.useState('');
-    const data = props.data
-    const setUserSelection = props.setUserSelection
-    const selectedMetric = props.selectedMetric
-    const userSelection = props.userSelection
+    const {app, data, updateTypes, selectedMetric, userSelection} = props
+
+    enum Part {
+        Condition,
+        Action,
+    }
 
     const handleChange = (
         event: React.ChangeEvent<{ value: unknown }>,
     ) => {
         setState(`${event.target.value}`);
         // console.log(`Name: ${selectedMetric}`)
-        // console.log(`Value: ${event.target.value}`)
-        setUserSelection({...userSelection, [selectedMetric]: event.target.value})
+        console.log(`Value: ${event.target.value}`)
+        updateTypes(selectedMetric, event.target.value)
+        // updateDataSelection
+        // updateTypes({...userSelection, [selectedMetric]: event.target.value})
     };
+
+    function getApps(appList: Array<WhitelistData>) {
+        const appTitles = appList.map(item => ( item.app ))
+        return appTitles.filter(( item, index ) => appTitles.indexOf(item) === index)
+    }
+
+
 
     return (
         <FormControl style={{marginTop: "0"}} fullWidth variant="outlined" className={classes.formControl}>
@@ -53,10 +73,19 @@ export default function AppDropdown(props: AppDropdownProps) {
                     }}
                     className={classes.selectEmpty}
                 >
-                    <option value="">Select...</option>
-                    {data.map((value, key) =>
-                        <option key={key} value={value}>{value}</option>
-                    )}
+
+                    <option value={app ? "" : 0}>Select...</option>
+
+                    {( app &&
+                        getApps(data).map((value, key) =>
+                            <option key={key} value={value}>{value}</option>
+                    ))}
+                    {( !app &&
+                        data.map((value, key) =>
+                            <option key={key} value={value.id}>{value.title}</option>
+                        ))}
+
+                    }
                 </Select>
         </FormControl>
 

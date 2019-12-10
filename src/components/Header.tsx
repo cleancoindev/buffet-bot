@@ -1,4 +1,9 @@
 import React from "react";
+
+// Routing
+import { Link } from 'react-router-dom'
+
+// Material UI
 import { createStyles, makeStyles, useTheme, Theme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -30,6 +35,8 @@ const useStyles = makeStyles(theme => ({
     },
     menuButton: {
       marginRight: 'auto',
+      textDecoration: 'none',
+      color: 'white'
     },
     title: {
       flexGrow: 1,
@@ -67,9 +74,11 @@ export default function ButtonAppBar() {
         <React.Fragment>
             <AppBar className={classes.appBar} position="static">
                 <Toolbar >
-                    <Typography variant="h6" className={classes.menuButton}>
-                    gelato finance
-                    </Typography>
+                    <Link className={classes.menuButton} to="/">
+                        <Typography variant="h6" >
+                        gelato finance
+                        </Typography>
+                    </Link>
                     <Hidden xsDown>
                         <Button style={{color: 'white'}}>
                             Overview
