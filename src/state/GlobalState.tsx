@@ -24,7 +24,7 @@ interface InitContextProps {
 }
 
 // Create Context
-const IcedTxContext = createContext({icedTxState: DEFAULT_ICED_TX, updateIcedTx: (id: string, conditionOrAction: ConditionOrAction) => {}})
+const IcedTxContext = createContext({icedTxState: DEFAULT_ICED_TX, updateIcedTx: (conditionOrAction: ConditionOrAction, id: string) => {}})
 
 export const useIcedTxContext = () => useContext(IcedTxContext)
 
@@ -34,14 +34,13 @@ const GlobalStateProvider: React.FunctionComponent = ({children}) => {
     // useReduced instead of useState
     // Second argument passes initial state
     const [icedTxState, dispatch] = useReducer(icedTxReducer, DEFAULT_ICED_TX)
-    console.log(icedTxState)
 
     // const [icedTx, setIcedTx] = React.useState<IcedTx>({
     //     condition: DEFAULT_DATA,
     //     action: DEFAULT_DATA
     // })
 
-    const updateIcedTx = (id: string, conditionOrAction: ConditionOrAction) => {
+    const updateIcedTx = (conditionOrAction: ConditionOrAction, id: string) => {
         // Update Logic
         setTimeout( () => {
             dispatch({ type: UPDATE_ACTION_OR_CONDITION, conditionOrAction, id })

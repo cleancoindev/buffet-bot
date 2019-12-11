@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { StepperContentProps } from '../constants/interfaces'
+
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -19,25 +21,34 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-export default function StepperContent() {
 
+
+export default function StepperContent(props: StepperContentProps) {
+    const { icedTxState, activeStep, classes, inputs } = props
+    console.log(icedTxState)
     function getStepContent(stepIndex: number, classes: Record<string, string>) {
         switch (stepIndex) {
             case 0:
                 return (
                     <div className={classes.stepperContent}>
-                        <h1>Test</h1>
+                        <h1>0</h1>
                     </div>
                 );
             case 1:
-                return "What is an ad group anyways?";
+                return <div className={classes.stepperContent}>
+                        <h1>1</h1>
+                    </div>;
             case 2:
-                return "This is the bit I really care about!";
+                return <div className={classes.stepperContent}>
+                            <h1>2</h1>
+                        </div>;
             default:
                 return "Unknown stepIndex";
         }
     }
     return (
-        <h1> I'm the Stepper Content</h1>
+        <div>
+            {getStepContent(activeStep, classes)}
+        </div>
     )
 }

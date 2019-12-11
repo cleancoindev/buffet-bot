@@ -32,7 +32,7 @@ function App() {
             <Container style={{background: "white"}} maxWidth="lg">
               <Switch>
                 <Route path="/" exact component={Configurator}/>
-                <Route path="/create/:condition/:action" component={Create}/>
+                <Route path="/create/:conditionId/:actionId" component={Create}/>
 
                 {/*Last route acts as an try catch*/}
                 <Route path="/" component={Configurator}/>

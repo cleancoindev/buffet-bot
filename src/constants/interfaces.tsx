@@ -1,4 +1,6 @@
 
+import {MouseEvent} from 'react'
+
 export interface WhitelistData {
     id: number;
     app: string;
@@ -34,13 +36,19 @@ export interface MatchParams {
     name: string;
 }
 
-export interface StepperProps {
-    app: string;
-    title: string;
+export interface StepperContentProps {
+    activeStep: number;
+    classes: Record<string, string>;
     inputs: Array<string>;
-    // Stepper details
-    activeSteps: number;
-    handleNext: Function;
-    handleBack: Function;
+    icedTxState: IcedTx;
+}
 
+export interface StepperProps {
+    // Stepper details
+    activeStep: number;
+    handleNext: (event: React.MouseEvent<HTMLButtonElement>) => void;
+    handleBack: (event: React.MouseEvent<HTMLButtonElement>) => void
+    handleReset: (event: React.MouseEvent<HTMLButtonElement>) => void
+    steps: Array<string>;
+    icedTxState: IcedTx;
 }

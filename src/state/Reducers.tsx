@@ -2,6 +2,7 @@
 import {ConditionOrAction, WhitelistData, IcedTx, Action }from '../constants/interfaces'
 
 import { ATYPES, CTYPES, APPS } from '../constants/whitelist'
+import { findCondition } from '../helpers/helpers'
 
 // ACTIONS
 export const UPDATE_ACTION_OR_CONDITION = 'UPDATE_ACTION_OR_CONDITION'
@@ -20,9 +21,7 @@ function updateIcedTxCondition(data: IcedTx, conditionOrAction: ConditionOrActio
     let updatedData: WhitelistData = defaultWhitelistData
     if (conditionOrAction === ConditionOrAction.Condition)
     {
-        CTYPES.map(type => {
-            if (type.id === parseInt(id)) {updatedData = type}
-        })
+        updatedData = findCondition(id)
         varName="condition"
 
     }

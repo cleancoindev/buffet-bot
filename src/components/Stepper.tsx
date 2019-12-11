@@ -7,6 +7,10 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { classes } from "istanbul-lib-coverage";
 
+// Local Components
+import StepperContent from './StepperContent'
+import { StepperProps } from "../constants/interfaces";
+
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		root: {
@@ -25,43 +29,15 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-function getSteps() {
-	return ["Set Condition", "Set Action", "Create Recipe"];
-}
 
-function getStepContent(stepIndex: number, classes: Record<string, string>) {
-	switch (stepIndex) {
-		case 0:
-			return (
-				<div className={classes.stepperContent}>
-					<h1>Test</h1>
-				</div>
-			);
-		case 1:
-			return "What is an ad group anyways?";
-		case 2:
-			return "This is the bit I really care about!";
-		default:
-			return "Unknown stepIndex";
-	}
-}
 
-export default function HorizontalLabelPositionBelowStepper() {
+export default function HorizontalLabelPositionBelowStepper(props: StepperProps) {
 	const classes = useStyles({});
-	const [activeStep, setActiveStep] = React.useState(0);
-	const steps = getSteps();
+	const { icedTxState, steps, activeStep, handleNext, handleBack, handleReset } = props
 
-	const handleNext = () => {
-		setActiveStep(prevActiveStep => prevActiveStep + 1);
-	};
-
-	const handleBack = () => {
-		setActiveStep(prevActiveStep => prevActiveStep - 1);
-	};
-
-	const handleReset = () => {
-		setActiveStep(0);
-	};
+	// const handleReset = () => {
+	// 	setActiveStep(0);
+	// };
 
 	return (
 		<div className={classes.root}>
@@ -86,7 +62,7 @@ export default function HorizontalLabelPositionBelowStepper() {
 					<div>
 						{/* Steps before last */}
 						{/* <Typography className={classes.instructions}> */}
-							{getStepContent(activeStep, classes)}
+						<StepperContent icedTxState={icedTxState} classes={classes} activeStep={activeStep} inputs={["uint256","uint256"]}></StepperContent>
 						{/* </Typography> */}
 						<div>
 							<Button
