@@ -39,11 +39,11 @@ export default function Create({match}: RouteComponentProps<Params> ) {
         if (icedTxState.condition.id === 0 || icedTxState.action.id === 0)
         {
             // See if inputted params in URL exist in whitelist
-            console.log(conditionId, actionId)
+            // console.log(conditionId, actionId)
             const paramCondition = findCondition(conditionId)
             const paramAction= findAction(actionId)
-            console.log(paramCondition)
-            console.log(paramAction)
+            // console.log(paramCondition)
+            // console.log(paramAction)
             if (paramCondition.id === 0 || paramAction.id === 0)
             {
                 // Render IcedTx not found
@@ -77,7 +77,7 @@ export default function Create({match}: RouteComponentProps<Params> ) {
     };
 
     function getSteps() {
-        return ["Set Condition", "Set Action", "Create Recipe"];
+        return ["Set Condition", "Set Action", "Create IcedTx"];
     }
 
     return (

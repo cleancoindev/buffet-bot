@@ -3,22 +3,16 @@ import {ConditionOrAction, WhitelistData, IcedTx, Action }from '../constants/int
 
 import { ATYPES, CTYPES, APPS } from '../constants/whitelist'
 import { findCondition } from '../helpers/helpers'
+import { DEFAULT_DATA } from '../constants/constants'
+
 
 // ACTIONS
 export const UPDATE_ACTION_OR_CONDITION = 'UPDATE_ACTION_OR_CONDITION'
 
-const defaultWhitelistData = {
-    id: 0,
-    app: "",
-    title: "",
-    address: "",
-    inputs: []
-
-}
 
 function updateIcedTxCondition(data: IcedTx, conditionOrAction: ConditionOrAction, id: string) {
     let varName = ""
-    let updatedData: WhitelistData = defaultWhitelistData
+    let updatedData: WhitelistData = DEFAULT_DATA
     if (conditionOrAction === ConditionOrAction.Condition)
     {
         updatedData = findCondition(id)

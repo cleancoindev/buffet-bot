@@ -4,14 +4,9 @@ import { IcedTx, ConditionOrAction, Action } from '../constants/interfaces'
 
 // import reducer function
 import { icedTxReducer, UPDATE_ACTION_OR_CONDITION } from './Reducers'
+import { DEFAULT_DATA } from '../constants/constants'
 
-const DEFAULT_DATA = {
-    id: 0,
-    app: "",
-    title: "",
-    address: "",
-    inputs: [""]
-}
+
 
 const DEFAULT_ICED_TX = {
     condition: DEFAULT_DATA,

@@ -25,7 +25,10 @@ const useStyles = makeStyles((theme: Theme) =>
 		},
 		stepperContent: {
 			background: "black"
-		}
+		},
+		title: {
+            marginLeft: theme.spacing(3)
+        }
 	})
 );
 

@@ -1,5 +1,5 @@
 import { ATYPES, CTYPES } from "../constants/whitelist"
-import {DEFAULT_DATA} from "../constants/constants"
+import { DEFAULT_DATA } from "../constants/constants"
 
 export function findCondition(id: string) {
     let returnData = DEFAULT_DATA

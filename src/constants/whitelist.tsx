@@ -1,19 +1,22 @@
+import { InputType } from "./interfaces";
+
 export const APPS = {
 	conditions: ["Wallet", "Calendar", "Kyber"],
 	actions: ["Wallet", "Kyber", "Fulcrum"]
 };
 
+
 export const CTYPES = [
-    { id: 1, app: "Wallet", title: "Token Balance", address: "0x0", inputs: ["uint", "address", "ERC20", "bool"]},
-    { id: 2, app: "Wallet", title: "Ether Balance", address: "0x0", inputs: ["uint", "address", "ERC20", "bool"]},
-    { id: 3, app: "Kyber", title: "Price", address: "0x0", inputs: ["uint", "address", "ERC20", "bool"] },
-    { id: 4, app: "Calendar", title: "Time", address: "0x0", inputs: ["uint", "address", "ERC20", "bool"] }
+    { id: 1, app: "Wallet", title: "Token Balance", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputs: [InputType.Date] },
+    { id: 2, app: "Wallet", title: "Ether Balance", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputs: [InputType.Date] },
+    { id: 3, app: "Kyber", title: "Price", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputs: [InputType.Date]  },
+    { id: 4, app: "Calendar", title: "Time", address: "0x0", params: ["uint256"], userInputs: [InputType.Date] }
 ];
 
 export const ATYPES = [
-    { id: 1, app: "Wallet", title: "Send Token", address: "0x0", inputs: ["uint", "address", "ERC20", "bool"]},
-    { id: 2, app: "Kyber", title: "Trade Tokens", address: "0x0", inputs: ["uint", "address", "ERC20", "bool"] },
-    { id: 3, app: "Fulcrum", title: "Margin Trade Tokens", address: "0x0", inputs: ["uint", "address", "ERC20", "bool"] }
+    { id: 1, app: "Wallet", title: "Send Token", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputs: [InputType.Date] },
+    { id: 2, app: "Kyber", title: "Trade Tokens", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputs: [InputType.Date] },
+    { id: 3, app: "Fulcrum", title: "Margin Trade Tokens", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputs: [InputType.Date]  }
 ];
 
 /*

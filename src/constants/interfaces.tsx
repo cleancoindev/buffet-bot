@@ -6,7 +6,8 @@ export interface WhitelistData {
     app: string;
     title: string;
     address: string;
-    inputs: Array<string>;
+    params: Array<string>;
+    userInputs: Array<InputType>;
 }
 
 export interface UserSelection {
@@ -30,6 +31,14 @@ export interface Action {
 export enum ConditionOrAction {
     Condition,
     Action,
+}
+
+export enum InputType {
+	Date,
+	Number,
+	Address,
+	Token,
+	DEFAULT
 }
 
 export interface MatchParams {

@@ -6,6 +6,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import { Hash } from 'crypto';
+import { WhitelistData } from '../constants/interfaces';
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -17,13 +18,7 @@ const useStyles = makeStyles(theme => ({
     },
   }));
 
-interface WhitelistData {
-    id: number;
-    app: string;
-    title: string;
-    address: string;
-    inputs: Array<string>;
-}
+
 
 interface AppDropdownProps {
     data: Array<WhitelistData> ;
