@@ -2,15 +2,16 @@
 import {ConditionOrAction, WhitelistData, IcedTx, Action }from '../constants/interfaces'
 
 import { ATYPES, CTYPES, APPS } from '../constants/whitelist'
-import { findCondition } from '../helpers/helpers'
+import { findCondition, findAction } from '../helpers/helpers'
 import { DEFAULT_DATA } from '../constants/constants'
 
 
 // ACTIONS
 export const UPDATE_ACTION_OR_CONDITION = 'UPDATE_ACTION_OR_CONDITION'
+export const ADD_USER_INPUT = "ADD_USER_INPUT"
 
 
-function updateIcedTxCondition(data: IcedTx, conditionOrAction: ConditionOrAction, id: string) {
+function updateIcedTxCondition(state: IcedTx, conditionOrAction: ConditionOrAction, id: string) {
     let varName = ""
     let updatedData: WhitelistData = DEFAULT_DATA
     if (conditionOrAction === ConditionOrAction.Condition)
@@ -21,14 +22,26 @@ function updateIcedTxCondition(data: IcedTx, conditionOrAction: ConditionOrActio
     }
     else if (conditionOrAction === ConditionOrAction.Action)
     {
-        ATYPES.forEach(type => {
-            if (type.id === parseInt(id)) {updatedData = type}
-        })
+        updatedData = findAction(id)
         varName="action"
 
     }
-    return {... data, [varName]: updatedData}
+    return {... state, [varName]: updatedData}
     // setData({...data, [varName]: updatedData})
+}
+
+function updateUserInput(state: IcedTx, index: number, value: any, conditionOrAction: ConditionOrAction) {
+    // Update userInputArray
+    const stateCopy = state;
+    if (conditionOrAction === ConditionOrAction.Condition)
+    {
+        stateCopy.condition.userInputs[index] = value
+
+    } else {
+        stateCopy.action.userInputs[index] = value
+    }
+
+    return stateCopy
 }
 
 
@@ -38,6 +51,8 @@ export const icedTxReducer = (state: IcedTx, action: Action) => {
     switch(action.type) {
         case UPDATE_ACTION_OR_CONDITION:
             return updateIcedTxCondition(state, action.conditionOrAction, action.id)
+        case ADD_USER_INPUT:
+            return updateUserInput(state, action.index, action.value, action.conditionOrAction)
         default:
             return state
     }

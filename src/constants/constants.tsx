@@ -6,5 +6,6 @@ export const DEFAULT_DATA = {
     title: "",
     address: "",
     params: [""],
-    userInputs: [InputType.DEFAULT]
+    userInputTypes: [InputType.DEFAULT],
+    userInputs: ["", 1]
 }

@@ -13,8 +13,8 @@ export default function StepperContent(props: StepperContentProps) {
     // console.log(icedTxState)
 
     const { condition, action} = icedTxState
-    const conditionInputs = condition.userInputs
-    const actionInputs = action.userInputs
+    const conditionInputs = condition.userInputTypes
+    const actionInputs = action.userInputTypes
     // console.log(conditionInputs, actionInputs)
     // Based on the userInputs, render respective inputs
 

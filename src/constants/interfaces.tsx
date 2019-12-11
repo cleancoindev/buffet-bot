@@ -1,13 +1,11 @@
-
-import {MouseEvent} from 'react'
-
 export interface WhitelistData {
     id: number;
     app: string;
     title: string;
     address: string;
     params: Array<string>;
-    userInputs: Array<InputType>;
+    userInputTypes: Array<InputType>;
+    userInputs: Array<string|number>;
 }
 
 export interface UserSelection {
@@ -24,8 +22,10 @@ export interface IcedTx {
 
 export interface Action {
     type: string;
-    id: string;
     conditionOrAction: ConditionOrAction;
+    id: string;
+    index: number;
+    value: (string|number)
 }
 
 export enum ConditionOrAction {

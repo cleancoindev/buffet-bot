@@ -3,7 +3,7 @@ import React, {createContext, useContext, useState, useReducer, Dispatch} from '
 import { IcedTx, ConditionOrAction, Action } from '../constants/interfaces'
 
 // import reducer function
-import { icedTxReducer, UPDATE_ACTION_OR_CONDITION } from './Reducers'
+import { icedTxReducer, UPDATE_ACTION_OR_CONDITION, ADD_USER_INPUT } from './Reducers'
 import { DEFAULT_DATA } from '../constants/constants'
 
 
@@ -19,7 +19,13 @@ interface InitContextProps {
 }
 
 // Create Context
-const IcedTxContext = createContext({icedTxState: DEFAULT_ICED_TX, updateIcedTx: (conditionOrAction: ConditionOrAction, id: string) => {}})
+const IcedTxContext = createContext(
+    {
+        icedTxState: DEFAULT_ICED_TX,
+        updateIcedTx: (conditionOrAction: ConditionOrAction, id: string) => {},
+        updateUserInput: (index: number, value: any, conditionOrAction: ConditionOrAction) => {}
+    }
+)
 
 export const useIcedTxContext = () => useContext(IcedTxContext)
 
@@ -37,9 +43,19 @@ const GlobalStateProvider: React.FunctionComponent = ({children}) => {
 
     const updateIcedTx = (conditionOrAction: ConditionOrAction, id: string) => {
         // Update Logic
-        setTimeout( () => {
-            dispatch({ type: UPDATE_ACTION_OR_CONDITION, conditionOrAction, id })
-        }, 700 )
+        // setTimeout( () => {
+
+        // Default Index => @DEV Restructure Dispatcher later
+        const index = 0
+        const value = 0
+        dispatch({ type: UPDATE_ACTION_OR_CONDITION, conditionOrAction, id, index, value })
+        // }, 700 )
+    }
+
+    const updateUserInput = (index: number, value: number, conditionOrAction: ConditionOrAction) => {
+        // Default Index => @DEV Restructure Dispatcher later
+        const id = "0"
+        dispatch({ type: ADD_USER_INPUT, conditionOrAction, id, index, value })
     }
 
     return (
@@ -47,7 +63,8 @@ const GlobalStateProvider: React.FunctionComponent = ({children}) => {
             value={
                 {
                     icedTxState: icedTxState,
-                    updateIcedTx: updateIcedTx
+                    updateIcedTx: updateIcedTx,
+                    updateUserInput: updateUserInput
                 }
             }
         >
