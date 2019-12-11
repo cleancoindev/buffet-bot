@@ -3,6 +3,7 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import classes from "*.module.css";
 import { InputType } from "../constants/interfaces";
+import DateAndTimePicker from "./DatePicker";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -31,6 +32,10 @@ export default function LayoutTextFields(props: InputProps) {
         console.log(inputType)
         switch(inputType) {
             case(InputType.Date):
+                return (
+                    <DateAndTimePicker></DateAndTimePicker>
+                )
+            case(InputType.Address):
                 return (
                     <TextField
                         id="outlined-full-width"
