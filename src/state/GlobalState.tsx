@@ -36,10 +36,10 @@ const GlobalStateProvider: React.FunctionComponent = ({children}) => {
     // useReduced instead of useState
     // Second argument passes initial state
     const [icedTxState, dispatch] = useReducer(icedTxReducer, DEFAULT_ICED_TX)
-    console.log(icedTxState)
+
 
     useEffect(() => {
-        console.log(icedTxState)
+
     })
     // const [icedTx, setIcedTx] = React.useState<IcedTx>({
     //     condition: DEFAULT_DATA,

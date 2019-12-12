@@ -12,10 +12,15 @@ export default function StepperContent(props: StepperContentProps) {
 	// console.log(icedTxState)
 
 	const { condition, action } = icedTxState;
-	const conditionInputs = condition.userInputTypes;
-    const actionInputs = action.userInputTypes;
+	const conditionInputTypes = condition.userInputTypes;
+	const actionInputTypes = action.userInputTypes;
 
-	// console.log(conditionInputs, actionInputs)
+	// User inputs when scrolling back
+	const conditionInputs = condition.userInputs
+	const actionInputs = action.userInputs
+	console.log(conditionInputs)
+
+	// console.log(conditionInputTypes, actionInputTypes)
 	// Based on the userInputs, render respective inputs
 
 	function getStepContent(
@@ -56,13 +61,15 @@ export default function StepperContent(props: StepperContentProps) {
 									marginTop: "16px",
 								}}
 							/>
-							{conditionInputs.map((input, key) => (
+							{conditionInputTypes.map((input, key) => (
 								<InputField
                                     key={key}
                                     index={key}
                                     inputType={input}
                                     label={condition.inputLabels[key]}
-                                    conditionOrAction={ConditionOrAction.Condition}
+									conditionOrAction={ConditionOrAction.Condition}
+									inputs={conditionInputs}
+
 								></InputField>
 							))}
 						</Grid>
@@ -101,13 +108,14 @@ export default function StepperContent(props: StepperContentProps) {
 									marginTop: "16px"
 								}}
 							/>
-							{actionInputs.map((input, key) => (
+							{actionInputTypes.map((input, key) => (
 								<InputField
                                     index={key}
 									key={key}
 									inputType={input}
                                     label={action.inputLabels[key]}
-                                    conditionOrAction={ConditionOrAction.Action}
+									conditionOrAction={ConditionOrAction.Action}
+									inputs={actionInputs}
 								></InputField>
 							))}
 						</Grid>

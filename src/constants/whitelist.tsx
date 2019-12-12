@@ -7,7 +7,7 @@ export const APPS = {
 
 
 export const CTYPES = [
-    { id: 1, app: "Wallet", title: "Token Balance", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputTypes: [InputType.Token, InputType.Number], inputLabels: ["Token", "Increase in Balance (input 0 for any increase)"], userInputs: [""] },
+    { id: 1, app: "Wallet", title: "Increase in token balance", address: "0x0", params: ["ERC20", "uint256"], userInputTypes: [InputType.Token, InputType.Number], inputLabels: ["Token", "Minimum increase in balance (0 if you want to react to any increase)"], userInputs: [""] },
     { id: 3, app: "Kyber", title: "Price", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputTypes: [InputType.Token, InputType.Token, InputType.Number, InputType.Number], inputLabels: ["Sell Token", "Buy Token", "Sell Amount (default 1)", "Price"], userInputs: [""]  },
     { id: 4, app: "Calendar", title: "Time", address: "0x0", params: ["uint256"], userInputTypes: [InputType.Date], inputLabels: ["Input Date and Time"], userInputs: [""] }
 ];

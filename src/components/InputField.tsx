@@ -6,6 +6,7 @@ import { InputType, ConditionOrAction } from "../constants/interfaces";
 import DateAndTimePicker from "./Inputs/DatePicker";
 import TokenSelect from "./Inputs/TokenSelect";
 import { useIcedTxContext } from "../state/GlobalState";
+import { DEFAULT_TOKEN_1 } from "../constants/constants";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -28,15 +29,20 @@ interface InputProps {
     label: string;
     index: number;
     conditionOrAction: ConditionOrAction;
+    inputs: Array<string|number>;
 }
 
 export default function LayoutTextFields(props: InputProps) {
     // Props
-    const { inputType, label, index, conditionOrAction } = props
+    const { inputType, label, index, conditionOrAction, inputs } = props
     // Context
     const { updateUserInput, icedTxState } = useIcedTxContext();
     // CSS Classes
     const classes = useStyles();
+
+    // If user skipped back, pre fill with state from context
+
+
 
     // Generic Update User Input function
     const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -45,8 +51,29 @@ export default function LayoutTextFields(props: InputProps) {
         updateUserInput(index, newValue, conditionOrAction)
       };
 
+    function returnDevaultData() {
+        if (inputs[0] !== "")
+        {
+            console.log(inputs[0])
+            return inputs[index]
+        }
+        else {
+            console.log("in here")
+            switch(inputType) {
+                case(InputType.Token):
+                    return DEFAULT_TOKEN_1
+                case(InputType.Number):
+                    return 0
+                case(InputType.Address):
+                    // return user address
+                    return "0x0"
+            }
+        }
+
+    }
 
     function renderInput() {
+
         switch(inputType) {
             case(InputType.Date):
                 return (
@@ -60,12 +87,13 @@ export default function LayoutTextFields(props: InputProps) {
             case(InputType.Number):
                 return (
                     <TextField
+                        inputProps={{ min: 0 }}
                         required
                         id="outlined-full-width"
                         label={label}
                         style={{marginTop: '0px', marginBottom: '0px'}}
-
-                        placeholder="1"
+                        defaultValue = {returnDevaultData()}
+                        // placeholder="1"
                         // helperText="Full width!"
                         fullWidth
                         onChange={handleChange}
