@@ -4,11 +4,13 @@ import {ConditionOrAction, WhitelistData, IcedTx, Action }from '../constants/int
 import { ATYPES, CTYPES, APPS } from '../constants/whitelist'
 import { findCondition, findAction } from '../helpers/helpers'
 import { DEFAULT_DATA } from '../constants/constants'
+import { DEFAULT_ICED_TX } from './GlobalState'
 
 
 // ACTIONS
 export const UPDATE_ACTION_OR_CONDITION = 'UPDATE_ACTION_OR_CONDITION'
 export const ADD_USER_INPUT = "ADD_USER_INPUT"
+export const RESET_ACTION_CONDITION_TO_DEFAULT = "RESET_ACTION_CONDITION_TO_DEFAULT"
 
 
 function updateIcedTxCondition(state: IcedTx, conditionOrAction: ConditionOrAction, id: string) {
@@ -43,6 +45,10 @@ function updateUserInput(state: IcedTx, index: number, value: any, conditionOrAc
     return stateCopy
 }
 
+function resetIcedTx() {
+    return DEFAULT_ICED_TX;
+}
+
 
 
 // Reducer function
@@ -52,6 +58,8 @@ export const icedTxReducer = (state: IcedTx, action: Action) => {
             return updateIcedTxCondition(state, action.conditionOrAction, action.id)
         case ADD_USER_INPUT:
             return updateUserInput(state, action.index, action.value, action.conditionOrAction)
+        case RESET_ACTION_CONDITION_TO_DEFAULT:
+            return resetIcedTx()
         default:
             return state
     }

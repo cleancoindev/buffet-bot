@@ -7,15 +7,14 @@ export const APPS = {
 
 
 export const CTYPES = [
-    { id: 1, app: "Wallet", title: "Token Balance", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputTypes: [InputType.Date], inputLabels: [""], userInputs: [""] },
-    { id: 2, app: "Wallet", title: "Ether Balance", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputTypes: [InputType.Date], inputLabels: [""], userInputs: [""] },
-    { id: 3, app: "Kyber", title: "Price", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputTypes: [InputType.Date], inputLabels: [""], userInputs: [""]  },
-    { id: 4, app: "Calendar", title: "Time", address: "0x0", params: ["uint256"], userInputTypes: [InputType.Date], inputLabels: [""], userInputs: [""] }
+    { id: 1, app: "Wallet", title: "Token Balance", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputTypes: [InputType.Token, InputType.Number], inputLabels: ["Token", "Increase in Balance (input 0 for any increase)"], userInputs: [""] },
+    { id: 3, app: "Kyber", title: "Price", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputTypes: [InputType.Token, InputType.Token, InputType.Number, InputType.Number], inputLabels: ["Sell Token", "Buy Token", "Sell Amount (default 1)", "Price"], userInputs: [""]  },
+    { id: 4, app: "Calendar", title: "Time", address: "0x0", params: ["uint256"], userInputTypes: [InputType.Date], inputLabels: ["Input Date and Time"], userInputs: [""] }
 ];
 
 export const ATYPES = [
     { id: 1, app: "Wallet", title: "Send Token", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputTypes: [InputType.Date], inputLabels: [""], userInputs: [""] },
-    { id: 2, app: "Kyber", title: "Trade Tokens", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputTypes: [InputType.Token, InputType.Token, InputType.Number], inputLabels: ["Token to sell", "Token to buy", "Sell Amount"],  userInputs: [""] },
+    { id: 2, app: "Kyber", title: "Trade Tokens", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputTypes: [InputType.Token, InputType.Token, InputType.Number], inputLabels: ["Sell Token", "Buy Token", "Sell Amount"],  userInputs: [""] },
     { id: 3, app: "Fulcrum", title: "Margin Trade Tokens", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputTypes: [InputType.Token], inputLabels: [""], userInputs: [""]  }
 ];
 

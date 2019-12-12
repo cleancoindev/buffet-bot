@@ -2,7 +2,6 @@ import React from "react";
 
 import { StepperContentProps, ConditionOrAction } from "../constants/interfaces";
 
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { Grid, Divider } from "@material-ui/core";
 
 // Import Local Components
@@ -54,7 +53,7 @@ export default function StepperContent(props: StepperContentProps) {
 								style={{
 									background: "white",
 									width: "100%",
-									marginTop: "16px"
+									marginTop: "16px",
 								}}
 							/>
 							{conditionInputs.map((input, key) => (

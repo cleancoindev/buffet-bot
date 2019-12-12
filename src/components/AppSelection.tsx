@@ -29,7 +29,7 @@ import {
 
 export default function AppSelection() {
 	// Import global state
-	const { updateIcedTx, icedTxState } = useIcedTxContext();
+	const { updateIcedTx, icedTxState, resetIcedTxInput } = useIcedTxContext();
 
 	// Local State
 	const [userSelection, setUserSelection] = React.useState<UserSelection>({
@@ -67,6 +67,8 @@ export default function AppSelection() {
 			[conditionOrAction.app]: app,
 			[conditionOrAction.type]: result
 		});
+		resetIcedTxInput()
+
 	}
 
 	return (

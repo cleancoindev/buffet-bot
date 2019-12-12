@@ -50,7 +50,7 @@ export default function LayoutTextFields(props: InputProps) {
         switch(inputType) {
             case(InputType.Date):
                 return (
-                    <DateAndTimePicker index={index}></DateAndTimePicker>
+                    <DateAndTimePicker label={label} index={index}></DateAndTimePicker>
                 )
             // @DEV Add new field to whitelist & respective interface, that stores the labels of the user inputs that will be displayed on the fornt enfd
             case(InputType.Token):
@@ -63,7 +63,7 @@ export default function LayoutTextFields(props: InputProps) {
                         required
                         id="outlined-full-width"
                         label={label}
-                        style={{marginTop: '0px'}}
+                        style={{marginTop: '0px', marginBottom: '0px'}}
 
                         placeholder="1"
                         // helperText="Full width!"
