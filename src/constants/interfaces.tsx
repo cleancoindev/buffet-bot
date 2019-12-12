@@ -4,6 +4,7 @@ export interface WhitelistData {
     title: string;
     address: string;
     params: Array<string>;
+    inputLabels: Array<string>;
     userInputTypes: Array<InputType>;
     userInputs: Array<string|number>;
 }
@@ -61,3 +62,12 @@ export interface StepperProps {
     steps: Array<string>;
     icedTxState: IcedTx;
 }
+
+export interface Token {
+    address: string;
+    symbol: string;
+    name: string;
+    decimals: number;
+  }
+
+export type KyberToken = Array<Token>

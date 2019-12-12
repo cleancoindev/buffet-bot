@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useState, useReducer, Dispatch} from 'react'
+import React, {createContext, useContext, useState, useReducer, Dispatch, useEffect} from 'react'
 // Import Interfaces
 import { IcedTx, ConditionOrAction, Action } from '../constants/interfaces'
 
@@ -36,6 +36,9 @@ const GlobalStateProvider: React.FunctionComponent = ({children}) => {
     // Second argument passes initial state
     const [icedTxState, dispatch] = useReducer(icedTxReducer, DEFAULT_ICED_TX)
 
+    useEffect(() => {
+        console.log(icedTxState)
+    })
     // const [icedTx, setIcedTx] = React.useState<IcedTx>({
     //     condition: DEFAULT_DATA,
     //     action: DEFAULT_DATA
@@ -52,7 +55,7 @@ const GlobalStateProvider: React.FunctionComponent = ({children}) => {
         // }, 700 )
     }
 
-    const updateUserInput = (index: number, value: number, conditionOrAction: ConditionOrAction) => {
+    const updateUserInput = (index: number, value: any, conditionOrAction: ConditionOrAction) => {
         // Default Index => @DEV Restructure Dispatcher later
         const id = "0"
         dispatch({ type: ADD_USER_INPUT, conditionOrAction, id, index, value })

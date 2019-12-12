@@ -65,6 +65,7 @@ export default function Create({match}: RouteComponentProps<Params> ) {
 
     // Stepper Functions
 	function handleNext () {
+        // @ DEV INCLUDE VALIDATION, ONLY ALLOW IF ALL INPUT FIELDS HAVE BEEN VALIDATED
 		setActiveStep(prevActiveStep => prevActiveStep + 1);
 	};
 

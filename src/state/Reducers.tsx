@@ -40,7 +40,6 @@ function updateUserInput(state: IcedTx, index: number, value: any, conditionOrAc
     } else {
         stateCopy.action.userInputs[index] = value
     }
-
     return stateCopy
 }
 

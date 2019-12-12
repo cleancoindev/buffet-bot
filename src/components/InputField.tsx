@@ -2,8 +2,10 @@ import React from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import classes from "*.module.css";
-import { InputType } from "../constants/interfaces";
-import DateAndTimePicker from "./DatePicker";
+import { InputType, ConditionOrAction } from "../constants/interfaces";
+import DateAndTimePicker from "./Inputs/DatePicker";
+import TokenSelect from "./Inputs/TokenSelect";
+import { useIcedTxContext } from "../state/GlobalState";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -21,23 +23,61 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface InputProps {
     inputType: InputType;
+    label: string;
+    index: number;
+    conditionOrAction: ConditionOrAction;
 }
 
 export default function LayoutTextFields(props: InputProps) {
-    const { inputType } = props
+    // Props
+    const { inputType, label, index, conditionOrAction } = props
+    // Context
+    const { updateUserInput, icedTxState } = useIcedTxContext();
+    // CSS Classes
     const classes = useStyles();
+
+    // Generic Update User Input function
+    const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+        const newValue = event.target.value as number;
+        // Update global state
+        updateUserInput(index, newValue, conditionOrAction)
+      };
 
 
     function renderInput() {
-        console.log(inputType)
         switch(inputType) {
             case(InputType.Date):
                 return (
-                    <DateAndTimePicker></DateAndTimePicker>
+                    <DateAndTimePicker index={index}></DateAndTimePicker>
+                )
+            // @DEV Add new field to whitelist & respective interface, that stores the labels of the user inputs that will be displayed on the fornt enfd
+            case(InputType.Token):
+                return (
+                    <TokenSelect index={index} conditionOrAction={conditionOrAction} label={label}/>
+                )
+            case(InputType.Number):
+                return (
+                    <TextField
+                        required
+                        id="outlined-full-width"
+                        label={label}
+                        style={{ marginTop: 8, marginRight: 16 }}
+                        placeholder="1"
+                        // helperText="Full width!"
+                        fullWidth
+                        onChange={handleChange}
+                        margin="normal"
+                        type="number"
+                        InputLabelProps={{
+                            shrink: true
+                        }}
+                        variant="outlined"
+                    />
                 )
             case(InputType.Address):
                 return (
                     <TextField
+                        required
                         id="outlined-full-width"
                         label="Label"
                         style={{ marginTop: 8, marginRight: 16 }}

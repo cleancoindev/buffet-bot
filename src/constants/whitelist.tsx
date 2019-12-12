@@ -7,16 +7,16 @@ export const APPS = {
 
 
 export const CTYPES = [
-    { id: 1, app: "Wallet", title: "Token Balance", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputTypes: [InputType.Date], userInputs: [""] },
-    { id: 2, app: "Wallet", title: "Ether Balance", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputTypes: [InputType.Date], userInputs: [""] },
-    { id: 3, app: "Kyber", title: "Price", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputTypes: [InputType.Date], userInputs: [""]  },
-    { id: 4, app: "Calendar", title: "Time", address: "0x0", params: ["uint256"], userInputTypes: [InputType.Date], userInputs: [""] }
+    { id: 1, app: "Wallet", title: "Token Balance", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputTypes: [InputType.Date], inputLabels: [""], userInputs: [""] },
+    { id: 2, app: "Wallet", title: "Ether Balance", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputTypes: [InputType.Date], inputLabels: [""], userInputs: [""] },
+    { id: 3, app: "Kyber", title: "Price", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputTypes: [InputType.Date], inputLabels: [""], userInputs: [""]  },
+    { id: 4, app: "Calendar", title: "Time", address: "0x0", params: ["uint256"], userInputTypes: [InputType.Date], inputLabels: [""], userInputs: [""] }
 ];
 
 export const ATYPES = [
-    { id: 1, app: "Wallet", title: "Send Token", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputTypes: [InputType.Date], userInputs: [""] },
-    { id: 2, app: "Kyber", title: "Trade Tokens", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputTypes: [InputType.Date], userInputs: [""] },
-    { id: 3, app: "Fulcrum", title: "Margin Trade Tokens", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputTypes: [InputType.Date], userInputs: [""]  }
+    { id: 1, app: "Wallet", title: "Send Token", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputTypes: [InputType.Date], inputLabels: [""], userInputs: [""] },
+    { id: 2, app: "Kyber", title: "Trade Tokens", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputTypes: [InputType.Token, InputType.Token, InputType.Number], inputLabels: ["Token to sell", "Token to buy", "Sell Amount"],  userInputs: [""] },
+    { id: 3, app: "Fulcrum", title: "Margin Trade Tokens", address: "0x0", params: ["uint256", "address", "ERC20", "bool"], userInputTypes: [InputType.Token], inputLabels: [""], userInputs: [""]  }
 ];
 
 /*

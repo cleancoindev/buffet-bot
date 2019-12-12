@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DateFnsUtils from '@date-io/date-fns'; // choose your lib
 import { ThemeProvider } from "@material-ui/styles";
 import { createMuiTheme } from "@material-ui/core";
+import { useIcedTxContext } from "../../state/GlobalState";
 
 
 import {
@@ -9,32 +10,39 @@ import {
   MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
+import { ConditionOrAction } from '../../constants/interfaces';
 
-export default function DateAndTimePicker() {
+interface InputProps {
+  // inputType: InputType;
+  // label: string;
+  index: number;
+}
+
+export default function DateAndTimePicker(props: InputProps) {
+    const { index } = props;
     // @DEV TO DO:
     // SET MIN AND MAX DATE, see api https://material-ui-pickers.dev/api/DateTimePicker
 
+  const { updateUserInput, icedTxState } = useIcedTxContext();
   const [selectedDate, handleDateChange] = useState(new Date());
-
-  useEffect(() => {
-      convertToTimestamp()
-  })
 
   function handleChange(date: MaterialUiPickersDate) {
     if (date !== null)
     {
-        console.log(date)
+
         const stringDate:string = date.toString()
         const newDate = new Date(stringDate)
-        console.log(newDate)
+
+        // index: number, value: number, conditionOrAction
+        updateUserInput(index, convertToTimestamp(newDate), ConditionOrAction.Condition)
         handleDateChange(newDate)
     }
 
   }
 
-  function convertToTimestamp() {
-      const timestamp = Math.floor(parseInt(Date.parse(selectedDate.toString()).toString())/1000)
-      console.log(timestamp)
+  function convertToTimestamp(date: Date) {
+      return Math.floor(parseInt(Date.parse(date.toString()).toString())/1000)
+
   }
 
   return (
