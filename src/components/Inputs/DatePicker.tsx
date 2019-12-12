@@ -46,7 +46,7 @@ export default function DateAndTimePicker(props: InputProps) {
   }
 
   return (
-    <div style={{marginRight: '24px', marginBottom: '24px', textAlign: 'left', width: '100%'}}>
+    <div style={{textAlign: 'left', width: '100%'}}>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <DateTimePicker label="Input Date and Time" style={{width: '100%'}} inputVariant="outlined" showTodayButton value={selectedDate} onChange={handleChange} />
         </MuiPickersUtilsProvider>

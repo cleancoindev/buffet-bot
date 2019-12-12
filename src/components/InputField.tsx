@@ -11,8 +11,10 @@ const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		root: {
             marginTop: '24px',
-            display: "flex",
-            width: '100%'
+            // display: "flex",
+            width: '100%',
+            paddingRight: theme.spacing(3),
+            paddingBottom: theme.spacing(2),
 		},
 		textField: {
             marginLeft: theme.spacing(1),
@@ -61,7 +63,8 @@ export default function LayoutTextFields(props: InputProps) {
                         required
                         id="outlined-full-width"
                         label={label}
-                        style={{ marginTop: 8, marginRight: 16 }}
+                        style={{marginTop: '0px'}}
+
                         placeholder="1"
                         // helperText="Full width!"
                         fullWidth
@@ -80,7 +83,7 @@ export default function LayoutTextFields(props: InputProps) {
                         required
                         id="outlined-full-width"
                         label="Label"
-                        style={{ marginTop: 8, marginRight: 16 }}
+
                         placeholder="Placeholder"
                         // helperText="Full width!"
                         fullWidth

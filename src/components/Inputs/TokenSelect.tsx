@@ -15,10 +15,9 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     button: {
       display: 'block',
-      marginTop: theme.spacing(2),
     },
     formControl: {
-      marginRight: '24px',
+      // marginRight: '24px',
       minWidth: 120,
       width: '100%'
     },
@@ -54,7 +53,6 @@ export default function TokenSelect(props: TokenSelectProps) {
   const handleChange = (event: React.ChangeEvent<{ value: any }>) => {
     const tokenAddress = event.target.value as string;
     const tokenObject = findToken(tokenAddress)
-    console.log(tokenObject)
     if (tokenObject === undefined) {
       console.log("ERROR in fetching Token")
       return "ERROR in finding Token"
