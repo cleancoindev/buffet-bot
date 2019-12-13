@@ -30,19 +30,18 @@ interface InputProps {
     index: number;
     conditionOrAction: ConditionOrAction;
     inputs: Array<string|number>;
+    app: string;
 }
 
 export default function LayoutTextFields(props: InputProps) {
     // Props
-    const { inputType, label, index, conditionOrAction, inputs } = props
+    const { app, inputType, label, index, conditionOrAction, inputs } = props
     // Context
     const { updateUserInput, icedTxState } = useIcedTxContext();
     // CSS Classes
     const classes = useStyles();
 
     // If user skipped back, pre fill with state from context
-
-
 
     // Generic Update User Input function
     const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -51,7 +50,36 @@ export default function LayoutTextFields(props: InputProps) {
         updateUserInput(index, newValue, conditionOrAction)
       };
 
-    function returnDevaultData() {
+
+    // Func should call getValue() in smart contract and return the respective value in a disabled Text field
+    // Params: Contract address | Contract Parameters
+    function callGetValue() {
+        // CALL Smart Contract get value
+        return  1000;
+    }
+
+    function callGetValueAndSetState() {
+        const returnValue = callGetValue()
+        updateUserInput(index, returnValue, conditionOrAction)
+        return returnValue
+    }
+
+    function deriveBool() {
+        switch(app) {
+            case("Kyber"):
+                // If user inputted price is greater than current price, return true, otherwise false
+                if(icedTxState.condition.userInputs[3] > icedTxState.condition.userInputs[5])
+                {
+                    updateUserInput(index, true, conditionOrAction)
+                }
+                else {
+                    updateUserInput(index, false, conditionOrAction)
+                }
+
+        }
+    }
+
+    function returnDefaultValue() {
         if (inputs[0] !== "")
         {
             console.log(inputs[0])
@@ -69,7 +97,6 @@ export default function LayoutTextFields(props: InputProps) {
                     return "0x0"
             }
         }
-
     }
 
     function renderInput() {
@@ -77,22 +104,26 @@ export default function LayoutTextFields(props: InputProps) {
         switch(inputType) {
             case(InputType.Date):
                 return (
-                    <DateAndTimePicker label={label} index={index}></DateAndTimePicker>
+                    <div className={classes.root}>
+                        <DateAndTimePicker label={label} index={index}></DateAndTimePicker>
+                    </div>
                 )
-            // @DEV Add new field to whitelist & respective interface, that stores the labels of the user inputs that will be displayed on the fornt enfd
             case(InputType.Token):
                 return (
+                    <div className={classes.root}>
                     <TokenSelect index={index} conditionOrAction={conditionOrAction} label={label}/>
+                    </div>
                 )
             case(InputType.Number):
                 return (
+                    <div className={classes.root}>
                     <TextField
                         inputProps={{ min: 0 }}
                         required
                         id="outlined-full-width"
                         label={label}
                         style={{marginTop: '0px', marginBottom: '0px'}}
-                        defaultValue = {returnDevaultData()}
+                        defaultValue = {returnDefaultValue()}
                         // placeholder="1"
                         // helperText="Full width!"
                         fullWidth
@@ -104,15 +135,19 @@ export default function LayoutTextFields(props: InputProps) {
                         }}
                         variant="outlined"
                     />
+                    </div>
                 )
-            case(InputType.Address):
+            case(InputType.GetValue):
                 return (
+                    <div className={classes.root}>
                     <TextField
                         required
+                        style={{marginTop: '0px', marginBottom: '0px'}}
                         id="outlined-full-width"
-                        label="Label"
-
-                        placeholder="Placeholder"
+                        label={label}
+                        defaultValue = {callGetValueAndSetState()}
+                        disabled
+                        // placeholder="Placeholder"
                         // helperText="Full width!"
                         fullWidth
                         margin="normal"
@@ -121,14 +156,57 @@ export default function LayoutTextFields(props: InputProps) {
                         }}
                         variant="outlined"
                     />
+                    </div>
                 )
+                case(InputType.Address):
+                    return (
+                        <div className={classes.root}>
+                        <TextField
+                            required
+                            id="outlined-full-width"
+                            label="Label"
+
+                            placeholder="Placeholder"
+                            // helperText="Full width!"
+                            fullWidth
+                            margin="normal"
+                            InputLabelProps={{
+                                shrink: true
+                            }}
+                            variant="outlined"
+                        />
+                        </div>
+                    )
+                case(InputType.StatelessGetValue):
+                    return (
+                        <div className={classes.root}>
+                        <TextField
+                            required
+                            style={{marginTop: '0px', marginBottom: '0px'}}
+                            id="outlined-full-width"
+                            label={label}
+                            defaultValue = {callGetValue()}
+                            disabled
+                            // placeholder="Placeholder"
+                            // helperText="Full width!"
+                            fullWidth
+                            margin="normal"
+                            InputLabelProps={{
+                                shrink: true
+                            }}
+                            variant="outlined"
+                        />
+                        </div>
+                    )
+                case(InputType.Bool):
+                    // No render
+                    deriveBool()
+                    return <React.Fragment></React.Fragment>
+                default:
+                    return <div className={classes.root}></div>
         }
 
     }
 
-	return (
-		<div className={classes.root}>
-            {renderInput()}
-		</div>
-	);
+	return renderInput();
 }

@@ -38,7 +38,10 @@ export enum InputType {
 	Date,
 	Number,
 	Address,
-	Token,
+    Token,
+    Bool,
+    GetValue,
+    StatelessGetValue,
 	DEFAULT
 }
 

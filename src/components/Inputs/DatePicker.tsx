@@ -16,7 +16,7 @@ interface InputProps {
   // inputType: InputType;
   // label: string;
   index: number;
-  label: string
+  label: string;
 }
 
 export default function DateAndTimePicker(props: InputProps) {

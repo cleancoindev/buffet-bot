@@ -10,6 +10,7 @@ import InputField from "./InputField";
 export default function StepperContent(props: StepperContentProps) {
 	const { icedTxState, activeStep, classes, inputs } = props;
 	// console.log(icedTxState)
+	console.log(icedTxState)
 
 	const { condition, action } = icedTxState;
 	const conditionInputTypes = condition.userInputTypes;
@@ -18,7 +19,12 @@ export default function StepperContent(props: StepperContentProps) {
 	// User inputs when scrolling back
 	const conditionInputs = condition.userInputs
 	const actionInputs = action.userInputs
-	console.log(conditionInputs)
+
+	// Apps
+	const conditionApp = condition.app
+	const actionApp = action.app
+
+
 
 	// console.log(conditionInputTypes, actionInputTypes)
 	// Based on the userInputs, render respective inputs
@@ -69,7 +75,7 @@ export default function StepperContent(props: StepperContentProps) {
                                     label={condition.inputLabels[key]}
 									conditionOrAction={ConditionOrAction.Condition}
 									inputs={conditionInputs}
-
+									app={conditionApp}
 								></InputField>
 							))}
 						</Grid>
@@ -116,6 +122,7 @@ export default function StepperContent(props: StepperContentProps) {
                                     label={action.inputLabels[key]}
 									conditionOrAction={ConditionOrAction.Action}
 									inputs={actionInputs}
+									app={actionApp}
 								></InputField>
 							))}
 						</Grid>

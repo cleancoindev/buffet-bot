@@ -13,7 +13,7 @@ export const DEFAULT_DATA = {
     params: emptyStringArray, // [ ]
     inputLabels: emptyStringArray, // [ ]
     userInputTypes: emptyUserInputTypeArray, // [ ]
-    userInputs: emptyUserInputArray // [ ]
+    userInputs: emptyUserInputArray, // [ ]
 }
 
 
