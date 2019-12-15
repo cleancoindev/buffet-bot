@@ -1,32 +1,31 @@
-import React from "react";
+import React from 'react';
 
-import { StepperContentProps, ConditionOrAction } from "../constants/interfaces";
+import {
+	StepperContentProps,
+	ConditionOrAction
+} from '../constants/interfaces';
 
-import { Grid, Divider } from "@material-ui/core";
+import { Grid, Divider } from '@material-ui/core';
 
 // Import Local Components
-import InputField from "./InputField";
+import InputField from './InputField';
 
 export default function StepperContent(props: StepperContentProps) {
 	const { icedTxState, activeStep, classes, inputs } = props;
 	// console.log(icedTxState)
-	console.log(icedTxState)
 
 	const { condition, action } = icedTxState;
 	const conditionInputTypes = condition.userInputTypes;
 	const actionInputTypes = action.userInputTypes;
 
 	// User inputs when scrolling back
-	const conditionInputs = condition.userInputs
-	const actionInputs = action.userInputs
+	const conditionInputs = condition.userInputs;
+	const actionInputs = action.userInputs;
 
 	// Apps
-	const conditionApp = condition.app
-	const actionApp = action.app
+	const conditionApp = condition.app;
+	const actionApp = action.app;
 
-
-
-	// console.log(conditionInputTypes, actionInputTypes)
 	// Based on the userInputs, render respective inputs
 
 	function getStepContent(
@@ -41,7 +40,7 @@ export default function StepperContent(props: StepperContentProps) {
 						direction="row"
 						justify="space-evenly"
 						alignItems="center"
-						style={{ background: "brown", padding: "10px" }}
+						style={{ background: 'brown', padding: '10px' }}
 					>
 						<Grid
 							container
@@ -52,9 +51,9 @@ export default function StepperContent(props: StepperContentProps) {
 							justify="flex-start"
 							alignItems="flex-start"
 							style={{
-								paddingLeft: "24px",
-								background: "pink",
-								minHeight: "200px"
+								paddingLeft: '24px',
+								background: 'pink',
+								minHeight: '200px'
 							}}
 						>
 							<h1> Step: {stepIndex + 1}</h1>
@@ -62,18 +61,20 @@ export default function StepperContent(props: StepperContentProps) {
 							<h2> Condition: {condition.title}</h2>
 							<Divider
 								style={{
-									background: "white",
-									width: "100%",
-									marginTop: "16px",
+									background: 'white',
+									width: '100%',
+									marginTop: '16px'
 								}}
 							/>
 							{conditionInputTypes.map((input, key) => (
 								<InputField
-                                    key={key}
-                                    index={key}
-                                    inputType={input}
-                                    label={condition.inputLabels[key]}
-									conditionOrAction={ConditionOrAction.Condition}
+									key={`Condition-${key}`}
+									index={key}
+									inputType={input}
+									label={condition.inputLabels[key]}
+									conditionOrAction={
+										ConditionOrAction.Condition
+									}
 									inputs={conditionInputs}
 									app={conditionApp}
 								></InputField>
@@ -88,7 +89,7 @@ export default function StepperContent(props: StepperContentProps) {
 						direction="row"
 						justify="space-evenly"
 						alignItems="center"
-						style={{ background: "brown", padding: "10px" }}
+						style={{ background: 'brown', padding: '10px' }}
 					>
 						<Grid
 							container
@@ -99,9 +100,9 @@ export default function StepperContent(props: StepperContentProps) {
 							justify="flex-start"
 							alignItems="flex-start"
 							style={{
-								paddingLeft: "24px",
-								background: "pink",
-								minHeight: "200px"
+								paddingLeft: '24px',
+								background: 'pink',
+								minHeight: '200px'
 							}}
 						>
 							<h1> Step: {stepIndex + 1}</h1>
@@ -109,17 +110,17 @@ export default function StepperContent(props: StepperContentProps) {
 							<h2> Action: {action.title}</h2>
 							<Divider
 								style={{
-									background: "white",
-									width: "100%",
-									marginTop: "16px"
+									background: 'white',
+									width: '100%',
+									marginTop: '16px'
 								}}
 							/>
 							{actionInputTypes.map((input, key) => (
 								<InputField
-                                    index={key}
-									key={key}
+									index={key}
+									key={`Action-${key}`}
 									inputType={input}
-                                    label={action.inputLabels[key]}
+									label={action.inputLabels[key]}
 									conditionOrAction={ConditionOrAction.Action}
 									inputs={actionInputs}
 									app={actionApp}
@@ -135,7 +136,7 @@ export default function StepperContent(props: StepperContentProps) {
 					</div>
 				);
 			default:
-				return "Unknown stepIndex";
+				return 'Unknown stepIndex';
 		}
 	}
 	return <div>{getStepContent(activeStep, classes)}</div>;
