@@ -31,11 +31,20 @@ interface InputProps {
 	conditionOrAction: ConditionOrAction;
 	inputs: Array<string | number>;
 	app: string;
+	disabled: boolean;
 }
 
 export default function LayoutTextFields(props: InputProps) {
 	// Props
-	const { app, inputType, label, index, conditionOrAction, inputs } = props;
+	const {
+		app,
+		inputType,
+		label,
+		index,
+		conditionOrAction,
+		inputs,
+		disabled
+	} = props;
 	// Context
 	const { updateUserInput, icedTxState } = useIcedTxContext();
 
@@ -138,6 +147,7 @@ export default function LayoutTextFields(props: InputProps) {
 						<DateAndTimePicker
 							label={label}
 							index={index}
+							disabled={disabled}
 						></DateAndTimePicker>
 					</div>
 				);
@@ -149,6 +159,7 @@ export default function LayoutTextFields(props: InputProps) {
 							index={index}
 							conditionOrAction={conditionOrAction}
 							label={label}
+							disabled={disabled}
 						/>
 					</div>
 				);
@@ -172,6 +183,7 @@ export default function LayoutTextFields(props: InputProps) {
 								shrink: true
 							}}
 							variant="outlined"
+							disabled={disabled}
 						/>
 					</div>
 				);
@@ -184,7 +196,7 @@ export default function LayoutTextFields(props: InputProps) {
 							id="outlined-full-width"
 							label={label}
 							defaultValue={callGetValueAndSetState()}
-							disabled
+							disabled={true}
 							// placeholder="Placeholder"
 							// helperText="Full width!"
 							fullWidth
@@ -211,6 +223,7 @@ export default function LayoutTextFields(props: InputProps) {
 								shrink: true
 							}}
 							variant="outlined"
+							disabled={disabled}
 						/>
 					</div>
 				);

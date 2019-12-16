@@ -30,6 +30,7 @@ interface TokenSelectProps
 	conditionOrAction: ConditionOrAction;
 	// @DEV CHANGE later when implented better DEFAULT VALUE system, this should only be string
 	defaultToken: string;
+	disabled: boolean;
 }
 
 const findToken = (address: string) => {
@@ -46,7 +47,7 @@ const findToken = (address: string) => {
 };
 
 export default function TokenSelect(props: TokenSelectProps) {
-	const { defaultToken, label, index, conditionOrAction } = props;
+	const { defaultToken, label, index, conditionOrAction, disabled } = props;
 	const { updateUserInput, icedTxState } = useIcedTxContext();
 
 	const classes = useStyles();
@@ -66,7 +67,6 @@ export default function TokenSelect(props: TokenSelectProps) {
 	React.useEffect(() => {
 		setLabelWidth(inputLabel.current!.offsetWidth);
 		// Set state wih default token
-		console.log('Rendering');
 		updateUserInput(index, token.address, conditionOrAction);
 	}, []);
 
@@ -111,6 +111,7 @@ export default function TokenSelect(props: TokenSelectProps) {
 				value={token.address}
 				onChange={handleChange}
 				labelWidth={labelWidth}
+				disabled={disabled}
 			>
 				{TOKEN_LIST.map((possibleToken, key) => (
 					<MenuItem key={key} value={possibleToken.address}>

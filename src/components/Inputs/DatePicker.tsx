@@ -17,10 +17,11 @@ interface InputProps {
   // label: string;
   index: number;
   label: string;
+  disabled: boolean;
 }
 
 export default function DateAndTimePicker(props: InputProps) {
-    const { index, label } = props;
+    const { index, label, disabled } = props;
     // @DEV TO DO:
     // SET MIN AND MAX DATE, see api https://material-ui-pickers.dev/api/DateTimePicker
 
@@ -49,7 +50,7 @@ export default function DateAndTimePicker(props: InputProps) {
   return (
     <div style={{textAlign: 'left', width: '100%'}}>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <DateTimePicker label={label} style={{width: '100%'}} inputVariant="outlined" showTodayButton value={selectedDate} onChange={handleChange} />
+            <DateTimePicker disabled={disabled} label={label} style={{width: '100%'}} inputVariant="outlined" showTodayButton value={selectedDate} onChange={handleChange} />
         </MuiPickersUtilsProvider>
 
     </div>
