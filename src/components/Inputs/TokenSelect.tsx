@@ -48,7 +48,6 @@ const findToken = (address: string) => {
 export default function TokenSelect(props: TokenSelectProps) {
 	const { defaultToken, label, index, conditionOrAction } = props;
 	const { updateUserInput, icedTxState } = useIcedTxContext();
-	console.log(defaultToken);
 
 	const classes = useStyles();
 	// @DEV Add a condition that always two different tokens will be shown by default

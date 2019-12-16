@@ -49,9 +49,15 @@ function updateUserInput(
 	return stateCopy;
 }
 
-function resetIcedTx() {
+function resetIcedTx(conditionOrAction: ConditionOrAction, state: IcedTx) {
+	const stateCopy = state;
+	if (conditionOrAction === ConditionOrAction.Condition) {
+		stateCopy.condition = DEFAULT_DATA;
+	} else if (conditionOrAction === ConditionOrAction.Action) {
+		stateCopy.action = DEFAULT_DATA;
+	}
 	// console.log("reset")
-	return DEFAULT_ICED_TX;
+	return stateCopy;
 }
 
 // Reducer function
@@ -71,7 +77,7 @@ export const icedTxReducer = (state: IcedTx, action: Action) => {
 				action.conditionOrAction
 			);
 		case RESET_ACTION_CONDITION_TO_DEFAULT:
-			return resetIcedTx();
+			return resetIcedTx(action.conditionOrAction, state);
 		default:
 			return state;
 	}

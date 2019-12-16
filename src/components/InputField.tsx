@@ -85,7 +85,6 @@ export default function LayoutTextFields(props: InputProps) {
 		// If user has inputted something, go in here
 
 		if (inputs[0] !== undefined) {
-			console.log('prefill from state');
 			if (inputs[index] !== undefined) {
 				return inputs[index];
 			} else {
@@ -94,7 +93,6 @@ export default function LayoutTextFields(props: InputProps) {
 		}
 		// If new render, go in here
 		else {
-			console.log('prefill with default data');
 			switch (inputType) {
 				case InputType.Number:
 					return 1;
@@ -114,12 +112,10 @@ export default function LayoutTextFields(props: InputProps) {
 
 	function returnStringDefaultValue() {
 		if (inputs[0] !== undefined || inputs[index] !== undefined) {
-			console.log('prefill from state');
 			return inputs[index].toString();
 		}
 		// If new render, go in here
 		else {
-			console.log('prefill with default data');
 			switch (inputType) {
 				case InputType.Address:
 					// return user address
@@ -127,7 +123,6 @@ export default function LayoutTextFields(props: InputProps) {
 				case InputType.Token:
 					let defaultToken = TOKEN_LIST[0];
 					if (index !== 0) defaultToken = TOKEN_LIST[1];
-					console.log(defaultToken.address);
 					return defaultToken.address;
 				default:
 					return 'error';
