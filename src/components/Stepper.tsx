@@ -57,7 +57,7 @@ export default function StepperParent(props: StepperProps) {
 	};
 
 	// Set TxState => Do dynamic
-	const txState = TxState.preApprove;
+	const txState = TxState.postApprove;
 
 	return (
 		<div className={classes.root}>

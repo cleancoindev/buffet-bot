@@ -2,6 +2,7 @@ import React from 'react';
 import { Grid, CircularProgress, Button } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { TxState } from '../constants/interfaces';
+import ProgressBar from './ProgressBar';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -63,6 +64,13 @@ export default function TransactionCard(props: TxCardProps) {
 					progressText: `Waiting for Metamask confirmation`,
 					prepayment: false
 				};
+			case TxState.postApprove:
+				return {
+					title: `Waiting for approval Tx to be mined`,
+					progress: Progress.awaitingeMining,
+					progressText: `Waiting for transaction to be mined`,
+					prepayment: false
+				};
 			default:
 				return {
 					title: `Approve gelato to move your DAI`,
@@ -106,6 +114,25 @@ export default function TransactionCard(props: TxCardProps) {
 					}}
 				>
 					<h3>{modalContent.title}</h3>
+				</Grid>
+				<Grid
+					className={classes.gridItem}
+					container
+					item
+					sm={12}
+					xs={12}
+					direction="row"
+					justify="flex-start"
+					alignItems="center"
+					style={{
+						background: '#FFFFFF',
+						paddingTop: '8px',
+						paddingBottom: '8px'
+						// borderStyle: 'solid',
+						// borderWidth: '2px'
+					}}
+				>
+					<ProgressBar />
 				</Grid>
 				<Grid
 					className={classes.gridItem}
