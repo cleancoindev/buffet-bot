@@ -57,7 +57,7 @@ export default function StepperParent(props: StepperProps) {
 	};
 
 	// Set TxState => Do dynamic
-	const txState = TxState.postApprove;
+	const txState = TxState.postCreate;
 
 	return (
 		<div className={classes.root}>
@@ -86,7 +86,7 @@ export default function StepperParent(props: StepperProps) {
 							inputs={['uint256', 'uint256']}
 						></StepperContent>
 						{/* </Typography> */}
-						<div>
+						<div style={{ marginBottom: '24px' }}>
 							<Button
 								disabled={activeStep === 0}
 								onClick={handleBack}
@@ -115,13 +115,13 @@ export default function StepperParent(props: StepperProps) {
 					</div>
 				)}
 			</div>
-			{/* <TransactionModal
+			<TransactionModal
 				txState={txState}
 				title={'Confirm in Metamask'}
 				modalOpen={modalOpen}
 				modalClickOpen={modalClickOpen}
 				modalClose={modalClose}
-			></TransactionModal> */}
+			></TransactionModal>
 		</div>
 	);
 }

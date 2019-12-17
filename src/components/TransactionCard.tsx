@@ -4,6 +4,7 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { TxState } from '../constants/interfaces';
 import ProgressBar from './ProgressBar';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import LinkIcon from '@material-ui/icons/Link';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -63,11 +64,13 @@ export default function TransactionCard(props: TxCardProps) {
 		switch (txState) {
 			case TxState.preApprove:
 				return {
-					title: `Approve gelato to move your DAI`,
+					title: `You need to approve gelato to move your DAI`,
 					progress: Progress.awaitingConfirmation,
 					progressText: `Waiting for Metamask confirmation`,
 					prepayment: false
 				};
+			// Skip this part and go straight to preCreate
+			/*
 			case TxState.waitingApprove:
 				return {
 					title: `Waiting for approval Tx to be mined`,
@@ -82,23 +85,24 @@ export default function TransactionCard(props: TxCardProps) {
 					progressText: `Transaction mined`,
 					prepayment: false
 				};
+			*/
 			case TxState.preCreate:
 				return {
-					title: `Create IcedTx`,
+					title: `Activate your Frozen Transaction`,
 					progress: Progress.awaitingConfirmation,
 					progressText: `Waiting for Metamask confirmation`,
 					prepayment: true
 				};
 			case TxState.waitingCreate:
 				return {
-					title: `Waiting for Create Tx to be mined`,
+					title: `Activating Frozen Transaction ...`,
 					progress: Progress.awaitingeMining,
-					progressText: `Waiting for transaction to be mined`,
+					progressText: `Transaction in progress`,
 					prepayment: true
 				};
 			case TxState.postCreate:
 				return {
-					title: `Successfully created IcedTx`,
+					title: `Frozen Transaction successfully activated!`,
 					progress: Progress.finished,
 					progressText: `Transaction mined`,
 					prepayment: true
@@ -149,12 +153,13 @@ export default function TransactionCard(props: TxCardProps) {
 					alignItems="flex-start"
 					style={{
 						background: '#000000',
-						color: 'white'
+						color: 'white',
+						textAlign: 'center'
 					}}
 				>
 					<h3>{modalContent.title}</h3>
 				</Grid>
-				{modalContent.progress === Progress.awaitingeMining && (
+				{/* {modalContent.progress === Progress.awaitingeMining && (
 					<Grid
 						className={classes.gridItem}
 						container
@@ -174,7 +179,7 @@ export default function TransactionCard(props: TxCardProps) {
 					>
 						<ProgressBar />
 					</Grid>
-				)}
+				)} */}
 				<Grid
 					className={classes.gridItem}
 					container
@@ -206,6 +211,9 @@ export default function TransactionCard(props: TxCardProps) {
 							style={{ marginRight: '8px' }}
 						/>
 					)}
+					{modalContent.progress === Progress.awaitingeMining && (
+						<ProgressBar />
+					)}
 					<h4>{modalContent.progressText}</h4>
 				</Grid>
 				<Grid
@@ -224,7 +232,40 @@ export default function TransactionCard(props: TxCardProps) {
 					<h4>Your Account</h4>
 					<h4 style={{ marginLeft: 'auto' }}>0x232...fdf32</h4>
 				</Grid>
-				{modalContent.prepayment && (
+				{TxState.postCreate && (
+					<Grid
+						className={classes.gridItem}
+						container
+						item
+						sm={12}
+						xs={12}
+						direction="row"
+						justify="space-evenly"
+						alignItems="center"
+						style={{
+							background: '#EEEEEE'
+						}}
+					>
+						<h4>Activation Recipt</h4>
+						<a
+							style={{
+								display: 'flex',
+								alignItems: 'center',
+								marginLeft: 'auto'
+							}}
+							href="https://www.etherscan.com"
+							target="_blank"
+						>
+							<LinkIcon
+								color={'primary'}
+								fontSize={'large'}
+								// style={{ marginRight: '8px' }}
+							/>
+						</a>
+						{/* <h4 style={{ marginLeft: 'auto' }}>0x232...fdf32</h4> */}
+					</Grid>
+				)}
+				{modalContent.prepayment && !TxState.postCreate && (
 					<Grid
 						className={classes.gridItem}
 						container
@@ -245,45 +286,54 @@ export default function TransactionCard(props: TxCardProps) {
 						</div>
 					</Grid>
 				)}
-				<Grid
-					className={classes.gridItem}
-					container
-					item
-					sm={12}
-					xs={12}
-					direction="row"
-					justify="space-evenly"
-					alignItems="center"
-					style={{
-						background: `${
-							modalContent.prepayment ? '#E8E8E8' : '#EEEEEE'
-						}`
-					}}
-				>
-					<h4>Transaction Fee</h4>
-					<div className={classes.dollar}>
-						<h4 style={{ margin: '0px' }}>0.025 ETH</h4>
-						<p style={{ margin: '0px' }}>$3.25 USD</p>
-					</div>
-				</Grid>
-				<Grid
-					className={classes.gridItem}
-					container
-					item
-					sm={12}
-					xs={12}
-					direction="row"
-					justify="space-evenly"
-					alignItems="flex-start"
-					style={{
-						background: `${
-							modalContent.prepayment ? '#EEEEEE' : '#E8E8E8'
-						}`
-					}}
-				>
-					<h4>Estimated Wait</h4>
-					<h4 style={{ marginLeft: 'auto' }}>~ 1 minute remaining</h4>
-				</Grid>
+				{!TxState.postCreate && (
+					<React.Fragment>
+						<Grid
+							className={classes.gridItem}
+							container
+							item
+							sm={12}
+							xs={12}
+							direction="row"
+							justify="space-evenly"
+							alignItems="center"
+							style={{
+								background: `${
+									modalContent.prepayment
+										? '#E8E8E8'
+										: '#EEEEEE'
+								}`
+							}}
+						>
+							<h4>Transaction Fee</h4>
+							<div className={classes.dollar}>
+								<h4 style={{ margin: '0px' }}>0.025 ETH</h4>
+								<p style={{ margin: '0px' }}>$3.25 USD</p>
+							</div>
+						</Grid>
+						<Grid
+							className={classes.gridItem}
+							container
+							item
+							sm={12}
+							xs={12}
+							direction="row"
+							justify="space-evenly"
+							alignItems="flex-start"
+							style={{
+								background: `${
+									modalContent.prepayment
+										? '#EEEEEE'
+										: '#E8E8E8'
+								}`
+							}}
+						>
+							<h4>Estimated Wait</h4>
+							<h4 style={{ marginLeft: 'auto' }}>~ 1 minute</h4>
+							{/* <h4 style={{ marginLeft: 'auto' }}>~ 1 minute remaining</h4> */}
+						</Grid>
+					</React.Fragment>
+				)}
 			</Grid>
 			<Grid
 				container
@@ -291,32 +341,149 @@ export default function TransactionCard(props: TxCardProps) {
 				justify="center"
 				alignItems="center"
 				style={{
-					width: '300px'
+					marginTop: '24px',
+					width: '300px',
+					marginBottom: '16px'
+					// borderStyle: 'solid',
+					// borderWidth: '2px'
 				}}
 			>
-				<Grid
-					container
-					item
-					sm={12}
-					xs={12}
-					direction="row"
-					justify="center"
-					alignItems="center"
-					style={{
-						background: 'FFFFFF',
-						marginTop: '24px'
-					}}
-				>
-					<Button
+				{TxState.postCreate && (
+					<React.Fragment>
+						<Grid
+							container
+							item
+							sm={12}
+							xs={12}
+							direction="row"
+							justify="center"
+							alignItems="center"
+							style={{
+								background: '#000000',
+								color: 'white',
+								margin: '0px',
+								padding: '16px',
+								textAlign: 'center'
+							}}
+						>
+							<h3 style={{ margin: '0px' }}>
+								What will happen now?
+							</h3>
+						</Grid>
+						<Grid
+							container
+							item
+							sm={12}
+							xs={12}
+							direction="row"
+							justify="center"
+							alignItems="center"
+							style={{
+								background: 'FFFFFF',
+								textAlign: 'center',
+								padding: '16px',
+								borderStyle: 'solid',
+								borderWidth: '2px'
+							}}
+						>
+							<h4 style={{ margin: '0px' }}>
+								If the Price you chose is triggered, gelato will
+								Trade on Kyber on your behalf
+							</h4>
+						</Grid>
+						<Grid
+							container
+							item
+							sm={12}
+							xs={12}
+							direction="row"
+							justify="center"
+							alignItems="center"
+							style={{
+								background: 'FFFFFF',
+								marginTop: '24px'
+							}}
+						>
+							<Button
+								style={{
+									width: '100%',
+									borderStyle: 'solid',
+									borderWidth: '2px'
+								}}
+							>
+								Share your Configuration
+							</Button>
+						</Grid>
+						<Grid
+							container
+							item
+							sm={12}
+							xs={12}
+							direction="row"
+							justify="center"
+							alignItems="center"
+							style={{
+								background: 'FFFFFF',
+								margin: '0px'
+							}}
+						>
+							<h3
+								style={{
+									margin: '8px'
+								}}
+							>
+								or
+							</h3>
+						</Grid>
+						<Grid
+							container
+							item
+							sm={12}
+							xs={12}
+							direction="row"
+							justify="center"
+							alignItems="center"
+							style={{
+								background: 'FFFFFF'
+							}}
+						>
+							<Button
+								style={{
+									width: '100%',
+									borderStyle: 'solid',
+									borderWidth: '2px'
+								}}
+							>
+								View Frozen Transactions
+							</Button>
+						</Grid>
+					</React.Fragment>
+				)}
+				{!TxState.postCreate && (
+					<Grid
+						container
+						item
+						sm={12}
+						xs={12}
+						direction="row"
+						justify="center"
+						alignItems="center"
 						style={{
-							width: '100%',
-							borderStyle: 'solid',
-							borderWidth: '2px'
+							background: 'FFFFFF',
+							marginTop: '24px'
 						}}
 					>
-						Cancel
-					</Button>
-				</Grid>
+						<Button
+							style={{
+								width: '100%',
+								borderStyle: 'solid',
+								borderWidth: '2px'
+							}}
+						>
+							Cancel
+						</Button>
+					</Grid>
+				)}
 			</Grid>
 		</div>
 	);

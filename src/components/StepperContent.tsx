@@ -223,5 +223,9 @@ export default function StepperContent(props: StepperContentProps) {
 				return 'Unknown stepIndex';
 		}
 	}
-	return <div>{getStepContent(activeStep, classes)}</div>;
+	return (
+		<div style={{ marginBottom: '24px' }}>
+			{getStepContent(activeStep, classes)}
+		</div>
+	);
 }
