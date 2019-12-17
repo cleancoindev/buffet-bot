@@ -6,7 +6,11 @@ import { InputType, ConditionOrAction } from '../constants/interfaces';
 import DateAndTimePicker from './Inputs/DatePicker';
 import TokenSelect from './Inputs/TokenSelect';
 import { useIcedTxContext } from '../state/GlobalState';
-import { TOKEN_LIST } from '../constants/constants';
+import {
+	TOKEN_LIST,
+	UPDATE_CONDITION_INPUTS,
+	UPDATE_ACTION_INPUTS
+} from '../constants/constants';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -46,7 +50,25 @@ export default function LayoutTextFields(props: InputProps) {
 		disabled
 	} = props;
 	// Context
-	const { updateUserInput, icedTxState } = useIcedTxContext();
+	const { dispatch, icedTxState } = useIcedTxContext();
+
+	// updateUser Input
+	const updateConditionInputs = (index: number, value: any) => {
+		// Default Index => @DEV Restructure Dispatcher later
+		dispatch({ type: UPDATE_CONDITION_INPUTS, index, value });
+	};
+
+	const updateActionInputs = (index: number, value: any) => {
+		// Default Index => @DEV Restructure Dispatcher later
+		dispatch({ type: UPDATE_ACTION_INPUTS, index, value });
+	};
+
+	// Based on whether the input is a condition or action, select a different dispatch function
+	let updateUserInput: Function;
+	updateUserInput =
+		conditionOrAction === ConditionOrAction.Condition
+			? updateConditionInputs
+			: updateActionInputs;
 
 	// CSS Classes
 	const classes = useStyles();
@@ -57,7 +79,7 @@ export default function LayoutTextFields(props: InputProps) {
 	const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
 		const newValue = event.target.value as number;
 		// Update global state
-		updateUserInput(index, newValue, conditionOrAction);
+		updateUserInput(index, newValue);
 	};
 
 	// Func should call getValue() in smart contract and return the respective value in a disabled Text field
@@ -69,7 +91,7 @@ export default function LayoutTextFields(props: InputProps) {
 
 	function callGetValueAndSetState() {
 		const returnValue = callGetValue();
-		updateUserInput(index, returnValue, conditionOrAction);
+		updateUserInput(index, returnValue);
 		return returnValue;
 	}
 
@@ -81,9 +103,9 @@ export default function LayoutTextFields(props: InputProps) {
 					icedTxState.condition.userInputs[3] >
 					icedTxState.condition.userInputs[5]
 				) {
-					updateUserInput(index, true, conditionOrAction);
+					updateUserInput(index, true);
 				} else {
-					updateUserInput(index, false, conditionOrAction);
+					updateUserInput(index, false);
 				}
 		}
 	}

@@ -484,6 +484,30 @@ export default function TransactionCard(props: TxCardProps) {
 						</Button>
 					</Grid>
 				)}
+				<Grid
+					container
+					item
+					sm={12}
+					xs={12}
+					direction="row"
+					onClick={() => console.log('MetamaskClick')}
+					justify="center"
+					alignItems="center"
+					style={{
+						background: 'FFFFFF',
+						marginTop: '24px'
+					}}
+				>
+					<Button
+						style={{
+							width: '100%',
+							borderStyle: 'solid',
+							borderWidth: '2px'
+						}}
+					>
+						Dummy
+					</Button>
+				</Grid>
 			</Grid>
 		</div>
 	);

@@ -14,6 +14,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { useIcedTxContext } from '../state/GlobalState';
 import { StepperProps, ConditionOrAction } from '../constants/interfaces';
 import { findCondition, findAction } from '../helpers/helpers';
+import { SELECT_CONDITION, SELECT_ACTION } from '../constants/constants';
 
 interface Params {
 	conditionId: string;
@@ -30,7 +31,7 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 	const {
 		params: { conditionId, actionId }
 	} = match;
-	const { icedTxState, updateIcedTx } = useIcedTxContext();
+	const { icedTxState, dispatch } = useIcedTxContext();
 
 	// Returns true if wrong params were inputted in URL
 	const [notFound, setNotFound] = useState(false);
@@ -48,14 +49,22 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 				// Render IcedTx not found
 				setNotFound(true);
 			} else {
-				updateIcedTx(
-					ConditionOrAction.Condition,
-					paramCondition.id.toString()
-				);
-				updateIcedTx(
-					ConditionOrAction.Action,
-					paramAction.id.toString()
-				);
+				// updateIcedTx(
+				// 	ConditionOrAction.Condition,
+				// 	paramCondition.id.toString()
+				// );
+				dispatch({
+					type: SELECT_CONDITION,
+					id: paramCondition.id.toString()
+				});
+				// updateIcedTx(
+				// 	ConditionOrAction.Action,
+				// 	paramAction.id.toString()
+				// );
+				dispatch({
+					type: SELECT_ACTION,
+					id: paramAction.id.toString()
+				});
 			}
 		}
 	}, []);
@@ -117,7 +126,9 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 					</React.Fragment>
 				)}
 
-				{notFound && <h1> Please go back to homepage</h1>}
+				{notFound && (
+					<h1> 404 - Page not found. Please return to homepage</h1>
+				)}
 			</Grid>
 		</React.Fragment>
 	);

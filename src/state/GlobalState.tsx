@@ -10,12 +10,7 @@ import React, {
 import { IcedTx, ConditionOrAction, Action } from '../constants/interfaces';
 
 // import reducer function
-import {
-	icedTxReducer,
-	UPDATE_ACTION_OR_CONDITION,
-	ADD_USER_INPUT,
-	RESET_ACTION_CONDITION_TO_DEFAULT
-} from './Reducers';
+import { icedTxReducer } from './Reducers';
 import { DEFAULT_DATA } from '../constants/constants';
 
 export const DEFAULT_ICED_TX = {
@@ -31,13 +26,14 @@ interface InitContextProps {
 // Create Context
 const IcedTxContext = createContext({
 	icedTxState: DEFAULT_ICED_TX,
-	updateIcedTx: (conditionOrAction: ConditionOrAction, id: string) => {},
-	updateUserInput: (
-		index: number,
-		value: any,
-		conditionOrAction: ConditionOrAction
-	) => {},
-	resetIcedTxInput: (conditionOrAction: ConditionOrAction) => {}
+	dispatch: (action: Action) => {}
+	// updateIcedTx: (conditionOrAction: ConditionOrAction, id: string) => {},
+	// updateUserInput: (
+	// 	index: number,
+	// 	value: any,
+	// 	conditionOrAction: ConditionOrAction
+	// ) => {},
+	// resetIcedTxInput: (conditionOrAction: ConditionOrAction) => {}
 });
 
 export const useIcedTxContext = () => useContext(IcedTxContext);
@@ -53,6 +49,7 @@ const GlobalStateProvider: React.FunctionComponent = ({ children }) => {
 	//     action: DEFAULT_DATA
 	// })
 
+	/*
 	const updateIcedTx = (conditionOrAction: ConditionOrAction, id: string) => {
 		// Update Logic
 		// setTimeout( () => {
@@ -94,13 +91,15 @@ const GlobalStateProvider: React.FunctionComponent = ({ children }) => {
 		});
 	};
 
+	*/
 	return (
 		<IcedTxContext.Provider
 			value={{
 				icedTxState: icedTxState,
-				updateIcedTx: updateIcedTx,
-				updateUserInput: updateUserInput,
-				resetIcedTxInput: resetIcedTxInput
+				dispatch: dispatch
+				// updateIcedTx: updateIcedTx,
+				// updateUserInput: updateUserInput,
+				// resetIcedTxInput: resetIcedTxInput
 			}}
 		>
 			{children}

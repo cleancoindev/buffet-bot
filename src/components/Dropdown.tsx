@@ -6,7 +6,9 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import { Hash } from 'crypto';
-import { WhitelistData } from '../constants/interfaces';
+import { WhitelistData, ConditionOrAction } from '../constants/interfaces';
+import { useIcedTxContext } from '../state/GlobalState';
+import { SELECT_CONDITION, SELECT_ACTION } from '../constants/constants';
 
 const useStyles = makeStyles(theme => ({
 	formControl: {
@@ -20,29 +22,36 @@ const useStyles = makeStyles(theme => ({
 
 interface AppDropdownProps {
 	data: Array<WhitelistData>;
-	updateTypes: Function;
-	selectedMetric: number;
+	conditionOrAction: number;
 	userSelection: Object;
 	app: boolean;
 }
 
 export default function AppDropdown(props: AppDropdownProps) {
+	const { dispatch } = useIcedTxContext();
+
+	// Dispatch Reducer
+	const selectCondition = (id: string) => {
+		dispatch({ type: SELECT_CONDITION, id: id });
+	};
+	const selectAction = (id: string) => {
+		dispatch({ type: SELECT_ACTION, id: id });
+	};
+
 	const classes = useStyles();
 	const [state, setState] = React.useState('');
-	const { app, data, updateTypes, selectedMetric, userSelection } = props;
-
-	enum Part {
-		Condition,
-		Action
-	}
+	const { app, data, conditionOrAction, userSelection } = props;
 
 	const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+		// @DEV potential BUG
 		setState(`${event.target.value}`);
-		// console.log(`Name: ${selectedMetric}`)
-		// console.log(`Value: ${event.target.value}`)
-		updateTypes(selectedMetric, event.target.value);
-		// updateDataSelection
-		// updateTypes({...userSelection, [selectedMetric]: event.target.value})
+
+		// updateTypes(conditionOrAction, event.target.value);
+
+		// IF condition, update condition, else update action
+		conditionOrAction === ConditionOrAction.Condition
+			? selectCondition(`${event.target.value}`)
+			: selectAction(`${event.target.value}`);
 	};
 
 	function getApps(appList: Array<WhitelistData>) {

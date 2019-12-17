@@ -26,10 +26,12 @@ import {
 	WhitelistData,
 	UserSelection
 } from '../constants/interfaces';
+import { RESET_CONDITION, RESET_ACTION } from '../constants/constants';
 
 export default function AppSelection() {
 	// Import global state
-	const { updateIcedTx, icedTxState, resetIcedTxInput } = useIcedTxContext();
+	//const { updateIcedTx, icedTxState, resetIcedTxInput } = useIcedTxContext();
+	const { dispatch, icedTxState } = useIcedTxContext();
 
 	// Local State
 	const [userSelection, setUserSelection] = React.useState<UserSelection>({
@@ -39,8 +41,9 @@ export default function AppSelection() {
 		actionAppFunctions: []
 	});
 
-	console.log(userSelection);
-	console.log(icedTxState);
+	const resetCondition = () => {
+		dispatch({ type: RESET_CONDITION });
+	};
 
 	function updateTypes(
 		selectedConditionOrAction: ConditionOrAction,
@@ -56,7 +59,9 @@ export default function AppSelection() {
 			});
 			conditionOrAction.app = 'conditionApp';
 			conditionOrAction.type = 'conditionAppFunctions';
-			resetIcedTxInput(ConditionOrAction.Condition);
+			// resetIcedTxInput(ConditionOrAction.Condition);
+			// RESET THE CONDITION to SELECT...
+			dispatch({ type: RESET_CONDITION });
 		} else if (selectedConditionOrAction === ConditionOrAction.Action) {
 			ATYPES.forEach(type => {
 				if (type.app === app) {
@@ -65,7 +70,9 @@ export default function AppSelection() {
 			});
 			conditionOrAction.app = 'actionApp';
 			conditionOrAction.type = 'actionAppFunctions';
-			resetIcedTxInput(ConditionOrAction.Action);
+			// resetIcedTxInput(ConditionOrAction.Action);
+			// RESET THE CONDITION to SELECT...
+			dispatch({ type: RESET_ACTION });
 		}
 		setUserSelection({
 			...userSelection,
@@ -105,8 +112,7 @@ export default function AppSelection() {
 						<Dropdown
 							app
 							userSelection={userSelection}
-							selectedMetric={ConditionOrAction.Condition}
-							updateTypes={updateTypes}
+							conditionOrAction={ConditionOrAction.Condition}
 							data={CTYPES}
 						/>
 					</Grid>
@@ -153,8 +159,7 @@ export default function AppSelection() {
 						<Dropdown
 							app
 							userSelection={userSelection}
-							selectedMetric={ConditionOrAction.Action}
-							updateTypes={updateTypes}
+							conditionOrAction={ConditionOrAction.Action}
 							data={ATYPES}
 						/>
 					</Grid>
@@ -197,8 +202,9 @@ export default function AppSelection() {
 								<Dropdown
 									app={false}
 									userSelection={userSelection}
-									selectedMetric={ConditionOrAction.Condition}
-									updateTypes={updateIcedTx}
+									conditionOrAction={
+										ConditionOrAction.Condition
+									}
 									data={userSelection.conditionAppFunctions}
 								/>
 							</Grid>
@@ -247,8 +253,7 @@ export default function AppSelection() {
 								<Dropdown
 									app={false}
 									userSelection={userSelection}
-									selectedMetric={ConditionOrAction.Action}
-									updateTypes={updateIcedTx}
+									conditionOrAction={ConditionOrAction.Action}
 									data={userSelection.actionAppFunctions}
 								/>
 							</Grid>

@@ -7,6 +7,7 @@ import { useIcedTxContext } from '../../state/GlobalState';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import { ConditionOrAction } from '../../constants/interfaces';
+import { UPDATE_CONDITION_INPUTS } from '../../constants/constants';
 
 interface InputProps {
 	// inputType: InputType;
@@ -21,7 +22,7 @@ export default function DateAndTimePicker(props: InputProps) {
 	// @DEV TO DO:
 	// SET MIN AND MAX DATE, see api https://material-ui-pickers.dev/api/DateTimePicker
 
-	const { updateUserInput, icedTxState } = useIcedTxContext();
+	const { dispatch, icedTxState } = useIcedTxContext();
 	console.log(icedTxState);
 	// Set state with either NOW or global state
 	let defaultDate;
@@ -35,11 +36,17 @@ export default function DateAndTimePicker(props: InputProps) {
 
 	React.useEffect(() => {
 		// Set state wih default token
-		updateUserInput(
+		dispatch({
+			type: UPDATE_CONDITION_INPUTS,
 			index,
-			dateToTimestamp(selectedDate),
-			ConditionOrAction.Condition
-		);
+			value: dateToTimestamp(selectedDate)
+		});
+
+		// updateUserInput(
+		// 	index,
+		// 	dateToTimestamp(selectedDate),
+		// 	ConditionOrAction.Condition
+		// );
 	}, []);
 
 	function handleChange(date: MaterialUiPickersDate) {
@@ -49,11 +56,17 @@ export default function DateAndTimePicker(props: InputProps) {
 			const newDate = new Date(stringDate);
 
 			// index: number, value: number, conditionOrAction
-			updateUserInput(
+			// updateUserInput(
+			// 	index,
+			// 	dateToTimestamp(newDate),
+			// 	ConditionOrAction.Condition
+			// );
+			dispatch({
+				type: UPDATE_CONDITION_INPUTS,
 				index,
-				dateToTimestamp(newDate),
-				ConditionOrAction.Condition
-			);
+				value: dateToTimestamp(newDate)
+			});
+
 			handleDateChange(newDate);
 		}
 	}

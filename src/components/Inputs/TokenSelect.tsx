@@ -8,7 +8,11 @@ import Button from '@material-ui/core/Button';
 
 import { useIcedTxContext } from '../../state/GlobalState';
 import { ConditionOrAction, Token } from '../../constants/interfaces';
-import { TOKEN_LIST } from '../../constants/constants';
+import {
+	TOKEN_LIST,
+	UPDATE_CONDITION_INPUTS,
+	UPDATE_ACTION_INPUTS
+} from '../../constants/constants';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -48,7 +52,25 @@ const findToken = (address: string) => {
 
 export default function TokenSelect(props: TokenSelectProps) {
 	const { defaultToken, label, index, conditionOrAction, disabled } = props;
-	const { updateUserInput, icedTxState } = useIcedTxContext();
+	const { dispatch, icedTxState } = useIcedTxContext();
+
+	// updateUser Input
+	const updateConditionInputs = (index: number, value: any) => {
+		// Default Index => @DEV Restructure Dispatcher later
+		dispatch({ type: UPDATE_CONDITION_INPUTS, index, value });
+	};
+
+	const updateActionInputs = (index: number, value: any) => {
+		// Default Index => @DEV Restructure Dispatcher later
+		dispatch({ type: UPDATE_ACTION_INPUTS, index, value });
+	};
+
+	// Based on whether the input is a condition or action, select a different dispatch function
+	let updateUserInput: Function;
+	updateUserInput =
+		conditionOrAction === ConditionOrAction.Condition
+			? updateConditionInputs
+			: updateActionInputs;
 
 	const classes = useStyles();
 	// @DEV Add a condition that always two different tokens will be shown by default
@@ -67,7 +89,7 @@ export default function TokenSelect(props: TokenSelectProps) {
 	React.useEffect(() => {
 		setLabelWidth(inputLabel.current!.offsetWidth);
 		// Set state wih default token
-		updateUserInput(index, token.address, conditionOrAction);
+		updateUserInput(index, token.address);
 	}, []);
 
 	const handleChange = (event: React.ChangeEvent<{ value: any }>) => {
@@ -80,7 +102,7 @@ export default function TokenSelect(props: TokenSelectProps) {
 		// Update local state
 		setToken(tokenObject);
 		// Update global state
-		updateUserInput(index, tokenObject.address, conditionOrAction);
+		updateUserInput(index, tokenObject.address);
 	};
 
 	const handleClose = () => {

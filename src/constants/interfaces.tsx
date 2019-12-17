@@ -1,3 +1,12 @@
+import {
+	SELECT_CONDITION,
+	SELECT_ACTION,
+	UPDATE_CONDITION_INPUTS,
+	RESET_CONDITION,
+	RESET_ACTION,
+	UPDATE_ACTION_INPUTS
+} from './constants';
+
 export interface WhitelistData {
 	id: number;
 	app: string;
@@ -19,14 +28,6 @@ export interface UserSelection {
 export interface IcedTx {
 	condition: WhitelistData;
 	action: WhitelistData;
-}
-
-export interface Action {
-	type: string;
-	conditionOrAction: ConditionOrAction;
-	id: string;
-	index: number;
-	value: string | number;
 }
 
 export enum ConditionOrAction {
@@ -87,3 +88,61 @@ export enum TxState {
 	Cancelled,
 	InsufficientBalance
 }
+
+// Action interfaces
+
+interface SelectAction {
+	// UPDATE_ACTION
+	type: typeof SELECT_ACTION;
+	// Id of Action
+	id: string;
+}
+
+interface SelectCondition {
+	// UPDATE_ACTION
+	type: typeof SELECT_CONDITION;
+	// Id of Action
+	id: string;
+}
+
+interface UpdateConditionInputs {
+	// UPDATE_ACTION
+	type: typeof UPDATE_CONDITION_INPUTS;
+	// Id of Action
+	index: number;
+	value: any;
+}
+
+interface UpdateActionInputs {
+	// UPDATE_ACTION
+	type: typeof UPDATE_ACTION_INPUTS;
+	// Id of Action
+	index: number;
+	value: any;
+}
+
+interface ResetCondition {
+	// UPDATE_ACTION
+	type: typeof RESET_CONDITION;
+}
+
+interface ResetAction {
+	// UPDATE_ACTION
+	type: typeof RESET_ACTION;
+}
+
+// export interface Action {
+// 	type: string;
+// 	conditionOrAction: ConditionOrAction;
+// 	id: string;
+// 	index: number;
+// 	value: string | number;
+// }
+
+export type Action =
+	| ResetCondition
+	| ResetAction
+	| UpdateActionInputs
+	| UpdateConditionInputs
+	| SelectCondition
+	| SelectAction;
