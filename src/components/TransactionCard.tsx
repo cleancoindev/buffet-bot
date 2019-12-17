@@ -3,6 +3,7 @@ import { Grid, CircularProgress, Button } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { TxState } from '../constants/interfaces';
 import ProgressBar from './ProgressBar';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -26,7 +27,8 @@ const useStyles = makeStyles((theme: Theme) =>
 enum Progress {
 	awaitingConfirmation,
 	awaitingeMining,
-	finished
+	finished,
+	cancelled
 }
 
 interface ModalContent {
@@ -42,9 +44,11 @@ interface TxCardProps {
 
 /*
 export enum TxState {
-	preApprove,
+    preApprove,
+    waitingApprove,
 	postApprove,
-	preCreate,
+    preCreate,
+    waitingCreate,
 	postCreate,
 	Cancelled,
 	InsufficientBalance
@@ -64,11 +68,46 @@ export default function TransactionCard(props: TxCardProps) {
 					progressText: `Waiting for Metamask confirmation`,
 					prepayment: false
 				};
-			case TxState.postApprove:
+			case TxState.waitingApprove:
 				return {
 					title: `Waiting for approval Tx to be mined`,
 					progress: Progress.awaitingeMining,
 					progressText: `Waiting for transaction to be mined`,
+					prepayment: false
+				};
+			case TxState.postApprove:
+				return {
+					title: `Successfully approved DAI`,
+					progress: Progress.finished,
+					progressText: `Transaction mined`,
+					prepayment: false
+				};
+			case TxState.preCreate:
+				return {
+					title: `Create IcedTx`,
+					progress: Progress.awaitingConfirmation,
+					progressText: `Waiting for Metamask confirmation`,
+					prepayment: true
+				};
+			case TxState.waitingCreate:
+				return {
+					title: `Waiting for Create Tx to be mined`,
+					progress: Progress.awaitingeMining,
+					progressText: `Waiting for transaction to be mined`,
+					prepayment: true
+				};
+			case TxState.postCreate:
+				return {
+					title: `Successfully created IcedTx`,
+					progress: Progress.finished,
+					progressText: `Transaction mined`,
+					prepayment: true
+				};
+			case TxState.Cancelled:
+				return {
+					title: `Transaction Cancelled`,
+					progress: Progress.cancelled,
+					progressText: `Tx cancelled`,
 					prepayment: false
 				};
 			default:
@@ -115,6 +154,27 @@ export default function TransactionCard(props: TxCardProps) {
 				>
 					<h3>{modalContent.title}</h3>
 				</Grid>
+				{modalContent.progress === Progress.awaitingeMining && (
+					<Grid
+						className={classes.gridItem}
+						container
+						item
+						sm={12}
+						xs={12}
+						direction="row"
+						justify="flex-start"
+						alignItems="center"
+						style={{
+							background: '#FFFFFF',
+							paddingTop: '8px',
+							paddingBottom: '8px'
+							// borderStyle: 'solid',
+							// borderWidth: '2px'
+						}}
+					>
+						<ProgressBar />
+					</Grid>
+				)}
 				<Grid
 					className={classes.gridItem}
 					container
@@ -132,29 +192,20 @@ export default function TransactionCard(props: TxCardProps) {
 						// borderWidth: '2px'
 					}}
 				>
-					<ProgressBar />
-				</Grid>
-				<Grid
-					className={classes.gridItem}
-					container
-					item
-					sm={12}
-					xs={12}
-					direction="row"
-					justify="flex-start"
-					alignItems="center"
-					style={{
-						background: '#FFFFFF',
-						paddingTop: '8px',
-						paddingBottom: '8px'
-						// borderStyle: 'solid',
-						// borderWidth: '2px'
-					}}
-				>
-					<CircularProgress
-						size={32}
-						style={{ marginRight: '8px' }}
-					/>
+					{modalContent.progress ===
+						Progress.awaitingConfirmation && (
+						<CircularProgress
+							size={32}
+							style={{ marginRight: '8px' }}
+						/>
+					)}
+					{modalContent.progress === Progress.finished && (
+						<CheckCircleIcon
+							color={'primary'}
+							fontSize={'large'}
+							style={{ marginRight: '8px' }}
+						/>
+					)}
 					<h4>{modalContent.progressText}</h4>
 				</Grid>
 				<Grid

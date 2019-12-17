@@ -115,13 +115,13 @@ export default function StepperParent(props: StepperProps) {
 					</div>
 				)}
 			</div>
-			<TransactionModal
+			{/* <TransactionModal
 				txState={txState}
 				title={'Confirm in Metamask'}
 				modalOpen={modalOpen}
 				modalClickOpen={modalClickOpen}
 				modalClose={modalClose}
-			></TransactionModal>
+			></TransactionModal> */}
 		</div>
 	);
 }

@@ -207,7 +207,7 @@ export default function StepperContent(props: StepperContentProps) {
 									disabled={true}
 								></InputField>
 							))}
-							<Divider
+							{/* <Divider
 								style={{
 									background: 'white',
 									width: '100%',
@@ -215,7 +215,7 @@ export default function StepperContent(props: StepperContentProps) {
 								}}
 							/>
 							<h1>Required prepayment:</h1>
-							<h2>0.06ETH ($1.08)</h2>
+							<h2>0.06ETH ($1.08)</h2> */}
 						</Grid>
 					</Grid>
 				);
