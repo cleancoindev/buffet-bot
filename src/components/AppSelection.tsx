@@ -32,6 +32,7 @@ export default function AppSelection() {
 	// Import global state
 	//const { updateIcedTx, icedTxState, resetIcedTxInput } = useIcedTxContext();
 	const { dispatch, icedTxState } = useIcedTxContext();
+	console.log(icedTxState);
 
 	// Local State
 	const [userSelection, setUserSelection] = React.useState<UserSelection>({
@@ -41,14 +42,13 @@ export default function AppSelection() {
 		actionAppFunctions: []
 	});
 
-	const resetCondition = () => {
-		dispatch({ type: RESET_CONDITION });
-	};
+	// console.log(userSelection);
 
-	function updateTypes(
+	function updateConditionOrAction(
 		selectedConditionOrAction: ConditionOrAction,
 		app: string
 	) {
+		// console.log(app);
 		const result: Array<WhitelistData> = [];
 		const conditionOrAction = { app: '', type: '' };
 		if (selectedConditionOrAction === ConditionOrAction.Condition) {
@@ -111,9 +111,10 @@ export default function AppSelection() {
 						</p>
 						<Dropdown
 							app
-							userSelection={userSelection}
+							// userSelection={userSelection}
 							conditionOrAction={ConditionOrAction.Condition}
 							data={CTYPES}
+							updateConditionOrAction={updateConditionOrAction}
 						/>
 					</Grid>
 					{/* <Grid container item justify="flex-start" style={{background: "yellow"}}>
@@ -154,13 +155,14 @@ export default function AppSelection() {
 						style={{ background: 'yellow' }}
 					>
 						<p style={{ marginLeft: '10px', color: 'black' }}>
-							Send Transactions to this dApp
+							Send Transaction to this dApp
 						</p>
 						<Dropdown
 							app
-							userSelection={userSelection}
+							// userSelection={userSelection}
 							conditionOrAction={ConditionOrAction.Action}
 							data={ATYPES}
+							updateConditionOrAction={updateConditionOrAction}
 						/>
 					</Grid>
 				</Grid>
@@ -201,11 +203,14 @@ export default function AppSelection() {
 								</p>
 								<Dropdown
 									app={false}
-									userSelection={userSelection}
+									// userSelection={userSelection}
 									conditionOrAction={
 										ConditionOrAction.Condition
 									}
 									data={userSelection.conditionAppFunctions}
+									updateConditionOrAction={
+										updateConditionOrAction
+									}
 								/>
 							</Grid>
 						</Grid>
@@ -252,9 +257,12 @@ export default function AppSelection() {
 								</p>
 								<Dropdown
 									app={false}
-									userSelection={userSelection}
+									// userSelection={userSelection}
 									conditionOrAction={ConditionOrAction.Action}
 									data={userSelection.actionAppFunctions}
+									updateConditionOrAction={
+										updateConditionOrAction
+									}
 								/>
 							</Grid>
 						</Grid>

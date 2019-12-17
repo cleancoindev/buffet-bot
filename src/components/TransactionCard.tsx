@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Grid, CircularProgress, Button } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { TxState } from '../constants/interfaces';
 import ProgressBar from './ProgressBar';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import LinkIcon from '@material-ui/icons/Link';
+import { useIcedTxContext } from '../state/GlobalState';
+import { UPDATE_TX_STATE } from '../constants/constants';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -41,6 +43,9 @@ interface ModalContent {
 
 interface TxCardProps {
 	txState: TxState;
+	modalOpen: boolean;
+	modalClickOpen: () => void;
+	modalClose: () => void;
 }
 
 /*
@@ -58,7 +63,11 @@ export enum TxState {
 
 export default function TransactionCard(props: TxCardProps) {
 	const classes = useStyles();
-	const { txState } = props;
+	const { txState, modalOpen, modalClickOpen, modalClose } = props;
+	console.log(txState);
+
+	// Get icedTx context
+	const { dispatch } = useIcedTxContext();
 
 	function returnModalContent(txState: TxState): ModalContent {
 		switch (txState) {
@@ -116,7 +125,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			default:
 				return {
-					title: `Approve gelato to move your DAI`,
+					title: `DEFAULT VALUE`,
 					progress: Progress.awaitingConfirmation,
 					progressText: `Waiting for Metamask confirmation`,
 					prepayment: false
@@ -124,10 +133,24 @@ export default function TransactionCard(props: TxCardProps) {
 		}
 	}
 
+	const incrementTxState = () => {
+		modalClose();
+		dispatch({
+			type: UPDATE_TX_STATE,
+			txState: txState + 1
+		});
+		modalClickOpen();
+	};
+
 	// Set default modal Content through txState (are we at approval, insufficient balance, or creation phase transaction wise)
 	const [modalContent, setModalContent] = React.useState<ModalContent>(
 		returnModalContent(txState)
 	);
+
+	// On every render, update the modals content
+	useEffect(() => {
+		setModalContent(returnModalContent(txState));
+	}, [txState]);
 
 	return (
 		<div>
@@ -348,7 +371,7 @@ export default function TransactionCard(props: TxCardProps) {
 					// borderWidth: '2px'
 				}}
 			>
-				{TxState.postCreate && (
+				{txState === TxState.postCreate && (
 					<React.Fragment>
 						<Grid
 							container
@@ -490,7 +513,6 @@ export default function TransactionCard(props: TxCardProps) {
 					sm={12}
 					xs={12}
 					direction="row"
-					onClick={() => console.log('MetamaskClick')}
 					justify="center"
 					alignItems="center"
 					style={{
@@ -499,6 +521,7 @@ export default function TransactionCard(props: TxCardProps) {
 					}}
 				>
 					<Button
+						onClick={incrementTxState}
 						style={{
 							width: '100%',
 							borderStyle: 'solid',

@@ -4,7 +4,8 @@ import {
 	UPDATE_CONDITION_INPUTS,
 	RESET_CONDITION,
 	RESET_ACTION,
-	UPDATE_ACTION_INPUTS
+	UPDATE_ACTION_INPUTS,
+	UPDATE_TX_STATE
 } from './constants';
 
 export interface WhitelistData {
@@ -28,6 +29,7 @@ export interface UserSelection {
 export interface IcedTx {
 	condition: WhitelistData;
 	action: WhitelistData;
+	txState: TxState;
 }
 
 export enum ConditionOrAction {
@@ -64,6 +66,9 @@ export interface StepperProps {
 	handleNext: (event: React.MouseEvent<HTMLButtonElement>) => void;
 	handleBack: (event: React.MouseEvent<HTMLButtonElement>) => void;
 	handleReset: (event: React.MouseEvent<HTMLButtonElement>) => void;
+	modalOpen: boolean;
+	modalClickOpen: (event: React.MouseEvent<HTMLButtonElement>) => void;
+	modalClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
 	steps: Array<string>;
 	icedTxState: IcedTx;
 }
@@ -79,14 +84,14 @@ export type KyberToken = Array<Token>;
 
 // Transaction Statea
 export enum TxState {
-	preApprove,
-	waitingApprove,
-	postApprove,
-	preCreate,
-	waitingCreate,
-	postCreate,
-	Cancelled,
-	InsufficientBalance
+	preApprove = 0,
+	preCreate = 1,
+	waitingCreate = 2,
+	postCreate = 3,
+	Cancelled = 4,
+	InsufficientBalance = 5
+	// waitingApprove,
+	// postApprove,
 }
 
 // Action interfaces
@@ -131,6 +136,11 @@ interface ResetAction {
 	type: typeof RESET_ACTION;
 }
 
+interface UpdateTxState {
+	type: typeof UPDATE_TX_STATE;
+	txState: TxState;
+}
+
 // export interface Action {
 // 	type: string;
 // 	conditionOrAction: ConditionOrAction;
@@ -145,4 +155,5 @@ export type Action =
 	| UpdateActionInputs
 	| UpdateConditionInputs
 	| SelectCondition
-	| SelectAction;
+	| SelectAction
+	| UpdateTxState;

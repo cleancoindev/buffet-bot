@@ -9,6 +9,7 @@ import { Hash } from 'crypto';
 import { WhitelistData, ConditionOrAction } from '../constants/interfaces';
 import { useIcedTxContext } from '../state/GlobalState';
 import { SELECT_CONDITION, SELECT_ACTION } from '../constants/constants';
+import { findCondition, findAction } from '../helpers/helpers';
 
 const useStyles = makeStyles(theme => ({
 	formControl: {
@@ -23,35 +24,45 @@ const useStyles = makeStyles(theme => ({
 interface AppDropdownProps {
 	data: Array<WhitelistData>;
 	conditionOrAction: number;
-	userSelection: Object;
 	app: boolean;
+	updateConditionOrAction: Function;
 }
 
 export default function AppDropdown(props: AppDropdownProps) {
+	const { app, data, conditionOrAction, updateConditionOrAction } = props;
 	const { dispatch } = useIcedTxContext();
+	const classes = useStyles();
+	const [state, setState] = React.useState('');
+	// console.log(state);
+	// console.log(data);
 
 	// Dispatch Reducer
 	const selectCondition = (id: string) => {
-		dispatch({ type: SELECT_CONDITION, id: id });
+		updateConditionOrAction(ConditionOrAction.Condition, id);
 	};
 	const selectAction = (id: string) => {
-		dispatch({ type: SELECT_ACTION, id: id });
+		updateConditionOrAction(ConditionOrAction.Action, id);
 	};
-
-	const classes = useStyles();
-	const [state, setState] = React.useState('');
-	const { app, data, conditionOrAction, userSelection } = props;
 
 	const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
 		// @DEV potential BUG
-		setState(`${event.target.value}`);
+		if (app) {
+			setState(`${event.target.value}`);
+			// IF condition, update condition, else update action
+			conditionOrAction === ConditionOrAction.Condition
+				? selectCondition(`${event.target.value}`)
+				: selectAction(`${event.target.value}`);
+		} else {
+			const functionId = `${event.target.value}`;
+			if (conditionOrAction === ConditionOrAction.Condition) {
+				dispatch({ type: SELECT_CONDITION, id: functionId });
+			} else {
+				dispatch({ type: SELECT_ACTION, id: functionId });
+			}
+			setState(`${functionId}`);
+		}
 
 		// updateTypes(conditionOrAction, event.target.value);
-
-		// IF condition, update condition, else update action
-		conditionOrAction === ConditionOrAction.Condition
-			? selectCondition(`${event.target.value}`)
-			: selectAction(`${event.target.value}`);
 	};
 
 	function getApps(appList: Array<WhitelistData>) {

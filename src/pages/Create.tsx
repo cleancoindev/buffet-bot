@@ -15,6 +15,7 @@ import { useIcedTxContext } from '../state/GlobalState';
 import { StepperProps, ConditionOrAction } from '../constants/interfaces';
 import { findCondition, findAction } from '../helpers/helpers';
 import { SELECT_CONDITION, SELECT_ACTION } from '../constants/constants';
+import TransactionModal from '../components/Modal';
 
 interface Params {
 	conditionId: string;
@@ -93,6 +94,21 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 		return ['Set Condition', 'Set Action', 'Create IcedTx'];
 	}
 
+	// MODAL STUFF
+
+	// Modal Stuff
+	const [modalOpen, setModalOpen] = React.useState(true);
+
+	const modalClickOpen = () => {
+		setModalOpen(true);
+	};
+
+	const modalClose = () => {
+		setModalOpen(false);
+	};
+
+	// MODAL STUFF END
+
 	return (
 		<React.Fragment>
 			<Grid
@@ -111,6 +127,9 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 								handleNext={handleNext}
 								handleBack={handleBack}
 								handleReset={handleReset}
+								modalOpen={modalOpen}
+								modalClickOpen={modalClickOpen}
+								modalClose={modalClose}
 							></Stepper>
 						</Hidden>
 						<Hidden smUp>
@@ -121,6 +140,9 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 								handleNext={handleNext}
 								handleBack={handleBack}
 								handleReset={handleReset}
+								modalOpen={modalOpen}
+								modalClickOpen={modalClickOpen}
+								modalClose={modalClose}
 							></MobileStepper>
 						</Hidden>
 					</React.Fragment>
@@ -130,6 +152,13 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 					<h1> 404 - Page not found. Please return to homepage</h1>
 				)}
 			</Grid>
+			<TransactionModal
+				txState={icedTxState.txState}
+				title={'Confirm in Metamask'}
+				modalOpen={modalOpen}
+				modalClickOpen={modalClickOpen}
+				modalClose={modalClose}
+			></TransactionModal>
 		</React.Fragment>
 	);
 }

@@ -13,8 +13,8 @@ import { TxState } from '../constants/interfaces';
 interface TransactioModalProps {
 	title: string;
 	modalOpen: boolean;
-	modalClickOpen: (event: React.MouseEvent<HTMLButtonElement>) => void;
-	modalClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
+	modalClose: () => void;
+	modalClickOpen: () => void;
 	txState: TxState;
 }
 
@@ -36,13 +36,18 @@ export default function TransactionModal(props: TransactioModalProps) {
 		<div>
 			<Dialog
 				open={modalOpen}
-				onClose={modalClose}
+				// onClose={modalClose}
 				aria-labelledby="alert-dialog-title"
 				aria-describedby="alert-dialog-description"
 			>
 				{/* <DialogTitle id="alert-dialog-title">{title}</DialogTitle> */}
 				<DialogContent>
-					<TransactionCard txState={txState}></TransactionCard>
+					<TransactionCard
+						modalOpen={modalOpen}
+						modalClose={modalClose}
+						modalClickOpen={modalClickOpen}
+						txState={txState}
+					></TransactionCard>
 				</DialogContent>
 			</Dialog>
 		</div>

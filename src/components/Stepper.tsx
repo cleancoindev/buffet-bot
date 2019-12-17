@@ -42,22 +42,10 @@ export default function StepperParent(props: StepperProps) {
 		activeStep,
 		handleNext,
 		handleBack,
-		handleReset
+		modalOpen,
+		modalClickOpen,
+		modalClose
 	} = props;
-
-	// Modal Stuff
-	const [modalOpen, setModalOpen] = React.useState(true);
-
-	const modalClickOpen = () => {
-		setModalOpen(true);
-	};
-
-	const modalClose = () => {
-		setModalOpen(false);
-	};
-
-	// Set TxState => Do dynamic
-	const txState = TxState.postCreate;
 
 	return (
 		<div className={classes.root}>
@@ -115,13 +103,6 @@ export default function StepperParent(props: StepperProps) {
 					</div>
 				)}
 			</div>
-			<TransactionModal
-				txState={txState}
-				title={'Confirm in Metamask'}
-				modalOpen={modalOpen}
-				modalClickOpen={modalClickOpen}
-				modalClose={modalClose}
-			></TransactionModal>
 		</div>
 	);
 }

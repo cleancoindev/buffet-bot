@@ -7,7 +7,12 @@ import React, {
 	useEffect
 } from 'react';
 // Import Interfaces
-import { IcedTx, ConditionOrAction, Action } from '../constants/interfaces';
+import {
+	IcedTx,
+	ConditionOrAction,
+	Action,
+	TxState
+} from '../constants/interfaces';
 
 // import reducer function
 import { icedTxReducer } from './Reducers';
@@ -15,7 +20,8 @@ import { DEFAULT_DATA } from '../constants/constants';
 
 export const DEFAULT_ICED_TX = {
 	condition: DEFAULT_DATA,
-	action: DEFAULT_DATA
+	action: DEFAULT_DATA,
+	txState: TxState.preApprove
 };
 
 interface InitContextProps {
@@ -27,13 +33,6 @@ interface InitContextProps {
 const IcedTxContext = createContext({
 	icedTxState: DEFAULT_ICED_TX,
 	dispatch: (action: Action) => {}
-	// updateIcedTx: (conditionOrAction: ConditionOrAction, id: string) => {},
-	// updateUserInput: (
-	// 	index: number,
-	// 	value: any,
-	// 	conditionOrAction: ConditionOrAction
-	// ) => {},
-	// resetIcedTxInput: (conditionOrAction: ConditionOrAction) => {}
 });
 
 export const useIcedTxContext = () => useContext(IcedTxContext);
@@ -49,57 +48,11 @@ const GlobalStateProvider: React.FunctionComponent = ({ children }) => {
 	//     action: DEFAULT_DATA
 	// })
 
-	/*
-	const updateIcedTx = (conditionOrAction: ConditionOrAction, id: string) => {
-		// Update Logic
-		// setTimeout( () => {
-
-		// Default Index => @DEV Restructure Dispatcher later
-		const index = 0;
-		const value = 0;
-		dispatch({
-			type: UPDATE_ACTION_OR_CONDITION,
-			conditionOrAction,
-			id,
-			index,
-			value
-		});
-		// }, 700 )
-	};
-
-	const updateUserInput = (
-		index: number,
-		value: any,
-		conditionOrAction: ConditionOrAction
-	) => {
-		// Default Index => @DEV Restructure Dispatcher later
-		const id = '0';
-		dispatch({ type: ADD_USER_INPUT, conditionOrAction, id, index, value });
-	};
-
-	const resetIcedTxInput = (conditionOrAction: ConditionOrAction) => {
-		// Dummy values
-		const index = 0;
-		const value = 0;
-		const id = '0';
-		dispatch({
-			type: RESET_ACTION_CONDITION_TO_DEFAULT,
-			conditionOrAction,
-			id,
-			index,
-			value
-		});
-	};
-
-	*/
 	return (
 		<IcedTxContext.Provider
 			value={{
 				icedTxState: icedTxState,
 				dispatch: dispatch
-				// updateIcedTx: updateIcedTx,
-				// updateUserInput: updateUserInput,
-				// resetIcedTxInput: resetIcedTxInput
 			}}
 		>
 			{children}

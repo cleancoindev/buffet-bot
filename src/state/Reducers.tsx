@@ -13,11 +13,12 @@ import {
 	SELECT_ACTION,
 	UPDATE_ACTION_INPUTS,
 	UPDATE_CONDITION_INPUTS,
-	RESET_ACTION
+	RESET_ACTION,
+	UPDATE_TX_STATE
 } from '../constants/constants';
 import { DEFAULT_ICED_TX } from './GlobalState';
 
-function updateIcedTxCondition(
+function updateIcedTx(
 	state: IcedTx,
 	conditionOrAction: ConditionOrAction,
 	id: string
@@ -76,17 +77,9 @@ export const SELECT_ACTION = 'SELECT_ACTION';
 export const icedTxReducer = (state: IcedTx, action: Action) => {
 	switch (action.type) {
 		case SELECT_CONDITION:
-			return updateIcedTxCondition(
-				state,
-				ConditionOrAction.Condition,
-				action.id
-			);
+			return updateIcedTx(state, ConditionOrAction.Condition, action.id);
 		case SELECT_ACTION:
-			return updateIcedTxCondition(
-				state,
-				ConditionOrAction.Action,
-				action.id
-			);
+			return updateIcedTx(state, ConditionOrAction.Action, action.id);
 		case UPDATE_CONDITION_INPUTS:
 			return updateUserInput(
 				state,
@@ -105,6 +98,8 @@ export const icedTxReducer = (state: IcedTx, action: Action) => {
 			return resetIcedTx(state, ConditionOrAction.Condition);
 		case RESET_ACTION:
 			return resetIcedTx(state, ConditionOrAction.Action);
+		case UPDATE_TX_STATE:
+			return { ...state, txState: action.txState };
 		// case ADD_USER_INPUT:
 		// 	return updateUserInput(
 		// 		state,
