@@ -8,7 +8,19 @@ import {
 	UPDATE_TX_STATE
 } from './constants';
 
-export interface WhitelistData {
+export interface ActionWhitelistData {
+	id: number;
+	app: string;
+	title: string;
+	address: string;
+	params: Array<string>;
+	inputLabels: Array<string>;
+	userInputTypes: Array<InputType>;
+	userInputs: Array<string | number>;
+	approvalIndex: number;
+}
+
+export interface ConditionWhitelistData {
 	id: number;
 	app: string;
 	title: string;
@@ -22,13 +34,13 @@ export interface WhitelistData {
 export interface UserSelection {
 	conditionApp: string;
 	actionApp: string;
-	conditionAppFunctions: Array<WhitelistData>;
-	actionAppFunctions: Array<WhitelistData>;
+	conditionAppFunctions: Array<ConditionWhitelistData>;
+	actionAppFunctions: Array<ActionWhitelistData>;
 }
 
 export interface IcedTx {
-	condition: WhitelistData;
-	action: WhitelistData;
+	condition: ConditionWhitelistData;
+	action: ActionWhitelistData;
 	txState: TxState;
 }
 
@@ -84,14 +96,18 @@ export type KyberToken = Array<Token>;
 
 // Transaction Statea
 export enum TxState {
-	displayApprove = 0,
-	preApprove = 1,
-	displayCreate = 2,
-	preCreate = 3,
-	waitingCreate = 4,
-	postCreate = 5,
-	cancelled = 6,
-	insufficientBalance = 7
+	displayGelatoWallet = 0,
+	preGelatoWallet = 1,
+	waitingGelatoWallet = 2,
+	postGelatoWallet = 3,
+	displayApprove = 4,
+	preApprove = 5,
+	displayCreate = 6,
+	preCreate = 7,
+	waitingCreate = 8,
+	postCreate = 9,
+	cancelled = 10,
+	insufficientBalance = 11
 	// waitingApprove,
 	// postApprove,
 }

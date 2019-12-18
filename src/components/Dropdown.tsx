@@ -1,15 +1,15 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import NativeSelect from '@material-ui/core/NativeSelect';
-import { Hash } from 'crypto';
-import { WhitelistData, ConditionOrAction } from '../constants/interfaces';
+
+import {
+	ConditionWhitelistData,
+	ActionWhitelistData,
+	ConditionOrAction
+} from '../constants/interfaces';
 import { useIcedTxContext } from '../state/GlobalState';
 import { SELECT_CONDITION, SELECT_ACTION } from '../constants/constants';
-import { findCondition, findAction } from '../helpers/helpers';
 
 const useStyles = makeStyles(theme => ({
 	formControl: {
@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface AppDropdownProps {
-	data: Array<WhitelistData>;
+	data: Array<ConditionWhitelistData | ActionWhitelistData>;
 	conditionOrAction: number;
 	app: boolean;
 	updateConditionOrAction: Function;
@@ -61,7 +61,9 @@ export default function AppDropdown(props: AppDropdownProps) {
 		}
 	};
 
-	function getApps(appList: Array<WhitelistData>) {
+	function getApps(
+		appList: Array<ConditionWhitelistData | ActionWhitelistData>
+	) {
 		const appTitles = appList.map(item => item.app);
 		return appTitles.filter(
 			(item, index) => appTitles.indexOf(item) === index

@@ -1,7 +1,6 @@
 import React, { MouseEvent, useState, useEffect } from 'react';
 
 // Material UI
-import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 
@@ -12,7 +11,6 @@ import MobileStepper from '../components/MobileStepper';
 // Types
 import { RouteComponentProps } from 'react-router-dom';
 import { useIcedTxContext } from '../state/GlobalState';
-import { StepperProps, ConditionOrAction } from '../constants/interfaces';
 import { findCondition, findAction } from '../helpers/helpers';
 import { SELECT_CONDITION, SELECT_ACTION } from '../constants/constants';
 import TransactionModal from '../components/Modal';
@@ -22,10 +20,6 @@ interface Params {
 	actionId: string;
 }
 
-// interface Match  {
-//     params: Params;
-// }
-
 // interface Match extends RouteComponentProps<Params> {}
 
 export default function Create({ match }: RouteComponentProps<Params>) {
@@ -33,7 +27,6 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 		params: { conditionId, actionId }
 	} = match;
 	const { icedTxState, dispatch } = useIcedTxContext();
-	console.log(icedTxState);
 
 	// Returns true if wrong params were inputted in URL
 	const [notFound, setNotFound] = useState(false);
@@ -98,7 +91,7 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 	// MODAL STUFF
 
 	// Modal Stuff
-	const [modalOpen, setModalOpen] = React.useState(true);
+	const [modalOpen, setModalOpen] = React.useState(false);
 
 	const modalClickOpen = () => {
 		setModalOpen(true);

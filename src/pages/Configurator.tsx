@@ -1,16 +1,7 @@
-import React from 'react'
+import React from 'react';
 
-import AppSelection from '../components/AppSelection'
-import Container from '@material-ui/core/Container';
-
+import AppSelection from '../components/AppSelection';
 
 export default function Configurator() {
-    return (
-
-        <AppSelection/>
-
-
-
-
-    )
+	return <AppSelection />;
 }

@@ -16,12 +16,15 @@ import {
 
 // import reducer function
 import { icedTxReducer } from './Reducers';
-import { DEFAULT_DATA } from '../constants/constants';
+import {
+	DEFAULT_DATA_ACTION,
+	DEFAULT_DATA_CONDITION
+} from '../constants/constants';
 
 export const DEFAULT_ICED_TX = {
-	condition: DEFAULT_DATA,
-	action: DEFAULT_DATA,
-	txState: TxState.displayApprove
+	condition: DEFAULT_DATA_CONDITION,
+	action: DEFAULT_DATA_ACTION,
+	txState: TxState.displayGelatoWallet
 };
 
 interface InitContextProps {

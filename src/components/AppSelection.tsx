@@ -23,8 +23,9 @@ import Dropdown from './Dropdown';
 // Import Interfaces
 import {
 	ConditionOrAction,
-	WhitelistData,
-	UserSelection
+	UserSelection,
+	ActionWhitelistData,
+	ConditionWhitelistData
 } from '../constants/interfaces';
 import { RESET_CONDITION, RESET_ACTION } from '../constants/constants';
 
@@ -49,7 +50,7 @@ export default function AppSelection() {
 		app: string
 	) {
 		// console.log(app);
-		const result: Array<WhitelistData> = [];
+		const result: Array<ActionWhitelistData | ConditionWhitelistData> = [];
 		const conditionOrAction = { app: '', type: '' };
 		if (selectedConditionOrAction === ConditionOrAction.Condition) {
 			CTYPES.forEach(type => {
@@ -62,7 +63,7 @@ export default function AppSelection() {
 			// resetIcedTxInput(ConditionOrAction.Condition);
 			// RESET THE CONDITION to SELECT...
 			dispatch({ type: RESET_CONDITION });
-		} else if (selectedConditionOrAction === ConditionOrAction.Action) {
+		} else {
 			ATYPES.forEach(type => {
 				if (type.app === app) {
 					result.push(type);

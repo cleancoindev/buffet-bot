@@ -4,7 +4,19 @@ const emptyUserInputArray: Array<string | number> = [];
 const emptyUserInputTypeArray: Array<InputType> = [];
 const emptyStringArray: Array<string> = [];
 
-export const DEFAULT_DATA = {
+export const DEFAULT_DATA_ACTION = {
+	id: 0,
+	app: '',
+	title: '',
+	address: '',
+	params: emptyStringArray, // [ ]
+	inputLabels: emptyStringArray, // [ ]
+	userInputTypes: emptyUserInputTypeArray, // [ ]
+	userInputs: emptyUserInputArray, // [ ]
+	approvalIndex: 999 // 999 means no approval in action
+};
+
+export const DEFAULT_DATA_CONDITION = {
 	id: 0,
 	app: '',
 	title: '',

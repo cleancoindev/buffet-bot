@@ -1,20 +1,22 @@
 // Import Interfaces
 import {
 	ConditionOrAction,
-	WhitelistData,
 	IcedTx,
-	Action
+	Action,
+	ActionWhitelistData,
+	ConditionWhitelistData
 } from '../constants/interfaces';
 import { findCondition, findAction } from '../helpers/helpers';
 import {
-	DEFAULT_DATA,
 	RESET_CONDITION,
 	SELECT_CONDITION,
 	SELECT_ACTION,
 	UPDATE_ACTION_INPUTS,
 	UPDATE_CONDITION_INPUTS,
 	RESET_ACTION,
-	UPDATE_TX_STATE
+	UPDATE_TX_STATE,
+	DEFAULT_DATA_CONDITION,
+	DEFAULT_DATA_ACTION
 } from '../constants/constants';
 import { DEFAULT_ICED_TX } from './GlobalState';
 
@@ -24,11 +26,11 @@ function updateIcedTx(
 	id: string
 ) {
 	let varName = '';
-	let updatedData: WhitelistData = DEFAULT_DATA;
+	let updatedData: ActionWhitelistData | ConditionWhitelistData;
 	if (conditionOrAction === ConditionOrAction.Condition) {
 		updatedData = findCondition(id);
 		varName = 'condition';
-	} else if (conditionOrAction === ConditionOrAction.Action) {
+	} else {
 		updatedData = findAction(id);
 		varName = 'action';
 	}
@@ -55,9 +57,9 @@ function updateUserInput(
 function resetIcedTx(state: IcedTx, conditionOrAction: ConditionOrAction) {
 	const stateCopy = state;
 	if (conditionOrAction === ConditionOrAction.Condition) {
-		stateCopy.condition = DEFAULT_DATA;
+		stateCopy.condition = DEFAULT_DATA_CONDITION;
 	} else if (conditionOrAction === ConditionOrAction.Action) {
-		stateCopy.action = DEFAULT_DATA;
+		stateCopy.action = DEFAULT_DATA_ACTION;
 	}
 	// console.log("reset")
 	return stateCopy;

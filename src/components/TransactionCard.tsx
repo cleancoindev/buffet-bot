@@ -8,6 +8,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import LinkIcon from '@material-ui/icons/Link';
 import { useIcedTxContext } from '../state/GlobalState';
 import { UPDATE_TX_STATE } from '../constants/constants';
+import { getTokenSymbol } from '../helpers/helpers';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -74,16 +75,59 @@ export default function TransactionCard(props: TxCardProps) {
 		modalClickOpen,
 		modalClose
 	} = props;
-	console.log(txState);
 
 	// Get icedTx context
 	const { dispatch } = useIcedTxContext();
 
+	/*
+displayGelatoWallet = 0,
+	preGelatoWallet = 1,
+	waitingGelatoWallet = 2,
+	postGelatoWallet = 3,
+
+*/
+
 	function returnModalContent(txState: TxState): ModalContent {
 		switch (txState) {
+			case TxState.displayGelatoWallet:
+				return {
+					title: `First, lets create a gelato wallet for you!`,
+					progress: Progress.awaitingModalConfirm,
+					progressText: ``,
+					prepayment: false,
+					btn: 'Create Wallet'
+				};
+			case TxState.preGelatoWallet:
+				return {
+					title: `First, lets create a gelato wallet for you!`,
+					progress: Progress.awaitingMetamaskConfirm,
+					progressText: `Waiting for Metamask confirmation`,
+					prepayment: false,
+					btn: ''
+				};
+			case TxState.waitingGelatoWallet:
+				return {
+					title: `Creating your gelato wallet ...`,
+					progress: Progress.awaitingeMining,
+					progressText: `Transaction in progress`,
+					prepayment: false,
+					btn: ''
+				};
+			case TxState.postGelatoWallet:
+				return {
+					title: `Success: Gelato wallet created!`,
+					progress: Progress.finished,
+					progressText: `Transaction mined`,
+					prepayment: false,
+					btn: 'Continue'
+				};
 			case TxState.displayApprove:
 				return {
-					title: `Please approve gelato to move DAI for you`,
+					title: `Approve gelato to move ${getTokenSymbol(
+						icedTxState.action.userInputs[
+							icedTxState.action.approvalIndex
+						].toString()
+					)} for you`,
 					progress: Progress.awaitingModalConfirm,
 					progressText: ``,
 					prepayment: false,
@@ -91,7 +135,11 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.preApprove:
 				return {
-					title: `Please approve gelato to move DAI for you`,
+					title: `Approve gelato to move ${getTokenSymbol(
+						icedTxState.action.userInputs[
+							icedTxState.action.approvalIndex
+						].toString()
+					)} for you`,
 					progress: Progress.awaitingMetamaskConfirm,
 					progressText: `Waiting for Metamask confirmation`,
 					prepayment: false,
@@ -127,7 +175,7 @@ export default function TransactionCard(props: TxCardProps) {
 					progress: Progress.finished,
 					progressText: `Transaction mined`,
 					prepayment: true,
-					btn: 'Close'
+					btn: ''
 				};
 			case TxState.cancelled:
 				return {

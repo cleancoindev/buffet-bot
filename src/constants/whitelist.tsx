@@ -71,7 +71,8 @@ export const ATYPES = [
 		params: ['ERC20', 'uint256', 'address'],
 		userInputTypes: [InputType.Token, InputType.Number, InputType.Address],
 		inputLabels: ['Token to send', 'Amount', 'Receiving Address'],
-		userInputs: []
+		userInputs: [],
+		approvalIndex: 0
 	},
 
 	{
@@ -82,7 +83,8 @@ export const ATYPES = [
 		params: ['uint256', 'address', 'ERC20', 'bool'],
 		userInputTypes: [InputType.Token, InputType.Token, InputType.Number],
 		inputLabels: ['Sell Token', 'Buy Token', 'Sell Amount'],
-		userInputs: []
+		userInputs: [],
+		approvalIndex: 0
 	},
 
 	{
@@ -93,7 +95,8 @@ export const ATYPES = [
 		params: ['uint256', 'address', 'ERC20', 'bool'],
 		userInputTypes: [InputType.Token],
 		inputLabels: [''],
-		userInputs: []
+		userInputs: [],
+		approvalIndex: 0
 	}
 ];
 
