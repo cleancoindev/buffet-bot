@@ -8,7 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { Grid } from '@material-ui/core';
 import TransactionCard from './TransactionCard';
-import { TxState } from '../constants/interfaces';
+import { TxState, IcedTx } from '../constants/interfaces';
 
 interface TransactioModalProps {
 	title: string;
@@ -16,6 +16,7 @@ interface TransactioModalProps {
 	modalClose: () => void;
 	modalClickOpen: () => void;
 	txState: TxState;
+	icedTxState: IcedTx;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -30,7 +31,14 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function TransactionModal(props: TransactioModalProps) {
 	const classes = useStyles();
-	const { txState, title, modalOpen, modalClickOpen, modalClose } = props;
+	const {
+		icedTxState,
+		txState,
+		title,
+		modalOpen,
+		modalClickOpen,
+		modalClose
+	} = props;
 
 	return (
 		<div>
@@ -47,6 +55,7 @@ export default function TransactionModal(props: TransactioModalProps) {
 						modalClose={modalClose}
 						modalClickOpen={modalClickOpen}
 						txState={txState}
+						icedTxState={icedTxState}
 					></TransactionCard>
 				</DialogContent>
 			</Dialog>

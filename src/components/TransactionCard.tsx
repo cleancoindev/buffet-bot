@@ -1,9 +1,10 @@
 import React, { useContext, useEffect } from 'react';
 import { Grid, CircularProgress, Button } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { TxState } from '../constants/interfaces';
+import { TxState, IcedTx } from '../constants/interfaces';
 import ProgressBar from './ProgressBar';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CancelIcon from '@material-ui/icons/Cancel';
 import LinkIcon from '@material-ui/icons/Link';
 import { useIcedTxContext } from '../state/GlobalState';
 import { UPDATE_TX_STATE } from '../constants/constants';
@@ -28,7 +29,8 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 enum Progress {
-	awaitingConfirmation,
+	awaitingModalConfirm,
+	awaitingMetamaskConfirm,
 	awaitingeMining,
 	finished,
 	cancelled
@@ -39,6 +41,7 @@ interface ModalContent {
 	progress: Progress;
 	progressText: string;
 	prepayment: boolean;
+	btn: string;
 }
 
 interface TxCardProps {
@@ -46,6 +49,7 @@ interface TxCardProps {
 	modalOpen: boolean;
 	modalClickOpen: () => void;
 	modalClose: () => void;
+	icedTxState: IcedTx;
 }
 
 /*
@@ -63,7 +67,13 @@ export enum TxState {
 
 export default function TransactionCard(props: TxCardProps) {
 	const classes = useStyles();
-	const { txState, modalOpen, modalClickOpen, modalClose } = props;
+	const {
+		icedTxState,
+		txState,
+		modalOpen,
+		modalClickOpen,
+		modalClose
+	} = props;
 	console.log(txState);
 
 	// Get icedTx context
@@ -71,64 +81,69 @@ export default function TransactionCard(props: TxCardProps) {
 
 	function returnModalContent(txState: TxState): ModalContent {
 		switch (txState) {
+			case TxState.displayApprove:
+				return {
+					title: `Please approve gelato to move DAI for you`,
+					progress: Progress.awaitingModalConfirm,
+					progressText: ``,
+					prepayment: false,
+					btn: 'Approve'
+				};
 			case TxState.preApprove:
 				return {
-					title: `You need to approve gelato to move your DAI`,
-					progress: Progress.awaitingConfirmation,
+					title: `Please approve gelato to move DAI for you`,
+					progress: Progress.awaitingMetamaskConfirm,
 					progressText: `Waiting for Metamask confirmation`,
-					prepayment: false
+					prepayment: false,
+					btn: ''
 				};
-			// Skip this part and go straight to preCreate
-			/*
-			case TxState.waitingApprove:
+			case TxState.displayCreate:
 				return {
-					title: `Waiting for approval Tx to be mined`,
-					progress: Progress.awaitingeMining,
-					progressText: `Waiting for transaction to be mined`,
-					prepayment: false
+					title: `Create your Frozen Transaction`,
+					progress: Progress.awaitingModalConfirm,
+					progressText: ``,
+					prepayment: true,
+					btn: 'Create'
 				};
-			case TxState.postApprove:
-				return {
-					title: `Successfully approved DAI`,
-					progress: Progress.finished,
-					progressText: `Transaction mined`,
-					prepayment: false
-				};
-			*/
 			case TxState.preCreate:
 				return {
-					title: `Activate your Frozen Transaction`,
-					progress: Progress.awaitingConfirmation,
+					title: `Create your Frozen Transaction`,
+					progress: Progress.awaitingMetamaskConfirm,
 					progressText: `Waiting for Metamask confirmation`,
-					prepayment: true
+					prepayment: true,
+					btn: ''
 				};
 			case TxState.waitingCreate:
 				return {
-					title: `Activating Frozen Transaction ...`,
+					title: `Creating Frozen Transaction ...`,
 					progress: Progress.awaitingeMining,
 					progressText: `Transaction in progress`,
-					prepayment: true
+					prepayment: true,
+					btn: ''
 				};
 			case TxState.postCreate:
 				return {
-					title: `Frozen Transaction successfully activated!`,
+					title: `Success: Frozen Transaction created!`,
 					progress: Progress.finished,
 					progressText: `Transaction mined`,
-					prepayment: true
+					prepayment: true,
+					btn: 'Close'
 				};
-			case TxState.Cancelled:
+			case TxState.cancelled:
 				return {
 					title: `Transaction Cancelled`,
 					progress: Progress.cancelled,
 					progressText: `Tx cancelled`,
-					prepayment: false
+					prepayment: false,
+					btn: 'Close'
 				};
 			default:
 				return {
 					title: `DEFAULT VALUE`,
-					progress: Progress.awaitingConfirmation,
+					progress: Progress.awaitingMetamaskConfirm,
 					progressText: `Waiting for Metamask confirmation`,
-					prepayment: false
+					prepayment: false,
+					btn: ''
 				};
 		}
 	}
@@ -173,7 +188,7 @@ export default function TransactionCard(props: TxCardProps) {
 					xs={12}
 					direction="column"
 					justify="flex-start"
-					alignItems="flex-start"
+					alignItems="center"
 					style={{
 						background: '#000000',
 						color: 'white',
@@ -203,59 +218,78 @@ export default function TransactionCard(props: TxCardProps) {
 						<ProgressBar />
 					</Grid>
 				)} */}
-				<Grid
-					className={classes.gridItem}
-					container
-					item
-					sm={12}
-					xs={12}
-					direction="row"
-					justify="flex-start"
-					alignItems="center"
-					style={{
-						background: '#FFFFFF',
-						paddingTop: '8px',
-						paddingBottom: '8px'
-						// borderStyle: 'solid',
-						// borderWidth: '2px'
-					}}
-				>
-					{modalContent.progress ===
-						Progress.awaitingConfirmation && (
-						<CircularProgress
-							size={32}
-							style={{ marginRight: '8px' }}
-						/>
-					)}
-					{modalContent.progress === Progress.finished && (
-						<CheckCircleIcon
-							color={'primary'}
-							fontSize={'large'}
-							style={{ marginRight: '8px' }}
-						/>
-					)}
-					{modalContent.progress === Progress.awaitingeMining && (
-						<ProgressBar />
-					)}
-					<h4>{modalContent.progressText}</h4>
-				</Grid>
-				<Grid
-					className={classes.gridItem}
-					container
-					item
-					sm={12}
-					xs={12}
-					direction="row"
-					justify="space-evenly"
-					alignItems="flex-start"
-					style={{
-						background: '#E8E8E8'
-					}}
-				>
-					<h4>Your Account</h4>
-					<h4 style={{ marginLeft: 'auto' }}>0x232...fdf32</h4>
-				</Grid>
-				{TxState.postCreate && (
+
+				{modalContent.progress !== Progress.awaitingModalConfirm && (
+					<Grid
+						className={classes.gridItem}
+						container
+						item
+						sm={12}
+						xs={12}
+						direction="row"
+						justify="flex-start"
+						alignItems="center"
+						style={{
+							background: '#FFFFFF',
+							paddingTop: '8px',
+							paddingBottom: '8px'
+							// borderStyle: 'solid',
+							// borderWidth: '2px'
+						}}
+					>
+						{modalContent.progress ===
+							Progress.awaitingMetamaskConfirm && (
+							<CircularProgress
+								size={32}
+								style={{ marginRight: '8px' }}
+							/>
+						)}
+						{modalContent.progress === Progress.finished && (
+							<CheckCircleIcon
+								color={'primary'}
+								fontSize={'large'}
+								style={{ marginRight: '8px' }}
+							/>
+						)}
+						{modalContent.progress === Progress.cancelled && (
+							<CancelIcon
+								color={'primary'}
+								fontSize={'large'}
+								style={{ marginRight: '8px' }}
+							/>
+						)}
+
+						{modalContent.progress === Progress.awaitingeMining && (
+							// <React.Fragment>
+							// <ProgressBar />
+							<CircularProgress
+								size={32}
+								style={{ marginRight: '8px' }}
+							/>
+							// </React.Fragment>
+						)}
+						<h4>{modalContent.progressText}</h4>
+					</Grid>
+				)}
+				{txState !== TxState.cancelled && (
+					<Grid
+						className={classes.gridItem}
+						container
+						item
+						sm={12}
+						xs={12}
+						direction="row"
+						justify="space-evenly"
+						alignItems="flex-start"
+						style={{
+							background: '#E8E8E8'
+						}}
+					>
+						<h4>Your Account</h4>
+						<h4 style={{ marginLeft: 'auto' }}>0x232...fdf32</h4>
+					</Grid>
+				)}
+				{txState === TxState.postCreate && (
 					<Grid
 						className={classes.gridItem}
 						container
@@ -288,29 +322,9 @@ export default function TransactionCard(props: TxCardProps) {
 						{/* <h4 style={{ marginLeft: 'auto' }}>0x232...fdf32</h4> */}
 					</Grid>
 				)}
-				{modalContent.prepayment && !TxState.postCreate && (
-					<Grid
-						className={classes.gridItem}
-						container
-						item
-						sm={12}
-						xs={12}
-						direction="row"
-						justify="space-evenly"
-						alignItems="center"
-						style={{
-							background: '#EEEEEE'
-						}}
-					>
-						<h4>Gelato Prepayment</h4>
-						<div className={classes.dollar}>
-							<h4 style={{ margin: '0px' }}>0.025 ETH</h4>
-							<p style={{ margin: '0px' }}>$3.25 USD</p>
-						</div>
-					</Grid>
-				)}
-				{!TxState.postCreate && (
-					<React.Fragment>
+				{modalContent.prepayment &&
+					txState !== TxState.postCreate &&
+					txState !== TxState.cancelled && (
 						<Grid
 							className={classes.gridItem}
 							container
@@ -321,42 +335,67 @@ export default function TransactionCard(props: TxCardProps) {
 							justify="space-evenly"
 							alignItems="center"
 							style={{
-								background: `${
-									modalContent.prepayment
-										? '#E8E8E8'
-										: '#EEEEEE'
-								}`
+								background: '#EEEEEE'
 							}}
 						>
-							<h4>Transaction Fee</h4>
+							<h4>Gelato Prepayment</h4>
 							<div className={classes.dollar}>
 								<h4 style={{ margin: '0px' }}>0.025 ETH</h4>
 								<p style={{ margin: '0px' }}>$3.25 USD</p>
 							</div>
 						</Grid>
-						<Grid
-							className={classes.gridItem}
-							container
-							item
-							sm={12}
-							xs={12}
-							direction="row"
-							justify="space-evenly"
-							alignItems="flex-start"
-							style={{
-								background: `${
-									modalContent.prepayment
-										? '#EEEEEE'
-										: '#E8E8E8'
-								}`
-							}}
-						>
-							<h4>Estimated Wait</h4>
-							<h4 style={{ marginLeft: 'auto' }}>~ 1 minute</h4>
-							{/* <h4 style={{ marginLeft: 'auto' }}>~ 1 minute remaining</h4> */}
-						</Grid>
-					</React.Fragment>
-				)}
+					)}
+				{txState !== TxState.postCreate &&
+					txState !== TxState.cancelled && (
+						<React.Fragment>
+							<Grid
+								className={classes.gridItem}
+								container
+								item
+								sm={12}
+								xs={12}
+								direction="row"
+								justify="space-evenly"
+								alignItems="center"
+								style={{
+									background: `${
+										modalContent.prepayment
+											? '#E8E8E8'
+											: '#EEEEEE'
+									}`
+								}}
+							>
+								<h4>Transaction Fee</h4>
+								<div className={classes.dollar}>
+									<h4 style={{ margin: '0px' }}>0.025 ETH</h4>
+									<p style={{ margin: '0px' }}>$3.25 USD</p>
+								</div>
+							</Grid>
+							<Grid
+								className={classes.gridItem}
+								container
+								item
+								sm={12}
+								xs={12}
+								direction="row"
+								justify="space-evenly"
+								alignItems="flex-start"
+								style={{
+									background: `${
+										modalContent.prepayment
+											? '#EEEEEE'
+											: '#E8E8E8'
+									}`
+								}}
+							>
+								<h4>Estimated Wait</h4>
+								<h4 style={{ marginLeft: 'auto' }}>
+									~ 1 minute
+								</h4>
+								{/* <h4 style={{ marginLeft: 'auto' }}>~ 1 minute remaining</h4> */}
+							</Grid>
+						</React.Fragment>
+					)}
 			</Grid>
 			<Grid
 				container
@@ -410,8 +449,19 @@ export default function TransactionCard(props: TxCardProps) {
 							}}
 						>
 							<h4 style={{ margin: '0px' }}>
-								If the Price you chose is triggered, gelato will
-								Trade on Kyber on your behalf
+								If the{' '}
+								<span style={{ color: 'red' }}>
+									{icedTxState.condition.title}
+								</span>{' '}
+								condition you chose is triggered, gelato will{' '}
+								<span style={{ color: 'red' }}>
+									{icedTxState.action.title}
+								</span>{' '}
+								on{' '}
+								<span style={{ color: 'red' }}>
+									{icedTxState.action.app}
+								</span>{' '}
+								on your behalf
 							</h4>
 						</Grid>
 						<Grid
@@ -482,7 +532,7 @@ export default function TransactionCard(props: TxCardProps) {
 						</Grid>
 					</React.Fragment>
 				)}
-				{!TxState.postCreate && (
+				{txState !== TxState.postCreate && modalContent.btn !== '' && (
 					<Grid
 						container
 						item
@@ -492,8 +542,8 @@ export default function TransactionCard(props: TxCardProps) {
 						justify="center"
 						alignItems="center"
 						style={{
-							background: 'FFFFFF',
-							marginTop: '24px'
+							background: 'FFFFFF'
+							// marginTop: '24px'
 						}}
 					>
 						<Button
@@ -503,7 +553,7 @@ export default function TransactionCard(props: TxCardProps) {
 								borderWidth: '2px'
 							}}
 						>
-							Cancel
+							{modalContent.btn}
 						</Button>
 					</Grid>
 				)}

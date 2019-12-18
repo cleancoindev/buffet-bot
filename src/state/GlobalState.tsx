@@ -21,7 +21,7 @@ import { DEFAULT_DATA } from '../constants/constants';
 export const DEFAULT_ICED_TX = {
 	condition: DEFAULT_DATA,
 	action: DEFAULT_DATA,
-	txState: TxState.preApprove
+	txState: TxState.displayApprove
 };
 
 interface InitContextProps {

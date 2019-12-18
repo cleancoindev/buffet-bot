@@ -33,8 +33,6 @@ export default function AppDropdown(props: AppDropdownProps) {
 	const { dispatch } = useIcedTxContext();
 	const classes = useStyles();
 	const [state, setState] = React.useState('');
-	// console.log(state);
-	// console.log(data);
 
 	// Dispatch Reducer
 	const selectCondition = (id: string) => {
@@ -61,8 +59,6 @@ export default function AppDropdown(props: AppDropdownProps) {
 			}
 			setState(`${functionId}`);
 		}
-
-		// updateTypes(conditionOrAction, event.target.value);
 	};
 
 	function getApps(appList: Array<WhitelistData>) {

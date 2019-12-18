@@ -84,12 +84,14 @@ export type KyberToken = Array<Token>;
 
 // Transaction Statea
 export enum TxState {
-	preApprove = 0,
-	preCreate = 1,
-	waitingCreate = 2,
-	postCreate = 3,
-	Cancelled = 4,
-	InsufficientBalance = 5
+	displayApprove = 0,
+	preApprove = 1,
+	displayCreate = 2,
+	preCreate = 3,
+	waitingCreate = 4,
+	postCreate = 5,
+	cancelled = 6,
+	insufficientBalance = 7
 	// waitingApprove,
 	// postApprove,
 }

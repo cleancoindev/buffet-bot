@@ -36,7 +36,7 @@ export default function LinearDeterminate() {
 
 	return (
 		<div className={classes.root}>
-			<LinearProgress variant="determinate" value={completed} />
+			<LinearProgress value={completed} />
 		</div>
 	);
 }

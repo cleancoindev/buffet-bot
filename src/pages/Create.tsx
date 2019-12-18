@@ -33,6 +33,7 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 		params: { conditionId, actionId }
 	} = match;
 	const { icedTxState, dispatch } = useIcedTxContext();
+	console.log(icedTxState);
 
 	// Returns true if wrong params were inputted in URL
 	const [notFound, setNotFound] = useState(false);
@@ -158,6 +159,7 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 				modalOpen={modalOpen}
 				modalClickOpen={modalClickOpen}
 				modalClose={modalClose}
+				icedTxState={icedTxState}
 			></TransactionModal>
 		</React.Fragment>
 	);
