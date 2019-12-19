@@ -126,14 +126,16 @@ export default function LayoutTextFields(props: InputProps) {
 		else {
 			switch (inputType) {
 				case InputType.Number:
+					updateUserInput(index, 1);
 					return 1;
 				case InputType.Address:
 					// return user address
+					updateUserInput(index, '0x0');
 					return '0x0';
 				case InputType.Token:
 					let defaultToken = TOKEN_LIST[0];
 					if (index !== 0) defaultToken = TOKEN_LIST[1];
-					console.log(defaultToken.address);
+					updateUserInput(index, defaultToken.address);
 					return defaultToken.address;
 				default:
 					return 'error';
