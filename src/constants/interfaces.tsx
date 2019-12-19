@@ -5,8 +5,21 @@ import {
 	RESET_CONDITION,
 	RESET_ACTION,
 	UPDATE_ACTION_INPUTS,
-	UPDATE_TX_STATE
+	UPDATE_TX_STATE,
+	UPDATE_PAST_TRANSACTIONS
 } from './constants';
+
+export interface PastTransaction {
+	id: string;
+	conditionAddress: string;
+	actionAddress: string;
+	conditionPayload: string;
+	actionPayload: string;
+	expiryDate: string;
+	prepayment: string;
+	timestamp: string;
+	status: string;
+}
 
 export interface ActionWhitelistData {
 	id: number;
@@ -42,6 +55,7 @@ export interface IcedTx {
 	condition: ConditionWhitelistData;
 	action: ActionWhitelistData;
 	txState: TxState;
+	pastTransactions: Array<PastTransaction>;
 }
 
 export enum ConditionOrAction {
@@ -159,6 +173,11 @@ interface UpdateTxState {
 	txState: TxState;
 }
 
+interface UpdatePastTransactions {
+	type: typeof UPDATE_PAST_TRANSACTIONS;
+	pastTransactions: Array<PastTransaction>;
+}
+
 // export interface Action {
 // 	type: string;
 // 	conditionOrAction: ConditionOrAction;
@@ -174,4 +193,5 @@ export type Action =
 	| UpdateConditionInputs
 	| SelectCondition
 	| SelectAction
-	| UpdateTxState;
+	| UpdateTxState
+	| UpdatePastTransactions;

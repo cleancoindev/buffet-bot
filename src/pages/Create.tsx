@@ -11,7 +11,7 @@ import MobileStepper from '../components/MobileStepper';
 // Types
 import { RouteComponentProps } from 'react-router-dom';
 import { useIcedTxContext } from '../state/GlobalState';
-import { findCondition, findAction } from '../helpers/helpers';
+import { findConditionById, findActionById } from '../helpers/helpers';
 import { SELECT_CONDITION, SELECT_ACTION } from '../constants/constants';
 import TransactionModal from '../components/Modal';
 
@@ -36,8 +36,8 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 		if (icedTxState.condition.id === 0 || icedTxState.action.id === 0) {
 			// See if inputted params in URL exist in whitelist
 			// console.log(conditionId, actionId)
-			const paramCondition = findCondition(conditionId);
-			const paramAction = findAction(actionId);
+			const paramCondition = findConditionById(conditionId);
+			const paramAction = findActionById(actionId);
 			// console.log(paramCondition)
 			// console.log(paramAction)
 			if (paramCondition.id === 0 || paramAction.id === 0) {

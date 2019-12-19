@@ -1,36 +1,32 @@
 import React, {
 	createContext,
 	useContext,
-	useState,
 	useReducer,
 	Dispatch,
 	useEffect
 } from 'react';
 // Import Interfaces
-import {
-	IcedTx,
-	ConditionOrAction,
-	Action,
-	TxState
-} from '../constants/interfaces';
+import { IcedTx, Action, TxState } from '../constants/interfaces';
 
 // import reducer function
 import { icedTxReducer } from './Reducers';
 import {
 	DEFAULT_DATA_ACTION,
-	DEFAULT_DATA_CONDITION
+	DEFAULT_DATA_CONDITION,
+	DEFAULT_PAST_TRANSACTIONS
 } from '../constants/constants';
 
 export const DEFAULT_ICED_TX = {
 	condition: DEFAULT_DATA_CONDITION,
 	action: DEFAULT_DATA_ACTION,
-	txState: TxState.displayGelatoWallet
+	txState: TxState.displayGelatoWallet,
+	pastTransactions: DEFAULT_PAST_TRANSACTIONS
 };
 
-interface InitContextProps {
-	state: IcedTx;
-	dispatch: Dispatch<Action>;
-}
+// interface InitContextProps {
+// 	state: IcedTx;
+// 	dispatch: Dispatch<Action>;
+// }
 
 // Create Context
 const IcedTxContext = createContext({

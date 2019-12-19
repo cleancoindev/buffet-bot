@@ -7,18 +7,39 @@ import { Grid, Divider } from '@material-ui/core';
 // Import Local Components
 import InputField from './InputField';
 import { useIcedTxContext } from '../state/GlobalState';
+import { PastTransaction } from '../constants/interfaces';
+import {
+	findConditionByAddress,
+	findActionByAddress,
+	decodePayload
+} from '../helpers/helpers';
 
-export default function StepperContent() {
+interface TransactionSummaryProps {
+	pastTransaction: PastTransaction;
+}
+export default function TransactionSummary(props: TransactionSummaryProps) {
 	const { icedTxState } = useIcedTxContext();
 	// console.log(icedTxState)
+	const { pastTransaction } = props;
 
-	const { condition, action } = icedTxState;
+	// Get respective conditions and action
+	const condition = findConditionByAddress(pastTransaction.conditionAddress);
+	const action = findActionByAddress(pastTransaction.actionAddress);
+
+	// Get UserInput Types
 	const conditionInputTypes = condition.userInputTypes;
 	const actionInputTypes = action.userInputTypes;
 
-	// User inputs when scrolling back
-	const conditionInputs = condition.userInputs;
-	const actionInputs = action.userInputs;
+	// Get user inputs by decoding payloads
+	const conditionInputs = decodePayload(
+		pastTransaction.conditionPayload,
+		condition.params
+	);
+
+	const actionInputs = decodePayload(
+		pastTransaction.actionPayload,
+		action.params
+	);
 
 	// Apps
 	const conditionApp = condition.app;

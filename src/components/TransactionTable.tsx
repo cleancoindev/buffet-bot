@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link, useHistory } from 'react-router-dom';
 
 // Material UI
 import {
@@ -14,6 +15,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import CancelIcon from '@material-ui/icons/Cancel';
+import Button from '@material-ui/core/Button';
 
 import TableRow from '@material-ui/core/TableRow';
 
@@ -22,27 +24,96 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 
 import { useIcedTxContext } from '../state/GlobalState';
+import {
+	findConditionByAddress,
+	findActionByAddress,
+	decodePayload,
+	stringifyTimestamp
+} from '../helpers/helpers';
+import {
+	ActionWhitelistData,
+	ConditionWhitelistData
+} from '../constants/interfaces';
+import {
+	DEFAULT_PAST_TRANSACTIONS,
+	UPDATE_PAST_TRANSACTIONS
+} from '../constants/constants';
 
-const rows = [
-	createData(
-		'1',
-		'Price on Kyber',
-		'Sell on Kyber',
-		'11.12.2019 - 12:00',
-		'waiting',
-		'VIEW',
+/*
+Event from SC
+
+ // =============
+	emit LogExecutionClaimMinted(
+		_selectedExecutor,
+		executionClaimId,
+		userProxy,
+		_trigger,
+		_triggerPayloadWithSelector,
+		_action,
+		_actionPayloadWithSelector,
+		triggerGasActionTotalGasMinExecutionGas,
+		executionClaimExpiryDate,
+		msg.value
+);
+
+What is needed:
+- executionClaimId
+- userProxy (used to filter, should be done by GraphQL)
+- trigger address => identifier for condition
+- action address => idendifier for action
+- trigger payload, value to decode
+- action payload, same
+- Block number => to get creation date
+- Expiry Date - maybe
+- Prepayment - maybe
+*/
+
+const rows: Array<Data> = [];
+
+// FETCH DATA FROM API => Using dummy data for now
+
+// iterate over fetched DEFAULT_PAST_TRANSACTIONS
+DEFAULT_PAST_TRANSACTIONS.forEach((executionClaim, index) => {
+	// With address, find condition and action
+	const condition = findConditionByAddress(executionClaim.conditionAddress);
+	const action = findActionByAddress(executionClaim.actionAddress);
+
+	// æDEV USE THIS Decoding when the view button is being clicked
+
+	const newData = createData(
+		executionClaim.id,
+		`${condition.title} on ${condition.app}`,
+		`${action.title} on ${action.app}`,
+		stringifyTimestamp(executionClaim.timestamp),
+		executionClaim.status,
+		index,
 		'CANCEL'
-	),
-	createData(
-		'2',
-		'Increase in Tokens on your Wallet',
-		'Sell on Kyber',
-		'11.12.2019 - 12:00',
-		'waiting',
-		'VIEW',
-		'CANCEL'
-	)
-];
+	);
+	rows.push(newData);
+
+	// Date when the claim was created
+});
+
+// const rows = [
+// 	createData(
+// 		'1',
+// 		'Price on Kyber',
+// 		'Sell on Kyber',
+// 		'11.12.2019 - 12:00',
+// 		'waiting',
+// 		'VIEW',
+// 		'CANCEL'
+// 	),
+// 	createData(
+// 		'2',
+// 		'Increase in Tokens on your Wallet',
+// 		'Sell on Kyber',
+// 		'11.12.2019 - 12:00',
+// 		'waiting',
+// 		'VIEW',
+// 		'CANCEL'
+// 	)
+// ];
 
 function desc<T>(a: T, b: T, orderBy: keyof T) {
 	if (b[orderBy] < a[orderBy]) {
@@ -85,13 +156,18 @@ interface HeadCell {
 	numeric: boolean;
 }
 
+// interface IcedTxStateTable {
+// 	condition: ConditionWhitelistData;
+// 	action: ActionWhitelistData;
+// }
+
 interface Data {
 	id: string;
 	condition: string;
 	action: string;
 	date: string;
 	status: string;
-	view: string;
+	view: number;
 	cancel: string;
 }
 
@@ -101,7 +177,7 @@ function createData(
 	action: string,
 	date: string,
 	status: string,
-	view: string,
+	view: number,
 	cancel: string
 ): Data {
 	return { id, condition, action, date, status, view, cancel };
@@ -130,7 +206,7 @@ const headCells: HeadCell[] = [
 	},
 	{
 		id: 'view',
-		numeric: true,
+		numeric: false,
 		disablePadding: false,
 		label: 'Details'
 	},
@@ -289,6 +365,9 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function EnhancedTable() {
 	const { icedTxState, dispatch } = useIcedTxContext();
 
+	// Router Context
+	let history = useHistory();
+
 	const classes = useStyles();
 	const [order, setOrder] = React.useState<Order>('asc');
 	// @ DEV CHANGED TO ID FROM CALORIES
@@ -297,6 +376,18 @@ export default function EnhancedTable() {
 	const [page, setPage] = React.useState(0);
 	const [dense, setDense] = React.useState(false);
 	const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+	const showDetails = (event: React.MouseEvent<unknown>, row: Data) => {
+		console.log('show details');
+		console.log(row);
+		console.log(DEFAULT_PAST_TRANSACTIONS[row.view]);
+		dispatch({
+			type: UPDATE_PAST_TRANSACTIONS,
+			pastTransactions: DEFAULT_PAST_TRANSACTIONS
+		});
+		history.push(`/dashboard/${DEFAULT_PAST_TRANSACTIONS[row.view].id}`);
+		// Route to new page
+	};
 
 	const handleRequestSort = (
 		event: React.MouseEvent<unknown>,
@@ -404,10 +495,8 @@ export default function EnhancedTable() {
 											</StyledTableCell>
 											<StyledTableCell align="left">
 												<div
-													onClick={(): void =>
-														console.log(
-															'Show details'
-														)
+													onClick={e =>
+														showDetails(e, row)
 													}
 													style={{
 														display: 'flex',
@@ -418,10 +507,15 @@ export default function EnhancedTable() {
 														cursor: 'pointer'
 													}}
 												>
+													{/* <Button
+														onClick={showDetails}
+														value={'test'}
+													> */}
 													<VisibilityIcon
 														// color="primary"
 														fontSize={'small'}
 													></VisibilityIcon>
+													{/* </Button> */}
 													{/* {row.view} */}
 												</div>
 											</StyledTableCell>

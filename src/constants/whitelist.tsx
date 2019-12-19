@@ -5,10 +5,11 @@ export const APPS = {
 	actions: ['Your Wallet', 'Kyber', 'Fulcrum']
 };
 
-// Solidity func for kyber price
-// function getExpectedRate(ERC20 src, ERC20 dest, uint srcQty)
+// GENERAL NOTES
+/*
+- use 'address' in params instead of ERC20, as the decoder function most likely does not know what address is
 
-// function triggered(ERC20 _sellToken, ERC20 _buyToken, _uint256 srcQuantity, uint256 _selectedRate, bool _mustBeLower)
+*/
 
 // Conditions
 export const CTYPES = [
@@ -17,9 +18,13 @@ export const CTYPES = [
 		app: 'Your Wallet',
 		title: 'Increase in token balance',
 		address: '0x0',
-		params: ['ERC20', 'uint256'],
-		userInputTypes: [InputType.Token, InputType.GetValue],
-		inputLabels: ['Select Token', 'Your current Balance'],
+		params: ['address', 'uint256', 'uint256'],
+		userInputTypes: [InputType.Token, InputType.Number, InputType.GetValue],
+		inputLabels: [
+			'Select Token',
+			'Increase Amount',
+			'Your current Balance'
+		],
 		userInputs: []
 	},
 
@@ -29,7 +34,7 @@ export const CTYPES = [
 		app: 'Kyber',
 		title: 'Price',
 		address: '0x1',
-		params: ['ERC20', 'ERC20', 'uint256', 'uint256', 'bool'],
+		params: ['address', 'address', 'uint256', 'uint256', 'bool'],
 		userInputTypes: [
 			InputType.Token,
 			InputType.Token,
@@ -68,7 +73,7 @@ export const ATYPES = [
 		app: 'Your Wallet',
 		title: 'Send Token',
 		address: '0x3',
-		params: ['ERC20', 'uint256', 'address'],
+		params: ['address', 'uint256', 'address'],
 		userInputTypes: [InputType.Token, InputType.Number, InputType.Address],
 		inputLabels: ['Token to send', 'Amount', 'Receiving Address'],
 		userInputs: [],
@@ -80,7 +85,7 @@ export const ATYPES = [
 		app: 'Kyber',
 		title: 'Trade Tokens',
 		address: '0x4',
-		params: ['uint256', 'address', 'ERC20', 'bool'],
+		params: ['uint256', 'address', 'address', 'bool'],
 		userInputTypes: [InputType.Token, InputType.Token, InputType.Number],
 		inputLabels: ['Sell Token', 'Buy Token', 'Sell Amount'],
 		userInputs: [],
@@ -92,7 +97,7 @@ export const ATYPES = [
 		app: 'Fulcrum',
 		title: 'Margin Trade Tokens',
 		address: '0x5',
-		params: ['uint256', 'address', 'ERC20', 'bool'],
+		params: ['uint256', 'address', 'address', 'bool'],
 		userInputTypes: [InputType.Token],
 		inputLabels: [''],
 		userInputs: [],

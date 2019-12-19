@@ -6,7 +6,7 @@ import {
 	ActionWhitelistData,
 	ConditionWhitelistData
 } from '../constants/interfaces';
-import { findCondition, findAction } from '../helpers/helpers';
+import { findConditionById, findActionById } from '../helpers/helpers';
 import {
 	RESET_CONDITION,
 	SELECT_CONDITION,
@@ -16,7 +16,8 @@ import {
 	RESET_ACTION,
 	UPDATE_TX_STATE,
 	DEFAULT_DATA_CONDITION,
-	DEFAULT_DATA_ACTION
+	DEFAULT_DATA_ACTION,
+	UPDATE_PAST_TRANSACTIONS
 } from '../constants/constants';
 import { DEFAULT_ICED_TX } from './GlobalState';
 
@@ -28,10 +29,10 @@ function updateIcedTx(
 	let varName = '';
 	let updatedData: ActionWhitelistData | ConditionWhitelistData;
 	if (conditionOrAction === ConditionOrAction.Condition) {
-		updatedData = findCondition(id);
+		updatedData = findConditionById(id);
 		varName = 'condition';
 	} else {
-		updatedData = findAction(id);
+		updatedData = findActionById(id);
 		varName = 'action';
 	}
 	return { ...state, [varName]: updatedData };
@@ -102,6 +103,8 @@ export const icedTxReducer = (state: IcedTx, action: Action) => {
 			return resetIcedTx(state, ConditionOrAction.Action);
 		case UPDATE_TX_STATE:
 			return { ...state, txState: action.txState };
+		case UPDATE_PAST_TRANSACTIONS:
+			return { ...state, pastTransactions: action.pastTransactions };
 		// case ADD_USER_INPUT:
 		// 	return updateUserInput(
 		// 		state,

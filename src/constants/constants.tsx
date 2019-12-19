@@ -33,8 +33,32 @@ export const TOKEN_LIST = [
 	{ address: '0x2', symbol: 'KNC', name: 'Kyber Network', decimals: 18 }
 ];
 
-// ACTIONS
+export const DEFAULT_PAST_TRANSACTIONS = [
+	{
+		id: '0',
+		conditionAddress: '0x1',
+		actionAddress: '0x5',
+		conditionPayload: '0x030949304934009413094309320493049039049204',
+		actionPayload: '0x030949304934009413094309320493049039049204',
+		expiryDate: '12353434312',
+		prepayment: '1009032030020',
+		timestamp: '1576759372',
+		status: 'open'
+	}
+	// {
+	// 	id: '0',
+	// 	conditionAddress: '0x2',
+	// 	actionAddress: '0x4',
+	// 	conditionPayload: '0x030949304934009413094309320493049039049204',
+	// 	actionPayload: '0x030949304934009413094309320493049039049204',
+	// 	expiryDate: '12353434312',
+	// 	prepayment: '1009032030020',
+	// 	timestamp: '1576759372',
+	// 	status: 'executed'
+	// }
+];
 
+// ACTIONS
 export const RESET_CONDITION = 'RESET_CONDITION';
 export const RESET_ACTION = 'RESET_ACTION';
 export const UPDATE_ACTION_INPUTS = 'UPDATE_ACTION_INPUTS';
@@ -42,3 +66,4 @@ export const UPDATE_CONDITION_INPUTS = 'UPDATE_CONDITION_INPUTS';
 export const SELECT_CONDITION = 'SELECT_CONDITION';
 export const SELECT_ACTION = 'SELECT_ACTION';
 export const UPDATE_TX_STATE = 'UPDATE_TX_STATE';
+export const UPDATE_PAST_TRANSACTIONS = 'UPDATE_PAST_TRANSACTIONS';
