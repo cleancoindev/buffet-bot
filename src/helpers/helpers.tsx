@@ -39,7 +39,7 @@ export function findConditionByAddress(address: string) {
 
 export function findActionById(id: string) {
 	let returnData = DEFAULT_DATA_ACTION;
-	ATYPES.map(type => {
+	ATYPES.forEach(type => {
 		if (type.id === parseInt(id)) {
 			returnData = type;
 		}
@@ -49,7 +49,7 @@ export function findActionById(id: string) {
 
 export function findActionByAddress(address: string) {
 	let returnData = DEFAULT_DATA_ACTION;
-	ATYPES.map(type => {
+	ATYPES.forEach(type => {
 		if (type.address === address) {
 			returnData = type;
 		}

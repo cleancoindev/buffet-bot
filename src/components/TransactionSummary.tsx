@@ -2,7 +2,7 @@ import React from 'react';
 
 import { ConditionOrAction } from '../constants/interfaces';
 
-import { Grid, Divider } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 
 // Import Local Components
 import InputField from './InputField';
@@ -18,7 +18,7 @@ interface TransactionSummaryProps {
 	pastTransaction: PastTransaction;
 }
 export default function TransactionSummary(props: TransactionSummaryProps) {
-	const { icedTxState } = useIcedTxContext();
+	// const { icedTxState } = useIcedTxContext();
 	// console.log(icedTxState)
 	const { pastTransaction } = props;
 

@@ -1,8 +1,8 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Grid, CircularProgress, Button } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { TxState, IcedTx } from '../constants/interfaces';
-import ProgressBar from './ProgressBar';
+// import ProgressBar from './ProgressBar';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
 import LinkIcon from '@material-ui/icons/Link';
@@ -71,7 +71,7 @@ export default function TransactionCard(props: TxCardProps) {
 	const {
 		icedTxState,
 		txState,
-		modalOpen,
+		// modalOpen,
 		modalClickOpen,
 		modalClose
 	} = props;

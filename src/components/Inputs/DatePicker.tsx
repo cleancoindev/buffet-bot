@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import DateFnsUtils from '@date-io/date-fns'; // choose your lib
-import { ThemeProvider } from '@material-ui/styles';
-import { createMuiTheme } from '@material-ui/core';
 import { useIcedTxContext } from '../../state/GlobalState';
 
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
-import { ConditionOrAction } from '../../constants/interfaces';
 import { UPDATE_CONDITION_INPUTS } from '../../constants/constants';
 
 interface InputProps {

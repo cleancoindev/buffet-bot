@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import classes from '*.module.css';
 import { InputType, ConditionOrAction } from '../constants/interfaces';
 import DateAndTimePicker from './Inputs/DatePicker';
 import TokenSelect from './Inputs/TokenSelect';

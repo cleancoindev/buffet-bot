@@ -12,7 +12,7 @@ import { useIcedTxContext } from '../state/GlobalState';
 // interface Match extends RouteComponentProps<Params> {}
 
 export default function Create() {
-	const { icedTxState, dispatch } = useIcedTxContext();
+	// const { icedTxState, dispatch } = useIcedTxContext();
 	return (
 		<React.Fragment>
 			<Grid

@@ -8,42 +8,62 @@ import StepperContent from './StepperContent';
 import { StepperProps } from '../constants/interfaces';
 
 const useStyles = makeStyles({
-  root: {
-    maxWidth: 400,
-    flexGrow: 1,
-  },
+	root: {
+		maxWidth: 400,
+		flexGrow: 1
+	}
 });
 
 export default function DotsMobileStepper(props: StepperProps) {
-  const classes = useStyles();
-  const theme = useTheme();
-  const { icedTxState, steps, activeStep, handleNext, handleBack, handleReset } = props
+	const classes = useStyles();
+	const theme = useTheme();
+	const { icedTxState, activeStep, handleNext, handleBack } = props;
 
-
-  return (
-    <React.Fragment>
-      <MobileStepper
-        variant="dots"
-        steps={3}
-        position="static"
-        activeStep={activeStep}
-        className={classes.root}
-        nextButton={
-          <Button size="small" onClick={handleNext} disabled={activeStep === 3}>
-            Next
-            {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-          </Button>
-        }
-        backButton={
-          <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
-            {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-            Back
-          </Button>
-        }
-        />
-        <div>
-        <StepperContent icedTxState={icedTxState} classes={classes} activeStep={activeStep} inputs={["uint256","uint256"]}></StepperContent>
-        </div>
-      </React.Fragment>
-  );
+	return (
+		<React.Fragment>
+			<MobileStepper
+				variant="dots"
+				steps={3}
+				position="static"
+				activeStep={activeStep}
+				className={classes.root}
+				nextButton={
+					<Button
+						size="small"
+						onClick={handleNext}
+						disabled={activeStep === 3}
+					>
+						Next
+						{theme.direction === 'rtl' ? (
+							<KeyboardArrowLeft />
+						) : (
+							<KeyboardArrowRight />
+						)}
+					</Button>
+				}
+				backButton={
+					<Button
+						size="small"
+						onClick={handleBack}
+						disabled={activeStep === 0}
+					>
+						{theme.direction === 'rtl' ? (
+							<KeyboardArrowRight />
+						) : (
+							<KeyboardArrowLeft />
+						)}
+						Back
+					</Button>
+				}
+			/>
+			<div>
+				<StepperContent
+					icedTxState={icedTxState}
+					classes={classes}
+					activeStep={activeStep}
+					inputs={['uint256', 'uint256']}
+				></StepperContent>
+			</div>
+		</React.Fragment>
+	);
 }

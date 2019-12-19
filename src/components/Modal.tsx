@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+// import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import TransactionCard from './TransactionCard';
@@ -14,22 +14,21 @@ interface TransactioModalProps {
 	icedTxState: IcedTx;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-	createStyles({
-		card: {
-			width: '50%',
-			height: '50%',
-			background: 'white'
-		}
-	})
-);
+// const useStyles = makeStyles((theme: Theme) =>
+// 	createStyles({
+// 		card: {
+// 			width: '50%',
+// 			height: '50%',
+// 			background: 'white'
+// 		}
+// 	})
+// );
 
 export default function TransactionModal(props: TransactioModalProps) {
-	const classes = useStyles();
 	const {
 		icedTxState,
 		txState,
-		title,
+		// title,
 		modalOpen,
 		modalClickOpen,
 		modalClose

@@ -11,7 +11,7 @@ import { Grid, Divider } from '@material-ui/core';
 import InputField from './InputField';
 
 export default function StepperContent(props: StepperContentProps) {
-	const { icedTxState, activeStep, classes, inputs } = props;
+	const { icedTxState, activeStep, classes } = props;
 	// console.log(icedTxState)
 
 	const { condition, action } = icedTxState;

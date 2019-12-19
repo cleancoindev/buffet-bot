@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
 
 // Routing
 import { Link } from 'react-router-dom';
@@ -9,7 +9,6 @@ import { useIcedTxContext } from '../state/GlobalState';
 // Material UI components
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import Divider from '@material-ui/core/Divider';
@@ -20,6 +19,14 @@ import { ATYPES, CTYPES } from '../constants/whitelist';
 // Local components
 import Dropdown from './Dropdown';
 
+// Material UI
+import {
+	createStyles,
+	makeStyles,
+	useTheme,
+	Theme
+} from '@material-ui/core/styles';
+
 // Import Interfaces
 import {
 	ConditionOrAction,
@@ -29,7 +36,16 @@ import {
 } from '../constants/interfaces';
 import { RESET_CONDITION, RESET_ACTION } from '../constants/constants';
 
+const useStyles = makeStyles(theme => ({
+	dropdown: {
+		background: 'black',
+		border: '3px outset #E50078',
+		borderRadius: '2px 2px 2px 2px'
+	}
+}));
+
 export default function AppSelection() {
+	const classes = useStyles();
 	// Import global state
 	//const { updateIcedTx, icedTxState, resetIcedTxInput } = useIcedTxContext();
 	const { dispatch, icedTxState } = useIcedTxContext();
@@ -83,13 +99,13 @@ export default function AppSelection() {
 	}
 
 	return (
-		<div>
+		<div className={classes.dropdown}>
 			<Grid
 				container
 				direction="row"
 				justify="space-evenly"
 				alignItems="center"
-				style={{ background: 'brown', padding: '10px' }}
+				style={{ padding: '16px' }}
 			>
 				<Grid
 					container
@@ -99,15 +115,17 @@ export default function AppSelection() {
 					direction="column"
 					justify="space-evenly"
 					alignItems="stretch"
-					style={{ background: 'pink', height: '200px' }}
+					style={{
+						height: '200px'
+					}}
 				>
 					<Grid
 						container
 						item
 						justify="flex-start"
-						style={{ background: 'yellow' }}
+						className={classes.dropdown}
 					>
-						<p style={{ marginLeft: '10px', color: 'black' }}>
+						<p style={{ marginLeft: '10px', color: 'white' }}>
 							Listen to this dApp
 						</p>
 						<Dropdown
@@ -147,15 +165,15 @@ export default function AppSelection() {
 					direction="column"
 					justify="space-evenly"
 					alignItems="stretch"
-					style={{ background: 'pink', height: '200px' }}
+					style={{ height: '200px' }}
 				>
 					<Grid
 						container
 						item
 						justify="flex-start"
-						style={{ background: 'yellow' }}
+						className={classes.dropdown}
 					>
-						<p style={{ marginLeft: '10px', color: 'black' }}>
+						<p style={{ marginLeft: '10px', color: 'white' }}>
 							Send Transaction to this dApp
 						</p>
 						<Dropdown
@@ -176,7 +194,7 @@ export default function AppSelection() {
 						direction="row"
 						justify="space-evenly"
 						alignItems="center"
-						style={{ background: 'brown', padding: '10px' }}
+						style={{ padding: '10px' }}
 					>
 						<Grid
 							container
@@ -186,18 +204,18 @@ export default function AppSelection() {
 							direction="column"
 							justify="space-evenly"
 							alignItems="stretch"
-							style={{ background: 'pink', height: '200px' }}
+							style={{ height: '200px' }}
 						>
 							<Grid
 								container
 								item
 								justify="flex-start"
-								style={{ background: 'yellow' }}
+								className={classes.dropdown}
 							>
 								<p
 									style={{
 										marginLeft: '10px',
-										color: 'black'
+										color: 'white'
 									}}
 								>
 									Select Condition
@@ -240,18 +258,18 @@ export default function AppSelection() {
 							direction="column"
 							justify="space-evenly"
 							alignItems="stretch"
-							style={{ background: 'pink', height: '200px' }}
+							style={{ height: '200px' }}
 						>
 							<Grid
 								container
 								item
 								justify="flex-start"
-								style={{ background: 'yellow' }}
+								className={classes.dropdown}
 							>
 								<p
 									style={{
 										marginLeft: '10px',
-										color: 'black'
+										color: 'white'
 									}}
 								>
 									Select Action
@@ -271,32 +289,63 @@ export default function AppSelection() {
 							userSelection.actionApp !== '' &&
 							icedTxState.condition.id !== 0 &&
 							icedTxState.action.id !== 0 && (
-								<Grid
-									container
-									item
-									xs={12}
-									direction="row"
-									justify="space-evenly"
-									alignItems="stretch"
-									style={{
-										background: 'pink',
-										height: '50px',
-										marginTop: '16px'
-									}}
-								>
-									<Link
-										to={`create/${icedTxState.condition.id}/${icedTxState.action.id}`}
+								<React.Fragment>
+									<Grid
+										container
+										item
+										xs={12}
+										direction="row"
+										justify="space-evenly"
+										alignItems="stretch"
+										style={{
+											marginTop: '16px'
+										}}
 									>
-										<Button
-											style={{
-												background: 'white',
-												minWidth: '100px'
-											}}
+										<h2 style={{ textAlign: 'center' }}>
+											Gelato will{' '}
+											<span style={{ color: '#E50078' }}>
+												{icedTxState.action.title}
+											</span>{' '}
+											with{' '}
+											<span style={{ color: '#E50078' }}>
+												{icedTxState.action.app}
+											</span>{' '}
+											when the condition{' '}
+											<span style={{ color: '#E50078' }}>
+												{icedTxState.condition.title}{' '}
+											</span>
+											on{' '}
+											<span style={{ color: '#E50078' }}>
+												{icedTxState.condition.app}
+											</span>{' '}
+											is fulfilled
+										</h2>
+									</Grid>
+									<Grid
+										container
+										item
+										xs={12}
+										direction="row"
+										justify="space-evenly"
+										alignItems="stretch"
+										style={{
+											marginTop: '16px'
+										}}
+									>
+										<Link
+											to={`create/${icedTxState.condition.id}/${icedTxState.action.id}`}
 										>
-											Create
-										</Button>
-									</Link>
-								</Grid>
+											<Button
+												style={{
+													background: '#E50078',
+													minWidth: '100px'
+												}}
+											>
+												Create
+											</Button>
+										</Link>
+									</Grid>
+								</React.Fragment>
 							)}
 					</Grid>
 				)}

@@ -4,7 +4,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import Button from '@material-ui/core/Button';
 
 import { useIcedTxContext } from '../../state/GlobalState';
 import { ConditionOrAction, Token } from '../../constants/interfaces';
@@ -43,8 +42,8 @@ const findToken = (address: string) => {
 	);
 	if (foundToken === undefined) {
 		// ERROR
-		return TOKEN_LIST[0];
 		console.log('Failed to find Token!');
+		return TOKEN_LIST[0];
 	} else {
 		return foundToken;
 	}
@@ -52,7 +51,7 @@ const findToken = (address: string) => {
 
 export default function TokenSelect(props: TokenSelectProps) {
 	const { defaultToken, label, index, conditionOrAction, disabled } = props;
-	const { dispatch, icedTxState } = useIcedTxContext();
+	const { dispatch } = useIcedTxContext();
 
 	// updateUser Input
 	const updateConditionInputs = (index: number, value: any) => {

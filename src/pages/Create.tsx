@@ -1,4 +1,4 @@
-import React, { MouseEvent, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Material UI
 import Grid from '@material-ui/core/Grid';

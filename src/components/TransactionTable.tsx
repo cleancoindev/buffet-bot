@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 // Material UI
 import {
@@ -15,7 +15,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import CancelIcon from '@material-ui/icons/Cancel';
-import Button from '@material-ui/core/Button';
 
 import TableRow from '@material-ui/core/TableRow';
 
@@ -27,13 +26,9 @@ import { useIcedTxContext } from '../state/GlobalState';
 import {
 	findConditionByAddress,
 	findActionByAddress,
-	decodePayload,
 	stringifyTimestamp
 } from '../helpers/helpers';
-import {
-	ActionWhitelistData,
-	ConditionWhitelistData
-} from '../constants/interfaces';
+
 import {
 	DEFAULT_PAST_TRANSACTIONS,
 	UPDATE_PAST_TRANSACTIONS
@@ -258,13 +253,13 @@ const StyledTableRow = withStyles((theme: Theme) =>
 )(TableRow);
 
 function EnhancedTableHead(props: EnhancedTableProps) {
-	const { order, orderBy, onRequestSort } = props;
+	const { order, orderBy } = props;
 
-	const createSortHandler = (property: keyof Data) => (
-		event: React.MouseEvent<unknown>
-	) => {
-		onRequestSort(event, property);
-	};
+	// const createSortHandler = (property: keyof Data) => (
+	// 	event: React.MouseEvent<unknown>
+	// ) => {
+	// 	onRequestSort(event, property);
+	// };
 
 	return (
 		<TableHead>
@@ -316,7 +311,7 @@ interface EnhancedTableToolbarProps {
 
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
 	const classes = useToolbarStyles();
-	const { numSelected } = props;
+	// const { numSelected } = props;
 
 	return (
 		<Toolbar>
@@ -363,7 +358,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function EnhancedTable() {
-	const { icedTxState, dispatch } = useIcedTxContext();
+	const { dispatch } = useIcedTxContext();
 
 	// Router Context
 	let history = useHistory();
@@ -373,9 +368,9 @@ export default function EnhancedTable() {
 	// @ DEV CHANGED TO ID FROM CALORIES
 	const [orderBy, setOrderBy] = React.useState<keyof Data>('id');
 	const [selected, setSelected] = React.useState<string[]>([]);
-	const [page, setPage] = React.useState(0);
-	const [dense, setDense] = React.useState(false);
-	const [rowsPerPage, setRowsPerPage] = React.useState(5);
+	const [page /*setPage*/] = React.useState(0);
+	const [dense /*setDense*/] = React.useState(false);
+	const [rowsPerPage /*setRowsPerPage*/] = React.useState(5);
 
 	const showDetails = (event: React.MouseEvent<unknown>, row: Data) => {
 		console.log('show details');
@@ -464,7 +459,7 @@ export default function EnhancedTable() {
 								)
 								.map((row, index) => {
 									const isItemSelected = isSelected(row.id);
-									const labelId = `enhanced-table-checkbox-${index}`;
+									// const labelId = `enhanced-table-checkbox-${index}`;
 
 									return (
 										<StyledTableRow

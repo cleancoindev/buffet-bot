@@ -4,14 +4,10 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import { classes } from 'istanbul-lib-coverage';
 
 // Local Components
 import StepperContent from './StepperContent';
 import { StepperProps, TxState } from '../constants/interfaces';
-import TransactionModal from './Modal';
-import TransactionCard from './TransactionCard';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -42,9 +38,9 @@ export default function StepperParent(props: StepperProps) {
 		activeStep,
 		handleNext,
 		handleBack,
-		modalOpen,
-		modalClickOpen,
-		modalClose
+		// modalOpen,
+		modalClickOpen
+		// modalClose
 	} = props;
 
 	return (

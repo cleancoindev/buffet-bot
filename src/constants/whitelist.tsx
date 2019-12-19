@@ -71,7 +71,7 @@ export const ATYPES = [
 	{
 		id: 1,
 		app: 'Your Wallet',
-		title: 'Send Token',
+		title: 'Send Tokens',
 		address: '0x3',
 		params: ['address', 'uint256', 'address'],
 		userInputTypes: [InputType.Token, InputType.Number, InputType.Address],

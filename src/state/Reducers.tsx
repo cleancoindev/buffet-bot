@@ -19,7 +19,6 @@ import {
 	DEFAULT_DATA_ACTION,
 	UPDATE_PAST_TRANSACTIONS
 } from '../constants/constants';
-import { DEFAULT_ICED_TX } from './GlobalState';
 
 function updateIcedTx(
 	state: IcedTx,

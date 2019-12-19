@@ -31,7 +31,7 @@ function App() {
 					<Header></Header>
 					<div className="container">
 						<Container
-							style={{ background: 'white' }}
+							// style={{ background: 'white' }}
 							maxWidth="lg"
 						>
 							<Switch>

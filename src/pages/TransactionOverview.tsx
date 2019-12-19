@@ -1,4 +1,4 @@
-import React, { MouseEvent, useState, useEffect } from 'react';
+import React from 'react';
 
 // Types
 import { RouteComponentProps } from 'react-router-dom';
@@ -10,10 +10,6 @@ import Grid from '@material-ui/core/Grid';
 
 import { useIcedTxContext } from '../state/GlobalState';
 import TransactionSummary from '../components/TransactionSummary';
-import {
-	findConditionByAddress,
-	findActionByAddress
-} from '../helpers/helpers';
 
 interface TxOverviewParams {
 	transactionId: string;
@@ -28,7 +24,7 @@ export default function TransactionOverview({
 		params: { transactionId }
 	} = match;
 	console.log(transactionId);
-	const { icedTxState, dispatch } = useIcedTxContext();
+	const { icedTxState } = useIcedTxContext();
 
 	console.log(icedTxState.pastTransactions);
 

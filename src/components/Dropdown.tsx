@@ -72,7 +72,8 @@ export default function AppDropdown(props: AppDropdownProps) {
 
 	return (
 		<FormControl
-			style={{ marginTop: '0' }}
+			color="primary"
+			style={{ color: 'white', marginTop: '0' }}
 			fullWidth
 			variant="outlined"
 			className={classes.formControl}
@@ -81,6 +82,7 @@ export default function AppDropdown(props: AppDropdownProps) {
 				native
 				value={state}
 				onChange={handleChange}
+				style={{ color: 'white', background: '#E50078' }}
 				inputProps={{
 					'aria-label': 'age',
 					id: 'outlined-age-native-simple'
