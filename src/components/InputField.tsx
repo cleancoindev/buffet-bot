@@ -194,6 +194,7 @@ export default function LayoutTextFields(props: InputProps) {
 							required
 							id="outlined-full-width"
 							label={label}
+							style={{ marginTop: '0px', marginBottom: '0px' }}
 							// Import TextField CSS
 							defaultValue={returnDefaultValue()}
 							// placeholder="1"

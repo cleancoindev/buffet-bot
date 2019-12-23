@@ -1,4 +1,5 @@
 import { InputType } from './interfaces';
+import { colors } from '@material-ui/core';
 
 const emptyUserInputArray: Array<string | number> = [];
 const emptyUserInputTypeArray: Array<InputType> = [];
@@ -102,6 +103,12 @@ export const INPUT_CSS = {
 			// '&.Mui-focused fieldset': {
 			// 	borderColor: COLOURS.salmon
 			// }
+		},
+		'& .MuiOutlinedInput-root.Mui-disabled': {
+			'& fieldset': {
+				borderColor: COLOURS.salmon,
+				borderWidth: 2
+			}
 		},
 		'& .MuiFormLabel-root': {
 			color: 'white'

@@ -20,8 +20,6 @@ import {
 	COLOURS
 } from '../../constants/constants';
 
-import InputBase from '@material-ui/core/InputBase';
-
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		button: {
@@ -33,6 +31,12 @@ const useStyles = makeStyles((theme: Theme) =>
 			'& .MuiOutlinedInput-root:hover': {
 				'& fieldset': {
 					borderColor: 'white'
+				}
+			},
+			'& .MuiOutlinedInput-root.Mui-disabled': {
+				'& fieldset': {
+					borderColor: COLOURS.salmon,
+					borderWidth: 2
 				}
 			}
 		},
