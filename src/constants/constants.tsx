@@ -4,6 +4,13 @@ const emptyUserInputArray: Array<string | number> = [];
 const emptyUserInputTypeArray: Array<InputType> = [];
 const emptyStringArray: Array<string> = [];
 
+export const COLOURS = {
+	salmon: '#E91E63',
+	salmon60: '#E91E6399',
+	salmon50: '#E91E6380',
+	pink: '#E50078'
+};
+
 export const DEFAULT_DATA_ACTION = {
 	id: 0,
 	app: '',
@@ -67,3 +74,37 @@ export const SELECT_CONDITION = 'SELECT_CONDITION';
 export const SELECT_ACTION = 'SELECT_ACTION';
 export const UPDATE_TX_STATE = 'UPDATE_TX_STATE';
 export const UPDATE_PAST_TRANSACTIONS = 'UPDATE_PAST_TRANSACTIONS';
+
+export const INPUT_CSS = {
+	root: {
+		width: '100%',
+		'& input:valid + fieldset': {
+			borderColor: COLOURS.salmon,
+			borderWidth: 2
+		},
+		// '& input:invalid + fieldset': {
+		// 	borderColor: 'red',
+		// 	borderWidth: 2
+		// },
+		// '& input:valid:focus + fieldset': {
+		// 	borderLeftWidth: 6,
+		// 	padding: '4px !important', // override inline-style
+		// 	borderColor: 'green'
+		// },
+		'& .MuiOutlinedInput-root': {
+			color: 'white',
+			// '& fieldset': {
+			// 	borderColor: 'red'
+			// },
+			'&:hover fieldset': {
+				borderColor: 'white'
+			}
+			// '&.Mui-focused fieldset': {
+			// 	borderColor: COLOURS.salmon
+			// }
+		},
+		'& .MuiFormLabel-root': {
+			color: 'white'
+		}
+	}
+};

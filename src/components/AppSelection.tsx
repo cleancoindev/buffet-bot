@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Props } from 'react';
 
 // Routing
 import { Link } from 'react-router-dom';
@@ -20,12 +20,7 @@ import { ATYPES, CTYPES } from '../constants/whitelist';
 import Dropdown from './Dropdown';
 
 // Material UI
-import {
-	createStyles,
-	makeStyles,
-	useTheme,
-	Theme
-} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 // Import Interfaces
 import {
@@ -34,13 +29,35 @@ import {
 	ActionWhitelistData,
 	ConditionWhitelistData
 } from '../constants/interfaces';
-import { RESET_CONDITION, RESET_ACTION } from '../constants/constants';
+import { RESET_CONDITION, RESET_ACTION, COLOURS } from '../constants/constants';
 
 const useStyles = makeStyles(theme => ({
-	dropdown: {
+	box: {
 		background: 'black',
-		border: '3px outset #E50078',
+		// border: '3px outset #E50078',
+		border: `3px outset ${COLOURS.salmon}`,
+
 		borderRadius: '2px 2px 2px 2px'
+	},
+	boxTitle: {
+		fontSize: '16px',
+		marginLeft: '10px',
+		color: 'white',
+		textAlign: 'left'
+	},
+	createButton: {
+		background: COLOURS.salmon,
+		minWidth: '100px',
+		color: 'white',
+		border: 0,
+		borderRadius: 3,
+		boxShadow: '0 2px 2px 2px rgba(255, 255, 255, .3)',
+		height: 48,
+		padding: '0 30px',
+		margin: 8,
+		'&:hover': {
+			background: COLOURS.salmon60
+		}
 	}
 }));
 
@@ -99,7 +116,7 @@ export default function AppSelection() {
 	}
 
 	return (
-		<div className={classes.dropdown}>
+		<div className={classes.box}>
 			<Grid
 				container
 				direction="row"
@@ -123,11 +140,9 @@ export default function AppSelection() {
 						container
 						item
 						justify="flex-start"
-						className={classes.dropdown}
+						className={classes.box}
 					>
-						<p style={{ marginLeft: '10px', color: 'white' }}>
-							Listen to this dApp
-						</p>
+						<p className={classes.boxTitle}>Listen to this dApp</p>
 						<Dropdown
 							app
 							// userSelection={userSelection}
@@ -148,7 +163,7 @@ export default function AppSelection() {
 					direction="column"
 					justify="center"
 					alignItems="center"
-					style={{ background: 'pink' }}
+					style={{}}
 				>
 					<Hidden xsDown>
 						<ArrowForwardIcon fontSize="large" />
@@ -171,9 +186,9 @@ export default function AppSelection() {
 						container
 						item
 						justify="flex-start"
-						className={classes.dropdown}
+						className={classes.box}
 					>
-						<p style={{ marginLeft: '10px', color: 'white' }}>
+						<p className={classes.boxTitle}>
 							Send Transaction to this dApp
 						</p>
 						<Dropdown
@@ -210,14 +225,9 @@ export default function AppSelection() {
 								container
 								item
 								justify="flex-start"
-								className={classes.dropdown}
+								className={classes.box}
 							>
-								<p
-									style={{
-										marginLeft: '10px',
-										color: 'white'
-									}}
-								>
+								<p className={classes.boxTitle}>
 									Select Condition
 								</p>
 								<Dropdown
@@ -241,7 +251,7 @@ export default function AppSelection() {
 							direction="column"
 							justify="center"
 							alignItems="center"
-							style={{ background: 'pink' }}
+							style={{}}
 						>
 							<Hidden xsDown>
 								<ArrowForwardIcon fontSize="large" />
@@ -264,14 +274,9 @@ export default function AppSelection() {
 								container
 								item
 								justify="flex-start"
-								className={classes.dropdown}
+								className={classes.box}
 							>
-								<p
-									style={{
-										marginLeft: '10px',
-										color: 'white'
-									}}
-								>
+								<p className={classes.boxTitle}>
 									Select Action
 								</p>
 								<Dropdown
@@ -310,7 +315,7 @@ export default function AppSelection() {
 											<span style={{ color: '#E50078' }}>
 												{icedTxState.action.app}
 											</span>{' '}
-											when the condition{' '}
+											on your behalf, when the condition{' '}
 											<span style={{ color: '#E50078' }}>
 												{icedTxState.condition.title}{' '}
 											</span>
@@ -334,12 +339,10 @@ export default function AppSelection() {
 									>
 										<Link
 											to={`create/${icedTxState.condition.id}/${icedTxState.action.id}`}
+											style={{ textDecoration: 'none' }}
 										>
 											<Button
-												style={{
-													background: '#E50078',
-													minWidth: '100px'
-												}}
+												className={classes.createButton}
 											>
 												Create
 											</Button>

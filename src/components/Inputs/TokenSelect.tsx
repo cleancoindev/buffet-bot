@@ -1,5 +1,10 @@
 import React from 'react';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import {
+	makeStyles,
+	Theme,
+	createStyles,
+	withStyles
+} from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
@@ -10,8 +15,12 @@ import { ConditionOrAction, Token } from '../../constants/interfaces';
 import {
 	TOKEN_LIST,
 	UPDATE_CONDITION_INPUTS,
-	UPDATE_ACTION_INPUTS
+	UPDATE_ACTION_INPUTS,
+	INPUT_CSS,
+	COLOURS
 } from '../../constants/constants';
+
+import InputBase from '@material-ui/core/InputBase';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -20,8 +29,30 @@ const useStyles = makeStyles((theme: Theme) =>
 		},
 		formControl: {
 			// marginRight: '24px',
-			minWidth: 120,
-			width: '100%'
+			width: '100%',
+			'& .MuiOutlinedInput-root:hover': {
+				'& fieldset': {
+					borderColor: 'white'
+				}
+			}
+		},
+		select: {
+			'& fieldset': {
+				borderColor: COLOURS.salmon,
+				borderWidth: 2,
+				color: 'white',
+				'& .MuiOutlinedInput:hover': {
+					borderColor: 'white'
+				}
+			},
+			'& .MuiSelect-root': {
+				color: 'white'
+			},
+			'& .MuiOutlinedInput-notchedOutline': {
+				'&:hover': {
+					borderColor: 'white'
+				}
+			}
 		}
 	})
 );
@@ -118,10 +149,15 @@ export default function TokenSelect(props: TokenSelectProps) {
 
 	return (
 		<FormControl variant="outlined" className={classes.formControl}>
-			<InputLabel ref={inputLabel} id="demo-simple-select-outlined-label">
+			<InputLabel
+				style={{ color: 'white' }}
+				ref={inputLabel}
+				id="demo-simple-select-outlined-label"
+			>
 				{label}
 			</InputLabel>
 			<Select
+				className={classes.select}
 				style={{ textAlign: 'left' }}
 				required
 				labelId="demo-simple-select-outlined-label"
@@ -133,6 +169,7 @@ export default function TokenSelect(props: TokenSelectProps) {
 				onChange={handleChange}
 				labelWidth={labelWidth}
 				disabled={disabled}
+				// input={<SalmonSelect />}
 			>
 				{TOKEN_LIST.map((possibleToken, key) => (
 					<MenuItem key={key} value={possibleToken.address}>

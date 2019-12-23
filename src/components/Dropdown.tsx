@@ -9,7 +9,11 @@ import {
 	ConditionOrAction
 } from '../constants/interfaces';
 import { useIcedTxContext } from '../state/GlobalState';
-import { SELECT_CONDITION, SELECT_ACTION } from '../constants/constants';
+import {
+	SELECT_CONDITION,
+	SELECT_ACTION,
+	COLOURS
+} from '../constants/constants';
 
 const useStyles = makeStyles(theme => ({
 	formControl: {
@@ -17,7 +21,12 @@ const useStyles = makeStyles(theme => ({
 		minWidth: 120
 	},
 	selectEmpty: {
-		marginTop: theme.spacing(2)
+		marginTop: theme.spacing(2),
+		color: 'white',
+		background: COLOURS.salmon,
+		'& :hover': {
+			background: COLOURS.salmon50
+		}
 	}
 }));
 
@@ -82,7 +91,6 @@ export default function AppDropdown(props: AppDropdownProps) {
 				native
 				value={state}
 				onChange={handleChange}
-				style={{ color: 'white', background: '#E50078' }}
 				inputProps={{
 					'aria-label': 'age',
 					id: 'outlined-age-native-simple'

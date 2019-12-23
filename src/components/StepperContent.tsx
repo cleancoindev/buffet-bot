@@ -5,13 +5,48 @@ import {
 	ConditionOrAction
 } from '../constants/interfaces';
 
+// Material UI
+import { makeStyles } from '@material-ui/core/styles';
+
 import { Grid, Divider } from '@material-ui/core';
 
 // Import Local Components
 import InputField from './InputField';
+import { COLOURS } from '../constants/constants';
+
+const useStyles = makeStyles(theme => ({
+	box: {
+		background: 'none',
+		// border: '3px outset #E50078',
+		border: `3px outset ${COLOURS.salmon}`,
+
+		borderRadius: '2px 2px 2px 2px'
+	},
+	boxTitle: {
+		fontSize: '16px',
+		marginLeft: '10px',
+		color: 'white',
+		textAlign: 'left'
+	},
+	createButton: {
+		background: COLOURS.salmon,
+		minWidth: '100px',
+		color: 'white',
+		border: 0,
+		borderRadius: 3,
+		boxShadow: '0 2px 2px 2px rgba(255, 255, 255, .3)',
+		height: 48,
+		padding: '0 30px',
+		margin: 8,
+		'&:hover': {
+			background: COLOURS.salmon60
+		}
+	}
+}));
 
 export default function StepperContent(props: StepperContentProps) {
-	const { icedTxState, activeStep, classes } = props;
+	const { icedTxState, activeStep } = props;
+	const classes = useStyles();
 	// console.log(icedTxState)
 
 	const { condition, action } = icedTxState;
@@ -40,7 +75,7 @@ export default function StepperContent(props: StepperContentProps) {
 						direction="row"
 						justify="space-evenly"
 						alignItems="center"
-						style={{ background: 'brown', padding: '10px' }}
+						style={{ padding: '10px' }}
 					>
 						<Grid
 							container
@@ -50,9 +85,9 @@ export default function StepperContent(props: StepperContentProps) {
 							direction="column"
 							justify="flex-start"
 							alignItems="flex-start"
+							className={classes.box}
 							style={{
 								paddingLeft: '24px',
-								background: 'pink',
 								minHeight: '200px'
 							}}
 						>
@@ -60,11 +95,11 @@ export default function StepperContent(props: StepperContentProps) {
 							<h2>
 								{' '}
 								Condition:{' '}
-								<span style={{ color: 'red' }}>
+								<span style={{ color: COLOURS.salmon }}>
 									{condition.title}{' '}
 								</span>
 								on{' '}
-								<span style={{ color: 'red' }}>
+								<span style={{ color: COLOURS.salmon }}>
 									{condition.app}
 								</span>{' '}
 							</h2>
@@ -99,7 +134,7 @@ export default function StepperContent(props: StepperContentProps) {
 						direction="row"
 						justify="space-evenly"
 						alignItems="center"
-						style={{ background: 'brown', padding: '10px' }}
+						style={{ padding: '10px' }}
 					>
 						<Grid
 							container
@@ -109,20 +144,20 @@ export default function StepperContent(props: StepperContentProps) {
 							direction="column"
 							justify="flex-start"
 							alignItems="flex-start"
+							className={classes.box}
 							style={{
 								paddingLeft: '24px',
-								background: 'pink',
 								minHeight: '200px'
 							}}
 						>
 							<h1> Step: {stepIndex + 1}</h1>
 							<h2>
 								Action:{' '}
-								<span style={{ color: 'red' }}>
+								<span style={{ color: COLOURS.salmon }}>
 									{action.title}
 								</span>{' '}
 								with{' '}
-								<span style={{ color: 'red' }}>
+								<span style={{ color: COLOURS.salmon }}>
 									{action.app}
 								</span>{' '}
 							</h2>
@@ -156,7 +191,7 @@ export default function StepperContent(props: StepperContentProps) {
 							direction="row"
 							justify="space-evenly"
 							alignItems="center"
-							style={{ background: 'brown', padding: '10px' }}
+							style={{ padding: '10px' }}
 						>
 							<Grid
 								container
@@ -166,27 +201,27 @@ export default function StepperContent(props: StepperContentProps) {
 								direction="column"
 								justify="flex-start"
 								alignItems="flex-start"
+								className={classes.box}
 								style={{
-									paddingLeft: '24px',
-									background: 'pink'
+									paddingLeft: '24px'
 								}}
 							>
 								<h1> Summary</h1>
 								<h2 style={{ textAlign: 'left' }}>
 									After creating this IcedTx, gelato will{' '}
-									<span style={{ color: 'red' }}>
+									<span style={{ color: COLOURS.salmon }}>
 										{action.title}
 									</span>{' '}
 									with{' '}
-									<span style={{ color: 'red' }}>
+									<span style={{ color: COLOURS.salmon }}>
 										{action.app}
 									</span>{' '}
 									when the condition{' '}
-									<span style={{ color: 'red' }}>
+									<span style={{ color: COLOURS.salmon }}>
 										{condition.title}{' '}
 									</span>
 									on{' '}
-									<span style={{ color: 'red' }}>
+									<span style={{ color: COLOURS.salmon }}>
 										{condition.app}
 									</span>{' '}
 									is fulfilled
@@ -205,7 +240,7 @@ export default function StepperContent(props: StepperContentProps) {
 							direction="row"
 							justify="space-evenly"
 							alignItems="center"
-							style={{ background: 'brown', padding: '10px' }}
+							style={{ padding: '10px' }}
 						>
 							<Grid
 								container
@@ -215,20 +250,20 @@ export default function StepperContent(props: StepperContentProps) {
 								direction="column"
 								justify="flex-start"
 								alignItems="flex-start"
+								className={classes.box}
 								style={{
 									paddingLeft: '24px',
-									background: 'pink',
 									minHeight: '200px'
 								}}
 							>
 								<h2>
 									{' '}
 									Condition:{' '}
-									<span style={{ color: 'red' }}>
+									<span style={{ color: COLOURS.salmon }}>
 										{condition.title}{' '}
 									</span>
 									on{' '}
-									<span style={{ color: 'red' }}>
+									<span style={{ color: COLOURS.salmon }}>
 										{condition.app}
 									</span>{' '}
 								</h2>
@@ -253,7 +288,7 @@ export default function StepperContent(props: StepperContentProps) {
 							direction="row"
 							justify="space-evenly"
 							alignItems="center"
-							style={{ background: 'brown', padding: '10px' }}
+							style={{ padding: '10px' }}
 						>
 							<Grid
 								container
@@ -263,19 +298,19 @@ export default function StepperContent(props: StepperContentProps) {
 								direction="column"
 								justify="flex-start"
 								alignItems="flex-start"
+								className={classes.box}
 								style={{
 									paddingLeft: '24px',
-									background: 'pink',
 									minHeight: '200px'
 								}}
 							>
 								<h2>
 									Action:{' '}
-									<span style={{ color: 'red' }}>
+									<span style={{ color: COLOURS.salmon }}>
 										{action.title}
 									</span>{' '}
 									with{' '}
-									<span style={{ color: 'red' }}>
+									<span style={{ color: COLOURS.salmon }}>
 										{action.app}
 									</span>{' '}
 								</h2>

@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 // Local Components
 import StepperContent from './StepperContent';
 import { StepperProps, TxState } from '../constants/interfaces';
+import { COLOURS } from '../constants/constants';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -15,17 +16,51 @@ const useStyles = makeStyles((theme: Theme) =>
 			width: '100%'
 		},
 		backButton: {
-			marginRight: theme.spacing(1)
+			background: 'grey',
+			color: 'white',
+			minWidth: '100px',
+			border: 0,
+			borderRadius: 3,
+			boxShadow: '0 2px 2px 2px rgba(255, 255, 255, .3)',
+			height: 48,
+			padding: '0 30px',
+			margin: 8,
+			'&:hover': {
+				background: '#4aedc4'
+			}
+		},
+		nextButton: {
+			background: COLOURS.salmon,
+			minWidth: '100px',
+			color: 'white',
+			border: 0,
+			borderRadius: 3,
+			boxShadow: '0 2px 2px 2px rgba(255, 255, 255, .3)',
+			height: 48,
+			padding: '0 30px',
+			margin: 8,
+			'&:hover': {
+				background: COLOURS.salmon60
+			}
 		},
 		instructions: {
 			marginTop: theme.spacing(1),
 			marginBottom: theme.spacing(1)
 		},
-		stepperContent: {
-			background: 'black'
+		stepper: {
+			background: 'none'
 		},
 		title: {
 			marginLeft: theme.spacing(3)
+		},
+		alternativeLabel: {
+			color: 'white !important'
+			// active: {
+			// 	color: 'white'
+			// },
+			// completed: {
+			// 	color: 'white'
+			// }
 		}
 	})
 );
@@ -45,10 +80,21 @@ export default function StepperParent(props: StepperProps) {
 
 	return (
 		<div className={classes.root}>
-			<Stepper activeStep={activeStep} alternativeLabel>
+			<Stepper
+				className={classes.stepper}
+				style={{}}
+				activeStep={activeStep}
+				alternativeLabel
+			>
 				{steps.map(label => (
 					<Step key={label}>
-						<StepLabel>{label}</StepLabel>
+						<StepLabel
+							classes={{
+								alternativeLabel: classes.alternativeLabel
+							}}
+						>
+							{label}
+						</StepLabel>
 					</Step>
 				))}
 			</Stepper>
@@ -83,6 +129,7 @@ export default function StepperParent(props: StepperProps) {
 									variant="contained"
 									color="primary"
 									onClick={modalClickOpen}
+									className={classes.nextButton}
 								>
 									{'Confirm'}
 								</Button>
@@ -91,6 +138,7 @@ export default function StepperParent(props: StepperProps) {
 									variant="contained"
 									color="primary"
 									onClick={handleNext}
+									className={classes.nextButton}
 								>
 									{'Next'}
 								</Button>

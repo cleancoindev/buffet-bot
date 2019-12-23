@@ -8,22 +8,21 @@ import { useIcedTxContext } from '../state/GlobalState';
 import {
 	TOKEN_LIST,
 	UPDATE_CONDITION_INPUTS,
-	UPDATE_ACTION_INPUTS
+	UPDATE_ACTION_INPUTS,
+	INPUT_CSS
 } from '../constants/constants';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
-		root: {
+		form: {
 			marginTop: '24px',
 			// display: "flex",
 			width: '100%',
 			paddingRight: theme.spacing(3),
 			paddingBottom: theme.spacing(2)
 		},
-		textField: {
-			marginLeft: theme.spacing(1),
-			marginRight: theme.spacing(1)
-		}
+		// Import TextField CSS
+		...INPUT_CSS
 	})
 );
 
@@ -166,7 +165,7 @@ export default function LayoutTextFields(props: InputProps) {
 		switch (inputType) {
 			case InputType.Date:
 				return (
-					<div className={classes.root}>
+					<div className={classes.form}>
 						<DateAndTimePicker
 							label={label}
 							index={index}
@@ -176,7 +175,7 @@ export default function LayoutTextFields(props: InputProps) {
 				);
 			case InputType.Token:
 				return (
-					<div className={classes.root}>
+					<div className={classes.form}>
 						<TokenSelect
 							defaultToken={returnStringDefaultValue()}
 							index={index}
@@ -188,13 +187,14 @@ export default function LayoutTextFields(props: InputProps) {
 				);
 			case InputType.Number:
 				return (
-					<div className={classes.root}>
+					<div className={classes.form}>
 						<TextField
+							className={classes.root}
 							inputProps={{ min: 0 }}
 							required
 							id="outlined-full-width"
 							label={label}
-							style={{ marginTop: '0px', marginBottom: '0px' }}
+							// Import TextField CSS
 							defaultValue={returnDefaultValue()}
 							// placeholder="1"
 							// helperText="Full width!"
@@ -212,14 +212,15 @@ export default function LayoutTextFields(props: InputProps) {
 				);
 			case InputType.GetValue:
 				return (
-					<div className={classes.root}>
+					<div className={classes.form}>
 						<TextField
+							className={classes.root}
 							required
 							style={{ marginTop: '0px', marginBottom: '0px' }}
 							id="outlined-full-width"
 							label={label}
 							defaultValue={callGetValueAndSetState()}
-							disabled={true}
+							// Import TextField CSS
 							// placeholder="Placeholder"
 							// helperText="Full width!"
 							fullWidth
@@ -233,14 +234,15 @@ export default function LayoutTextFields(props: InputProps) {
 				);
 			case InputType.Address:
 				return (
-					<div className={classes.root}>
+					<div className={classes.form}>
 						<TextField
+							className={classes.root}
 							required
 							id="outlined-full-width"
 							label="Label"
 							placeholder="Placeholder"
 							// helperText="Full width!"
-							fullWidth
+							// Import TextField CSS
 							margin="normal"
 							InputLabelProps={{
 								shrink: true
@@ -252,14 +254,15 @@ export default function LayoutTextFields(props: InputProps) {
 				);
 			case InputType.StatelessGetValue:
 				return (
-					<div className={classes.root}>
+					<div className={classes.form}>
 						<TextField
 							required
 							style={{ marginTop: '0px', marginBottom: '0px' }}
 							id="outlined-full-width"
 							label={label}
 							defaultValue={callGetValue()}
-							disabled
+							// Import TextField CSS
+							className={classes.root}
 							// placeholder="Placeholder"
 							// helperText="Full width!"
 							fullWidth
@@ -276,9 +279,10 @@ export default function LayoutTextFields(props: InputProps) {
 				deriveBool();
 				return <React.Fragment></React.Fragment>;
 			default:
-				return <div className={classes.root}></div>;
+				return <div className={classes.form}></div>;
 		}
 	}
 
 	return renderInput();
+	// Import TextField CSS
 }
