@@ -31,7 +31,8 @@ import {
 
 import {
 	DEFAULT_PAST_TRANSACTIONS,
-	UPDATE_PAST_TRANSACTIONS
+	UPDATE_PAST_TRANSACTIONS,
+	COLOURS
 } from '../constants/constants';
 
 /*
@@ -233,11 +234,17 @@ interface EnhancedTableProps {
 const StyledTableCell = withStyles((theme: Theme) =>
 	createStyles({
 		head: {
-			backgroundColor: theme.palette.common.black,
-			color: theme.palette.common.white
+			// backgroundColor: theme.palette.common.white,
+			background: 'none',
+			color: 'white',
+			border: `2px outset ${COLOURS.salmon}`,
+			borderRadius: '2px 2px 2px 2px'
 		},
 		body: {
-			fontSize: 14
+			fontSize: 14,
+			color: 'white',
+			border: `2px outset ${COLOURS.salmon}`,
+			borderRadius: '2px 2px 2px 2px'
 		}
 	})
 )(TableCell);
@@ -246,7 +253,9 @@ const StyledTableRow = withStyles((theme: Theme) =>
 	createStyles({
 		root: {
 			'&:nth-of-type(odd)': {
-				backgroundColor: theme.palette.background.default
+				// backgroundColor: theme.palette.background.default,
+				border: `3px outset ${COLOURS.salmon}`,
+				borderRadius: '2px 2px 2px 2px'
 			}
 		}
 	})
@@ -286,21 +295,14 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
 			paddingleft: theme.spacing(1)
 		},
 		paper: {},
-		highlight:
-			theme.palette.type === 'light'
-				? {
-						color: 'theme.palette.secondary.main',
-						backgroundColor: lighten(
-							theme.palette.secondary.light,
-							0.85
-						)
-				  }
-				: {
-						color: 'theme.palette.text.primary',
-						backgroundColor: theme.palette.secondary.dark
-				  },
+		highlight: {
+			color: 'theme.palette.secondary.main',
+			// backgroundColor: lighten(theme.palette.secondary.light, 0.85)
+			backgroundColor: 'none'
+		},
 		title: {
-			flex: '1 1 100%'
+			flex: '1 1 100%',
+			color: 'white'
 		}
 	})
 );
@@ -326,8 +328,6 @@ const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		root: {
 			width: '100%'
-
-			// background: 'transparent',
 			// color: 'white'
 		},
 		paper: {
@@ -335,11 +335,11 @@ const useStyles = makeStyles((theme: Theme) =>
 			marginBottom: theme.spacing(2),
 			overflowX: 'auto',
 			// minWidth: 750,
-			background: 'transparent'
-			// color: 'white'
+			background: 'transparent',
+			border: `3px outset ${COLOURS.salmon}`,
+			borderRadius: '2px 2px 2px 2px'
 		},
 		table: {
-			// background: 'transparent',
 			// color: 'white'
 		},
 		visuallyHidden: {

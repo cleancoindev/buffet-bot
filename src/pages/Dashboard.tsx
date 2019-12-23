@@ -8,6 +8,7 @@ import TransactionTable from '../components/TransactionTable';
 // Types
 
 import { useIcedTxContext } from '../state/GlobalState';
+import { COLOURS } from '../constants/constants';
 
 // interface Match extends RouteComponentProps<Params> {}
 
@@ -20,6 +21,11 @@ export default function Create() {
 				direction="row"
 				justify="center"
 				alignItems="center"
+				// style={{
+				// 	border: `3px outset ${COLOURS.salmon}`,
+				// 	borderRadius: '2px 2px 2px 2px',
+				// 	background: 'white'
+				// }}
 			>
 				<TransactionTable />
 			</Grid>

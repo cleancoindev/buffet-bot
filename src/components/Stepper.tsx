@@ -48,7 +48,10 @@ const useStyles = makeStyles((theme: Theme) =>
 			marginBottom: theme.spacing(1)
 		},
 		stepper: {
-			background: 'none'
+			background: 'none',
+			'& .MuiStepIcon-root.MuiStepIcon-active': {
+				color: COLOURS.salmon
+			}
 		},
 		title: {
 			marginLeft: theme.spacing(3)
