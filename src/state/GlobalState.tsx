@@ -27,7 +27,7 @@ import {
 export const DEFAULT_ICED_TX = {
 	condition: DEFAULT_DATA_CONDITION,
 	action: DEFAULT_DATA_ACTION,
-	txState: TxState.displayGelatoWallet,
+	txState: TxState.displayInstallMetamask,
 	pastTransactions: DEFAULT_PAST_TRANSACTIONS
 };
 
@@ -38,8 +38,10 @@ export const DEFAULT_ICED_TX = {
 
 // Create web3 Provider using ethers and web3react
 const getLibrary = (provider?: any, connector?: AbstractConnectorInterface) => {
-	// return new ethers.providers.Web3Provider(web3.currentProvider);
-	return ethers.getDefaultProvider();
+	const library = new ethers.providers.Web3Provider(provider);
+	// @DEV check what this does
+	library.pollingInterval = 8000;
+	return library;
 };
 
 // Create Context

@@ -10,6 +10,10 @@ import { useIcedTxContext } from '../state/GlobalState';
 import { UPDATE_TX_STATE } from '../constants/constants';
 import { getTokenSymbol } from '../helpers/helpers';
 
+// Web3 React
+import { useWeb3React } from '@web3-react/core';
+import { injected } from '../constants/connectors';
+
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		gridItem: {
@@ -43,6 +47,7 @@ interface ModalContent {
 	progressText: string;
 	prepayment: boolean;
 	btn: string;
+	btnFunc?: Function;
 }
 
 interface TxCardProps {
@@ -79,16 +84,42 @@ export default function TransactionCard(props: TxCardProps) {
 	// Get icedTx context
 	const { dispatch } = useIcedTxContext();
 
-	/*
-displayGelatoWallet = 0,
-	preGelatoWallet = 1,
-	waitingGelatoWallet = 2,
-	postGelatoWallet = 3,
+	// Web3React
+	const { active, activate, deactivate } = useWeb3React();
 
-*/
+	const handleClick = (event: React.MouseEvent<unknown>) => {
+		if (modalContent.btnFunc === undefined) {
+			console.log('undefined');
+		} else {
+			modalContent.btnFunc();
+		}
+	};
 
 	function returnModalContent(txState: TxState): ModalContent {
 		switch (txState) {
+			case TxState.displayInstallMetamask:
+				return {
+					title: `To use gelato, please install the Metamask Plugin`,
+					progress: Progress.awaitingModalConfirm,
+					progressText: ``,
+					prepayment: false,
+					btn: 'Install Metamask',
+					btnFunc: () => {
+						console.log('hallo');
+						window.open('https://metamask.io/', '_blank');
+					}
+				};
+			case TxState.displayLogIntoMetamask:
+				return {
+					title: `Please log into Metamask`,
+					progress: Progress.awaitingModalConfirm,
+					progressText: ``,
+					prepayment: false,
+					btn: 'Open Metamask',
+					btnFunc: () => {
+						activate(injected);
+					}
+				};
 			case TxState.displayGelatoWallet:
 				return {
 					title: `First, lets create a gelato wallet for you!`,
@@ -600,6 +631,7 @@ displayGelatoWallet = 0,
 								borderStyle: 'solid',
 								borderWidth: '2px'
 							}}
+							onClick={handleClick}
 						>
 							{modalContent.btn}
 						</Button>

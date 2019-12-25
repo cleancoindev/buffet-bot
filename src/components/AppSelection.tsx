@@ -30,6 +30,7 @@ import {
 	ConditionWhitelistData
 } from '../constants/interfaces';
 import { RESET_CONDITION, RESET_ACTION, COLOURS } from '../constants/constants';
+import { useWeb3React } from '@web3-react/core';
 
 const useStyles = makeStyles(theme => ({
 	box: {
@@ -66,6 +67,10 @@ export default function AppSelection() {
 	// Import global state
 	//const { updateIcedTx, icedTxState, resetIcedTxInput } = useIcedTxContext();
 	const { dispatch, icedTxState } = useIcedTxContext();
+
+	// Import Web3react Context
+	const web3 = useWeb3React();
+	// console.log(web3);
 
 	// Local State
 	const [userSelection, setUserSelection] = React.useState<UserSelection>({
@@ -116,6 +121,9 @@ export default function AppSelection() {
 
 	return (
 		<div className={classes.box}>
+			<h1>{`Connected Address: ${
+				web3.active ? web3.account : 'No account found'
+			}`}</h1>
 			<Grid
 				container
 				direction="row"

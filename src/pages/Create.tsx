@@ -12,8 +12,15 @@ import MobileStepper from '../components/MobileStepper';
 import { RouteComponentProps } from 'react-router-dom';
 import { useIcedTxContext } from '../state/GlobalState';
 import { findConditionById, findActionById } from '../helpers/helpers';
-import { SELECT_CONDITION, SELECT_ACTION } from '../constants/constants';
+import {
+	SELECT_CONDITION,
+	SELECT_ACTION,
+	UPDATE_TX_STATE
+} from '../constants/constants';
 import TransactionModal from '../components/Modal';
+import { TxState } from '../constants/interfaces';
+import { Web3Provider } from 'ethers/providers';
+import { useWeb3React } from '@web3-react/core';
 
 interface Params {
 	conditionId: string;
@@ -27,6 +34,9 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 		params: { conditionId, actionId }
 	} = match;
 	const { icedTxState, dispatch } = useIcedTxContext();
+
+	// web3React context
+	const web3 = useWeb3React();
 
 	// Returns true if wrong params were inputted in URL
 	const [notFound, setNotFound] = useState(false);
@@ -100,6 +110,89 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 	const modalClose = () => {
 		setModalOpen(false);
 	};
+
+	console.log(web3.library);
+
+	// ########################### Checks before minting
+	const preTxCheck = () => {
+		// 1. Check if user has metamask installed, if not display install metamask link
+		const { ethereum } = window as any;
+
+		switch (icedTxState.txState) {
+			case TxState.displayInstallMetamask:
+				// Web3 object is injected
+				if (typeof ethereum !== 'undefined') {
+					// Check if the object is injected by metamask
+					if (ethereum.isMetaMask) {
+						// Yes it is metamask
+						console.log('Metamask is installed');
+						// Change txState to "Login with metamask"
+						console.log('Change TxState to displayLogIntoMetamask');
+						dispatch({
+							type: UPDATE_TX_STATE,
+							txState: TxState.displayLogIntoMetamask
+						});
+					} else {
+						// No Metamask installed => Show install Metamask Modal
+						console.log(
+							'No Metamask is installed - Render Install metamask modal'
+							// No need to change icedTx.txState
+						);
+					}
+				} else {
+					// No ethereum provider => Still install metamask
+				}
+				break;
+
+			// 2. Check if user is logged into metamask and has approved gelato
+			case TxState.displayLogIntoMetamask:
+				// User is already logged in => Change to insufficientBalance
+				if (web3.active) {
+					// Check if the object is injected by metamask
+					console.log('Change TxState to insufficientBalance');
+					dispatch({
+						type: UPDATE_TX_STATE,
+						txState: TxState.insufficientBalance
+					});
+				} else {
+					// No Metamask installed => Show install Metamask Modal
+					console.log('User has to log into metamask');
+				}
+
+				break;
+
+			// 3. Check if user has sufficient ETH Balance
+			case TxState.insufficientBalance:
+				// User is already logged in => Change to insufficientBalance
+				web3.library.getBalance(web3.account).then((result: string) => {
+					console.log(result);
+				});
+				// if (web3.active) {
+				// 	// Check if the object is injected by metamask
+				// 	console.log('Change TxState to insufficientBalance');
+				// 	dispatch({
+				// 		type: UPDATE_TX_STATE,
+				// 		txState: TxState.insufficientBalance
+				// 	});
+				// } else {
+				// 		// No Metamask installed => Show install Metamask Modal
+				// 		console.log(
+				// 			'User has to log into metamask'
+				// 		);
+				// }
+				break;
+		}
+
+		// 4. Check if user has gelato proxy
+
+		// 5. Check if user has sufficient token approval
+
+		// 6. READY to mint
+	};
+
+	useEffect(() => {
+		preTxCheck();
+	}, [icedTxState.txState]);
 
 	// MODAL STUFF END
 

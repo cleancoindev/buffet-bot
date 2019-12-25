@@ -110,18 +110,20 @@ export type KyberToken = Array<Token>;
 
 // Transaction Statea
 export enum TxState {
-	displayGelatoWallet = 0,
-	preGelatoWallet = 1,
-	waitingGelatoWallet = 2,
-	postGelatoWallet = 3,
-	displayApprove = 4,
-	preApprove = 5,
-	displayCreate = 6,
-	preCreate = 7,
-	waitingCreate = 8,
-	postCreate = 9,
-	cancelled = 10,
-	insufficientBalance = 11
+	displayInstallMetamask = 0,
+	displayLogIntoMetamask = 1,
+	displayGelatoWallet = 2,
+	preGelatoWallet = 3,
+	waitingGelatoWallet = 4,
+	postGelatoWallet = 5,
+	displayApprove = 6,
+	preApprove = 7,
+	displayCreate = 8,
+	preCreate = 9,
+	waitingCreate = 10,
+	postCreate = 11,
+	cancelled = 12,
+	insufficientBalance = 13
 	// waitingApprove,
 	// postApprove,
 }

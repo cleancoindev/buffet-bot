@@ -57,6 +57,7 @@ export function useInactiveListener(suppress: boolean = false) {
 				}
 			};
 			const handleNetworkChanged = (networkId: string | number) => {
+				// @DEV REFRESH CONTRACTS IN STATE
 				console.log(
 					"Handling 'networkChanged' event with payload",
 					networkId

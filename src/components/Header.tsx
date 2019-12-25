@@ -77,15 +77,14 @@ export default function ButtonAppBar() {
 	};
 	const { active, activate, deactivate } = useWeb3React();
 	const web3React = useWeb3React();
-	console.log(web3React);
 
 	// Web3 Logic
 
 	// handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
-	// const triedEager = useEagerConnect();
+	const triedEager = useEagerConnect();
 
 	// handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
-	// useInactiveListener(!triedEager);
+	useInactiveListener(!triedEager);
 
 	const logInLogOutMetamask = async () => {
 		if (active) {
@@ -96,6 +95,8 @@ export default function ButtonAppBar() {
 			await activate(injected);
 		}
 	};
+
+	// Web3 Logic END
 
 	return (
 		<React.Fragment>
