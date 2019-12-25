@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Routing
 import { Link, useHistory } from 'react-router-dom';
@@ -27,6 +27,11 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import Divider from '@material-ui/core/Divider';
+
+// Web3 React
+import { useWeb3React } from '@web3-react/core';
+import { useEagerConnect, useInactiveListener } from '../hooks/hooks';
+import { injected } from '../constants/connectors';
 
 const drawerWidth = 240;
 
@@ -70,6 +75,27 @@ export default function ButtonAppBar() {
 	const handleDrawerToggle = () => {
 		setMobileOpen(!mobileOpen);
 	};
+	const { active, activate, deactivate } = useWeb3React();
+	const web3React = useWeb3React();
+	console.log(web3React);
+
+	// Web3 Logic
+
+	// handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
+	// const triedEager = useEagerConnect();
+
+	// handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
+	// useInactiveListener(!triedEager);
+
+	const logInLogOutMetamask = async () => {
+		if (active) {
+			console.log('log metamask out');
+			await deactivate();
+		} else {
+			console.log('log metamask in');
+			await activate(injected);
+		}
+	};
 
 	return (
 		<React.Fragment>
@@ -85,7 +111,12 @@ export default function ButtonAppBar() {
 						>
 							Overview
 						</Button>
-						<Button style={{ color: 'white' }}>Connect</Button>
+						<Button
+							onClick={logInLogOutMetamask}
+							style={{ color: 'white' }}
+						>
+							{active ? 'LogOut' : 'Connect'}
+						</Button>
 					</Hidden>
 					<Hidden smUp>
 						<IconButton

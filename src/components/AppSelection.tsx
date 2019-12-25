@@ -66,7 +66,6 @@ export default function AppSelection() {
 	// Import global state
 	//const { updateIcedTx, icedTxState, resetIcedTxInput } = useIcedTxContext();
 	const { dispatch, icedTxState } = useIcedTxContext();
-	console.log(icedTxState);
 
 	// Local State
 	const [userSelection, setUserSelection] = React.useState<UserSelection>({

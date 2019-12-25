@@ -8,6 +8,14 @@ import React, {
 // Import Interfaces
 import { IcedTx, Action, TxState } from '../constants/interfaces';
 
+// Import Web3 React
+// Exposes following funcs: 1) getLibrary and 2) _useWeb3ReactManager
+import { Web3ReactProvider } from '@web3-react/core';
+import { AbstractConnectorInterface } from '@web3-react/types';
+
+// Import ethers.js
+import { ethers } from 'ethers';
+
 // import reducer function
 import { icedTxReducer } from './Reducers';
 import {
@@ -28,6 +36,12 @@ export const DEFAULT_ICED_TX = {
 // 	dispatch: Dispatch<Action>;
 // }
 
+// Create web3 Provider using ethers and web3react
+const getLibrary = (provider?: any, connector?: AbstractConnectorInterface) => {
+	// return new ethers.providers.Web3Provider(web3.currentProvider);
+	return ethers.getDefaultProvider();
+};
+
 // Create Context
 const IcedTxContext = createContext({
 	icedTxState: DEFAULT_ICED_TX,
@@ -41,21 +55,17 @@ const GlobalStateProvider: React.FunctionComponent = ({ children }) => {
 	// Second argument passes initial state
 	const [icedTxState, dispatch] = useReducer(icedTxReducer, DEFAULT_ICED_TX);
 
-	useEffect(() => {});
-	// const [icedTx, setIcedTx] = React.useState<IcedTx>({
-	//     condition: DEFAULT_DATA,
-	//     action: DEFAULT_DATA
-	// })
-
 	return (
-		<IcedTxContext.Provider
-			value={{
-				icedTxState: icedTxState,
-				dispatch: dispatch
-			}}
-		>
-			{children}
-		</IcedTxContext.Provider>
+		<Web3ReactProvider getLibrary={getLibrary}>
+			<IcedTxContext.Provider
+				value={{
+					icedTxState: icedTxState,
+					dispatch: dispatch
+				}}
+			>
+				{children}
+			</IcedTxContext.Provider>
+		</Web3ReactProvider>
 	);
 };
 
