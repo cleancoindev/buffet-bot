@@ -11,6 +11,19 @@ export const APPS = {
 
 */
 
+// Smart Contract Addresses
+export const GELATO_CORE_ADDRESS = {
+	1: '0x0',
+	3: '0x0Fcf27B454b344645a94788A3e820A0D2dab7F0e',
+	4: '0x501aF774Eb578203CC34E7171273124A93706C06',
+	42: '0x0'
+};
+
+export const EXECUTOR_ADDRESS = {
+	3: '0x203AdbbA2402a36C202F207caA8ce81f1A4c7a72',
+	4: '0x203AdbbA2402a36C202F207caA8ce81f1A4c7a72'
+};
+
 // Conditions
 export const CTYPES = [
 	{
@@ -58,7 +71,7 @@ export const CTYPES = [
 		id: 4,
 		app: 'Calendar',
 		title: 'Time',
-		address: '0x2',
+		address: '0xBdA9E16D8506C3AB2431fD4EE081c6d8a847FBaD',
 		params: ['uint256'],
 		userInputTypes: [InputType.Date],
 		inputLabels: ['Input Date and Time'],
@@ -84,7 +97,7 @@ export const ATYPES = [
 		id: 2,
 		app: 'Kyber',
 		title: 'Trade Tokens',
-		address: '0x4',
+		address: '0x5e2C7234DC00eF98B52B694b29824AcF30dBA53e',
 		params: ['uint256', 'address', 'address', 'bool'],
 		userInputTypes: [InputType.Token, InputType.Token, InputType.Number],
 		inputLabels: ['Sell Token', 'Buy Token', 'Sell Amount'],
@@ -102,6 +115,27 @@ export const ATYPES = [
 		inputLabels: [''],
 		userInputs: [],
 		approvalIndex: 0
+	}
+];
+
+export const TOKEN_LIST = [
+	{
+		address: '0x732fBA98dca813C3A630b53a8bFc1d6e87B1db65',
+		symbol: 'OMG',
+		name: 'OmiseGo',
+		decimals: 18
+	},
+	{
+		address: '0x725d648E6ff2B8C44c96eFAEa29b305e5bb1526a',
+		symbol: 'MANA',
+		name: 'MANA',
+		decimals: 18
+	},
+	{
+		address: '0x6FA355a7b6bD2D6bD8b927C489221BFBb6f1D7B2',
+		symbol: 'KNC',
+		name: 'Kyber Network',
+		decimals: 18
 	}
 ];
 

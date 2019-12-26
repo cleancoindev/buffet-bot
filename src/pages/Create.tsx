@@ -18,9 +18,16 @@ import {
 	UPDATE_TX_STATE
 } from '../constants/constants';
 import TransactionModal from '../components/Modal';
-import { TxState } from '../constants/interfaces';
+import { TxState, ChainIds } from '../constants/interfaces';
 import { Web3Provider } from 'ethers/providers';
 import { useWeb3React } from '@web3-react/core';
+import { ethers } from 'ethers';
+import { BigNumber } from 'ethers/utils';
+import { GELATO_CORE_ADDRESS, TOKEN_LIST } from '../constants/whitelist';
+
+import GELATO_CORE_ABI from '../constants/abis/gelatoCore.json';
+import ERC20_ABI from '../constants/abis/erc20.json';
+import { useGelatoCore, useERC20 } from '../hooks/hooks';
 
 interface Params {
 	conditionId: string;
@@ -40,6 +47,14 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 
 	// Returns true if wrong params were inputted in URL
 	const [notFound, setNotFound] = useState(false);
+
+	// Get gelatoCore
+	const gelatoCore = useGelatoCore();
+
+	// Get Erc20 contract
+	// @DEV make selected Token dynamic
+	const selectedToken = 2;
+	const erc20 = useERC20(selectedToken);
 
 	// When component renders, 1) Check that icedTx state exist, if not 2) check if correct params were inputted in URL, if not, 3) setNotFound = true
 	useEffect(() => {
@@ -111,7 +126,8 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 		setModalOpen(false);
 	};
 
-	console.log(web3.library);
+	console.log(web3);
+	console.log(icedTxState.txState);
 
 	// ########################### Checks before minting
 	const preTxCheck = () => {
@@ -164,26 +180,80 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 			// 3. Check if user has sufficient ETH Balance
 			case TxState.insufficientBalance:
 				// User is already logged in => Change to insufficientBalance
-				web3.library.getBalance(web3.account).then((result: string) => {
-					console.log(result);
-				});
-				// if (web3.active) {
-				// 	// Check if the object is injected by metamask
-				// 	console.log('Change TxState to insufficientBalance');
-				// 	dispatch({
-				// 		type: UPDATE_TX_STATE,
-				// 		txState: TxState.insufficientBalance
-				// 	});
-				// } else {
-				// 		// No Metamask installed => Show install Metamask Modal
-				// 		console.log(
-				// 			'User has to log into metamask'
-				// 		);
-				// }
+				web3.library
+					.getBalance(web3.account)
+					.then((result: ethers.utils.BigNumber) => {
+						const userBalance = result;
+						const hypotheticalMintingCosts = ethers.utils.bigNumberify(
+							'10000000000000000'
+						);
+						// We make initial check that user has sufficient ETH, e.g. more than 0.01ETH => Balance greater than cost of minting
+						if (hypotheticalMintingCosts.lte(userBalance)) {
+							// Change txState to displayGelatoWallet
+							console.log(
+								'Change TxState to displayGelatoWallet'
+							);
+							dispatch({
+								type: UPDATE_TX_STATE,
+								txState: TxState.displayGelatoWallet
+							});
+						} else {
+							console.log('User has insufficient balance');
+						}
+					});
 				break;
-		}
+			// 4. Check if user has gelato proxy
+			case TxState.displayGelatoWallet:
+				// User is already logged in => Change to insufficientBalance
+				gelatoCore.isUser(web3.account).then((result: boolean) => {
+					const isUser = result;
+					// User has Proxy
+					if (isUser) {
+						console.log('Change TxState to displayApprove');
+						dispatch({
+							type: UPDATE_TX_STATE,
+							txState: TxState.displayApprove
+						});
+					}
+				});
 
-		// 4. Check if user has gelato proxy
+				// let proxyAddress = await gelatoCore.useProxyOfUser(context.account)
+				break;
+			case TxState.displayApprove:
+				// User is already logged in => Change to insufficientBalance
+				gelatoCore
+					.getProxyOfUser(web3.account)
+					.then((result: string) => {
+						const proxyAddress = result;
+						// User has Proxy
+						// @DEV Make dynamic
+						const tokenAmount = ethers.utils.bigNumberify(
+							'10000000000000000'
+						);
+						erc20
+							.allowance(web3.account, proxyAddress)
+							.then((result: ethers.utils.BigNumber) => {
+								const allowance = result;
+								console.log(allowance.toString());
+								// If the Allowance is greater than the selected token amount, move on
+								if (tokenAmount.lte(allowance)) {
+									console.log(
+										'Change TxState to displayCreate'
+									);
+									dispatch({
+										type: UPDATE_TX_STATE,
+										txState: TxState.displayCreate
+									});
+								} else {
+									console.log('Insufficient allowance');
+								}
+								// User has Proxy
+							});
+					});
+				break;
+			default:
+				console.log('default');
+		}
 
 		// 5. Check if user has sufficient token approval
 
@@ -192,7 +262,7 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 
 	useEffect(() => {
 		preTxCheck();
-	}, [icedTxState.txState]);
+	}, [icedTxState.txState, web3.active]);
 
 	// MODAL STUFF END
 

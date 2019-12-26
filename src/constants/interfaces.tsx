@@ -128,6 +128,8 @@ export enum TxState {
 	// postApprove,
 }
 
+export type ChainIds = 1 | 3 | 4 | 42;
+
 // Action interfaces
 
 interface SelectAction {

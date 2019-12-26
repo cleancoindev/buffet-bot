@@ -13,12 +13,12 @@ import Select from '@material-ui/core/Select';
 import { useIcedTxContext } from '../../state/GlobalState';
 import { ConditionOrAction, Token } from '../../constants/interfaces';
 import {
-	TOKEN_LIST,
 	UPDATE_CONDITION_INPUTS,
 	UPDATE_ACTION_INPUTS,
 	INPUT_CSS,
 	COLOURS
 } from '../../constants/constants';
+import { TOKEN_LIST } from '../../constants/whitelist';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({

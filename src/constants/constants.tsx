@@ -35,12 +35,6 @@ export const DEFAULT_DATA_CONDITION = {
 	userInputs: emptyUserInputArray // [ ]
 };
 
-export const TOKEN_LIST = [
-	{ address: '0x0', symbol: 'DAI', name: 'DAI', decimals: 18 },
-	{ address: '0x1', symbol: 'WETH', name: 'Wrapped ETH', decimals: 18 },
-	{ address: '0x2', symbol: 'KNC', name: 'Kyber Network', decimals: 18 }
-];
-
 export const DEFAULT_PAST_TRANSACTIONS = [
 	{
 		id: '0',

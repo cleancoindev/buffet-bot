@@ -6,11 +6,11 @@ import DateAndTimePicker from './Inputs/DatePicker';
 import TokenSelect from './Inputs/TokenSelect';
 import { useIcedTxContext } from '../state/GlobalState';
 import {
-	TOKEN_LIST,
 	UPDATE_CONDITION_INPUTS,
 	UPDATE_ACTION_INPUTS,
 	INPUT_CSS
 } from '../constants/constants';
+import { TOKEN_LIST } from '../constants/whitelist';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
