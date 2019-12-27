@@ -420,30 +420,38 @@ export default function TransactionCard(props: TxCardProps) {
 								// The chain ID (or network ID) to use
 								// chainId: 3
 							};
+							try {
+								const tx = await gelatoCore.mintExecutionClaim(
+									icedTxState.condition.address,
+									encodedTrigger,
+									icedTxState.action.address,
+									encodedAction,
+									// @DEV make dynamic
+									EXECUTOR_ADDRESS[4],
+									overrides
+								);
 
-							const tx = await gelatoCore.mintExecutionClaim(
-								icedTxState.condition.address,
-								encodedTrigger,
-								icedTxState.action.address,
-								encodedAction,
-								// @DEV make dynamic
-								EXECUTOR_ADDRESS[4],
-								overrides
-							);
+								setTxHash(tx.hash);
+								console.log('Change TxState to waitingCreate');
+								dispatch({
+									type: UPDATE_TX_STATE,
+									txState: TxState.waitingCreate
+								});
+								const txMined = await tx.wait();
 
-							setTxHash(tx.hash);
-							console.log('Change TxState to waitingCreate');
-							dispatch({
-								type: UPDATE_TX_STATE,
-								txState: TxState.waitingCreate
-							});
-							const txMined = await tx.wait();
-
-							console.log('Change TxState to postCreate');
-							dispatch({
-								type: UPDATE_TX_STATE,
-								txState: TxState.postCreate
-							});
+								console.log('Change TxState to postCreate');
+								dispatch({
+									type: UPDATE_TX_STATE,
+									txState: TxState.postCreate
+								});
+							} catch (error) {
+								console.log(error);
+								console.log('Change TxState to cancelled');
+								dispatch({
+									type: UPDATE_TX_STATE,
+									txState: TxState.cancelled
+								});
+							}
 						} else {
 							console.log('ERROR, undefined account');
 						}
@@ -479,7 +487,8 @@ export default function TransactionCard(props: TxCardProps) {
 					progress: Progress.cancelled,
 					progressText: `Tx cancelled`,
 					prepayment: false,
-					btn: 'Close'
+					btn: 'Close',
+					btnFunc: modalClose
 				};
 			default:
 				return {
