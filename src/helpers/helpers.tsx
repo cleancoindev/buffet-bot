@@ -63,6 +63,12 @@ export function getTokenSymbol(address: string) {
 	return token === undefined ? 'ERROR Get Token Symbol' : token.symbol;
 }
 
+// @DEV Potenital bug in returning error string
+export function getTokenByAddress(address: string) {
+	const token = TOKEN_LIST.find(token => token.address === address);
+	return token === undefined ? 'ERROR Get Token Symbol' : token;
+}
+
 export function encodeActionPayload(
 	userInput: Array<string | number>,
 	inputParameter: Array<Params>,

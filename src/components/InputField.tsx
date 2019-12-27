@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Dispatch } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { InputType, ConditionOrAction } from '../constants/interfaces';
@@ -11,6 +11,7 @@ import {
 	INPUT_CSS
 } from '../constants/constants';
 import { TOKEN_LIST } from '../constants/whitelist';
+import { ethers } from 'ethers';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({

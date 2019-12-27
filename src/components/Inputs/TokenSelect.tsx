@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Dispatch } from 'react';
 import {
 	makeStyles,
 	Theme,
@@ -19,6 +19,8 @@ import {
 	COLOURS
 } from '../../constants/constants';
 import { TOKEN_LIST } from '../../constants/whitelist';
+import { ethers } from 'ethers';
+import { getTokenByAddress } from '../../helpers/helpers';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -86,7 +88,15 @@ const findToken = (address: string) => {
 
 export default function TokenSelect(props: TokenSelectProps) {
 	const { defaultToken, label, index, conditionOrAction, disabled } = props;
-	const { dispatch } = useIcedTxContext();
+	const { dispatch, icedTxState } = useIcedTxContext();
+
+	// @DEV Add a condition that always two different tokens will be shown by default
+
+	// Pref
+	const [token, setToken] = React.useState<Token>(findToken(defaultToken));
+	// console.log(token)
+	// console.log(icedTxState)
+	// console.log(conditionOrAction)
 
 	// updateUser Input
 	const updateConditionInputs = (index: number, value: any) => {
@@ -107,13 +117,6 @@ export default function TokenSelect(props: TokenSelectProps) {
 			: updateActionInputs;
 
 	const classes = useStyles();
-	// @DEV Add a condition that always two different tokens will be shown by default
-
-	// Pref
-	const [token, setToken] = React.useState<Token>(findToken(defaultToken));
-	// console.log(token)
-	// console.log(icedTxState)
-	// console.log(conditionOrAction)
 
 	const [open, setOpen] = React.useState(false);
 

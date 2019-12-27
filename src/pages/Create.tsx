@@ -22,12 +22,10 @@ import { TxState, ChainIds } from '../constants/interfaces';
 import { Web3Provider } from 'ethers/providers';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
-import { BigNumber } from 'ethers/utils';
-import { GELATO_CORE_ADDRESS, TOKEN_LIST } from '../constants/whitelist';
 
-import GELATO_CORE_ABI from '../constants/abis/gelatoCore.json';
 import ERC20_ABI from '../constants/abis/erc20.json';
-import { useGelatoCore, useERC20 } from '../hooks/hooks';
+
+import { useGelatoCore } from '../hooks/hooks';
 
 interface Params {
 	conditionId: string;
@@ -50,11 +48,6 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 
 	// Get gelatoCore
 	const gelatoCore = useGelatoCore();
-
-	// Get Erc20 contract
-	// @DEV make selected Token dynamic
-	const selectedToken = 2;
-	const erc20 = useERC20(selectedToken);
 
 	// When component renders, 1) Check that icedTx state exist, if not 2) check if correct params were inputted in URL, if not, 3) setNotFound = true
 	useEffect(() => {
@@ -217,35 +210,49 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 				// let proxyAddress = await gelatoCore.useProxyOfUser(context.account)
 				break;
 			case TxState.displayApprove:
-				// User is already logged in => Change to insufficientBalance
-				gelatoCore
-					.getProxyOfUser(web3.account)
-					.then((result: string) => {
-						const proxyAddress = result;
-						// User has Proxy
-						// @DEV Make dynamic
-						const tokenAmount = ethers.utils.bigNumberify(
-							'10000000000000000'
-						);
-						erc20
-							.allowance(web3.account, proxyAddress)
-							.then((result: ethers.utils.BigNumber) => {
-								const allowance = result;
-								// If the Allowance is greater than the selected token amount, move on
-								if (tokenAmount.lte(allowance)) {
-									console.log(
-										'Change TxState to displayCreate'
-									);
-									dispatch({
-										type: UPDATE_TX_STATE,
-										txState: TxState.displayCreate
-									});
-								} else {
-									console.log('Insufficient allowance');
-								}
-								// User has Proxy
-							});
-					});
+				if (activeStep === 2) {
+					// User is already logged in => Change to insufficientBalance
+					gelatoCore
+						.getProxyOfUser(web3.account)
+						.then((result: string) => {
+							const proxyAddress = result;
+							// User has Proxy
+							// @DEV Make dynamic
+							const tokenAmount = ethers.utils.bigNumberify(
+								'10000000000000000'
+							);
+							// Get Erc20 contract
+							const signer = web3.library.getSigner();
+							const tokenAddress =
+								icedTxState.action.userInputs[
+									icedTxState.action.approvalIndex
+								];
+							console.log(tokenAddress);
+							const erc20 = new ethers.Contract(
+								tokenAddress.toString(),
+								ERC20_ABI,
+								signer
+							);
+							erc20
+								.allowance(web3.account, proxyAddress)
+								.then((result: ethers.utils.BigNumber) => {
+									const allowance = result;
+									// If the Allowance is greater than the selected token amount, move on
+									if (tokenAmount.lte(allowance)) {
+										console.log(
+											'Change TxState to displayCreate'
+										);
+										dispatch({
+											type: UPDATE_TX_STATE,
+											txState: TxState.displayCreate
+										});
+									} else {
+										console.log('Insufficient allowance');
+									}
+									// User has Proxy
+								});
+						});
+				}
 				break;
 			default:
 				console.log('default');
@@ -258,7 +265,7 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 
 	useEffect(() => {
 		preTxCheck();
-	}, [icedTxState.txState, web3.active]);
+	}, [icedTxState.txState, web3.active, activeStep]);
 
 	// MODAL STUFF END
 

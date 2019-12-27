@@ -8,6 +8,8 @@ import {
 	UPDATE_TX_STATE,
 	UPDATE_PAST_TRANSACTIONS
 } from './constants';
+import { Dispatch, SetStateAction } from 'react';
+import { ethers } from 'ethers';
 
 export interface PastTransaction {
 	id: string;

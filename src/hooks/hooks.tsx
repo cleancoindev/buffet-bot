@@ -7,7 +7,6 @@ import { GELATO_CORE_ADDRESS, TOKEN_LIST } from '../constants/whitelist';
 import { ethers } from 'ethers';
 
 import GELATO_CORE_ABI from '../constants/abis/gelatoCore.json';
-import ERC20_ABI from '../constants/abis/erc20.json';
 
 export function useEagerConnect() {
 	const { activate, active } = useWeb3React();
@@ -102,17 +101,6 @@ export function useGelatoCore() {
 		const gelatoCoreAddress = GELATO_CORE_ADDRESS[chainId];
 		return new ethers.Contract(gelatoCoreAddress, GELATO_CORE_ABI, signer);
 	} else {
-		return 'ERROR, NOT active';
-	}
-}
-
-export function useERC20(index: number) {
-	const web3 = useWeb3React();
-	if (web3.active) {
-		const signer = web3.library.getSigner();
-		const erc20Address = TOKEN_LIST[index].address;
-		return new ethers.Contract(erc20Address, ERC20_ABI, signer);
-	} else {
-		return 'ERROR, not active';
+		console.log('ERROR, NOT active');
 	}
 }

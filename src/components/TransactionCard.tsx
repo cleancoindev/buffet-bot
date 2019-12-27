@@ -26,6 +26,9 @@ import { useGelatoCore } from '../hooks/hooks';
 import { EXECUTOR_ADDRESS } from '../constants/whitelist';
 import { ethers } from 'ethers';
 
+// Smart Contract ABIs
+import ERC20_ABI from '../constants/abis/erc20.json';
+
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		gridItem: {
@@ -58,6 +61,7 @@ interface ModalContent {
 	progress: Progress;
 	progressText: string;
 	prepayment: boolean;
+	closeBtn: boolean;
 	btn: string;
 	btnFunc?: Function;
 }
@@ -131,6 +135,10 @@ export default function TransactionCard(props: TxCardProps) {
 		}
 	};
 
+	function addGasBuffer(weiAmount: ethers.utils.BigNumber) {
+		return ethers.utils.bigNumberify('50000').add(weiAmount);
+	}
+
 	async function getGasEstimatePlusBuffer(
 		encodedTrigger: string,
 		encodedAction: string,
@@ -149,7 +157,7 @@ export default function TransactionCard(props: TxCardProps) {
 			}
 		);
 
-		return ethers.utils.bigNumberify('50000').add(gasEstimate);
+		return addGasBuffer(gasEstimate);
 	}
 
 	async function setTransactionFee() {
@@ -160,18 +168,32 @@ export default function TransactionCard(props: TxCardProps) {
 
 		const gelatoGasPriceInWei = await getEthGasStationGasPrice();
 
-		const { encodedTrigger, encodedAction } = encodeActionAndTrigger(
-			userAccount
+		let gasEstimatePlusBuffer: ethers.utils.BigNumber = ethers.utils.bigNumberify(
+			'1'
 		);
 
-		const prepaymentAmount = await getPrepaymentAmount();
+		switch (icedTxState.txState) {
+			case TxState.displayGelatoWallet:
+				const gasEstimate = await gelatoCore.estimate.createUserProxy();
+				gasEstimatePlusBuffer = addGasBuffer(gasEstimate);
+				break;
 
-		// Get Gas Estimate
-		const gasEstimatePlusBuffer = await getGasEstimatePlusBuffer(
-			encodedTrigger,
-			encodedAction,
-			prepaymentAmount
-		);
+			case TxState.displayCreate:
+				const {
+					encodedTrigger,
+					encodedAction
+				} = encodeActionAndTrigger(userAccount);
+
+				const prepaymentAmount = await getPrepaymentAmount();
+
+				// Get Gas Estimate
+				gasEstimatePlusBuffer = await getGasEstimatePlusBuffer(
+					encodedTrigger,
+					encodedAction,
+					prepaymentAmount
+				);
+				break;
+		}
 
 		const transactionFeeInWei = gelatoGasPriceInWei.mul(
 			gasEstimatePlusBuffer
@@ -250,7 +272,6 @@ export default function TransactionCard(props: TxCardProps) {
 		);
 		const gasStationJson = await gasStationResponse.json();
 		const fastGasPrice = gasStationJson.fast;
-		console.log(fastGasPrice);
 		const gelatoGasPriceInGwei = ethers.utils
 			.bigNumberify(fastGasPrice)
 			.div(ethers.utils.bigNumberify('10'))
@@ -266,7 +287,6 @@ export default function TransactionCard(props: TxCardProps) {
 
 	// When Modal renders, set Prepayment value based on the selected action
 	useEffect(() => {
-		console.log('RENDERING MODAL');
 		if (active) {
 			setPrepaymentAmount();
 			setTransactionFee();
@@ -297,6 +317,7 @@ export default function TransactionCard(props: TxCardProps) {
 					progress: Progress.awaitingModalConfirm,
 					progressText: ``,
 					prepayment: false,
+					closeBtn: true,
 					btn: 'Install Metamask',
 					btnFunc: () => {
 						window.open('https://metamask.io/', '_blank');
@@ -308,6 +329,7 @@ export default function TransactionCard(props: TxCardProps) {
 					progress: Progress.awaitingModalConfirm,
 					progressText: ``,
 					prepayment: false,
+					closeBtn: true,
 					btn: 'Open Metamask',
 					btnFunc: () => {
 						activate(injected);
@@ -319,7 +341,67 @@ export default function TransactionCard(props: TxCardProps) {
 					progress: Progress.awaitingModalConfirm,
 					progressText: ``,
 					prepayment: false,
-					btn: 'Create Wallet'
+					closeBtn: true,
+					btn: 'Create Wallet',
+					btnFunc: async () => {
+						// Change Modal to illustrate that user has to confirm Tx
+						console.log('Change TxState to preGelatoWallet');
+						dispatch({
+							type: UPDATE_TX_STATE,
+							txState: TxState.preGelatoWallet
+						});
+
+						// User has Proxy
+						if (account !== undefined && account !== null) {
+							const gelatoGasPriceInWei = await getEthGasStationGasPrice();
+
+							const gasEstimate = await gelatoCore.estimate.createUserProxy();
+
+							const gasEstimatePlusBuffer = addGasBuffer(
+								gasEstimate
+							);
+
+							let overrides = {
+								// The maximum units of gas for the transaction to use
+								gasLimit: gasEstimatePlusBuffer,
+
+								// The price (in wei) per unit of gas
+								gasPrice: gelatoGasPriceInWei
+							};
+							try {
+								const tx = await gelatoCore.createUserProxy(
+									overrides
+								);
+
+								setTxHash(tx.hash);
+								console.log(
+									'Change TxState to waitingGelatoWallet'
+								);
+								dispatch({
+									type: UPDATE_TX_STATE,
+									txState: TxState.waitingGelatoWallet
+								});
+								await tx.wait();
+
+								console.log(
+									'Change TxState to postGelatoWallet'
+								);
+								dispatch({
+									type: UPDATE_TX_STATE,
+									txState: TxState.postGelatoWallet
+								});
+							} catch (error) {
+								console.log(error);
+								console.log('Change TxState to cancelled');
+								dispatch({
+									type: UPDATE_TX_STATE,
+									txState: TxState.cancelled
+								});
+							}
+						} else {
+							console.log('ERROR, undefined account');
+						}
+					}
 				};
 			case TxState.preGelatoWallet:
 				return {
@@ -327,6 +409,7 @@ export default function TransactionCard(props: TxCardProps) {
 					progress: Progress.awaitingMetamaskConfirm,
 					progressText: `Waiting for Metamask confirmation`,
 					prepayment: false,
+					closeBtn: false,
 					btn: ''
 				};
 			case TxState.waitingGelatoWallet:
@@ -335,6 +418,7 @@ export default function TransactionCard(props: TxCardProps) {
 					progress: Progress.awaitingeMining,
 					progressText: `Transaction in progress`,
 					prepayment: false,
+					closeBtn: false,
 					btn: ''
 				};
 			case TxState.postGelatoWallet:
@@ -343,6 +427,7 @@ export default function TransactionCard(props: TxCardProps) {
 					progress: Progress.finished,
 					progressText: `Transaction mined`,
 					prepayment: false,
+					closeBtn: false,
 					btn: 'Continue'
 				};
 			case TxState.displayApprove:
@@ -355,7 +440,86 @@ export default function TransactionCard(props: TxCardProps) {
 					progress: Progress.awaitingModalConfirm,
 					progressText: ``,
 					prepayment: false,
-					btn: 'Approve'
+					closeBtn: true,
+					btn: 'Approve',
+					btnFunc: async () => {
+						// Change Modal to illustrate that user has to confirm Tx
+						console.log('Change TxState to preApprove');
+						dispatch({
+							type: UPDATE_TX_STATE,
+							txState: TxState.preApprove
+						});
+						const proxyAddress = await gelatoCore.getProxyOfUser(
+							account
+						);
+
+						// Get Erc20 contract
+						const signer = library.getSigner();
+						const tokenAddress =
+							icedTxState.action.userInputs[
+								icedTxState.action.approvalIndex
+							];
+						const erc20 = new ethers.Contract(
+							tokenAddress.toString(),
+							ERC20_ABI,
+							signer
+						);
+
+						// User has Proxy
+						if (account !== undefined && account !== null) {
+							const gelatoGasPriceInWei = await getEthGasStationGasPrice();
+
+							const gasEstimate = await erc20.estimate.approve(
+								proxyAddress,
+								ethers.constants.MaxUint256
+							);
+
+							const gasEstimatePlusBuffer = addGasBuffer(
+								gasEstimate
+							);
+
+							let overrides = {
+								// The maximum units of gas for the transaction to use
+								gasLimit: gasEstimatePlusBuffer,
+
+								// The price (in wei) per unit of gas
+								gasPrice: gelatoGasPriceInWei
+							};
+							try {
+								const tx = await erc20.approve(
+									proxyAddress,
+									ethers.constants.MaxUint256,
+									overrides
+								);
+
+								setTxHash(tx.hash);
+								console.log('Change TxState to displayCreate');
+								dispatch({
+									type: UPDATE_TX_STATE,
+									txState: TxState.displayCreate
+								});
+								// WE SKIP THE WAITING FOR THE TX FOR APPROVE
+								// await tx.wait();
+
+								// console.log(
+								// 	'Change TxState to postGelatoWallet'
+								// );
+								// dispatch({
+								// 	type: UPDATE_TX_STATE,
+								// 	txState: TxState.postGelatoWallet
+								// });
+							} catch (error) {
+								console.log(error);
+								console.log('Change TxState to cancelled');
+								dispatch({
+									type: UPDATE_TX_STATE,
+									txState: TxState.cancelled
+								});
+							}
+						} else {
+							console.log('ERROR, undefined account');
+						}
+					}
 				};
 			case TxState.preApprove:
 				return {
@@ -367,6 +531,7 @@ export default function TransactionCard(props: TxCardProps) {
 					progress: Progress.awaitingMetamaskConfirm,
 					progressText: `Waiting for Metamask confirmation`,
 					prepayment: false,
+					closeBtn: true,
 					btn: ''
 				};
 			case TxState.displayCreate:
@@ -375,6 +540,7 @@ export default function TransactionCard(props: TxCardProps) {
 					progress: Progress.awaitingModalConfirm,
 					progressText: ``,
 					prepayment: true,
+					closeBtn: true,
 					btn: 'Create',
 					btnFunc: async () => {
 						// Change Modal to illustrate that user has to confirm Tx
@@ -437,7 +603,7 @@ export default function TransactionCard(props: TxCardProps) {
 									type: UPDATE_TX_STATE,
 									txState: TxState.waitingCreate
 								});
-								const txMined = await tx.wait();
+								await tx.wait();
 
 								console.log('Change TxState to postCreate');
 								dispatch({
@@ -463,6 +629,7 @@ export default function TransactionCard(props: TxCardProps) {
 					progress: Progress.awaitingMetamaskConfirm,
 					progressText: `Waiting for Metamask confirmation`,
 					prepayment: true,
+					closeBtn: true,
 					btn: ''
 				};
 			case TxState.waitingCreate:
@@ -471,6 +638,7 @@ export default function TransactionCard(props: TxCardProps) {
 					progress: Progress.awaitingeMining,
 					progressText: `Transaction in progress`,
 					prepayment: true,
+					closeBtn: true,
 					btn: ''
 				};
 			case TxState.postCreate:
@@ -479,6 +647,7 @@ export default function TransactionCard(props: TxCardProps) {
 					progress: Progress.finished,
 					progressText: `Transaction mined`,
 					prepayment: true,
+					closeBtn: false,
 					btn: ''
 				};
 			case TxState.cancelled:
@@ -487,8 +656,16 @@ export default function TransactionCard(props: TxCardProps) {
 					progress: Progress.cancelled,
 					progressText: `Tx cancelled`,
 					prepayment: false,
+					closeBtn: false,
 					btn: 'Close',
-					btnFunc: modalClose
+					btnFunc: () => {
+						console.log('Change TxState to insufficientBalance');
+						dispatch({
+							type: UPDATE_TX_STATE,
+							txState: TxState.insufficientBalance
+						});
+						modalClose();
+					}
 				};
 			default:
 				return {
@@ -496,6 +673,7 @@ export default function TransactionCard(props: TxCardProps) {
 					progress: Progress.awaitingMetamaskConfirm,
 					progressText: `Waiting for Metamask confirmation`,
 					prepayment: false,
+					closeBtn: false,
 					btn: ''
 				};
 		}
@@ -920,30 +1098,33 @@ export default function TransactionCard(props: TxCardProps) {
 						</Button>
 					</Grid>
 				)}
-				{/* <Grid
-					container
-					item
-					sm={12}
-					xs={12}
-					direction="row"
-					justify="center"
-					alignItems="center"
-					style={{
-						background: 'FFFFFF',
-						marginTop: '24px'
-					}}
-				>
-					<Button
-						onClick={incrementTxState}
+				{/* Dont display close button for some of the modals*/}
+				{modalContent.closeBtn && (
+					<Grid
+						container
+						item
+						sm={12}
+						xs={12}
+						direction="row"
+						justify="center"
+						alignItems="center"
 						style={{
-							width: '100%',
-							borderStyle: 'solid',
-							borderWidth: '2px'
+							background: 'FFFFFF',
+							marginTop: '24px'
 						}}
 					>
-						Dummy
-					</Button>
-				</Grid> */}
+						<Button
+							onClick={modalClose}
+							style={{
+								width: '100%',
+								borderStyle: 'solid',
+								borderWidth: '2px'
+							}}
+						>
+							Cancel
+						</Button>
+					</Grid>
+				)}
 			</Grid>
 		</div>
 	);

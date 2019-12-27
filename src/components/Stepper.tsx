@@ -78,7 +78,6 @@ export default function StepperParent(props: StepperProps) {
 		handleBack,
 		// modalOpen,
 		modalClickOpen
-		// modalClose
 	} = props;
 
 	return (
@@ -116,6 +115,7 @@ export default function StepperParent(props: StepperProps) {
 							icedTxState={icedTxState}
 							classes={classes}
 							activeStep={activeStep}
+							// {"@DEV WHAT DOES INPUTS DO?"}
 							inputs={['uint256', 'uint256']}
 						></StepperContent>
 						{/* </Typography> */}
