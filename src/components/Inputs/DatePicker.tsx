@@ -119,7 +119,6 @@ export default function DateAndTimePicker(props: InputProps) {
 	// SET MIN AND MAX DATE, see api https://material-ui-pickers.dev/api/DateTimePicker
 
 	const { dispatch, icedTxState } = useIcedTxContext();
-	console.log(icedTxState);
 	// Set state with either NOW or global state
 	let defaultDate;
 	if (icedTxState.condition.userInputs[index] === undefined) {

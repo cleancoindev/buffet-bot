@@ -79,9 +79,13 @@ export function encodeActionPayload(
 	//@DEV CHANGE UINT inputs into BigNumbers
 
 	// Insert user address into userInput Array at index 0
-	userInput.splice(0, 0, user);
+	// Make copy to not change global userInput variable
+	const copyUserInput = [...userInput];
+	copyUserInput.splice(0, 0, user);
 
-	const actionPayloadWithSelector = iFace.functions.action.encode(userInput);
+	const actionPayloadWithSelector = iFace.functions.action.encode(
+		copyUserInput
+	);
 
 	return actionPayloadWithSelector;
 }

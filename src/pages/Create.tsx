@@ -126,9 +126,6 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 		setModalOpen(false);
 	};
 
-	console.log(web3);
-	console.log(icedTxState.txState);
-
 	// ########################### Checks before minting
 	const preTxCheck = () => {
 		// 1. Check if user has metamask installed, if not display install metamask link
@@ -234,7 +231,6 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 							.allowance(web3.account, proxyAddress)
 							.then((result: ethers.utils.BigNumber) => {
 								const allowance = result;
-								console.log(allowance.toString());
 								// If the Allowance is greater than the selected token amount, move on
 								if (tokenAmount.lte(allowance)) {
 									console.log(

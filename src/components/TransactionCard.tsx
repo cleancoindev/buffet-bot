@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react';
+
+// Routes
+import { Link, useHistory } from 'react-router-dom';
+
 import { Grid, CircularProgress, Button } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { TxState, IcedTx, ChainIds } from '../constants/interfaces';
+
 // import ProgressBar from './ProgressBar';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
 import LinkIcon from '@material-ui/icons/Link';
 import { useIcedTxContext } from '../state/GlobalState';
-import { UPDATE_TX_STATE } from '../constants/constants';
+import { UPDATE_TX_STATE, COLOURS } from '../constants/constants';
 import {
 	getTokenSymbol,
 	encodeActionPayload,
@@ -94,6 +99,9 @@ export default function TransactionCard(props: TxCardProps) {
 	// Get icedTx context
 	const { dispatch } = useIcedTxContext();
 
+	// For Routing to Dashboard
+	const history = useHistory();
+
 	// Web3React
 	const {
 		chainId,
@@ -110,6 +118,10 @@ export default function TransactionCard(props: TxCardProps) {
 	});
 	const [etherscanPrefix, setEtherscanPrefix] = useState('');
 	const [txHash, setTxHash] = useState('');
+	const [txFee, setTxFee] = useState({
+		eth: 0,
+		dollar: 0
+	});
 
 	const handleClick = (event: React.MouseEvent<unknown>) => {
 		if (modalContent.btnFunc === undefined) {
@@ -119,6 +131,75 @@ export default function TransactionCard(props: TxCardProps) {
 		}
 	};
 
+	async function getGasEstimatePlusBuffer(
+		encodedTrigger: string,
+		encodedAction: string,
+		prepaymentAmount: ethers.utils.BigNumber
+	) {
+		// @DEV ADD TRY/CATCHS to all ETHEREUM TRANSACTIONS
+		const gasEstimate = await gelatoCore.estimate.mintExecutionClaim(
+			icedTxState.condition.address,
+			encodedTrigger,
+			icedTxState.action.address,
+			encodedAction,
+			// @DEV make dynamic
+			EXECUTOR_ADDRESS[4],
+			{
+				value: ethers.utils.bigNumberify(prepaymentAmount.toString())
+			}
+		);
+
+		return ethers.utils.bigNumberify('50000').add(gasEstimate);
+	}
+
+	async function setTransactionFee() {
+		let userAccount = account;
+
+		if (userAccount === undefined || userAccount === null)
+			userAccount = '0x0';
+
+		const gelatoGasPriceInWei = await getEthGasStationGasPrice();
+
+		const { encodedTrigger, encodedAction } = encodeActionAndTrigger(
+			userAccount
+		);
+
+		const prepaymentAmount = await getPrepaymentAmount();
+
+		// Get Gas Estimate
+		const gasEstimatePlusBuffer = await getGasEstimatePlusBuffer(
+			encodedTrigger,
+			encodedAction,
+			prepaymentAmount
+		);
+
+		const transactionFeeInWei = gelatoGasPriceInWei.mul(
+			gasEstimatePlusBuffer
+		);
+
+		const { ethAmount, dollar } = await convertWeiToETHAndDollar(
+			transactionFeeInWei
+		);
+
+		setTxFee({
+			eth: parseFloat(ethAmount),
+			dollar: parseFloat(dollar)
+		});
+	}
+
+	async function setPrepaymentAmount() {
+		const prepayment = await getPrepaymentAmount();
+
+		const { ethAmount, dollar } = await convertWeiToETHAndDollar(
+			prepayment
+		);
+
+		setPrepayment({
+			eth: parseFloat(ethAmount),
+			dollar: parseFloat(dollar)
+		});
+	}
+
 	async function getPrepaymentAmount() {
 		const prepayment = await gelatoCore.getMintingDepositPayable(
 			icedTxState.action.address,
@@ -126,35 +207,69 @@ export default function TransactionCard(props: TxCardProps) {
 			EXECUTOR_ADDRESS[4]
 		);
 
-		const userFriendlyPrepayment = ethers.utils.formatEther(
-			ethers.utils.bigNumberify(prepayment.toString())
-		);
-		console.log(userFriendlyPrepayment);
+		return prepayment;
+	}
 
+	async function convertWeiToETHAndDollar(costs: ethers.utils.BigNumber) {
+		// Calc ETH Amoutn e.g. 0.025 ETH
+		const ethAmount = ethers.utils.formatEther(costs);
+
+		// Get EtherScan provider
 		let etherscanProvider = new ethers.providers.EtherscanProvider();
 
 		// Getting the current Ethereum price
 		let etherPrice = await etherscanProvider.getEtherPrice();
-		console.log(etherPrice);
 
 		const dollar = (
-			parseFloat(userFriendlyPrepayment) *
-			parseFloat(etherPrice.toString())
+			parseFloat(ethAmount) * parseFloat(etherPrice.toString())
 		).toFixed(2);
-		console.log(dollar);
 
-		setPrepayment({
-			eth: parseFloat(userFriendlyPrepayment),
-			dollar: parseFloat(dollar)
-		});
+		return { ethAmount: parseFloat(ethAmount).toFixed(4), dollar };
+	}
 
-		return prepayment;
+	function encodeActionAndTrigger(account: string) {
+		const encodedTrigger = encodeTriggerPayload(
+			icedTxState.condition.userInputs,
+			icedTxState.condition.params
+		);
+
+		const encodedAction = encodeActionPayload(
+			icedTxState.action.userInputs,
+			icedTxState.action.params,
+			account
+		);
+		return { encodedTrigger, encodedAction };
+	}
+
+	// Return gas price in wei with buffer
+	async function getEthGasStationGasPrice() {
+		// Calculate gas price
+
+		const gasStationResponse = await fetch(
+			'https://ethgasstation.info/json/ethgasAPI.json'
+		);
+		const gasStationJson = await gasStationResponse.json();
+		const fastGasPrice = gasStationJson.fast;
+		console.log(fastGasPrice);
+		const gelatoGasPriceInGwei = ethers.utils
+			.bigNumberify(fastGasPrice)
+			.div(ethers.utils.bigNumberify('10'))
+			.add(ethers.utils.bigNumberify('1'));
+
+		const gelatoGasPriceInWei = ethers.utils.parseUnits(
+			gelatoGasPriceInGwei.toString(),
+			'gwei'
+		);
+
+		return gelatoGasPriceInWei;
 	}
 
 	// When Modal renders, set Prepayment value based on the selected action
 	useEffect(() => {
+		console.log('RENDERING MODAL');
 		if (active) {
-			getPrepaymentAmount();
+			setPrepaymentAmount();
+			setTransactionFee();
 			let prefix;
 			switch (chainId) {
 				case 1:
@@ -184,7 +299,6 @@ export default function TransactionCard(props: TxCardProps) {
 					prepayment: false,
 					btn: 'Install Metamask',
 					btnFunc: () => {
-						console.log('hallo');
 						window.open('https://metamask.io/', '_blank');
 					}
 				};
@@ -272,43 +386,41 @@ export default function TransactionCard(props: TxCardProps) {
 						const proxyAddress = await gelatoCore.getProxyOfUser(
 							account
 						);
-						console.log(proxyAddress);
 						// User has Proxy
 						if (account !== undefined && account !== null) {
-							const encodedTrigger = encodeTriggerPayload(
-								icedTxState.condition.userInputs,
-								icedTxState.condition.params
-							);
-
-							const encodedAction = encodeActionPayload(
-								icedTxState.action.userInputs,
-								icedTxState.action.params,
-								account
-							);
+							const {
+								encodedTrigger,
+								encodedAction
+							} = encodeActionAndTrigger(account);
 
 							const prepaymentAmount = await getPrepaymentAmount();
+
+							const gelatoGasPriceInWei = await getEthGasStationGasPrice();
+
+							//  Add 50.000 gas to estimate
+							const gasEstimatePlusBuffer = await getGasEstimatePlusBuffer(
+								encodedTrigger,
+								encodedAction,
+								prepaymentAmount
+							);
+
 							let overrides = {
 								// The maximum units of gas for the transaction to use
-								gasLimit: 4000000,
+								gasLimit: gasEstimatePlusBuffer,
 
 								// The price (in wei) per unit of gas
-								gasPrice: ethers.utils.parseUnits(
-									'5.0',
-									'gwei'
-								),
+								gasPrice: gelatoGasPriceInWei,
 
 								// The nonce to use in the transaction
 								// nonce: 123,
 
 								// The amount to send with the transaction (i.e. msg.value)
-								value: ethers.utils.bigNumberify(
-									prepaymentAmount.toString()
-								)
+								value: prepaymentAmount
 
 								// The chain ID (or network ID) to use
 								// chainId: 3
 							};
-							// @DEV ADD TRY/CATCHS to all ETHEREUM TRANSACTIONS
+
 							const tx = await gelatoCore.mintExecutionClaim(
 								icedTxState.condition.address,
 								encodedTrigger,
@@ -318,7 +430,7 @@ export default function TransactionCard(props: TxCardProps) {
 								EXECUTOR_ADDRESS[4],
 								overrides
 							);
-							console.log(tx);
+
 							setTxHash(tx.hash);
 							console.log('Change TxState to waitingCreate');
 							dispatch({
@@ -326,7 +438,7 @@ export default function TransactionCard(props: TxCardProps) {
 								txState: TxState.waitingCreate
 							});
 							const txMined = await tx.wait();
-							console.log(txMined);
+
 							console.log('Change TxState to postCreate');
 							dispatch({
 								type: UPDATE_TX_STATE,
@@ -535,7 +647,7 @@ export default function TransactionCard(props: TxCardProps) {
 							background: '#EEEEEE'
 						}}
 					>
-						<h4>Activation Recipt</h4>
+						<h4>Transaction Confirmation</h4>
 						<a
 							style={{
 								display: 'flex',
@@ -577,7 +689,7 @@ export default function TransactionCard(props: TxCardProps) {
 								>{`${prepayment.eth} ETH`}</h4>
 								<p
 									style={{ margin: '0px' }}
-								>{`${prepayment.dollar} USD`}</p>
+								>{`$${prepayment.dollar} USD`}</p>
 							</div>
 						</Grid>
 					)}
@@ -603,8 +715,12 @@ export default function TransactionCard(props: TxCardProps) {
 							>
 								<h4>Transaction Fee</h4>
 								<div className={classes.dollar}>
-									<h4 style={{ margin: '0px' }}>0.025 ETH</h4>
-									<p style={{ margin: '0px' }}>$3.25 USD</p>
+									<h4
+										style={{ margin: '0px' }}
+									>{`${txFee.eth} ETH`}</h4>
+									<p
+										style={{ margin: '0px' }}
+									>{`$${txFee.dollar} USD`}</p>
 								</div>
 							</Grid>
 							<Grid
@@ -686,21 +802,21 @@ export default function TransactionCard(props: TxCardProps) {
 						>
 							<h4 style={{ margin: '0px' }}>
 								If the{' '}
-								<span style={{ color: 'red' }}>
+								<span style={{ color: COLOURS.salmon }}>
 									{icedTxState.condition.title}
 								</span>{' '}
 								condition you chose is triggered, gelato will{' '}
-								<span style={{ color: 'red' }}>
+								<span style={{ color: COLOURS.salmon }}>
 									{icedTxState.action.title}
 								</span>{' '}
 								on{' '}
-								<span style={{ color: 'red' }}>
+								<span style={{ color: COLOURS.salmon }}>
 									{icedTxState.action.app}
 								</span>{' '}
 								on your behalf
 							</h4>
 						</Grid>
-						<Grid
+						{/* <Grid
 							container
 							item
 							sm={12}
@@ -710,7 +826,6 @@ export default function TransactionCard(props: TxCardProps) {
 							alignItems="center"
 							style={{
 								background: 'FFFFFF',
-								marginTop: '24px'
 							}}
 						>
 							<Button
@@ -722,8 +837,8 @@ export default function TransactionCard(props: TxCardProps) {
 							>
 								Share your Configuration
 							</Button>
-						</Grid>
-						<Grid
+						</Grid> */}
+						{/* <Grid
 							container
 							item
 							sm={12}
@@ -743,7 +858,7 @@ export default function TransactionCard(props: TxCardProps) {
 							>
 								or
 							</h3>
-						</Grid>
+						</Grid> */}
 						<Grid
 							container
 							item
@@ -753,17 +868,19 @@ export default function TransactionCard(props: TxCardProps) {
 							justify="center"
 							alignItems="center"
 							style={{
-								background: 'FFFFFF'
+								background: 'FFFFFF',
+								marginTop: '24px'
 							}}
 						>
 							<Button
+								onClick={() => history.push('/dashboard')}
 								style={{
 									width: '100%',
 									borderStyle: 'solid',
 									borderWidth: '2px'
 								}}
 							>
-								View Frozen Transactions
+								Dashboard
 							</Button>
 						</Grid>
 					</React.Fragment>
@@ -794,7 +911,7 @@ export default function TransactionCard(props: TxCardProps) {
 						</Button>
 					</Grid>
 				)}
-				<Grid
+				{/* <Grid
 					container
 					item
 					sm={12}
@@ -817,7 +934,7 @@ export default function TransactionCard(props: TxCardProps) {
 					>
 						Dummy
 					</Button>
-				</Grid>
+				</Grid> */}
 			</Grid>
 		</div>
 	);
