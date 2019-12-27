@@ -26,53 +26,57 @@ export const EXECUTOR_ADDRESS = {
 
 // Conditions
 export const CTYPES = [
-	{
-		id: 1,
-		app: 'Your Wallet',
-		title: 'Increase in token balance',
-		address: '0x0',
-		params: ['address', 'uint256', 'uint256'],
-		userInputTypes: [InputType.Token, InputType.Number, InputType.GetValue],
-		inputLabels: [
-			'Select Token',
-			'Increase Amount',
-			'Your current Balance'
-		],
-		userInputs: []
-	},
+	// {
+	// 	id: 1,
+	// 	app: 'Your Wallet',
+	// 	title: 'Increase in token balance',
+	// 	address: '0x0',
+	// 	params: [
+	// 		{ type: 'address', name: 'seller' },
+	// 		{ type: 'uint256', name: 'amount' },
+	// 		{ type: 'uint256', name: 'currentBalance' }
+	// 	],
+	// 	userInputTypes: [InputType.Token, InputType.Number, InputType.GetValue],
+	// 	inputLabels: [
+	// 		'Select Token',
+	// 		'Increase Amount',
+	// 		'Your current Balance'
+	// 	],
+	// 	userInputs: []
+	// },
 
-	// Use isGreater as bool
-	{
-		id: 3,
-		app: 'Kyber',
-		title: 'Price',
-		address: '0x1',
-		params: ['address', 'address', 'uint256', 'uint256', 'bool'],
-		userInputTypes: [
-			InputType.Token,
-			InputType.Token,
-			InputType.Number,
-			InputType.Number,
-			InputType.Bool,
-			InputType.StatelessGetValue
-		],
-		inputLabels: [
-			'Sell Token',
-			'Buy Token',
-			'Sell Volume (default 1) - The higher, the more reliable',
-			'Price to trigger trade',
-			'True if inputted price is greater, false if lower',
-			'Current Price'
-		],
-		userInputs: []
-	},
+	// // Use isGreater as bool
+	// {
+	// 	id: 3,
+	// 	app: 'Kyber',
+	// 	title: 'Price',
+	// 	address: '0x1',
+	// 	params: ['address', 'address', 'uint256', 'uint256', 'bool'],
+	// 	userInputTypes: [
+	// 		InputType.Token,
+	// 		InputType.Token,
+	// 		InputType.Number,
+	// 		InputType.Number,
+	// 		InputType.Bool,
+	// 		InputType.StatelessGetValue
+	// 	],
+	// 	inputLabels: [
+	// 		'Sell Token',
+	// 		'Buy Token',
+	// 		'Sell Volume (default 1) - The higher, the more reliable',
+	// 		'Price to trigger trade',
+	// 		'True if inputted price is greater, false if lower',
+	// 		'Current Price'
+	// 	],
+	// 	userInputs: []
+	// },
 
 	{
 		id: 4,
 		app: 'Calendar',
 		title: 'Time',
 		address: '0xBdA9E16D8506C3AB2431fD4EE081c6d8a847FBaD',
-		params: ['uint256'],
+		params: [{ type: 'uint256', name: '_timestamp' }],
 		userInputTypes: [InputType.Date],
 		inputLabels: ['Input Date and Time'],
 		userInputs: []
@@ -81,41 +85,58 @@ export const CTYPES = [
 
 // Actions
 export const ATYPES = [
-	{
-		id: 1,
-		app: 'Your Wallet',
-		title: 'Send Tokens',
-		address: '0x3',
-		params: ['address', 'uint256', 'address'],
-		userInputTypes: [InputType.Token, InputType.Number, InputType.Address],
-		inputLabels: ['Token to send', 'Amount', 'Receiving Address'],
-		userInputs: [],
-		approvalIndex: 0
-	},
+	// {
+	// 	id: 1,
+	// 	app: 'Your Wallet',
+	// 	title: 'Send Tokens',
+	// 	address: '0x3',
+	// 	params: ['address', 'uint256', 'address'],
+	// 	userInputTypes: [InputType.Token, InputType.Number, InputType.Address],
+	// 	inputLabels: ['Token to send', 'Amount', 'Receiving Address'],
+	// 	userInputs: [],
+	// 	approvalIndex: 0
+	// },
 
 	{
 		id: 2,
 		app: 'Kyber',
 		title: 'Trade Tokens',
 		address: '0x5e2C7234DC00eF98B52B694b29824AcF30dBA53e',
-		params: ['uint256', 'address', 'address', 'bool'],
-		userInputTypes: [InputType.Token, InputType.Token, InputType.Number],
-		inputLabels: ['Sell Token', 'Buy Token', 'Sell Amount'],
-		userInputs: [],
-		approvalIndex: 0
-	},
-
-	{
-		id: 3,
-		app: 'Fulcrum',
-		title: 'Margin Trade Tokens',
-		address: '0x5',
-		params: ['uint256', 'address', 'address', 'bool'],
-		userInputTypes: [InputType.Token],
-		inputLabels: [''],
+		// params: ['uint256', 'address', 'address', 'bool'],
+		params: [
+			{ type: 'address', name: '_user' },
+			{ type: 'address', name: '_src' },
+			{ type: 'uint256', name: '_srcAmt' },
+			{ type: 'address', name: '_dest' },
+			{ type: 'uint256', name: '_minConversionRate' }
+		],
+		userInputTypes: [
+			InputType.Token,
+			InputType.Number,
+			InputType.Token,
+			InputType.Number
+		],
+		inputLabels: [
+			'Sell Token',
+			'Sell Amount',
+			'Buy Token',
+			'Minimum Conversion Rate'
+		],
 		userInputs: [],
 		approvalIndex: 0
 	}
+
+	// {
+	// 	id: 3,
+	// 	app: 'Fulcrum',
+	// 	title: 'Margin Trade Tokens',
+	// 	address: '0x5',
+	// 	params: ['uint256', 'address', 'address', 'bool'],
+	// 	userInputTypes: [InputType.Token],
+	// 	inputLabels: [''],
+	// 	userInputs: [],
+	// 	approvalIndex: 0
+	// }
 ];
 
 export const TOKEN_LIST = [

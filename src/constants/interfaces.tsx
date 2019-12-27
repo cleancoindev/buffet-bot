@@ -21,12 +21,17 @@ export interface PastTransaction {
 	status: string;
 }
 
+export interface Params {
+	type: string;
+	name: string;
+}
+
 export interface ActionWhitelistData {
 	id: number;
 	app: string;
 	title: string;
 	address: string;
-	params: Array<string>;
+	params: Array<Params>;
 	inputLabels: Array<string>;
 	userInputTypes: Array<InputType>;
 	userInputs: Array<string | number>;
@@ -38,7 +43,7 @@ export interface ConditionWhitelistData {
 	app: string;
 	title: string;
 	address: string;
-	params: Array<string>;
+	params: Array<Params>;
 	inputLabels: Array<string>;
 	userInputTypes: Array<InputType>;
 	userInputs: Array<string | number>;

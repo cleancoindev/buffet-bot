@@ -4,13 +4,14 @@ import {
 	DEFAULT_DATA_CONDITION
 } from '../constants/constants';
 import { utils } from 'ethers';
+import { Params } from '../constants/interfaces';
 
 export function stringifyTimestamp(timestamp: string) {
 	let date = new Date(parseInt(timestamp) * 1000);
 	return `${date.toLocaleDateString()} - ${date.toLocaleTimeString()}`;
 }
 
-export function decodePayload(payload: string, inputTypes: Array<string>) {
+export function decodePayload(payload: string, inputTypes: Array<Params>) {
 	// do ethers.js decoding like in well timed
 	return ['0x0', '0x1', '1', '1200'];
 }
@@ -62,54 +63,44 @@ export function getTokenSymbol(address: string) {
 	return token === undefined ? 'ERROR Get Token Symbol' : token.symbol;
 }
 
-export function encodeActionPayload(user: string, userProxy: string) {
+export function encodeActionPayload(
+	userInput: Array<string | number>,
+	inputParameter: Array<Params>,
+	user: string
+) {
 	const actionKyberTradeABI = [
 		{
 			name: 'action',
 			type: 'function',
-			inputs: [
-				{ type: 'address', name: '_user' },
-				// { type: 'address', name: '_userProxy' },
-				{ type: 'address', name: '_src' },
-				{ type: 'uint256', name: '_srcAmt' },
-				{ type: 'address', name: '_dest' },
-				{ type: 'uint256', name: '_minConversionRate' }
-			]
+			inputs: inputParameter
 		}
 	];
 	const iFace = new utils.Interface(actionKyberTradeABI);
 	//@DEV CHANGE UINT inputs into BigNumbers
-	const src = '0x6FA355a7b6bD2D6bD8b927C489221BFBb6f1D7B2';
-	const srcAmt = '1000000000000000000';
-	const dest = '0x732fBA98dca813C3A630b53a8bFc1d6e87B1db65';
-	const minConversionRate = '0';
 
-	const actionPayloadWithSelector = iFace.functions.action.encode([
-		user,
-		// userProxy,
-		src,
-		srcAmt,
-		dest,
-		minConversionRate
-	]);
+	// Insert user address into userInput Array at index 0
+	userInput.splice(0, 0, user);
+
+	const actionPayloadWithSelector = iFace.functions.action.encode(userInput);
 
 	return actionPayloadWithSelector;
 }
 
-export function encodeTriggerPayload() {
+export function encodeTriggerPayload(
+	userInput: Array<string | number>,
+	inputParameter: Array<Params>
+) {
 	const triggerTimestampPassedABI = [
 		{
 			name: 'fired',
 			type: 'function',
-			inputs: [{ type: 'uint256', name: '_timestamp' }]
+			inputs: inputParameter
 		}
 	];
 	const iFace = new utils.Interface(triggerTimestampPassedABI);
 	const timestamp = '0';
 
-	const triggerPayloadWithSelector = iFace.functions.fired.encode([
-		timestamp
-	]);
+	const triggerPayloadWithSelector = iFace.functions.fired.encode(userInput);
 
 	return triggerPayloadWithSelector;
 }

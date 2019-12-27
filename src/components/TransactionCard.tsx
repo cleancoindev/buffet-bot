@@ -153,24 +153,26 @@ export default function TransactionCard(props: TxCardProps) {
 
 	// When Modal renders, set Prepayment value based on the selected action
 	useEffect(() => {
-		getPrepaymentAmount();
-		let prefix;
-		switch (chainId) {
-			case 1:
-				prefix = '';
-				break;
-			case 3:
-				prefix = 'ropsten.';
-				break;
-			case 4:
-				prefix = 'rinkeby.';
-				break;
-			default:
-				prefix = 'rinkeby.';
-				break;
+		if (active) {
+			getPrepaymentAmount();
+			let prefix;
+			switch (chainId) {
+				case 1:
+					prefix = '';
+					break;
+				case 3:
+					prefix = 'ropsten.';
+					break;
+				case 4:
+					prefix = 'rinkeby.';
+					break;
+				default:
+					prefix = 'rinkeby.';
+					break;
+			}
+			setEtherscanPrefix(prefix);
 		}
-		setEtherscanPrefix(prefix);
-	}, []);
+	}, [active]);
 
 	function returnModalContent(txState: TxState): ModalContent {
 		switch (txState) {
@@ -273,15 +275,18 @@ export default function TransactionCard(props: TxCardProps) {
 						console.log(proxyAddress);
 						// User has Proxy
 						if (account !== undefined && account !== null) {
-							const encodedAction = encodeActionPayload(
-								account,
-								proxyAddress
+							const encodedTrigger = encodeTriggerPayload(
+								icedTxState.condition.userInputs,
+								icedTxState.condition.params
 							);
-							console.log(encodedAction);
-							const encodedTrigger = encodeTriggerPayload();
-							console.log(encodedTrigger);
 
-							const kyberSwapPrepayment = await getPrepaymentAmount();
+							const encodedAction = encodeActionPayload(
+								icedTxState.action.userInputs,
+								icedTxState.action.params,
+								account
+							);
+
+							const prepaymentAmount = await getPrepaymentAmount();
 							let overrides = {
 								// The maximum units of gas for the transaction to use
 								gasLimit: 4000000,
@@ -297,7 +302,7 @@ export default function TransactionCard(props: TxCardProps) {
 
 								// The amount to send with the transaction (i.e. msg.value)
 								value: ethers.utils.bigNumberify(
-									kyberSwapPrepayment.toString()
+									prepaymentAmount.toString()
 								)
 
 								// The chain ID (or network ID) to use

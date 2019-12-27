@@ -1,8 +1,10 @@
-import { InputType } from './interfaces';
+import { InputType, Params } from './interfaces';
 import { colors } from '@material-ui/core';
 
 const emptyUserInputArray: Array<string | number> = [];
 const emptyUserInputTypeArray: Array<InputType> = [];
+
+const emptyParamArray: Array<Params> = [];
 const emptyStringArray: Array<string> = [];
 
 export const COLOURS = {
@@ -17,7 +19,7 @@ export const DEFAULT_DATA_ACTION = {
 	app: '',
 	title: '',
 	address: '',
-	params: emptyStringArray, // [ ]
+	params: emptyParamArray, // [ ]
 	inputLabels: emptyStringArray, // [ ]
 	userInputTypes: emptyUserInputTypeArray, // [ ]
 	userInputs: emptyUserInputArray, // [ ]
@@ -29,7 +31,7 @@ export const DEFAULT_DATA_CONDITION = {
 	app: '',
 	title: '',
 	address: '',
-	params: emptyStringArray, // [ ]
+	params: emptyParamArray, // [ ]
 	inputLabels: emptyStringArray, // [ ]
 	userInputTypes: emptyUserInputTypeArray, // [ ]
 	userInputs: emptyUserInputArray // [ ]
