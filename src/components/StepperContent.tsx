@@ -88,10 +88,15 @@ export default function StepperContent(props: StepperContentProps) {
 							className={classes.box}
 							style={{
 								paddingLeft: '24px',
-								minHeight: '200px'
+								minHeight: '200px',
+								textAlign: 'left'
 							}}
 						>
-							<h1> Step: {stepIndex + 1}</h1>
+							<h1>
+								{' '}
+								Step: {stepIndex + 1} - Define the condition
+								that will trigger the action
+							</h1>
 							<h2>
 								{' '}
 								Condition:{' '}
@@ -150,7 +155,11 @@ export default function StepperContent(props: StepperContentProps) {
 								minHeight: '200px'
 							}}
 						>
-							<h1> Step: {stepIndex + 1}</h1>
+							<h1>
+								{' '}
+								Step: {stepIndex + 1} - Define the action gelato
+								should execute on your behalf
+							</h1>
 							<h2>
 								Action:{' '}
 								<span style={{ color: COLOURS.salmon }}>
@@ -258,7 +267,7 @@ export default function StepperContent(props: StepperContentProps) {
 							>
 								<h2>
 									{' '}
-									Condition:{' '}
+									Condition Summary:{' '}
 									<span style={{ color: COLOURS.salmon }}>
 										{condition.title}{' '}
 									</span>
@@ -305,7 +314,7 @@ export default function StepperContent(props: StepperContentProps) {
 								}}
 							>
 								<h2>
-									Action:{' '}
+									Action Summary:{' '}
 									<span style={{ color: COLOURS.salmon }}>
 										{action.title}
 									</span>{' '}

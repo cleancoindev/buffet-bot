@@ -21,6 +21,7 @@ import { ThemeProvider } from '@material-ui/styles';
 
 import { Overrides } from '@material-ui/core/styles/overrides';
 import { MuiPickersOverrides } from '@material-ui/pickers/typings/overrides';
+import { ethers } from 'ethers';
 
 type overridesNameToClassKey = {
 	[P in keyof MuiPickersOverrides]: keyof MuiPickersOverrides[P];
@@ -85,11 +86,12 @@ const useInputStyles = makeStyles({
 interface TextFieldWrapProps {
 	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	value: Date;
+	label: string;
 }
 
 const TextFieldWrap = (props: TextFieldWrapProps) => {
 	const labelClasses = useInputStyles();
-	const { setOpen, value } = props;
+	const { setOpen, value, label } = props;
 
 	return (
 		<FormControl style={{ width: '100%' }}>
@@ -105,7 +107,7 @@ const TextFieldWrap = (props: TextFieldWrapProps) => {
 				onClick={() => setOpen(true)}
 				defaultValue={value}
 				id="outlined-full-width"
-				label="Pick a date and time"
+				label={label}
 			/>
 		</FormControl>
 	);
@@ -121,11 +123,14 @@ export default function DateAndTimePicker(props: InputProps) {
 	const { dispatch, icedTxState } = useIcedTxContext();
 	// Set state with either NOW or global state
 	let defaultDate;
+
 	if (icedTxState.condition.userInputs[index] === undefined) {
 		defaultDate = new Date();
 	} else {
 		defaultDate = icedTxState.condition.userInputs[index];
-		defaultDate = timestampToDate(defaultDate);
+
+		// @DEV only works with toString() Due to function not accepting BigNumbers. SHould not be a problem though
+		defaultDate = timestampToDate(defaultDate.toString());
 	}
 	const [selectedDate, handleDateChange] = useState(defaultDate);
 
@@ -205,6 +210,7 @@ export default function DateAndTimePicker(props: InputProps) {
 							<TextFieldWrap
 								setOpen={setIsOpen}
 								value={selectedDate}
+								label={label}
 								// {...props}
 								// name={name}
 								// input={{

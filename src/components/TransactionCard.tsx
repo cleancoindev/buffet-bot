@@ -177,6 +177,28 @@ export default function TransactionCard(props: TxCardProps) {
 				const gasEstimate = await gelatoCore.estimate.createUserProxy();
 				gasEstimatePlusBuffer = addGasBuffer(gasEstimate);
 				break;
+			case TxState.displayApprove:
+				const proxyAddress = await gelatoCore.getProxyOfUser(account);
+
+				// Get Erc20 contract
+				const signer = library.getSigner();
+				const tokenAddress =
+					icedTxState.action.userInputs[
+						icedTxState.action.approvalIndex
+					];
+				const erc20 = new ethers.Contract(
+					tokenAddress.toString(),
+					JSON.stringify(ERC20_ABI),
+					signer
+				);
+
+				const gasEstimateApprove = await erc20.estimate.approve(
+					proxyAddress,
+					ethers.constants.MaxUint256
+				);
+
+				gasEstimatePlusBuffer = addGasBuffer(gasEstimateApprove);
+				break;
 
 			case TxState.displayCreate:
 				const {
@@ -307,7 +329,7 @@ export default function TransactionCard(props: TxCardProps) {
 			}
 			setEtherscanPrefix(prefix);
 		}
-	}, [active]);
+	}, [active, txFee]);
 
 	function returnModalContent(txState: TxState): ModalContent {
 		switch (txState) {
@@ -337,7 +359,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.displayGelatoWallet:
 				return {
-					title: `First, lets create a gelato wallet for you!`,
+					title: `First, let's create a gelato wallet for you!`,
 					progress: Progress.awaitingModalConfirm,
 					progressText: ``,
 					prepayment: false,
@@ -416,7 +438,7 @@ export default function TransactionCard(props: TxCardProps) {
 				return {
 					title: `Creating your gelato wallet ...`,
 					progress: Progress.awaitingeMining,
-					progressText: `Transaction in progress`,
+					progressText: `Transaction in progress, please wait`,
 					prepayment: false,
 					closeBtn: false,
 					btn: ''
@@ -425,10 +447,13 @@ export default function TransactionCard(props: TxCardProps) {
 				return {
 					title: `Success: Gelato wallet created!`,
 					progress: Progress.finished,
-					progressText: `Transaction mined`,
+					progressText: `Transaction complete`,
 					prepayment: false,
-					closeBtn: false,
-					btn: 'Continue'
+					closeBtn: true,
+					btn: 'Continue',
+					btnFunc: () => {
+						incrementTxState();
+					}
 				};
 			case TxState.displayApprove:
 				return {
@@ -459,9 +484,10 @@ export default function TransactionCard(props: TxCardProps) {
 							icedTxState.action.userInputs[
 								icedTxState.action.approvalIndex
 							];
+						console.log(ERC20_ABI);
 						const erc20 = new ethers.Contract(
 							tokenAddress.toString(),
-							ERC20_ABI,
+							JSON.stringify(ERC20_ABI),
 							signer
 						);
 
@@ -636,7 +662,7 @@ export default function TransactionCard(props: TxCardProps) {
 				return {
 					title: `Creating Frozen Transaction ...`,
 					progress: Progress.awaitingeMining,
-					progressText: `Transaction in progress`,
+					progressText: `Transaction in progress, please wait`,
 					prepayment: true,
 					closeBtn: true,
 					btn: ''

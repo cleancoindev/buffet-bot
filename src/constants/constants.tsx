@@ -1,7 +1,7 @@
 import { InputType, Params } from './interfaces';
-import { colors } from '@material-ui/core';
+import { ethers } from 'ethers';
 
-const emptyUserInputArray: Array<string | number> = [];
+const emptyUserInputArray: Array<string | number | ethers.utils.BigNumber> = [];
 const emptyUserInputTypeArray: Array<InputType> = [];
 
 const emptyParamArray: Array<Params> = [];

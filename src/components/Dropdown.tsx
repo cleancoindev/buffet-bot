@@ -26,6 +26,9 @@ const useStyles = makeStyles(theme => ({
 		background: COLOURS.salmon,
 		'& :hover': {
 			background: COLOURS.salmon50
+		},
+		'& .MuiSelect-icon': {
+			color: 'white'
 		}
 	}
 }));

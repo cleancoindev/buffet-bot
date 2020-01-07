@@ -78,7 +78,7 @@ export const CTYPES = [
 		address: '0xBdA9E16D8506C3AB2431fD4EE081c6d8a847FBaD',
 		params: [{ type: 'uint256', name: '_timestamp' }],
 		userInputTypes: [InputType.Date],
-		inputLabels: ['Input Date and Time'],
+		inputLabels: ['Pick a Date and Time'],
 		userInputs: []
 	}
 ];
@@ -112,14 +112,14 @@ export const ATYPES = [
 		],
 		userInputTypes: [
 			InputType.Token,
-			InputType.Number,
+			InputType.TokenAmount,
 			InputType.Token,
 			InputType.Number
 		],
 		inputLabels: [
-			'Sell Token',
+			'Token you want to sell',
 			'Sell Amount',
-			'Buy Token',
+			'Token you want to buy',
 			'Minimum Conversion Rate'
 		],
 		userInputs: [],
@@ -141,7 +141,7 @@ export const ATYPES = [
 
 export const TOKEN_LIST = [
 	{
-		address: '0x732fBA98dca813C3A630b53a8bFc1d6e87B1db65',
+		address: '0x4BFBa4a8F28755Cb2061c413459EE562c6B9c51b',
 		symbol: 'OMG',
 		name: 'OmiseGo',
 		decimals: 18

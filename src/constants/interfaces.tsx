@@ -36,7 +36,7 @@ export interface ActionWhitelistData {
 	params: Array<Params>;
 	inputLabels: Array<string>;
 	userInputTypes: Array<InputType>;
-	userInputs: Array<string | number>;
+	userInputs: Array<string | number | ethers.utils.BigNumber>;
 	approvalIndex: number;
 }
 
@@ -48,7 +48,7 @@ export interface ConditionWhitelistData {
 	params: Array<Params>;
 	inputLabels: Array<string>;
 	userInputTypes: Array<InputType>;
-	userInputs: Array<string | number>;
+	userInputs: Array<string | number | ethers.utils.BigNumber>;
 }
 
 export interface UserSelection {
@@ -73,6 +73,7 @@ export enum ConditionOrAction {
 export enum InputType {
 	Date,
 	Number,
+	TokenAmount,
 	Address,
 	Token,
 	Bool,

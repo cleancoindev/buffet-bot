@@ -12,6 +12,7 @@ import {
 } from '../constants/constants';
 import { TOKEN_LIST } from '../constants/whitelist';
 import { ethers } from 'ethers';
+import { getTokenByAddress } from '../helpers/helpers';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -32,7 +33,7 @@ interface InputProps {
 	label: string;
 	index: number;
 	conditionOrAction: ConditionOrAction;
-	inputs: Array<string | number>;
+	inputs: Array<string | number | ethers.utils.BigNumber>;
 	app: string;
 	disabled: boolean;
 }
@@ -51,6 +52,7 @@ export default function LayoutTextFields(props: InputProps) {
 	// Context
 	const { dispatch, icedTxState } = useIcedTxContext();
 
+	console.log(inputs[index]);
 	// updateUser Input
 	const updateConditionInputs = (index: number, value: any) => {
 		// Default Index => @DEV Restructure Dispatcher later
@@ -75,10 +77,41 @@ export default function LayoutTextFields(props: InputProps) {
 	// If user skipped back, pre fill with state from context
 
 	// Generic Update User Input function
-	const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+	const handleChangeNumber = (
+		event: React.ChangeEvent<{ value: unknown }>
+	) => {
 		const newValue = event.target.value as number;
-		// Update global state
-		updateUserInput(index, newValue);
+		console.log(event);
+		console.log(newValue);
+		console.log('handle change number');
+		if (newValue.toString() !== '') {
+			// Handle special case if InputType is TokenAmount
+			if (inputType === InputType.TokenAmount) {
+				// get index of token in question
+				// @DEV Assuming that token in question always comes one index before tokenAmount
+				const tokenIndex = index - 1;
+				const tokenAddress = inputs[tokenIndex].toString();
+
+				// Find token object by address
+				const token = getTokenByAddress(tokenAddress);
+
+				const weiAmount = ethers.utils.parseUnits(
+					newValue.toString(),
+					token.decimals
+				);
+				// console.log(weiAmount.toString());
+				// Update global state
+				console.log('updatingUserInput');
+				updateUserInput(index, weiAmount);
+			}
+		} else {
+			// throw Error("Input value is empty / wrong");
+			// if (inputs[index] !== 1) {
+			// 	// updateUserInput(index, 1);
+			// } else {
+			// 	// updateUserInput(index, 10);
+			// }
+		}
 	};
 
 	// Func should call getValue() in smart contract and return the respective value in a disabled Text field
@@ -111,14 +144,29 @@ export default function LayoutTextFields(props: InputProps) {
 
 	// If user already inputted values, prefill inputs from state, otherwise display the default values
 	// œDEV make default values specific for each condition and action, not global
-	function returnDefaultValue(): string | number {
+	function returnDefaultValue(): string | number | ethers.utils.BigNumber {
 		// If user has inputted something, go in here
-
+		console.log('retrurn default value');
 		if (inputs[0] !== undefined) {
 			if (inputs[index] !== undefined) {
-				return inputs[index];
+				console.log(inputs[index]);
+				// If the inputted value is of inputType TokenAmount
+				if (inputType === InputType.TokenAmount) {
+					const tokenIndex = index - 1;
+					const tokenAddress = inputs[tokenIndex].toString();
+
+					// Find token object by address
+					const token = getTokenByAddress(tokenAddress);
+					const humanReadableAmount = ethers.utils.formatUnits(
+						inputs[index].toString(),
+						token.decimals
+					);
+					return humanReadableAmount;
+				} else {
+					return inputs[index];
+				}
 			} else {
-				return 'error, value from state is undefined';
+				throw Error('error, value from state is undefined');
 			}
 		}
 		// If new render, go in here
@@ -126,6 +174,10 @@ export default function LayoutTextFields(props: InputProps) {
 			switch (inputType) {
 				case InputType.Number:
 					updateUserInput(index, 1);
+					return 1;
+				case InputType.TokenAmount:
+					const oneEthInWei = ethers.constants.WeiPerEther;
+					updateUserInput(index, oneEthInWei);
 					return 1;
 				case InputType.Address:
 					// return user address
@@ -186,6 +238,34 @@ export default function LayoutTextFields(props: InputProps) {
 						/>
 					</div>
 				);
+			case InputType.TokenAmount:
+				// Amounts
+				return (
+					<div className={classes.form}>
+						<TextField
+							className={classes.root}
+							inputProps={{ min: 1, step: 'any', lang: 'en' }}
+							required
+							id="outlined-full-width"
+							label={label}
+							style={{ marginTop: '0px', marginBottom: '0px' }}
+							// Import TextField CSS
+							defaultValue={returnDefaultValue()}
+							// value={returnDefaultValue()}
+							// placeholder="1"
+							// helperText="Full width!"
+							fullWidth
+							onChange={handleChangeNumber}
+							margin="normal"
+							type="number"
+							InputLabelProps={{
+								shrink: true
+							}}
+							variant="outlined"
+							disabled={disabled}
+						/>
+					</div>
+				);
 			case InputType.Number:
 				return (
 					<div className={classes.form}>
@@ -201,7 +281,7 @@ export default function LayoutTextFields(props: InputProps) {
 							// placeholder="1"
 							// helperText="Full width!"
 							fullWidth
-							onChange={handleChange}
+							onChange={handleChangeNumber}
 							margin="normal"
 							type="number"
 							InputLabelProps={{

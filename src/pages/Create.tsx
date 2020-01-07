@@ -230,7 +230,7 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 							console.log(tokenAddress);
 							const erc20 = new ethers.Contract(
 								tokenAddress.toString(),
-								ERC20_ABI,
+								JSON.stringify(ERC20_ABI),
 								signer
 							);
 							erc20

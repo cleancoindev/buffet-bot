@@ -3,7 +3,7 @@ import {
 	DEFAULT_DATA_ACTION,
 	DEFAULT_DATA_CONDITION
 } from '../constants/constants';
-import { utils } from 'ethers';
+import { utils, ethers } from 'ethers';
 import { Params } from '../constants/interfaces';
 
 export function stringifyTimestamp(timestamp: string) {
@@ -66,11 +66,15 @@ export function getTokenSymbol(address: string) {
 // @DEV Potenital bug in returning error string
 export function getTokenByAddress(address: string) {
 	const token = TOKEN_LIST.find(token => token.address === address);
-	return token === undefined ? 'ERROR Get Token Symbol' : token;
+	if (token === undefined) {
+		throw Error('Could not find Token with selected addrress');
+	} else {
+		return token;
+	}
 }
 
 export function encodeActionPayload(
-	userInput: Array<string | number>,
+	userInput: Array<string | number | ethers.utils.BigNumber>,
 	inputParameter: Array<Params>,
 	user: string
 ) {
@@ -97,7 +101,7 @@ export function encodeActionPayload(
 }
 
 export function encodeTriggerPayload(
-	userInput: Array<string | number>,
+	userInput: Array<string | number | ethers.utils.BigNumber>,
 	inputParameter: Array<Params>
 ) {
 	const triggerTimestampPassedABI = [

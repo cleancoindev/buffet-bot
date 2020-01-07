@@ -121,9 +121,7 @@ export default function AppSelection() {
 
 	return (
 		<div className={classes.box}>
-			<h1>{`Connected Address: ${
-				web3.active ? web3.account : 'No account found'
-			}`}</h1>
+			<h1>{`Automate sending transactions to ethereum dapps with gelato`}</h1>
 			<Grid
 				container
 				direction="row"
