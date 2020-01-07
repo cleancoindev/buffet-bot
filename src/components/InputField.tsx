@@ -14,6 +14,10 @@ import { TOKEN_LIST } from '../constants/whitelist';
 import { ethers } from 'ethers';
 import { getTokenByAddress } from '../helpers/helpers';
 
+// Number formater
+import NumberFormat from 'react-number-format';
+import ReactNumberFormat from './Inputs/ReactNumberFormat';
+
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		form: {
@@ -114,6 +118,32 @@ export default function LayoutTextFields(props: InputProps) {
 		}
 	};
 
+	const TextFieldWithProps = () => {
+		return (
+			<TextField
+				className={classes.root}
+				inputProps={{ min: 1 }}
+				required
+				id="outlined-full-width"
+				label={label}
+				// Import TextField CSS
+				// defaultValue={returnDefaultValue()}
+				// value={returnDefaultValue()}
+				// placeholder="1"
+				// helperText="Full width!"
+				fullWidth
+				onChange={handleChangeNumber}
+				margin="normal"
+				type="number"
+				InputLabelProps={{
+					shrink: true
+				}}
+				variant="outlined"
+				disabled={disabled}
+			/>
+		);
+	};
+
 	// Func should call getValue() in smart contract and return the respective value in a disabled Text field
 	// Params: Contract address | Contract Parameters
 	function callGetValue() {
@@ -144,7 +174,7 @@ export default function LayoutTextFields(props: InputProps) {
 
 	// If user already inputted values, prefill inputs from state, otherwise display the default values
 	// œDEV make default values specific for each condition and action, not global
-	function returnDefaultValue(): string | number | ethers.utils.BigNumber {
+	function returnDefaultValue(): string | number {
 		// If user has inputted something, go in here
 		console.log('retrurn default value');
 		if (inputs[0] !== undefined) {
@@ -161,9 +191,9 @@ export default function LayoutTextFields(props: InputProps) {
 						inputs[index].toString(),
 						token.decimals
 					);
-					return humanReadableAmount;
+					return humanReadableAmount.toString();
 				} else {
-					return inputs[index];
+					return inputs[index].toString();
 				}
 			} else {
 				throw Error('error, value from state is undefined');
@@ -242,7 +272,15 @@ export default function LayoutTextFields(props: InputProps) {
 				// Amounts
 				return (
 					<div className={classes.form}>
-						<TextField
+						{/* <NumberFormat
+							defaultValue={returnDefaultValue()}
+							customInput={TextFieldWithProps}
+							thousandSeparator
+							onChange={handleChangeNumber}
+						/> */}
+						<ReactNumberFormat></ReactNumberFormat>
+
+						{/* <TextField
 							className={classes.root}
 							inputProps={{ min: 1, step: 'any', lang: 'en' }}
 							required
@@ -263,7 +301,7 @@ export default function LayoutTextFields(props: InputProps) {
 							}}
 							variant="outlined"
 							disabled={disabled}
-						/>
+						/> */}
 					</div>
 				);
 			case InputType.Number:
