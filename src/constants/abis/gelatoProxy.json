@@ -1,18 +1,15 @@
 [
 	{
-		"constant": true,
-		"inputs": [],
-		"name": "getGelatoCore",
-		"outputs": [
+		"inputs": [
 			{
 				"internalType": "address payable",
-				"name": "",
+				"name": "_user",
 				"type": "address"
 			}
 		],
 		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
+		"stateMutability": "nonpayable",
+		"type": "constructor"
 	},
 	{
 		"constant": false,
@@ -46,18 +43,18 @@
 		"type": "function"
 	},
 	{
-		"constant": false,
-		"inputs": [
+		"constant": true,
+		"inputs": [],
+		"name": "getGelatoCore",
+		"outputs": [
 			{
 				"internalType": "address payable",
-				"name": "_gelatoCore",
+				"name": "",
 				"type": "address"
 			}
 		],
-		"name": "setGelatoCore",
-		"outputs": [],
 		"payable": false,
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -76,15 +73,18 @@
 		"type": "function"
 	},
 	{
+		"constant": false,
 		"inputs": [
 			{
 				"internalType": "address payable",
-				"name": "_user",
+				"name": "_gelatoCore",
 				"type": "address"
 			}
 		],
+		"name": "setGelatoCore",
+		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
-		"type": "constructor"
+		"type": "function"
 	}
 ]

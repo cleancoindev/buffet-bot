@@ -195,6 +195,7 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 			// 4. Check if user has gelato proxy
 			case TxState.displayGelatoWallet:
 				// User is already logged in => Change to insufficientBalance
+				console.log('Checking if user is registered');
 				gelatoCore.isUser(web3.account).then((result: boolean) => {
 					const isUser = result;
 					// User has Proxy

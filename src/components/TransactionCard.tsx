@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 // Routes
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import { Grid, CircularProgress, Button } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
@@ -116,6 +116,8 @@ export default function TransactionCard(props: TxCardProps) {
 		deactivate
 	} = useWeb3React();
 
+	const networkId = chainId as ChainIds;
+
 	const [prepayment, setPrepayment] = useState({
 		eth: 0,
 		dollar: 0
@@ -146,12 +148,12 @@ export default function TransactionCard(props: TxCardProps) {
 	) {
 		// @DEV ADD TRY/CATCHS to all ETHEREUM TRANSACTIONS
 		const gasEstimate = await gelatoCore.estimate.mintExecutionClaim(
+			EXECUTOR_ADDRESS[networkId],
 			icedTxState.condition.address,
 			encodedTrigger,
 			icedTxState.action.address,
 			encodedAction,
 			// @DEV make dynamic
-			EXECUTOR_ADDRESS[4],
 			{
 				value: ethers.utils.bigNumberify(prepaymentAmount.toString())
 			}
@@ -201,10 +203,11 @@ export default function TransactionCard(props: TxCardProps) {
 				break;
 
 			case TxState.displayCreate:
+				const userProxy = await gelatoCore.getProxyOfUser(account);
 				const {
 					encodedTrigger,
 					encodedAction
-				} = encodeActionAndTrigger(userAccount);
+				} = encodeActionAndTrigger(userAccount, userProxy);
 
 				const prepaymentAmount = await getPrepaymentAmount();
 
@@ -225,10 +228,16 @@ export default function TransactionCard(props: TxCardProps) {
 			transactionFeeInWei
 		);
 
-		setTxFee({
-			eth: parseFloat(ethAmount),
-			dollar: parseFloat(dollar)
-		});
+		console.log(txFee.eth);
+		console.log(ethAmount);
+
+		// Only update state if returned value is not 0
+		if (ethAmount !== '0.0000') {
+			setTxFee({
+				eth: parseFloat(ethAmount),
+				dollar: parseFloat(dollar)
+			});
+		}
 	}
 
 	async function setPrepaymentAmount() {
@@ -246,9 +255,9 @@ export default function TransactionCard(props: TxCardProps) {
 
 	async function getPrepaymentAmount() {
 		const prepayment = await gelatoCore.getMintingDepositPayable(
-			icedTxState.action.address,
-			// @DEV Make dynamic
-			EXECUTOR_ADDRESS[4]
+			EXECUTOR_ADDRESS[networkId],
+			icedTxState.condition.address,
+			icedTxState.action.address
 		);
 
 		return prepayment;
@@ -271,7 +280,7 @@ export default function TransactionCard(props: TxCardProps) {
 		return { ethAmount: parseFloat(ethAmount).toFixed(4), dollar };
 	}
 
-	function encodeActionAndTrigger(account: string) {
+	function encodeActionAndTrigger(account: string, userProxy: string) {
 		const encodedTrigger = encodeTriggerPayload(
 			icedTxState.condition.userInputs,
 			icedTxState.condition.params
@@ -280,7 +289,8 @@ export default function TransactionCard(props: TxCardProps) {
 		const encodedAction = encodeActionPayload(
 			icedTxState.action.userInputs,
 			icedTxState.action.params,
-			account
+			account,
+			userProxy
 		);
 		return { encodedTrigger, encodedAction };
 	}
@@ -329,7 +339,7 @@ export default function TransactionCard(props: TxCardProps) {
 			}
 			setEtherscanPrefix(prefix);
 		}
-	}, [active, txFee]);
+	}, [active, txState]);
 
 	function returnModalContent(txState: TxState): ModalContent {
 		switch (txState) {
@@ -583,7 +593,7 @@ export default function TransactionCard(props: TxCardProps) {
 							const {
 								encodedTrigger,
 								encodedAction
-							} = encodeActionAndTrigger(account);
+							} = encodeActionAndTrigger(account, proxyAddress);
 
 							const prepaymentAmount = await getPrepaymentAmount();
 
@@ -612,14 +622,21 @@ export default function TransactionCard(props: TxCardProps) {
 								// The chain ID (or network ID) to use
 								// chainId: 3
 							};
+							/*
+							 address _selectedExecutor,
+							IGelatoTrigger _trigger,
+							bytes calldata _triggerPayloadWithSelector,
+							IGelatoAction _action,
+							bytes calldata _actionPayloadWithSelector
+							*/
 							try {
 								const tx = await gelatoCore.mintExecutionClaim(
+									EXECUTOR_ADDRESS[networkId],
 									icedTxState.condition.address,
 									encodedTrigger,
 									icedTxState.action.address,
 									encodedAction,
 									// @DEV make dynamic
-									EXECUTOR_ADDRESS[4],
 									overrides
 								);
 

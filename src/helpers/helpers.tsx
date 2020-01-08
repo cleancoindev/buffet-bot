@@ -76,7 +76,8 @@ export function getTokenByAddress(address: string) {
 export function encodeActionPayload(
 	userInput: Array<string | number | ethers.utils.BigNumber>,
 	inputParameter: Array<Params>,
-	user: string
+	user: string,
+	userProxy: string
 ) {
 	const actionKyberTradeABI = [
 		{
@@ -92,6 +93,8 @@ export function encodeActionPayload(
 	// Make copy to not change global userInput variable
 	const copyUserInput = [...userInput];
 	copyUserInput.splice(0, 0, user);
+	copyUserInput.splice(1, 0, userProxy);
+	console.log(copyUserInput);
 
 	const actionPayloadWithSelector = iFace.functions.action.encode(
 		copyUserInput
