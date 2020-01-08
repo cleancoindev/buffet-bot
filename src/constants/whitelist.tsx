@@ -139,9 +139,10 @@ export const ATYPES = [
 	// }
 ];
 
+// Add network to tokenList
 export const TOKEN_LIST = [
 	{
-		address: '0x4BFBa4a8F28755Cb2061c413459EE562c6B9c51b',
+		address: '0x732fBA98dca813C3A630b53a8bFc1d6e87B1db65',
 		symbol: 'OMG',
 		name: 'OmiseGo',
 		decimals: 18

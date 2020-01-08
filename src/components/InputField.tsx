@@ -15,7 +15,6 @@ import { ethers } from 'ethers';
 import { getTokenByAddress } from '../helpers/helpers';
 
 // Number formater
-import NumberFormat from 'react-number-format';
 import ReactNumberFormat from './Inputs/ReactNumberFormat';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -56,7 +55,6 @@ export default function LayoutTextFields(props: InputProps) {
 	// Context
 	const { dispatch, icedTxState } = useIcedTxContext();
 
-	console.log(inputs[index]);
 	// updateUser Input
 	const updateConditionInputs = (index: number, value: any) => {
 		// Default Index => @DEV Restructure Dispatcher later
@@ -84,11 +82,12 @@ export default function LayoutTextFields(props: InputProps) {
 	const handleChangeNumber = (
 		event: React.ChangeEvent<{ value: unknown }>
 	) => {
-		const newValue = event.target.value as number;
-		console.log(event);
-		console.log(newValue);
-		console.log('handle change number');
-		if (newValue.toString() !== '') {
+		const newValue = event.target.value as string;
+
+		if (newValue === '.') {
+			const zero = ethers.constants.Zero;
+			updateUserInput(index, zero);
+		} else if (newValue !== '') {
 			// Handle special case if InputType is TokenAmount
 			if (inputType === InputType.TokenAmount) {
 				// get index of token in question
@@ -108,40 +107,17 @@ export default function LayoutTextFields(props: InputProps) {
 				console.log('updatingUserInput');
 				updateUserInput(index, weiAmount);
 			}
+		} else if (newValue === '') {
+			const zero = ethers.constants.Zero;
+			updateUserInput(index, zero);
 		} else {
-			// throw Error("Input value is empty / wrong");
+			throw Error('Input value is empty / wrong');
 			// if (inputs[index] !== 1) {
 			// 	// updateUserInput(index, 1);
 			// } else {
 			// 	// updateUserInput(index, 10);
 			// }
 		}
-	};
-
-	const TextFieldWithProps = () => {
-		return (
-			<TextField
-				className={classes.root}
-				inputProps={{ min: 1 }}
-				required
-				id="outlined-full-width"
-				label={label}
-				// Import TextField CSS
-				// defaultValue={returnDefaultValue()}
-				// value={returnDefaultValue()}
-				// placeholder="1"
-				// helperText="Full width!"
-				fullWidth
-				onChange={handleChangeNumber}
-				margin="normal"
-				type="number"
-				InputLabelProps={{
-					shrink: true
-				}}
-				variant="outlined"
-				disabled={disabled}
-			/>
-		);
 	};
 
 	// Func should call getValue() in smart contract and return the respective value in a disabled Text field
@@ -176,10 +152,8 @@ export default function LayoutTextFields(props: InputProps) {
 	// œDEV make default values specific for each condition and action, not global
 	function returnDefaultValue(): string | number {
 		// If user has inputted something, go in here
-		console.log('retrurn default value');
 		if (inputs[0] !== undefined) {
 			if (inputs[index] !== undefined) {
-				console.log(inputs[index]);
 				// If the inputted value is of inputType TokenAmount
 				if (inputType === InputType.TokenAmount) {
 					const tokenIndex = index - 1;
@@ -191,6 +165,7 @@ export default function LayoutTextFields(props: InputProps) {
 						inputs[index].toString(),
 						token.decimals
 					);
+
 					return humanReadableAmount.toString();
 				} else {
 					return inputs[index].toString();
@@ -206,6 +181,7 @@ export default function LayoutTextFields(props: InputProps) {
 					updateUserInput(index, 1);
 					return 1;
 				case InputType.TokenAmount:
+					console.log('token amount else');
 					const oneEthInWei = ethers.constants.WeiPerEther;
 					updateUserInput(index, oneEthInWei);
 					return 1;
@@ -272,13 +248,15 @@ export default function LayoutTextFields(props: InputProps) {
 				// Amounts
 				return (
 					<div className={classes.form}>
-						{/* <NumberFormat
+						<ReactNumberFormat
+							updateUserInput={updateUserInput}
+							label={label}
+							index={index}
+							inputType={inputType}
+							inputs={inputs}
 							defaultValue={returnDefaultValue()}
-							customInput={TextFieldWithProps}
-							thousandSeparator
-							onChange={handleChangeNumber}
-						/> */}
-						<ReactNumberFormat></ReactNumberFormat>
+							convertToWei
+						></ReactNumberFormat>
 
 						{/* <TextField
 							className={classes.root}
@@ -307,7 +285,16 @@ export default function LayoutTextFields(props: InputProps) {
 			case InputType.Number:
 				return (
 					<div className={classes.form}>
-						<TextField
+						<ReactNumberFormat
+							updateUserInput={updateUserInput}
+							label={label}
+							index={index}
+							inputType={inputType}
+							inputs={inputs}
+							defaultValue={returnDefaultValue()}
+							convertToWei={false}
+						></ReactNumberFormat>
+						{/* <TextField
 							className={classes.root}
 							inputProps={{ min: 0 }}
 							required
@@ -327,7 +314,7 @@ export default function LayoutTextFields(props: InputProps) {
 							}}
 							variant="outlined"
 							disabled={disabled}
-						/>
+						/> */}
 					</div>
 				);
 			case InputType.GetValue:

@@ -47,7 +47,9 @@ const useStyles = makeStyles(theme => ({
 export default function StepperContent(props: StepperContentProps) {
 	const { icedTxState, activeStep } = props;
 	const classes = useStyles();
-	// console.log(icedTxState)
+	if (icedTxState.action.userInputs[1]) {
+		console.log(icedTxState.action.userInputs[1].toString());
+	}
 
 	const { condition, action } = icedTxState;
 	const conditionInputTypes = condition.userInputTypes;

@@ -828,57 +828,61 @@ export default function TransactionCard(props: TxCardProps) {
 						<h4>{modalContent.progressText}</h4>
 					</Grid>
 				)}
-				{txState !== TxState.cancelled && (
-					<Grid
-						className={classes.gridItem}
-						container
-						item
-						sm={12}
-						xs={12}
-						direction="row"
-						justify="space-evenly"
-						alignItems="flex-start"
-						style={{
-							background: '#E8E8E8'
-						}}
-					>
-						<h4>Your Account</h4>
-						<h4 style={{ marginLeft: 'auto' }}>0x232...fdf32</h4>
-					</Grid>
-				)}
-				{txState === TxState.postCreate && (
-					<Grid
-						className={classes.gridItem}
-						container
-						item
-						sm={12}
-						xs={12}
-						direction="row"
-						justify="space-evenly"
-						alignItems="center"
-						style={{
-							background: '#EEEEEE'
-						}}
-					>
-						<h4>Transaction Confirmation</h4>
-						<a
+				{txState !== TxState.cancelled &&
+					txState > TxState.displayLogIntoMetamask && (
+						<Grid
+							className={classes.gridItem}
+							container
+							item
+							sm={12}
+							xs={12}
+							direction="row"
+							justify="space-evenly"
+							alignItems="flex-start"
 							style={{
-								display: 'flex',
-								alignItems: 'center',
-								marginLeft: 'auto'
+								background: '#E8E8E8'
 							}}
-							href={`https://${etherscanPrefix}etherscan.io/tx/${txHash}`}
-							target="_blank"
 						>
-							<LinkIcon
-								color={'primary'}
-								fontSize={'large'}
-								// style={{ marginRight: '8px' }}
-							/>
-						</a>
-						{/* <h4 style={{ marginLeft: 'auto' }}>0x232...fdf32</h4> */}
-					</Grid>
-				)}
+							<h4>Your Account</h4>
+							<h4 style={{ marginLeft: 'auto' }}>
+								0x232...fdf32
+							</h4>
+						</Grid>
+					)}
+				{txState === TxState.postCreate &&
+					txState > TxState.displayLogIntoMetamask && (
+						<Grid
+							className={classes.gridItem}
+							container
+							item
+							sm={12}
+							xs={12}
+							direction="row"
+							justify="space-evenly"
+							alignItems="center"
+							style={{
+								background: '#EEEEEE'
+							}}
+						>
+							<h4>Transaction Confirmation</h4>
+							<a
+								style={{
+									display: 'flex',
+									alignItems: 'center',
+									marginLeft: 'auto'
+								}}
+								href={`https://${etherscanPrefix}etherscan.io/tx/${txHash}`}
+								target="_blank"
+							>
+								<LinkIcon
+									color={'primary'}
+									fontSize={'large'}
+									// style={{ marginRight: '8px' }}
+								/>
+							</a>
+							{/* <h4 style={{ marginLeft: 'auto' }}>0x232...fdf32</h4> */}
+						</Grid>
+					)}
 				{modalContent.prepayment &&
 					txState !== TxState.postCreate &&
 					txState !== TxState.cancelled && (
@@ -907,7 +911,8 @@ export default function TransactionCard(props: TxCardProps) {
 						</Grid>
 					)}
 				{txState !== TxState.postCreate &&
-					txState !== TxState.cancelled && (
+					txState !== TxState.cancelled &&
+					txState > TxState.displayLogIntoMetamask && (
 						<React.Fragment>
 							<Grid
 								className={classes.gridItem}
