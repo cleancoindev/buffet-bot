@@ -76,50 +76,6 @@ export default function LayoutTextFields(props: InputProps) {
 	// CSS Classes
 	const classes = useStyles();
 
-	// If user skipped back, pre fill with state from context
-
-	// Generic Update User Input function
-	const handleChangeNumber = (
-		event: React.ChangeEvent<{ value: unknown }>
-	) => {
-		const newValue = event.target.value as string;
-
-		if (newValue === '.') {
-			const zero = ethers.constants.Zero;
-			updateUserInput(index, zero);
-		} else if (newValue !== '') {
-			// Handle special case if InputType is TokenAmount
-			if (inputType === InputType.TokenAmount) {
-				// get index of token in question
-				// @DEV Assuming that token in question always comes one index before tokenAmount
-				const tokenIndex = index - 1;
-				const tokenAddress = inputs[tokenIndex].toString();
-
-				// Find token object by address
-				const token = getTokenByAddress(tokenAddress);
-
-				const weiAmount = ethers.utils.parseUnits(
-					newValue.toString(),
-					token.decimals
-				);
-				// console.log(weiAmount.toString());
-				// Update global state
-				console.log('updatingUserInput');
-				updateUserInput(index, weiAmount);
-			}
-		} else if (newValue === '') {
-			const zero = ethers.constants.Zero;
-			updateUserInput(index, zero);
-		} else {
-			throw Error('Input value is empty / wrong');
-			// if (inputs[index] !== 1) {
-			// 	// updateUserInput(index, 1);
-			// } else {
-			// 	// updateUserInput(index, 10);
-			// }
-		}
-	};
-
 	// Func should call getValue() in smart contract and return the respective value in a disabled Text field
 	// Params: Contract address | Contract Parameters
 	function callGetValue() {
@@ -257,29 +213,6 @@ export default function LayoutTextFields(props: InputProps) {
 							defaultValue={returnDefaultValue()}
 							convertToWei
 						></ReactNumberFormat>
-
-						{/* <TextField
-							className={classes.root}
-							inputProps={{ min: 1, step: 'any', lang: 'en' }}
-							required
-							id="outlined-full-width"
-							label={label}
-							style={{ marginTop: '0px', marginBottom: '0px' }}
-							// Import TextField CSS
-							defaultValue={returnDefaultValue()}
-							// value={returnDefaultValue()}
-							// placeholder="1"
-							// helperText="Full width!"
-							fullWidth
-							onChange={handleChangeNumber}
-							margin="normal"
-							type="number"
-							InputLabelProps={{
-								shrink: true
-							}}
-							variant="outlined"
-							disabled={disabled}
-						/> */}
 					</div>
 				);
 			case InputType.Number:
