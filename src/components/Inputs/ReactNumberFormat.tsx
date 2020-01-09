@@ -57,6 +57,7 @@ interface ReactNumberFormatProps {
 	inputs: Array<string | number | ethers.utils.BigNumber>;
 	defaultValue: string | number;
 	convertToWei: boolean;
+	disabled: boolean;
 }
 
 export default function ReactNumberFormat(props: ReactNumberFormatProps) {
@@ -67,7 +68,8 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		inputType,
 		inputs,
 		defaultValue,
-		convertToWei
+		convertToWei,
+		disabled
 	} = props;
 	const classes = useStyles();
 	const [values, setValues] = React.useState<State>({
@@ -142,6 +144,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				shrink: true
 			}}
 			variant="outlined"
+			disabled={disabled}
 		/>
 	);
 }

@@ -88,28 +88,48 @@ interface TextFieldWrapProps {
 	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	value: Date;
 	label: string;
+	disabled: boolean;
 }
 
 const TextFieldWrap = (props: TextFieldWrapProps) => {
 	const labelClasses = useInputStyles();
-	const { setOpen, value, label } = props;
+	const { setOpen, value, label, disabled } = props;
 
 	return (
 		<FormControl style={{ width: '100%' }}>
-			<TextField
-				placeholder={'placeholder'}
-				className={labelClasses.root}
-				fullWidth
-				margin="normal"
-				InputLabelProps={{
-					shrink: true
-				}}
-				variant="outlined"
-				onClick={() => setOpen(true)}
-				defaultValue={value}
-				id="outlined-full-width"
-				label={label}
-			/>
+			{!disabled && (
+				<TextField
+					placeholder={'placeholder'}
+					className={labelClasses.root}
+					fullWidth
+					margin="normal"
+					InputLabelProps={{
+						shrink: true
+					}}
+					variant="outlined"
+					onClick={() => setOpen(true)}
+					defaultValue={value}
+					id="outlined-full-width"
+					label={label}
+					disabled={disabled}
+				/>
+			)}
+			{disabled && (
+				<TextField
+					placeholder={'placeholder'}
+					className={labelClasses.root}
+					fullWidth
+					margin="normal"
+					InputLabelProps={{
+						shrink: true
+					}}
+					variant="outlined"
+					defaultValue={value}
+					id="outlined-full-width"
+					label={label}
+					disabled={disabled}
+				/>
+			)}
 		</FormControl>
 	);
 };
@@ -117,7 +137,7 @@ const TextFieldWrap = (props: TextFieldWrapProps) => {
 // #################################################
 
 export default function DateAndTimePicker(props: InputProps) {
-	const { index, label, disabled, defaultValue } = props;
+	const { index, label, defaultValue, disabled } = props;
 	// @DEV TO DO:
 	// SET MIN AND MAX DATE, see api https://material-ui-pickers.dev/api/DateTimePicker
 
@@ -189,7 +209,6 @@ export default function DateAndTimePicker(props: InputProps) {
 					<DateTimePicker
 						open={isOpen}
 						onClose={() => setIsOpen(false)}
-						disabled={disabled}
 						label={label}
 						style={{ width: '100%' }}
 						inputVariant="outlined"
@@ -205,6 +224,7 @@ export default function DateAndTimePicker(props: InputProps) {
 								setOpen={setIsOpen}
 								value={selectedDate}
 								label={label}
+								disabled={disabled}
 								// {...props}
 								// name={name}
 								// input={{

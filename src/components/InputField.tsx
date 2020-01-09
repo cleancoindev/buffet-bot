@@ -218,6 +218,7 @@ export default function LayoutTextFields(props: InputProps) {
 							inputs={inputs}
 							defaultValue={returnDefaultValue()}
 							convertToWei
+							disabled={disabled}
 						></ReactNumberFormat>
 					</div>
 				);
@@ -232,6 +233,7 @@ export default function LayoutTextFields(props: InputProps) {
 							inputs={inputs}
 							defaultValue={returnDefaultValue()}
 							convertToWei={false}
+							disabled={disabled}
 						></ReactNumberFormat>
 						{/* <TextField
 							className={classes.root}
