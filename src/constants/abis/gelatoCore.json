@@ -436,7 +436,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "_actionConditionsCheckGas",
+        "name": "_actionTriggersCheckGas",
         "type": "uint256"
       },
       {
@@ -700,11 +700,11 @@
       },
       {
         "internalType": "uint256",
-        "name": "_actionConditionsCheckGas",
+        "name": "_actionTriggersCheckGas",
         "type": "uint256"
       }
     ],
-    "name": "gasTestActionConditionsCheck",
+    "name": "gasTestActionTriggersCheck",
     "outputs": [
       {
         "internalType": "bool",
@@ -798,7 +798,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "_actionConditionsCheckGas",
+        "name": "_actionTriggersCheckGas",
         "type": "uint256"
       },
       {

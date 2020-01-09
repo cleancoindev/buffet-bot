@@ -11,12 +11,7 @@ export function stringifyTimestamp(timestamp: string) {
 	return `${date.toLocaleDateString()} - ${date.toLocaleTimeString()}`;
 }
 
-export function decodePayload(payload: string, inputTypes: Array<Params>) {
-	// do ethers.js decoding like in well timed
-	return ['0x0', '0x1', '1', '1200'];
-}
-
-export function findConditionById(id: string) {
+export function findTriggerById(id: string) {
 	let returnData = DEFAULT_DATA_CONDITION;
 
 	CTYPES.forEach(type => {
@@ -27,7 +22,7 @@ export function findConditionById(id: string) {
 	return returnData;
 }
 
-export function findConditionByAddress(address: string) {
+export function findTriggerByAddress(address: string) {
 	let returnData = DEFAULT_DATA_CONDITION;
 
 	CTYPES.forEach(type => {
@@ -71,9 +66,13 @@ export function getTokenSymbol(address: string) {
 
 // @DEV Potenital bug in returning error string
 export function getTokenByAddress(address: string) {
-	const token = TOKEN_LIST.find(token => token.address === address);
+	const token = TOKEN_LIST.find(
+		token =>
+			ethers.utils.getAddress(token.address) ===
+			ethers.utils.getAddress(address)
+	);
 	if (token === undefined) {
-		throw Error('Could not find Token with selected addrress');
+		throw Error(`Could not find Token with address ${address}`);
 	} else {
 		return token;
 	}
@@ -121,9 +120,44 @@ export function encodeTriggerPayload(
 		}
 	];
 	const iFace = new utils.Interface(triggerTimestampPassedABI);
-	const timestamp = '0';
 
 	const triggerPayloadWithSelector = iFace.functions.fired.encode(userInput);
 
 	return triggerPayloadWithSelector;
+}
+
+export function decodeActionPayload(
+	payload: string,
+	inputParameter: Array<Params>
+) {
+	const decodedPayload = ethers.utils.defaultAbiCoder.decode(
+		paramsToSimpleParams(inputParameter),
+		ethers.utils.hexDataSlice(payload, 4)
+	);
+
+	// Delete Index 0 and 1 (user address and proxy address), as those will not be displayed
+	decodedPayload.splice(0, 1);
+	decodedPayload.splice(0, 1);
+	return decodedPayload;
+}
+
+export function decodeTriggerPayload(
+	payload: string,
+	inputParameter: Array<Params>
+) {
+	const decodedPayload = ethers.utils.defaultAbiCoder.decode(
+		paramsToSimpleParams(inputParameter),
+		ethers.utils.hexDataSlice(payload, 4)
+	);
+	console.log(decodedPayload);
+
+	return decodedPayload;
+}
+
+export function paramsToSimpleParams(inputParameter: Array<Params>) {
+	let simpleParams: Array<string> = [];
+	inputParameter.forEach(parameter => {
+		simpleParams.push(parameter.type);
+	});
+	return simpleParams;
 }

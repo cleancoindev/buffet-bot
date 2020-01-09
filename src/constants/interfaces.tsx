@@ -13,13 +13,14 @@ import { ethers } from 'ethers';
 
 export interface PastTransaction {
 	id: string;
-	conditionAddress: string;
-	actionAddress: string;
-	conditionPayload: string;
+	trigger: string;
+	action: string;
+	triggerPayload: string;
 	actionPayload: string;
-	expiryDate: string;
-	prepayment: string;
-	timestamp: string;
+	expiryDate?: string;
+	prepayment?: string;
+	mintingDate: string;
+	executionDate?: string;
 	status: string;
 }
 
@@ -40,7 +41,7 @@ export interface ActionWhitelistData {
 	approvalIndex: number;
 }
 
-export interface ConditionWhitelistData {
+export interface TriggerWhitelistData {
 	id: number;
 	app: string;
 	title: string;
@@ -52,21 +53,21 @@ export interface ConditionWhitelistData {
 }
 
 export interface UserSelection {
-	conditionApp: string;
+	triggerApp: string;
 	actionApp: string;
-	conditionAppFunctions: Array<ConditionWhitelistData>;
+	triggerAppFunctions: Array<TriggerWhitelistData>;
 	actionAppFunctions: Array<ActionWhitelistData>;
 }
 
 export interface IcedTx {
-	condition: ConditionWhitelistData;
+	trigger: TriggerWhitelistData;
 	action: ActionWhitelistData;
 	txState: TxState;
 	pastTransactions: Array<PastTransaction>;
 }
 
-export enum ConditionOrAction {
-	Condition,
+export enum TriggerOrAction {
+	Trigger,
 	Action
 }
 
@@ -147,14 +148,14 @@ interface SelectAction {
 	id: string;
 }
 
-interface SelectCondition {
+interface SelectTrigger {
 	// UPDATE_ACTION
 	type: typeof SELECT_CONDITION;
 	// Id of Action
 	id: string;
 }
 
-interface UpdateConditionInputs {
+interface UpdateTriggerInputs {
 	// UPDATE_ACTION
 	type: typeof UPDATE_CONDITION_INPUTS;
 	// Id of Action
@@ -170,7 +171,7 @@ interface UpdateActionInputs {
 	value: any;
 }
 
-interface ResetCondition {
+interface ResetTrigger {
 	// UPDATE_ACTION
 	type: typeof RESET_CONDITION;
 }
@@ -192,18 +193,18 @@ interface UpdatePastTransactions {
 
 // export interface Action {
 // 	type: string;
-// 	conditionOrAction: ConditionOrAction;
+// 	triggerOrAction: TriggerOrAction;
 // 	id: string;
 // 	index: number;
 // 	value: string | number;
 // }
 
 export type Action =
-	| ResetCondition
+	| ResetTrigger
 	| ResetAction
 	| UpdateActionInputs
-	| UpdateConditionInputs
-	| SelectCondition
+	| UpdateTriggerInputs
+	| SelectTrigger
 	| SelectAction
 	| UpdateTxState
 	| UpdatePastTransactions;

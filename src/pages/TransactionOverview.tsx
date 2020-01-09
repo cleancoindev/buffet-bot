@@ -10,6 +10,14 @@ import Grid from '@material-ui/core/Grid';
 
 import { useIcedTxContext } from '../state/GlobalState';
 import TransactionSummary from '../components/TransactionSummary';
+import {
+	findTriggerByAddress,
+	findActionByAddress,
+	decodeTriggerPayload,
+	decodeActionPayload
+} from '../helpers/helpers';
+import { on } from 'cluster';
+import { render } from '@testing-library/react';
 
 interface TxOverviewParams {
 	transactionId: string;
@@ -18,26 +26,32 @@ interface TxOverviewParams {
 export default function TransactionOverview({
 	match
 }: RouteComponentProps<TxOverviewParams>) {
-	// See if TxState.condition.id === 0
+	// See if TxState.trigger.id === 0
 	// IF so, check transactionId params, if it is a number, then fetch data from blockchain
 	const {
 		params: { transactionId }
 	} = match;
-	console.log(transactionId);
 	const { icedTxState } = useIcedTxContext();
-
-	console.log(icedTxState.pastTransactions);
 
 	// Get the identified past transaction from state
 	const pastTransaction =
 		icedTxState.pastTransactions[parseInt(transactionId.toString())];
-	console.log(pastTransaction);
 
-	// useEffect(()=> {
-	// 	dispatch({
+	// Get respective triggers and action
+	// console.log(pastTransaction.trigger);
+	// console.log(pastTransaction.action);
+	const trigger = findTriggerByAddress(pastTransaction.trigger);
+	const action = findActionByAddress(pastTransaction.action);
+	// Get user inputs by decoding payloads
+	const triggerInputs = decodeTriggerPayload(
+		pastTransaction.triggerPayload,
+		trigger.params
+	);
 
-	// 	})
-	// })
+	const actionInputs = decodeActionPayload(
+		pastTransaction.actionPayload,
+		action.params
+	);
 
 	return (
 		<React.Fragment>
@@ -48,7 +62,10 @@ export default function TransactionOverview({
 				alignItems="center"
 			>
 				<TransactionSummary
-					pastTransaction={pastTransaction}
+					trigger={trigger}
+					action={action}
+					triggerInputs={triggerInputs}
+					actionInputs={actionInputs}
 				></TransactionSummary>
 			</Grid>
 		</React.Fragment>

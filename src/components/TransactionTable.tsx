@@ -24,7 +24,7 @@ import Paper from '@material-ui/core/Paper';
 
 import { useIcedTxContext } from '../state/GlobalState';
 import {
-	findConditionByAddress,
+	findTriggerByAddress,
 	findActionByAddress,
 	stringifyTimestamp
 } from '../helpers/helpers';
@@ -58,7 +58,7 @@ Event from SC
 What is needed:
 - executionClaimId
 - userProxy (used to filter, should be done by GraphQL)
-- trigger address => identifier for condition
+- trigger address => identifier for trigger
 - action address => idendifier for action
 - trigger payload, value to decode
 - action payload, same
@@ -130,13 +130,13 @@ interface HeadCell {
 }
 
 // interface IcedTxStateTable {
-// 	condition: ConditionWhitelistData;
+// 	trigger: TriggerWhitelistData;
 // 	action: ActionWhitelistData;
 // }
 
 interface Data {
 	id: string;
-	condition: string;
+	trigger: string;
 	action: string;
 	date: string;
 	status: string;
@@ -146,14 +146,14 @@ interface Data {
 
 function createData(
 	id: string,
-	condition: string,
+	trigger: string,
 	action: string,
 	date: string,
 	status: string,
 	view: number,
 	cancel: string
 ): Data {
-	return { id, condition, action, date, status, view, cancel };
+	return { id, trigger, action, date, status, view, cancel };
 }
 
 const headCells: HeadCell[] = [
@@ -164,10 +164,10 @@ const headCells: HeadCell[] = [
 		label: 'id'
 	},
 	{
-		id: 'condition',
+		id: 'trigger',
 		numeric: true,
 		disablePadding: false,
-		label: 'Condition'
+		label: 'Trigger'
 	},
 	{ id: 'action', numeric: true, disablePadding: false, label: 'Action' },
 	{ id: 'date', numeric: true, disablePadding: false, label: 'Created at' },
@@ -335,7 +335,10 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function EnhancedTable() {
-	const { dispatch } = useIcedTxContext();
+	const {
+		dispatch,
+		icedTxState: { pastTransactions }
+	} = useIcedTxContext();
 	const web3 = useWeb3React();
 
 	// Router Context
@@ -396,13 +399,16 @@ export default function EnhancedTable() {
 
 			let newRows: Array<Data> = [];
 
+			// Change global state
+			dispatch({
+				type: UPDATE_PAST_TRANSACTIONS,
+				pastTransactions: executionClaims
+			});
+
 			executionClaims.forEach((executionClaim: any, index: any) => {
-				// With address, find condition and action
-				const condition = findConditionByAddress(
-					executionClaim.trigger
-				);
-				console.log(executionClaim.trigger);
-				console.log(executionClaim.action);
+				// With address, find trigger and action
+				const trigger = findTriggerByAddress(executionClaim.trigger);
+
 				const action = findActionByAddress(executionClaim.action);
 
 				// Set default status string
@@ -427,12 +433,12 @@ export default function EnhancedTable() {
 				}
 
 				// @DEV USE THIS Decoding when the view button is being clicked
-				// console.log(condition);
+				// console.log(trigger);
 				// console.log(action);
 				const newData = createData(
 					// Remove '0x' at the beginning
 					executionClaim.id.toString().substring(2),
-					`${condition.title} on ${condition.app}`,
+					`${trigger.title} on ${trigger.app}`,
 					`${action.title} on ${action.app}`,
 					stringifyTimestamp(executionClaim.mintingDate),
 					statusString,
@@ -445,7 +451,6 @@ export default function EnhancedTable() {
 			});
 
 			setDisplayedRows(newRows);
-			console.log(executionClaims);
 		} catch (err) {
 			console.log('Could not fetch past execution claims');
 
@@ -467,14 +472,14 @@ export default function EnhancedTable() {
 	// FETCH DATA FROM API => Using dummy data for now
 
 	const showDetails = (event: React.MouseEvent<unknown>, row: Data) => {
-		console.log('show details');
-		console.log(row);
-		console.log(DEFAULT_PAST_TRANSACTIONS[row.view]);
-		dispatch({
-			type: UPDATE_PAST_TRANSACTIONS,
-			pastTransactions: DEFAULT_PAST_TRANSACTIONS
-		});
-		history.push(`/dashboard/${DEFAULT_PAST_TRANSACTIONS[row.view].id}`);
+		// console.log('show details');
+		// console.log(row);
+		// console.log(pastTransactions[row.view]);
+		// dispatch({
+		// 	type: UPDATE_PAST_TRANSACTIONS,
+		// 	pastTransactions: DEFAULT_PAST_TRANSACTIONS
+		// });
+		history.push(`/dashboard/${row.view}`);
 		// Route to new page
 	};
 
@@ -578,7 +583,7 @@ export default function EnhancedTable() {
 												{row.id}
 											</StyledTableCell>
 											<StyledTableCell align="left">
-												{row.condition}
+												{row.trigger}
 											</StyledTableCell>
 											<StyledTableCell align="left">
 												{row.action}

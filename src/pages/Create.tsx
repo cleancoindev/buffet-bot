@@ -11,7 +11,7 @@ import MobileStepper from '../components/MobileStepper';
 // Types
 import { RouteComponentProps } from 'react-router-dom';
 import { useIcedTxContext } from '../state/GlobalState';
-import { findConditionById, findActionById } from '../helpers/helpers';
+import { findTriggerById, findActionById } from '../helpers/helpers';
 import {
 	SELECT_CONDITION,
 	SELECT_ACTION,
@@ -28,7 +28,7 @@ import ERC20_ABI from '../constants/abis/erc20.json';
 import { useGelatoCore } from '../hooks/hooks';
 
 interface Params {
-	conditionId: string;
+	triggerId: string;
 	actionId: string;
 }
 
@@ -36,7 +36,7 @@ interface Params {
 
 export default function Create({ match }: RouteComponentProps<Params>) {
 	const {
-		params: { conditionId, actionId }
+		params: { triggerId, actionId }
 	} = match;
 	const { icedTxState, dispatch } = useIcedTxContext();
 
@@ -51,27 +51,27 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 
 	// When component renders, 1) Check that icedTx state exist, if not 2) check if correct params were inputted in URL, if not, 3) setNotFound = true
 	useEffect(() => {
-		if (icedTxState.condition.id === 0 || icedTxState.action.id === 0) {
+		if (icedTxState.trigger.id === 0 || icedTxState.action.id === 0) {
 			// See if inputted params in URL exist in whitelist
-			// console.log(conditionId, actionId)
-			const paramCondition = findConditionById(conditionId);
+			// console.log(triggerId, actionId)
+			const paramTrigger = findTriggerById(triggerId);
 			const paramAction = findActionById(actionId);
-			// console.log(paramCondition)
+			// console.log(paramTrigger)
 			// console.log(paramAction)
-			if (paramCondition.id === 0 || paramAction.id === 0) {
+			if (paramTrigger.id === 0 || paramAction.id === 0) {
 				// Render IcedTx not found
 				setNotFound(true);
 			} else {
 				// updateIcedTx(
-				// 	ConditionOrAction.Condition,
-				// 	paramCondition.id.toString()
+				// 	TriggerOrAction.Trigger,
+				// 	paramTrigger.id.toString()
 				// );
 				dispatch({
 					type: SELECT_CONDITION,
-					id: paramCondition.id.toString()
+					id: paramTrigger.id.toString()
 				});
 				// updateIcedTx(
-				// 	ConditionOrAction.Action,
+				// 	TriggerOrAction.Action,
 				// 	paramAction.id.toString()
 				// );
 				dispatch({
@@ -103,7 +103,7 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 	};
 
 	function getSteps() {
-		return ['Set Condition', 'Set Action', 'Create IcedTx'];
+		return ['Set Trigger', 'Set Action', 'Create IcedTx'];
 	}
 
 	// MODAL STUFF

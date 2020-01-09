@@ -24,10 +24,10 @@ import { makeStyles } from '@material-ui/core/styles';
 
 // Import Interfaces
 import {
-	ConditionOrAction,
+	TriggerOrAction,
 	UserSelection,
 	ActionWhitelistData,
-	ConditionWhitelistData
+	TriggerWhitelistData
 } from '../constants/interfaces';
 import { RESET_CONDITION, RESET_ACTION, COLOURS } from '../constants/constants';
 import { useWeb3React } from '@web3-react/core';
@@ -74,30 +74,30 @@ export default function AppSelection() {
 
 	// Local State
 	const [userSelection, setUserSelection] = React.useState<UserSelection>({
-		conditionApp: '',
+		triggerApp: '',
 		actionApp: '',
-		conditionAppFunctions: [],
+		triggerAppFunctions: [],
 		actionAppFunctions: []
 	});
 
 	// console.log(userSelection);
 
-	function updateConditionOrAction(
-		selectedConditionOrAction: ConditionOrAction,
+	function updateTriggerOrAction(
+		selectedTriggerOrAction: TriggerOrAction,
 		app: string
 	) {
 		// console.log(app);
-		const result: Array<ActionWhitelistData | ConditionWhitelistData> = [];
-		const conditionOrAction = { app: '', type: '' };
-		if (selectedConditionOrAction === ConditionOrAction.Condition) {
+		const result: Array<ActionWhitelistData | TriggerWhitelistData> = [];
+		const triggerOrAction = { app: '', type: '' };
+		if (selectedTriggerOrAction === TriggerOrAction.Trigger) {
 			CTYPES.forEach(type => {
 				if (type.app === app) {
 					result.push(type);
 				}
 			});
-			conditionOrAction.app = 'conditionApp';
-			conditionOrAction.type = 'conditionAppFunctions';
-			// resetIcedTxInput(ConditionOrAction.Condition);
+			triggerOrAction.app = 'triggerApp';
+			triggerOrAction.type = 'triggerAppFunctions';
+			// resetIcedTxInput(TriggerOrAction.Trigger);
 			// RESET THE CONDITION to SELECT...
 			dispatch({ type: RESET_CONDITION });
 		} else {
@@ -106,16 +106,16 @@ export default function AppSelection() {
 					result.push(type);
 				}
 			});
-			conditionOrAction.app = 'actionApp';
-			conditionOrAction.type = 'actionAppFunctions';
-			// resetIcedTxInput(ConditionOrAction.Action);
+			triggerOrAction.app = 'actionApp';
+			triggerOrAction.type = 'actionAppFunctions';
+			// resetIcedTxInput(TriggerOrAction.Action);
 			// RESET THE CONDITION to SELECT...
 			dispatch({ type: RESET_ACTION });
 		}
 		setUserSelection({
 			...userSelection,
-			[conditionOrAction.app]: app,
-			[conditionOrAction.type]: result
+			[triggerOrAction.app]: app,
+			[triggerOrAction.type]: result
 		});
 	}
 
@@ -151,9 +151,9 @@ export default function AppSelection() {
 						<Dropdown
 							app
 							// userSelection={userSelection}
-							conditionOrAction={ConditionOrAction.Condition}
+							triggerOrAction={TriggerOrAction.Trigger}
 							data={CTYPES}
-							updateConditionOrAction={updateConditionOrAction}
+							updateTriggerOrAction={updateTriggerOrAction}
 						/>
 					</Grid>
 					{/* <Grid container item justify="flex-start" style={{background: "yellow"}}>
@@ -199,15 +199,15 @@ export default function AppSelection() {
 						<Dropdown
 							app
 							// userSelection={userSelection}
-							conditionOrAction={ConditionOrAction.Action}
+							triggerOrAction={TriggerOrAction.Action}
 							data={ATYPES}
-							updateConditionOrAction={updateConditionOrAction}
+							updateTriggerOrAction={updateTriggerOrAction}
 						/>
 					</Grid>
 				</Grid>
 			</Grid>
 			<Divider variant="middle" />
-			{userSelection.conditionApp !== '' &&
+			{userSelection.triggerApp !== '' &&
 				userSelection.actionApp !== '' && (
 					<Grid
 						container
@@ -233,17 +233,17 @@ export default function AppSelection() {
 								className={classes.box}
 							>
 								<p className={classes.boxTitle}>
-									Select Condition
+									Select Trigger
 								</p>
 								<Dropdown
 									app={false}
 									// userSelection={userSelection}
-									conditionOrAction={
-										ConditionOrAction.Condition
+									triggerOrAction={
+										TriggerOrAction.Trigger
 									}
-									data={userSelection.conditionAppFunctions}
-									updateConditionOrAction={
-										updateConditionOrAction
+									data={userSelection.triggerAppFunctions}
+									updateTriggerOrAction={
+										updateTriggerOrAction
 									}
 								/>
 							</Grid>
@@ -287,17 +287,17 @@ export default function AppSelection() {
 								<Dropdown
 									app={false}
 									// userSelection={userSelection}
-									conditionOrAction={ConditionOrAction.Action}
+									triggerOrAction={TriggerOrAction.Action}
 									data={userSelection.actionAppFunctions}
-									updateConditionOrAction={
-										updateConditionOrAction
+									updateTriggerOrAction={
+										updateTriggerOrAction
 									}
 								/>
 							</Grid>
 						</Grid>
-						{userSelection.conditionApp !== '' &&
+						{userSelection.triggerApp !== '' &&
 							userSelection.actionApp !== '' &&
-							icedTxState.condition.id !== 0 &&
+							icedTxState.trigger.id !== 0 &&
 							icedTxState.action.id !== 0 && (
 								<React.Fragment>
 									<Grid
@@ -320,13 +320,13 @@ export default function AppSelection() {
 											<span style={{ color: '#E50078' }}>
 												{icedTxState.action.app}
 											</span>{' '}
-											on your behalf, when the condition{' '}
+											on your behalf, when the trigger{' '}
 											<span style={{ color: '#E50078' }}>
-												{icedTxState.condition.title}{' '}
+												{icedTxState.trigger.title}{' '}
 											</span>
 											on{' '}
 											<span style={{ color: '#E50078' }}>
-												{icedTxState.condition.app}
+												{icedTxState.trigger.app}
 											</span>{' '}
 											is fulfilled
 										</h2>
@@ -343,7 +343,7 @@ export default function AppSelection() {
 										}}
 									>
 										<Link
-											to={`create/${icedTxState.condition.id}/${icedTxState.action.id}`}
+											to={`create/${icedTxState.trigger.id}/${icedTxState.action.id}`}
 											style={{ textDecoration: 'none' }}
 										>
 											<Button

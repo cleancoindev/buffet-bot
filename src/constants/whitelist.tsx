@@ -1,7 +1,7 @@
 import { InputType } from './interfaces';
 
 export const APPS = {
-	conditions: ['Your Wallet', 'Calendar', 'Kyber'],
+	triggers: ['Your Wallet', 'Calendar', 'Kyber'],
 	actions: ['Your Wallet', 'Kyber', 'Fulcrum']
 };
 
@@ -26,7 +26,7 @@ export const EXECUTOR_ADDRESS = {
 	42: '0x0'
 };
 
-// Conditions
+// Triggers
 export const CTYPES = [
 	// {
 	// 	id: 1,
@@ -115,6 +115,7 @@ export const ATYPES = [
         uint256 _minConversionRate
 
 		*/
+
 		params: [
 			{ type: 'address', name: '_user' },
 			{ type: 'address', name: '_userProxy' },
@@ -199,7 +200,7 @@ export const TOKEN_LIST = [
 
 /*
 export const LIST = {
-	conditions: {
+	triggers: {
 		Your Wallet: {
 			tokenBalance: {
 				title: "Token Balance",

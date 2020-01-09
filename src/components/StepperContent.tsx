@@ -1,9 +1,6 @@
 import React from 'react';
 
-import {
-	StepperContentProps,
-	ConditionOrAction
-} from '../constants/interfaces';
+import { StepperContentProps, TriggerOrAction } from '../constants/interfaces';
 
 // Material UI
 import { makeStyles } from '@material-ui/core/styles';
@@ -13,6 +10,7 @@ import { Grid, Divider } from '@material-ui/core';
 // Import Local Components
 import InputField from './InputField';
 import { COLOURS } from '../constants/constants';
+import TransactionSummary from './TransactionSummary';
 
 const useStyles = makeStyles(theme => ({
 	box: {
@@ -47,20 +45,17 @@ const useStyles = makeStyles(theme => ({
 export default function StepperContent(props: StepperContentProps) {
 	const { icedTxState, activeStep } = props;
 	const classes = useStyles();
-	if (icedTxState.action.userInputs[1]) {
-		console.log(icedTxState.action.userInputs[1].toString());
-	}
 
-	const { condition, action } = icedTxState;
-	const conditionInputTypes = condition.userInputTypes;
+	const { trigger, action } = icedTxState;
+	const triggerInputTypes = trigger.userInputTypes;
 	const actionInputTypes = action.userInputTypes;
 
 	// User inputs when scrolling back
-	const conditionInputs = condition.userInputs;
+	const triggerInputs = trigger.userInputs;
 	const actionInputs = action.userInputs;
 
 	// Apps
-	const conditionApp = condition.app;
+	const triggerApp = trigger.app;
 	const actionApp = action.app;
 
 	// Based on the userInputs, render respective inputs
@@ -96,18 +91,18 @@ export default function StepperContent(props: StepperContentProps) {
 						>
 							<h1>
 								{' '}
-								Step: {stepIndex + 1} - Define the condition
-								that will trigger the action
+								Step: {stepIndex + 1} - Define the trigger that
+								will trigger the action
 							</h1>
 							<h2>
 								{' '}
-								Condition:{' '}
+								Trigger:{' '}
 								<span style={{ color: COLOURS.salmon }}>
-									{condition.title}{' '}
+									{trigger.title}{' '}
 								</span>
 								on{' '}
 								<span style={{ color: COLOURS.salmon }}>
-									{condition.app}
+									{trigger.app}
 								</span>{' '}
 							</h2>
 							<Divider
@@ -117,17 +112,15 @@ export default function StepperContent(props: StepperContentProps) {
 									marginTop: '16px'
 								}}
 							/>
-							{conditionInputTypes.map((input, key) => (
+							{triggerInputTypes.map((input, key) => (
 								<InputField
-									key={`Condition-${key}`}
+									key={`Trigger-${key}`}
 									index={key}
 									inputType={input}
-									label={condition.inputLabels[key]}
-									conditionOrAction={
-										ConditionOrAction.Condition
-									}
-									inputs={conditionInputs}
-									app={conditionApp}
+									label={trigger.inputLabels[key]}
+									triggerOrAction={TriggerOrAction.Trigger}
+									inputs={triggerInputs}
+									app={triggerApp}
 									disabled={false}
 								></InputField>
 							))}
@@ -185,7 +178,7 @@ export default function StepperContent(props: StepperContentProps) {
 									key={`Action-${key}`}
 									inputType={input}
 									label={action.inputLabels[key]}
-									conditionOrAction={ConditionOrAction.Action}
+									triggerOrAction={TriggerOrAction.Action}
 									inputs={actionInputs}
 									app={actionApp}
 									disabled={false}
@@ -196,161 +189,12 @@ export default function StepperContent(props: StepperContentProps) {
 				);
 			case 2:
 				return (
-					<div style={{ marginBottom: '24px' }}>
-						<Grid
-							container
-							direction="row"
-							justify="space-evenly"
-							alignItems="center"
-							style={{ padding: '10px' }}
-						>
-							<Grid
-								container
-								item
-								sm={12}
-								xs={12}
-								direction="column"
-								justify="flex-start"
-								alignItems="flex-start"
-								className={classes.box}
-								style={{
-									paddingLeft: '24px'
-								}}
-							>
-								<h1> Summary</h1>
-								<h2 style={{ textAlign: 'left' }}>
-									After creating this IcedTx, gelato will{' '}
-									<span style={{ color: COLOURS.salmon }}>
-										{action.title}
-									</span>{' '}
-									with{' '}
-									<span style={{ color: COLOURS.salmon }}>
-										{action.app}
-									</span>{' '}
-									when the condition{' '}
-									<span style={{ color: COLOURS.salmon }}>
-										{condition.title}{' '}
-									</span>
-									on{' '}
-									<span style={{ color: COLOURS.salmon }}>
-										{condition.app}
-									</span>{' '}
-									is fulfilled
-								</h2>
-								{/* <Divider
-						style={{
-							background: 'white',
-							width: '100%',
-							marginTop: '16px'
-						}}
-					/> */}
-							</Grid>
-						</Grid>
-						<Grid
-							container
-							direction="row"
-							justify="space-evenly"
-							alignItems="center"
-							style={{ padding: '10px' }}
-						>
-							<Grid
-								container
-								item
-								sm={12}
-								xs={12}
-								direction="column"
-								justify="flex-start"
-								alignItems="flex-start"
-								className={classes.box}
-								style={{
-									paddingLeft: '24px',
-									minHeight: '200px'
-								}}
-							>
-								<h2>
-									{' '}
-									Condition Summary:{' '}
-									<span style={{ color: COLOURS.salmon }}>
-										{condition.title}{' '}
-									</span>
-									on{' '}
-									<span style={{ color: COLOURS.salmon }}>
-										{condition.app}
-									</span>{' '}
-								</h2>
-								{conditionInputTypes.map((input, key) => (
-									<InputField
-										key={`Condition-${key}`}
-										index={key}
-										inputType={input}
-										label={condition.inputLabels[key]}
-										conditionOrAction={
-											ConditionOrAction.Condition
-										}
-										inputs={conditionInputs}
-										app={conditionApp}
-										disabled={true}
-									></InputField>
-								))}
-							</Grid>
-						</Grid>
-						<Grid
-							container
-							direction="row"
-							justify="space-evenly"
-							alignItems="center"
-							style={{ padding: '10px' }}
-						>
-							<Grid
-								container
-								item
-								sm={12}
-								xs={12}
-								direction="column"
-								justify="flex-start"
-								alignItems="flex-start"
-								className={classes.box}
-								style={{
-									paddingLeft: '24px',
-									minHeight: '200px'
-								}}
-							>
-								<h2>
-									Action Summary:{' '}
-									<span style={{ color: COLOURS.salmon }}>
-										{action.title}
-									</span>{' '}
-									with{' '}
-									<span style={{ color: COLOURS.salmon }}>
-										{action.app}
-									</span>{' '}
-								</h2>
-								{actionInputTypes.map((input, key) => (
-									<InputField
-										index={key}
-										key={`Action-${key}`}
-										inputType={input}
-										label={action.inputLabels[key]}
-										conditionOrAction={
-											ConditionOrAction.Action
-										}
-										inputs={actionInputs}
-										app={actionApp}
-										disabled={true}
-									></InputField>
-								))}
-								{/* <Divider
-								style={{
-									background: 'white',
-									width: '100%',
-									marginTop: '16px'
-								}}
-							/>
-							<h1>Required prepayment:</h1>
-							<h2>0.06ETH ($1.08)</h2> */}
-							</Grid>
-						</Grid>
-					</div>
+					<TransactionSummary
+						trigger={trigger}
+						action={action}
+						triggerInputs={triggerInputs}
+						actionInputs={actionInputs}
+					></TransactionSummary>
 				);
 			default:
 				return 'Unknown stepIndex';

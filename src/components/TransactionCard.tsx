@@ -149,7 +149,7 @@ export default function TransactionCard(props: TxCardProps) {
 		// @DEV ADD TRY/CATCHS to all ETHEREUM TRANSACTIONS
 		const gasEstimate = await gelatoCore.estimate.mintExecutionClaim(
 			EXECUTOR_ADDRESS[networkId],
-			icedTxState.condition.address,
+			icedTxState.trigger.address,
 			encodedTrigger,
 			icedTxState.action.address,
 			encodedAction,
@@ -256,7 +256,7 @@ export default function TransactionCard(props: TxCardProps) {
 	async function getPrepaymentAmount() {
 		const prepayment = await gelatoCore.getMintingDepositPayable(
 			EXECUTOR_ADDRESS[networkId],
-			icedTxState.condition.address,
+			icedTxState.trigger.address,
 			icedTxState.action.address
 		);
 
@@ -282,8 +282,8 @@ export default function TransactionCard(props: TxCardProps) {
 
 	function encodeActionAndTrigger(account: string, userProxy: string) {
 		const encodedTrigger = encodeTriggerPayload(
-			icedTxState.condition.userInputs,
-			icedTxState.condition.params
+			icedTxState.trigger.userInputs,
+			icedTxState.trigger.params
 		);
 
 		const encodedAction = encodeActionPayload(
@@ -632,7 +632,7 @@ export default function TransactionCard(props: TxCardProps) {
 							try {
 								const tx = await gelatoCore.mintExecutionClaim(
 									EXECUTOR_ADDRESS[networkId],
-									icedTxState.condition.address,
+									icedTxState.trigger.address,
 									encodedTrigger,
 									icedTxState.action.address,
 									encodedAction,
@@ -1038,9 +1038,9 @@ export default function TransactionCard(props: TxCardProps) {
 							<h4 style={{ margin: '0px' }}>
 								If the{' '}
 								<span style={{ color: COLOURS.salmon }}>
-									{icedTxState.condition.title}
+									{icedTxState.trigger.title}
 								</span>{' '}
-								condition you chose is triggered, gelato will{' '}
+								trigger you chose is triggered, gelato will{' '}
 								<span style={{ color: COLOURS.salmon }}>
 									{icedTxState.action.title}
 								</span>{' '}

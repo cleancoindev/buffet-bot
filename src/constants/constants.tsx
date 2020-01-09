@@ -40,20 +40,20 @@ export const DEFAULT_DATA_CONDITION = {
 export const DEFAULT_PAST_TRANSACTIONS = [
 	{
 		id: '0',
-		conditionAddress: '0x1',
-		actionAddress: '0x5',
-		conditionPayload: '0x030949304934009413094309320493049039049204',
+		trigger: '0x1',
+		action: '0x5',
+		triggerPayload: '0x030949304934009413094309320493049039049204',
 		actionPayload: '0x030949304934009413094309320493049039049204',
-		expiryDate: '12353434312',
-		prepayment: '1009032030020',
-		timestamp: '1576759372',
+		// expiryDate: '12353434312',
+		// prepayment: '1009032030020',
+		mintingDate: '1576759372',
 		status: 'open'
 	}
 	// {
 	// 	id: '0',
-	// 	conditionAddress: '0x2',
+	// 	triggerAddress: '0x2',
 	// 	actionAddress: '0x4',
-	// 	conditionPayload: '0x030949304934009413094309320493049039049204',
+	// 	triggerPayload: '0x030949304934009413094309320493049039049204',
 	// 	actionPayload: '0x030949304934009413094309320493049039049204',
 	// 	expiryDate: '12353434312',
 	// 	prepayment: '1009032030020',
