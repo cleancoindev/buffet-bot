@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
 // Material UI
@@ -34,6 +34,9 @@ import {
 	UPDATE_PAST_TRANSACTIONS,
 	COLOURS
 } from '../constants/constants';
+import { useWeb3React } from '@web3-react/core';
+import { Button } from '@material-ui/core';
+import { CANCELLED } from 'dns';
 
 /*
 Event from SC
@@ -63,32 +66,6 @@ What is needed:
 - Expiry Date - maybe
 - Prepayment - maybe
 */
-
-const rows: Array<Data> = [];
-
-// FETCH DATA FROM API => Using dummy data for now
-
-// iterate over fetched DEFAULT_PAST_TRANSACTIONS
-DEFAULT_PAST_TRANSACTIONS.forEach((executionClaim, index) => {
-	// With address, find condition and action
-	const condition = findConditionByAddress(executionClaim.conditionAddress);
-	const action = findActionByAddress(executionClaim.actionAddress);
-
-	// æDEV USE THIS Decoding when the view button is being clicked
-
-	const newData = createData(
-		executionClaim.id,
-		`${condition.title} on ${condition.app}`,
-		`${action.title} on ${action.app}`,
-		stringifyTimestamp(executionClaim.timestamp),
-		executionClaim.status,
-		index,
-		'CANCEL'
-	);
-	rows.push(newData);
-
-	// Date when the claim was created
-});
 
 // const rows = [
 // 	createData(
@@ -359,6 +336,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function EnhancedTable() {
 	const { dispatch } = useIcedTxContext();
+	const web3 = useWeb3React();
 
 	// Router Context
 	let history = useHistory();
@@ -371,6 +349,122 @@ export default function EnhancedTable() {
 	const [page /*setPage*/] = React.useState(0);
 	const [dense /*setDense*/] = React.useState(false);
 	const [rowsPerPage /*setRowsPerPage*/] = React.useState(5);
+
+	// THE GRAPH API Fetching
+
+	let account: string;
+	if (!web3.active) {
+		account = '0x0';
+	} else {
+		account = web3.account as string;
+	}
+
+	const rows: Array<Data> = [];
+
+	const [displayedRows, setDisplayedRows] = React.useState(rows);
+	const [renderTwice, setRenderTwice] = React.useState(false);
+	const [renderCounter, setRenderCounter] = React.useState(0);
+
+	async function fetchPastExecutionClaims() {
+		try {
+			const response = await fetch(
+				'https://api.thegraph.com/subgraphs/name/gelatodigital/gelato-ropsten',
+				{
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						query: `{
+							users (where: {address:"${account}"}) {
+							  executionClaims {
+								id
+								status
+								trigger
+								triggerPayload
+								action
+								actionPayload
+								mintingDate
+								executionDate
+							  }
+							}
+						  }
+						  `
+					})
+				}
+			);
+			const json = await response.json();
+			const executionClaims = json.data.users[0].executionClaims;
+
+			let newRows: Array<Data> = [];
+
+			executionClaims.forEach((executionClaim: any, index: any) => {
+				// With address, find condition and action
+				const condition = findConditionByAddress(
+					executionClaim.trigger
+				);
+				console.log(executionClaim.trigger);
+				console.log(executionClaim.action);
+				const action = findActionByAddress(executionClaim.action);
+
+				// Set default status string
+				let statusString: string = 'open';
+
+				switch (executionClaim.status) {
+					case 'open':
+						statusString = 'open';
+						break;
+					case 'executedSuccess':
+						statusString = 'succesfully executed';
+						break;
+					case 'executedFailure':
+						statusString = 'failed to execute - please contract us';
+						break;
+					case 'cancelled':
+						statusString = 'cancelled';
+						break;
+					case 'expired':
+						statusString = 'expired';
+						break;
+				}
+
+				// @DEV USE THIS Decoding when the view button is being clicked
+				// console.log(condition);
+				// console.log(action);
+				const newData = createData(
+					// Remove '0x' at the beginning
+					executionClaim.id.toString().substring(2),
+					`${condition.title} on ${condition.app}`,
+					`${action.title} on ${action.app}`,
+					stringifyTimestamp(executionClaim.mintingDate),
+					statusString,
+					index,
+					'CANCEL'
+				);
+				newRows.push(newData);
+
+				// Date when the claim was created
+			});
+
+			setDisplayedRows(newRows);
+			console.log(executionClaims);
+		} catch (err) {
+			console.log('Could not fetch past execution claims');
+
+			// Do UseEffect 5 times, if it API request still fails, stop
+			renderCounter < 5
+				? setRenderCounter(renderCounter + 1)
+				: console.log(
+						'Could not connect to users account, stop useEffect'
+				  );
+		}
+	}
+
+	useEffect(() => {
+		console.log(renderCounter);
+		fetchPastExecutionClaims();
+		// this will clear Timeout when component unmont like in willComponentUnmount
+	}, [renderCounter]);
+
+	// FETCH DATA FROM API => Using dummy data for now
 
 	const showDetails = (event: React.MouseEvent<unknown>, row: Data) => {
 		console.log('show details');
@@ -398,7 +492,7 @@ export default function EnhancedTable() {
 	) => {
 		if (event.target.checked) {
 			// @DEV CHANGED NAME TO ID
-			const newSelecteds = rows.map(n => n.id);
+			const newSelecteds = displayedRows.map(n => n.id);
 			setSelected(newSelecteds);
 			return;
 		}
@@ -428,11 +522,15 @@ export default function EnhancedTable() {
 	const isSelected = (name: string) => selected.indexOf(name) !== -1;
 
 	const emptyRows =
-		rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+		rowsPerPage -
+		Math.min(rowsPerPage, displayedRows.length - page * rowsPerPage);
 
 	return (
 		<React.Fragment>
 			<div className={classes.root}>
+				<Button color={'secondary'} onClick={fetchPastExecutionClaims}>
+					Fetch
+				</Button>
 				<Paper className={classes.paper}>
 					<EnhancedTableToolbar numSelected={selected.length} />
 
@@ -449,10 +547,13 @@ export default function EnhancedTable() {
 							orderBy={orderBy}
 							onSelectAllClick={handleSelectAllClick}
 							onRequestSort={handleRequestSort}
-							rowCount={rows.length}
+							rowCount={displayedRows.length}
 						/>
 						<TableBody>
-							{stableSort(rows, getSorting(order, orderBy))
+							{stableSort(
+								displayedRows,
+								getSorting(order, orderBy)
+							)
 								.slice(
 									page * rowsPerPage,
 									page * rowsPerPage + rowsPerPage

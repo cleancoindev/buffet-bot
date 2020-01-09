@@ -9,6 +9,8 @@ import TransactionTable from '../components/TransactionTable';
 
 import { useIcedTxContext } from '../state/GlobalState';
 import { COLOURS } from '../constants/constants';
+import { Button } from '@material-ui/core';
+import { useWeb3React } from '@web3-react/core';
 
 // interface Match extends RouteComponentProps<Params> {}
 

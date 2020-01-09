@@ -31,7 +31,10 @@ export function findConditionByAddress(address: string) {
 	let returnData = DEFAULT_DATA_CONDITION;
 
 	CTYPES.forEach(type => {
-		if (type.address === address) {
+		if (
+			ethers.utils.getAddress(type.address) ===
+			ethers.utils.getAddress(address)
+		) {
 			returnData = type;
 		}
 	});
@@ -51,7 +54,10 @@ export function findActionById(id: string) {
 export function findActionByAddress(address: string) {
 	let returnData = DEFAULT_DATA_ACTION;
 	ATYPES.forEach(type => {
-		if (type.address === address) {
+		if (
+			ethers.utils.getAddress(type.address) ===
+			ethers.utils.getAddress(address)
+		) {
 			returnData = type;
 		}
 	});
