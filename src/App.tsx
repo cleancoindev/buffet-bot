@@ -21,6 +21,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 // Contexts
 import GlobalStateProvider from './state/GlobalState';
 import TransactionOverview from './pages/TransactionOverview';
+import TransactionModal from './components/Modal';
 
 function App() {
 	return (
@@ -59,6 +60,7 @@ function App() {
 							</Switch>
 						</Container>
 					</div>
+					<TransactionModal></TransactionModal>
 				</div>
 			</Router>
 		</GlobalStateProvider>

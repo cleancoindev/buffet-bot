@@ -15,7 +15,9 @@ import { findTriggerById, findActionById } from '../helpers/helpers';
 import {
 	SELECT_CONDITION,
 	SELECT_ACTION,
-	UPDATE_TX_STATE
+	UPDATE_TX_STATE,
+	OPEN_MODAL,
+	CLOSE_MODAL
 } from '../constants/constants';
 import TransactionModal from '../components/Modal';
 import { TxState, ChainIds } from '../constants/interfaces';
@@ -105,19 +107,6 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 	function getSteps() {
 		return ['Set Trigger', 'Set Action', 'Create IcedTx'];
 	}
-
-	// MODAL STUFF
-
-	// Modal Stuff
-	const [modalOpen, setModalOpen] = React.useState(false);
-
-	const modalClickOpen = () => {
-		setModalOpen(true);
-	};
-
-	const modalClose = () => {
-		setModalOpen(false);
-	};
 
 	// ########################### Checks before minting
 	const preTxCheck = () => {
@@ -257,11 +246,32 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 				break;
 			default:
 				console.log('default');
+				if (
+					icedTxState.txState === TxState.displayCancel ||
+					icedTxState.txState === TxState.preCancel ||
+					icedTxState.txState === TxState.postCancel
+				) {
+					console.log('User wanted to cancel, refresh txState');
+					dispatch({
+						type: UPDATE_TX_STATE,
+						txState: TxState.displayInstallMetamask
+					});
+				}
 		}
 
 		// 5. Check if user has sufficient token approval
 
 		// 6. READY to mint
+	};
+
+	const modalOpen = icedTxState.modalOpen;
+	const modalClickOpen = () => {
+		console.log('setting modal to true');
+		dispatch({ type: OPEN_MODAL });
+		console.log(modalOpen);
+	};
+	const modalClose = () => {
+		dispatch({ type: CLOSE_MODAL });
 	};
 
 	useEffect(() => {
@@ -313,14 +323,12 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 					<h1> 404 - Page not found. Please return to homepage</h1>
 				)}
 			</Grid>
-			<TransactionModal
-				txState={icedTxState.txState}
-				title={'Confirm in Metamask'}
+			{/* <TransactionModal
 				modalOpen={modalOpen}
 				modalClickOpen={modalClickOpen}
 				modalClose={modalClose}
 				icedTxState={icedTxState}
-			></TransactionModal>
+			></TransactionModal> */}
 		</React.Fragment>
 	);
 }

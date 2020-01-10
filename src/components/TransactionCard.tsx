@@ -12,7 +12,12 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
 import LinkIcon from '@material-ui/icons/Link';
 import { useIcedTxContext } from '../state/GlobalState';
-import { UPDATE_TX_STATE, COLOURS } from '../constants/constants';
+import {
+	UPDATE_TX_STATE,
+	COLOURS,
+	UPDATE_PAST_TRANSACTIONS,
+	CLOSE_MODAL
+} from '../constants/constants';
 import {
 	getTokenSymbol,
 	encodeActionPayload,
@@ -218,6 +223,28 @@ export default function TransactionCard(props: TxCardProps) {
 					prepaymentAmount
 				);
 				break;
+
+			case TxState.displayCancel:
+				const pastTransaction = icedTxState.pastTransactions.find(
+					tx => tx.executionClaimId === icedTxState.pastTransactionId
+				);
+
+				const estimate = await gelatoCore.estimate.cancelExecutionClaim(
+					pastTransaction?.selectedExecutor,
+					pastTransaction?.executionClaimId,
+					pastTransaction?.proxyAddress,
+					pastTransaction?.trigger,
+					pastTransaction?.triggerPayload,
+					pastTransaction?.action,
+					pastTransaction?.actionPayload,
+					pastTransaction?.triggerGasActionTotalGasMinExecutionGas,
+					pastTransaction?.expiryDate,
+					pastTransaction?.prepayment
+				);
+
+				//  Add 50.000 gas to estimate
+				gasEstimatePlusBuffer = addGasBuffer(estimate);
+				break;
 		}
 
 		const transactionFeeInWei = gelatoGasPriceInWei.mul(
@@ -228,8 +255,8 @@ export default function TransactionCard(props: TxCardProps) {
 			transactionFeeInWei
 		);
 
-		console.log(txFee.eth);
-		console.log(ethAmount);
+		// console.log(txFee.eth);
+		// console.log(ethAmount);
 
 		// Only update state if returned value is not 0
 		if (ethAmount !== '0.0000') {
@@ -320,7 +347,10 @@ export default function TransactionCard(props: TxCardProps) {
 	// When Modal renders, set Prepayment value based on the selected action
 	useEffect(() => {
 		if (active) {
-			setPrepaymentAmount();
+			// Only set prepayment amount if txState is equal displayCreate
+			if (txState === TxState.displayCreate) {
+				setPrepaymentAmount();
+			}
 			setTransactionFee();
 			let prefix;
 			switch (chainId) {
@@ -693,6 +723,187 @@ export default function TransactionCard(props: TxCardProps) {
 					closeBtn: false,
 					btn: ''
 				};
+			case TxState.displayCancel:
+				return {
+					title: `Cancel this frozen Transaction`,
+					progress: Progress.awaitingModalConfirm,
+					progressText: ``,
+					prepayment: true,
+					closeBtn: true,
+					btn: 'Cancel frozen Transaction',
+					btnFunc: async () => {
+						// Change Modal to illustrate that user has to confirm Tx
+						console.log('Change TxState to preCancel');
+						dispatch({
+							type: UPDATE_TX_STATE,
+							txState: TxState.preCancel
+						});
+
+						const pastTransaction = icedTxState.pastTransactions.find(
+							tx =>
+								tx.executionClaimId ===
+								icedTxState.pastTransactionId
+						);
+
+						// User has Proxy
+						if (
+							pastTransaction !== undefined &&
+							pastTransaction !== null
+						) {
+							const gelatoGasPriceInWei = await getEthGasStationGasPrice();
+
+							const estimate = await gelatoCore.estimate.cancelExecutionClaim(
+								pastTransaction?.selectedExecutor,
+								pastTransaction?.executionClaimId,
+								pastTransaction?.proxyAddress,
+								pastTransaction?.trigger,
+								pastTransaction?.triggerPayload,
+								pastTransaction?.action,
+								pastTransaction?.actionPayload,
+								pastTransaction?.triggerGasActionTotalGasMinExecutionGas,
+								pastTransaction?.expiryDate,
+								pastTransaction?.prepayment
+							);
+
+							console.log(pastTransaction);
+
+							//  Add 50.000 gas to estimate
+							const gasEstimatePlusBuffer = addGasBuffer(
+								estimate
+							);
+
+							let overrides = {
+								// The maximum units of gas for the transaction to use
+								gasLimit: gasEstimatePlusBuffer,
+
+								// The price (in wei) per unit of gas
+								gasPrice: gelatoGasPriceInWei
+
+								// The chain ID (or network ID) to use
+								// chainId: 3
+							};
+							/*
+								address _selectedExecutor,
+							IGelatoTrigger _trigger,
+							bytes calldata _triggerPayloadWithSelector,
+							IGelatoAction _action,
+							bytes calldata _actionPayloadWithSelector
+							*/
+							try {
+								// Find past executcion Claim with executionClaimId
+
+								const tx = await gelatoCore.cancelExecutionClaim(
+									pastTransaction?.selectedExecutor,
+									pastTransaction?.executionClaimId,
+									pastTransaction?.proxyAddress,
+									pastTransaction?.trigger,
+									pastTransaction?.triggerPayload,
+									pastTransaction?.action,
+									pastTransaction?.actionPayload,
+									pastTransaction?.triggerGasActionTotalGasMinExecutionGas,
+									pastTransaction?.expiryDate,
+									pastTransaction?.prepayment,
+									overrides
+								);
+
+								// const tx = await gelatoCore.mintExecutionClaim(
+								// 	EXECUTOR_ADDRESS[networkId],
+								// 	icedTxState.trigger.address,
+								// 	encodedTrigger,
+								// 	icedTxState.action.address,
+								// 	encodedAction,
+								// 	// @DEV make dynamic
+								// 	overrides
+								// );
+
+								setTxHash(tx.hash);
+								console.log('Change TxState to waitingCancel');
+								dispatch({
+									type: UPDATE_TX_STATE,
+									txState: TxState.waitingCancel
+								});
+								await tx.wait();
+
+								// Successfully cancelled => Update Table to pastTransactions in global state to relfect cancel
+								const updatedPastTransaction = {
+									...pastTransaction,
+									status: 'cancelled'
+								};
+								const updatedPastTransactions = [
+									...icedTxState.pastTransactions
+								];
+
+								// Replace old pastTx in global state with updated pastTx where status = cancelled
+								updatedPastTransactions.forEach((tx, index) => {
+									if (
+										tx.executionClaimId ===
+										updatedPastTransaction.executionClaimId
+									) {
+										updatedPastTransactions.splice(
+											index,
+											1,
+											updatedPastTransaction
+										);
+									}
+								});
+
+								dispatch({
+									type: UPDATE_PAST_TRANSACTIONS,
+									pastTransactions: updatedPastTransactions
+								});
+
+								// Update state for showing refreshed Overview of past transactions
+
+								console.log('Change TxState to postCancel');
+								dispatch({
+									type: UPDATE_TX_STATE,
+									txState: TxState.postCancel
+								});
+							} catch (error) {
+								console.log(error);
+								console.log('Change TxState to cancelled');
+								dispatch({
+									type: UPDATE_TX_STATE,
+									txState: TxState.cancelled
+								});
+							}
+						} else {
+							console.log('ERROR, undefined account');
+						}
+					}
+				};
+			case TxState.preCancel:
+				return {
+					title: `Cancel your Frozen Transaction`,
+					progress: Progress.awaitingMetamaskConfirm,
+					progressText: `Waiting for Metamask confirmation`,
+					prepayment: true,
+					closeBtn: true,
+					btn: ''
+				};
+			case TxState.waitingCancel:
+				return {
+					title: `Cancelling Frozen Transaction ...`,
+					progress: Progress.awaitingeMining,
+					progressText: `Transaction in progress, please wait`,
+					prepayment: true,
+					closeBtn: false,
+					btn: ''
+				};
+			case TxState.postCancel:
+				return {
+					title: `Success: Frozen Transaction cancelled!`,
+					progress: Progress.finished,
+					progressText: `Transaction mined`,
+					prepayment: true,
+					closeBtn: false,
+					btn: 'Close',
+					btnFunc: () => {
+						// @ DEV Maybe make more efficient!
+						modalClose();
+						window.location.reload();
+					}
+				};
 			case TxState.cancelled:
 				return {
 					title: `Transaction Cancelled`,
@@ -905,9 +1116,10 @@ export default function TransactionCard(props: TxCardProps) {
 							{/* <h4 style={{ marginLeft: 'auto' }}>0x232...fdf32</h4> */}
 						</Grid>
 					)}
+				{/* Only show gelato prepayment between displayCreate and postCreate */}
 				{modalContent.prepayment &&
-					txState !== TxState.postCreate &&
-					txState !== TxState.cancelled && (
+					txState >= TxState.displayCreate &&
+					txState < TxState.postCreate && (
 						<Grid
 							className={classes.gridItem}
 							container
@@ -1116,6 +1328,9 @@ export default function TransactionCard(props: TxCardProps) {
 								onClick={() => {
 									// Reset txState
 									dispatch({
+										type: CLOSE_MODAL
+									});
+									dispatch({
 										type: UPDATE_TX_STATE,
 										txState: TxState.displayLogIntoMetamask
 									});
@@ -1181,7 +1396,11 @@ export default function TransactionCard(props: TxCardProps) {
 								borderWidth: '2px'
 							}}
 						>
-							Cancel
+							{txState === TxState.preCancel ||
+							txState === TxState.displayCancel ||
+							txState === TxState.postCancel
+								? 'Close'
+								: 'Cancel'}
 						</Button>
 					</Grid>
 				)}

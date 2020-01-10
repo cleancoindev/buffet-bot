@@ -28,7 +28,11 @@ import {
 	stringifyTimestamp
 } from '../helpers/helpers';
 
-import { UPDATE_PAST_TRANSACTIONS, COLOURS } from '../constants/constants';
+import {
+	UPDATE_PAST_TRANSACTIONS,
+	COLOURS,
+	CANCEL_EXECUTION_CLAIM
+} from '../constants/constants';
 import { useWeb3React } from '@web3-react/core';
 import { useGelatoCore } from '../hooks/hooks';
 
@@ -472,40 +476,13 @@ export default function EnhancedTable() {
 	// Cancel ExecutionClaim
 
 	const cancelExecutionClaim = async (executionClaimId: string) => {
-		// Find past executcion Claim with executionClaimId
-		const pastTransaction = pastTransactions.find(
-			tx => tx.executionClaimId === executionClaimId
-		);
-		console.log(pastTransaction);
-
-		// Call cancel function on gelatoCore
-		/*
-			address _selectedExecutor,
-			uint256 _executionClaimId,
-			IGelatoUserProxy _userProxy,
-			IGelatoTrigger _trigger,
-			bytes calldata _triggerPayloadWithSelector,
-			IGelatoAction _action,
-			bytes calldata _actionPayloadWithSelector,
-			uint256[3] calldata _triggerGasActionTotalGasMinExecutionGas,
-			uint256 _executionClaimExpiryDate,
-			uint256 _mintingDeposit
-		*/
-		console.log(pastTransaction?.triggerGasActionTotalGasMinExecutionGas);
-		const tx = await gelatoCore.cancelExecutionClaim(
-			pastTransaction?.selectedExecutor,
-			pastTransaction?.executionClaimId,
-			pastTransaction?.proxyAddress,
-			pastTransaction?.trigger,
-			pastTransaction?.triggerPayload,
-			pastTransaction?.action,
-			pastTransaction?.actionPayload,
-			pastTransaction?.triggerGasActionTotalGasMinExecutionGas,
-			pastTransaction?.expiryDate,
-			pastTransaction?.prepayment,
-			{ gasLimit: 1000000 }
-		);
-		await tx.wait();
+		// Update Tx State
+		// Update pastTransactionId
+		// Open MOdal
+		dispatch({
+			type: CANCEL_EXECUTION_CLAIM,
+			pastTransactionId: executionClaimId
+		});
 	};
 
 	const showDetails = (event: React.MouseEvent<unknown>, row: Data) => {
@@ -659,29 +636,35 @@ export default function EnhancedTable() {
 											</StyledTableCell>
 											<StyledTableCell align="left">
 												{/* {row.cancel} */}
-												{row.status !== 'cancelled' && (
-													<div
-														onClick={() =>
-															cancelExecutionClaim(
-																row.id
-															)
-														}
-														style={{
-															display: 'flex',
-															justifyContent:
-																'center',
-															alignItems:
-																'center',
-															// marginRight: '20px',
-															cursor: 'pointer'
-														}}
-													>
-														<CancelIcon
-															// color="primary"
-															fontSize={'small'}
-														></CancelIcon>
-													</div>
-												)}
+												{row.status !== 'cancelled' &&
+													row.status !== 'expired' &&
+													row.status !==
+														'succesfully executed' && (
+														<div
+															onClick={() =>
+																cancelExecutionClaim(
+																	row.id
+																)
+															}
+															style={{
+																display: 'flex',
+																justifyContent:
+																	'center',
+																alignItems:
+																	'center',
+																// marginRight: '20px',
+																cursor:
+																	'pointer'
+															}}
+														>
+															<CancelIcon
+																// color="primary"
+																fontSize={
+																	'small'
+																}
+															></CancelIcon>
+														</div>
+													)}
 											</StyledTableCell>
 										</StyledTableRow>
 									);

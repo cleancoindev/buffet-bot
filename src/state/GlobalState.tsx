@@ -28,7 +28,9 @@ export const DEFAULT_ICED_TX = {
 	trigger: DEFAULT_DATA_CONDITION,
 	action: DEFAULT_DATA_ACTION,
 	txState: TxState.displayInstallMetamask,
-	pastTransactions: DEFAULT_PAST_TRANSACTIONS
+	pastTransactions: DEFAULT_PAST_TRANSACTIONS,
+	pastTransactionId: '0',
+	modalOpen: false
 };
 
 // interface InitContextProps {

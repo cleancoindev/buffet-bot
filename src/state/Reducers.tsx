@@ -4,7 +4,8 @@ import {
 	IcedTx,
 	Action,
 	ActionWhitelistData,
-	TriggerWhitelistData
+	TriggerWhitelistData,
+	TxState
 } from '../constants/interfaces';
 import { findTriggerById, findActionById } from '../helpers/helpers';
 import {
@@ -17,7 +18,10 @@ import {
 	UPDATE_TX_STATE,
 	DEFAULT_DATA_CONDITION,
 	DEFAULT_DATA_ACTION,
-	UPDATE_PAST_TRANSACTIONS
+	UPDATE_PAST_TRANSACTIONS,
+	OPEN_MODAL,
+	CLOSE_MODAL,
+	CANCEL_EXECUTION_CLAIM
 } from '../constants/constants';
 
 function updateIcedTx(
@@ -104,16 +108,16 @@ export const icedTxReducer = (state: IcedTx, action: Action) => {
 			return { ...state, txState: action.txState };
 		case UPDATE_PAST_TRANSACTIONS:
 			return { ...state, pastTransactions: action.pastTransactions };
-		// case ADD_USER_INPUT:
-		// 	return updateUserInput(
-		// 		state,
-		// 		action.index,
-		// 		action.value,
-		// 		action.triggerOrAction
-		// 	);
-		// case RESET_ACTION_CONDITION_TO_DEFAULT:
-		// 	return resetIcedTx(action.triggerOrAction, state);
-		// default:
-		// 	return state;
+		case OPEN_MODAL:
+			return { ...state, modalOpen: true };
+		case CLOSE_MODAL:
+			return { ...state, modalOpen: false };
+		case CANCEL_EXECUTION_CLAIM:
+			return {
+				...state,
+				pastTransactionId: action.pastTransactionId,
+				modalOpen: true,
+				txState: TxState.displayCancel
+			};
 	}
 };

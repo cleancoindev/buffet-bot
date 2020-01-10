@@ -6,7 +6,10 @@ import {
 	RESET_ACTION,
 	UPDATE_ACTION_INPUTS,
 	UPDATE_TX_STATE,
-	UPDATE_PAST_TRANSACTIONS
+	UPDATE_PAST_TRANSACTIONS,
+	OPEN_MODAL,
+	CLOSE_MODAL,
+	CANCEL_EXECUTION_CLAIM
 } from './constants';
 import { ethers } from 'ethers';
 
@@ -83,6 +86,8 @@ export interface IcedTx {
 	action: ActionWhitelistData;
 	txState: TxState;
 	pastTransactions: Array<PastTransaction>;
+	modalOpen: boolean;
+	pastTransactionId: string;
 }
 
 export enum TriggerOrAction {
@@ -150,8 +155,12 @@ export enum TxState {
 	preCreate = 9,
 	waitingCreate = 10,
 	postCreate = 11,
-	cancelled = 12,
-	insufficientBalance = 13
+	displayCancel = 12,
+	preCancel = 13,
+	waitingCancel = 14,
+	postCancel = 15,
+	cancelled = 16,
+	insufficientBalance = 17
 	// waitingApprove,
 	// postApprove,
 }
@@ -210,6 +219,19 @@ interface UpdatePastTransactions {
 	pastTransactions: Array<PastTransaction>;
 }
 
+interface OpenModal {
+	type: typeof OPEN_MODAL;
+}
+
+interface CloseModal {
+	type: typeof CLOSE_MODAL;
+}
+
+interface UpdateSelectedTx {
+	type: typeof CANCEL_EXECUTION_CLAIM;
+	pastTransactionId: string;
+}
+
 // export interface Action {
 // 	type: string;
 // 	triggerOrAction: TriggerOrAction;
@@ -226,4 +248,7 @@ export type Action =
 	| SelectTrigger
 	| SelectAction
 	| UpdateTxState
-	| UpdatePastTransactions;
+	| UpdatePastTransactions
+	| OpenModal
+	| CloseModal
+	| UpdateSelectedTx;
