@@ -4,7 +4,6 @@ import { useHistory } from 'react-router-dom';
 // Material UI
 import {
 	createStyles,
-	lighten,
 	makeStyles,
 	Theme,
 	withStyles
@@ -29,14 +28,9 @@ import {
 	stringifyTimestamp
 } from '../helpers/helpers';
 
-import {
-	DEFAULT_PAST_TRANSACTIONS,
-	UPDATE_PAST_TRANSACTIONS,
-	COLOURS
-} from '../constants/constants';
+import { UPDATE_PAST_TRANSACTIONS, COLOURS } from '../constants/constants';
 import { useWeb3React } from '@web3-react/core';
-import { Button } from '@material-ui/core';
-import { CANCELLED } from 'dns';
+import { useGelatoCore } from '../hooks/hooks';
 
 /*
 Event from SC
@@ -187,7 +181,7 @@ const headCells: HeadCell[] = [
 		id: 'cancel',
 		numeric: true,
 		disablePadding: false,
-		label: 'Cancel & Refund'
+		label: 'Cancel'
 	}
 ];
 
@@ -341,13 +335,14 @@ export default function EnhancedTable() {
 	} = useIcedTxContext();
 	const web3 = useWeb3React();
 
+	const gelatoCore = useGelatoCore();
 	// Router Context
 	let history = useHistory();
 
 	const classes = useStyles();
-	const [order, setOrder] = React.useState<Order>('asc');
+	const [order, setOrder] = React.useState<Order>('desc');
 	// @ DEV CHANGED TO ID FROM CALORIES
-	const [orderBy, setOrderBy] = React.useState<keyof Data>('id');
+	const [orderBy, setOrderBy] = React.useState<keyof Data>('date');
 	const [selected, setSelected] = React.useState<string[]>([]);
 	const [page /*setPage*/] = React.useState(0);
 	const [dense /*setDense*/] = React.useState(false);
@@ -365,7 +360,6 @@ export default function EnhancedTable() {
 	const rows: Array<Data> = [];
 
 	const [displayedRows, setDisplayedRows] = React.useState(rows);
-	const [renderTwice, setRenderTwice] = React.useState(false);
 	const [renderCounter, setRenderCounter] = React.useState(0);
 
 	async function fetchPastExecutionClaims() {
@@ -380,13 +374,19 @@ export default function EnhancedTable() {
 							users (where: {address:"${account}"}) {
 							  executionClaims {
 								id
-								status
+								executionClaimId
+								selectedExecutor
+								proxyAddress
 								trigger
 								triggerPayload
 								action
 								actionPayload
+								expiryDate
+								prepayment
 								mintingDate
 								executionDate
+								status
+								triggerGasActionTotalGasMinExecutionGas
 							  }
 							}
 						  }
@@ -396,6 +396,7 @@ export default function EnhancedTable() {
 			);
 			const json = await response.json();
 			const executionClaims = json.data.users[0].executionClaims;
+			console.log(executionClaims);
 
 			let newRows: Array<Data> = [];
 
@@ -436,8 +437,7 @@ export default function EnhancedTable() {
 				// console.log(trigger);
 				// console.log(action);
 				const newData = createData(
-					// Remove '0x' at the beginning
-					executionClaim.id.toString().substring(2),
+					executionClaim.executionClaimId.toString(),
 					`${trigger.title} on ${trigger.app}`,
 					`${action.title} on ${action.app}`,
 					stringifyTimestamp(executionClaim.mintingDate),
@@ -469,7 +469,44 @@ export default function EnhancedTable() {
 		// this will clear Timeout when component unmont like in willComponentUnmount
 	}, [renderCounter]);
 
-	// FETCH DATA FROM API => Using dummy data for now
+	// Cancel ExecutionClaim
+
+	const cancelExecutionClaim = async (executionClaimId: string) => {
+		// Find past executcion Claim with executionClaimId
+		const pastTransaction = pastTransactions.find(
+			tx => tx.executionClaimId === executionClaimId
+		);
+		console.log(pastTransaction);
+
+		// Call cancel function on gelatoCore
+		/*
+			address _selectedExecutor,
+			uint256 _executionClaimId,
+			IGelatoUserProxy _userProxy,
+			IGelatoTrigger _trigger,
+			bytes calldata _triggerPayloadWithSelector,
+			IGelatoAction _action,
+			bytes calldata _actionPayloadWithSelector,
+			uint256[3] calldata _triggerGasActionTotalGasMinExecutionGas,
+			uint256 _executionClaimExpiryDate,
+			uint256 _mintingDeposit
+		*/
+		console.log(pastTransaction?.triggerGasActionTotalGasMinExecutionGas);
+		const tx = await gelatoCore.cancelExecutionClaim(
+			pastTransaction?.selectedExecutor,
+			pastTransaction?.executionClaimId,
+			pastTransaction?.proxyAddress,
+			pastTransaction?.trigger,
+			pastTransaction?.triggerPayload,
+			pastTransaction?.action,
+			pastTransaction?.actionPayload,
+			pastTransaction?.triggerGasActionTotalGasMinExecutionGas,
+			pastTransaction?.expiryDate,
+			pastTransaction?.prepayment,
+			{ gasLimit: 1000000 }
+		);
+		await tx.wait();
+	};
 
 	const showDetails = (event: React.MouseEvent<unknown>, row: Data) => {
 		// console.log('show details');
@@ -533,9 +570,9 @@ export default function EnhancedTable() {
 	return (
 		<React.Fragment>
 			<div className={classes.root}>
-				<Button color={'secondary'} onClick={fetchPastExecutionClaims}>
+				{/* <Button color={'secondary'} onClick={fetchPastExecutionClaims}>
 					Fetch
-				</Button>
+				</Button> */}
 				<Paper className={classes.paper}>
 					<EnhancedTableToolbar numSelected={selected.length} />
 
@@ -604,7 +641,7 @@ export default function EnhancedTable() {
 														justifyContent:
 															'center',
 														alignItems: 'center',
-														marginRight: '8px',
+														// marginRight: '8px',
 														cursor: 'pointer'
 													}}
 												>
@@ -622,24 +659,29 @@ export default function EnhancedTable() {
 											</StyledTableCell>
 											<StyledTableCell align="left">
 												{/* {row.cancel} */}
-												<div
-													onClick={(): void =>
-														console.log('Cancel')
-													}
-													style={{
-														display: 'flex',
-														justifyContent:
-															'center',
-														alignItems: 'center',
-														marginRight: '20px',
-														cursor: 'pointer'
-													}}
-												>
-													<CancelIcon
-														// color="primary"
-														fontSize={'small'}
-													></CancelIcon>
-												</div>
+												{row.status !== 'cancelled' && (
+													<div
+														onClick={() =>
+															cancelExecutionClaim(
+																row.id
+															)
+														}
+														style={{
+															display: 'flex',
+															justifyContent:
+																'center',
+															alignItems:
+																'center',
+															// marginRight: '20px',
+															cursor: 'pointer'
+														}}
+													>
+														<CancelIcon
+															// color="primary"
+															fontSize={'small'}
+														></CancelIcon>
+													</div>
+												)}
 											</StyledTableCell>
 										</StyledTableRow>
 									);

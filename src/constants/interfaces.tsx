@@ -8,20 +8,39 @@ import {
 	UPDATE_TX_STATE,
 	UPDATE_PAST_TRANSACTIONS
 } from './constants';
-import { Dispatch, SetStateAction } from 'react';
 import { ethers } from 'ethers';
+
+/* We need
+	address _selectedExecutor,
+	uint256 _executionClaimId,
+	IGelatoUserProxy _userProxy,
+	IGelatoTrigger _trigger,
+	bytes calldata _triggerPayloadWithSelector,
+	IGelatoAction _action,
+	bytes calldata _actionPayloadWithSelector,
+	uint256[3] calldata _triggerGasActionTotalGasMinExecutionGas,
+	uint256 _executionClaimExpiryDate,
+	uint256 _mintingDeposit
+
+
+*/
 
 export interface PastTransaction {
 	id: string;
+	executionClaimId: string;
+	selectedExecutor: string;
+	proxyAddress: string;
 	trigger: string;
-	action: string;
 	triggerPayload: string;
+	action: string;
 	actionPayload: string;
-	expiryDate?: string;
-	prepayment?: string;
+	expiryDate: string;
+	prepayment: string;
+	// Graph specific values
 	mintingDate: string;
 	executionDate?: string;
 	status: string;
+	triggerGasActionTotalGasMinExecutionGas: Array<number>;
 }
 
 export interface Params {

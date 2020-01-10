@@ -96,7 +96,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 				>
 					<h1> Summary</h1>
 					<h2 style={{ textAlign: 'left' }}>
-						After creating this IcedTx, gelato will{' '}
+						This Iced Transaction will{' '}
 						<span style={{ color: COLOURS.salmon }}>
 							{action.title}
 						</span>{' '}
@@ -104,7 +104,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 						<span style={{ color: COLOURS.salmon }}>
 							{action.app}
 						</span>{' '}
-						when the trigger{' '}
+						when the Trigger{' '}
 						<span style={{ color: COLOURS.salmon }}>
 							{trigger.title}{' '}
 						</span>
@@ -112,7 +112,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 						<span style={{ color: COLOURS.salmon }}>
 							{trigger.app}
 						</span>{' '}
-						is fulfilled
+						is fired
 					</h2>
 					{/* <Divider
 						style={{

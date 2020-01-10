@@ -681,7 +681,7 @@ export default function TransactionCard(props: TxCardProps) {
 					progress: Progress.awaitingeMining,
 					progressText: `Transaction in progress, please wait`,
 					prepayment: true,
-					closeBtn: true,
+					closeBtn: false,
 					btn: ''
 				};
 			case TxState.postCreate:
@@ -862,7 +862,12 @@ export default function TransactionCard(props: TxCardProps) {
 						>
 							<h4>Your Account</h4>
 							<h4 style={{ marginLeft: 'auto' }}>
-								0x232...fdf32
+								{account
+									? `${account.substring(
+											0,
+											5
+									  )}...${account.substring(36, 41)}`
+									: 'No acount found'}
 							</h4>
 						</Grid>
 					)}
@@ -1040,7 +1045,7 @@ export default function TransactionCard(props: TxCardProps) {
 								<span style={{ color: COLOURS.salmon }}>
 									{icedTxState.trigger.title}
 								</span>{' '}
-								trigger you chose is triggered, gelato will{' '}
+								trigger you chose is fired, gelato will{' '}
 								<span style={{ color: COLOURS.salmon }}>
 									{icedTxState.action.title}
 								</span>{' '}
@@ -1108,7 +1113,14 @@ export default function TransactionCard(props: TxCardProps) {
 							}}
 						>
 							<Button
-								onClick={() => history.push('/dashboard')}
+								onClick={() => {
+									// Reset txState
+									dispatch({
+										type: UPDATE_TX_STATE,
+										txState: TxState.displayLogIntoMetamask
+									});
+									history.push('/dashboard');
+								}}
 								style={{
 									width: '100%',
 									borderStyle: 'solid',

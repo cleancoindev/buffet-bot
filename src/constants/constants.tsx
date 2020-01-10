@@ -1,5 +1,6 @@
 import { InputType, Params } from './interfaces';
 import { ethers } from 'ethers';
+import { EXECUTOR_ADDRESS } from './whitelist';
 
 const emptyUserInputArray: Array<string | number | ethers.utils.BigNumber> = [];
 const emptyUserInputTypeArray: Array<InputType> = [];
@@ -37,17 +38,42 @@ export const DEFAULT_DATA_CONDITION = {
 	userInputs: emptyUserInputArray // [ ]
 };
 
+/*
+Interface
+
+	selectedExecutor: string;
+	id: string;
+	userProxy: string;
+	trigger: string;
+	triggerPayload: string;
+	action: string;
+	actionPayload: string;
+	triggerGasActionTotalGasMinExecutionGas: number;
+	expiryDate: string;
+	prepayment: string;
+	// Graph specific values
+	mintingDate: string;
+	executionDate?: string;
+	status: string;
+}
+
+*/
+
 export const DEFAULT_PAST_TRANSACTIONS = [
 	{
-		id: '0',
+		selectedExecutor: EXECUTOR_ADDRESS[3],
+		id: '0x1',
+		executionClaimId: '1',
+		proxyAddress: '0x0',
 		trigger: '0x1',
-		action: '0x5',
 		triggerPayload: '0x030949304934009413094309320493049039049204',
+		action: '0x5',
 		actionPayload: '0x030949304934009413094309320493049039049204',
-		// expiryDate: '12353434312',
-		// prepayment: '1009032030020',
+		expiryDate: '12353434312',
+		prepayment: '1009032030020',
 		mintingDate: '1576759372',
-		status: 'open'
+		status: 'open',
+		triggerGasActionTotalGasMinExecutionGas: [0, 1, 2]
 	}
 	// {
 	// 	id: '0',

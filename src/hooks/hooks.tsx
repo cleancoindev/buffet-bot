@@ -101,6 +101,7 @@ export function useGelatoCore() {
 		const gelatoCoreAddress = GELATO_CORE_ADDRESS[chainId];
 		return new ethers.Contract(gelatoCoreAddress, GELATO_CORE_ABI, signer);
 	} else {
-		console.log('ERROR, NOT active');
+		console.log('Cannot find gelatoCore');
+		// throw Error('Cannot find gelatoCore');
 	}
 }
