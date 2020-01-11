@@ -28,6 +28,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import Divider from '@material-ui/core/Divider';
+import WarningIcon from '@material-ui/icons/Warning';
 
 // Web3 React
 import { useWeb3React } from '@web3-react/core';
@@ -209,6 +210,7 @@ export default function ButtonAppBar() {
 						)}
 						{active && chainId !== SELECTED_CHAIN_ID && (
 							<BootstrapButtonDanger
+								startIcon={<WarningIcon />}
 								onClick={() => {
 									// Update TxState
 									dispatch({

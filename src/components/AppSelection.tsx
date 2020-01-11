@@ -27,7 +27,8 @@ import {
 	TriggerOrAction,
 	UserSelection,
 	ActionWhitelistData,
-	TriggerWhitelistData
+	TriggerWhitelistData,
+	TxState
 } from '../constants/interfaces';
 import { RESET_CONDITION, RESET_ACTION, COLOURS } from '../constants/constants';
 import { useWeb3React } from '@web3-react/core';
@@ -207,156 +208,158 @@ export default function AppSelection() {
 				</Grid>
 			</Grid>
 			<Divider variant="middle" />
-			{userSelection.triggerApp !== '' &&
-				userSelection.actionApp !== '' && (
+			{userSelection.triggerApp !== '' && userSelection.actionApp !== '' && (
+				<Grid
+					container
+					direction="row"
+					justify="space-evenly"
+					alignItems="center"
+					style={{ padding: '10px' }}
+				>
 					<Grid
 						container
-						direction="row"
+						item
+						sm={4}
+						xs={12}
+						direction="column"
 						justify="space-evenly"
-						alignItems="center"
-						style={{ padding: '10px' }}
+						alignItems="stretch"
+						style={{ height: '200px' }}
 					>
 						<Grid
 							container
 							item
-							sm={4}
-							xs={12}
-							direction="column"
-							justify="space-evenly"
-							alignItems="stretch"
-							style={{ height: '200px' }}
+							justify="flex-start"
+							className={classes.box}
 						>
-							<Grid
-								container
-								item
-								justify="flex-start"
-								className={classes.box}
-							>
-								<p className={classes.boxTitle}>
-									Select Trigger
-								</p>
-								<Dropdown
-									app={false}
-									// userSelection={userSelection}
-									triggerOrAction={
-										TriggerOrAction.Trigger
-									}
-									data={userSelection.triggerAppFunctions}
-									updateTriggerOrAction={
-										updateTriggerOrAction
-									}
-								/>
-							</Grid>
+							<p className={classes.boxTitle}>Select Trigger</p>
+							<Dropdown
+								app={false}
+								// userSelection={userSelection}
+								triggerOrAction={TriggerOrAction.Trigger}
+								data={userSelection.triggerAppFunctions}
+								updateTriggerOrAction={updateTriggerOrAction}
+							/>
 						</Grid>
+					</Grid>
+					<Grid
+						container
+						item
+						sm={2}
+						xs={12}
+						direction="column"
+						justify="center"
+						alignItems="center"
+						style={{}}
+					>
+						<Hidden xsDown>
+							<ArrowForwardIcon fontSize="large" />
+						</Hidden>
+						<Hidden smUp>
+							<ArrowDownwardIcon fontSize="large" />
+						</Hidden>
+					</Grid>
+					<Grid
+						container
+						item
+						sm={4}
+						xs={12}
+						direction="column"
+						justify="space-evenly"
+						alignItems="stretch"
+						style={{ height: '200px' }}
+					>
 						<Grid
 							container
 							item
-							sm={2}
-							xs={12}
-							direction="column"
-							justify="center"
-							alignItems="center"
-							style={{}}
+							justify="flex-start"
+							className={classes.box}
 						>
-							<Hidden xsDown>
-								<ArrowForwardIcon fontSize="large" />
-							</Hidden>
-							<Hidden smUp>
-								<ArrowDownwardIcon fontSize="large" />
-							</Hidden>
+							<p className={classes.boxTitle}>Select Action</p>
+							<Dropdown
+								app={false}
+								// userSelection={userSelection}
+								triggerOrAction={TriggerOrAction.Action}
+								data={userSelection.actionAppFunctions}
+								updateTriggerOrAction={updateTriggerOrAction}
+							/>
 						</Grid>
-						<Grid
-							container
-							item
-							sm={4}
-							xs={12}
-							direction="column"
-							justify="space-evenly"
-							alignItems="stretch"
-							style={{ height: '200px' }}
-						>
-							<Grid
-								container
-								item
-								justify="flex-start"
-								className={classes.box}
-							>
-								<p className={classes.boxTitle}>
-									Select Action
-								</p>
-								<Dropdown
-									app={false}
-									// userSelection={userSelection}
-									triggerOrAction={TriggerOrAction.Action}
-									data={userSelection.actionAppFunctions}
-									updateTriggerOrAction={
-										updateTriggerOrAction
-									}
-								/>
-							</Grid>
-						</Grid>
-						{userSelection.triggerApp !== '' &&
-							userSelection.actionApp !== '' &&
-							icedTxState.trigger.id !== 0 &&
-							icedTxState.action.id !== 0 && (
-								<React.Fragment>
-									<Grid
-										container
-										item
-										xs={12}
-										direction="row"
-										justify="space-evenly"
-										alignItems="stretch"
-										style={{
-											marginTop: '16px'
-										}}
-									>
-										<h2 style={{ textAlign: 'center' }}>
-											Gelato will{' '}
-											<span style={{ color: '#E50078' }}>
-												{icedTxState.action.title}
-											</span>{' '}
-											with{' '}
-											<span style={{ color: '#E50078' }}>
-												{icedTxState.action.app}
-											</span>{' '}
-											on your behalf, when the trigger{' '}
-											<span style={{ color: '#E50078' }}>
-												{icedTxState.trigger.title}{' '}
-											</span>
-											on{' '}
-											<span style={{ color: '#E50078' }}>
-												{icedTxState.trigger.app}
-											</span>{' '}
-											is fulfilled
-										</h2>
-									</Grid>
-									<Grid
-										container
-										item
-										xs={12}
-										direction="row"
-										justify="space-evenly"
-										alignItems="stretch"
-										style={{
-											marginTop: '16px'
-										}}
-									>
+					</Grid>
+					{userSelection.triggerApp !== '' &&
+						userSelection.actionApp !== '' &&
+						icedTxState.trigger.id !== 0 &&
+						icedTxState.action.id !== 0 && (
+							<React.Fragment>
+								<Grid
+									container
+									item
+									xs={12}
+									direction="row"
+									justify="space-evenly"
+									alignItems="stretch"
+									style={{
+										marginTop: '16px'
+									}}
+								>
+									<h2 style={{ textAlign: 'center' }}>
+										Gelato will{' '}
+										<span style={{ color: '#E50078' }}>
+											{icedTxState.action.title}
+										</span>{' '}
+										with{' '}
+										<span style={{ color: '#E50078' }}>
+											{icedTxState.action.app}
+										</span>{' '}
+										on your behalf, when the trigger{' '}
+										<span style={{ color: '#E50078' }}>
+											{icedTxState.trigger.title}{' '}
+										</span>
+										on{' '}
+										<span style={{ color: '#E50078' }}>
+											{icedTxState.trigger.app}
+										</span>{' '}
+										is fulfilled
+									</h2>
+								</Grid>
+								<Grid
+									container
+									item
+									xs={12}
+									direction="row"
+									justify="space-evenly"
+									alignItems="stretch"
+									style={{
+										marginTop: '16px'
+									}}
+								>
+									{icedTxState.txState ===
+										TxState.displayWrongNetwork && (
 										<Link
 											to={`create/${icedTxState.trigger.id}/${icedTxState.action.id}`}
 											style={{ textDecoration: 'none' }}
 										>
 											<Button
 												className={classes.createButton}
+												disabled
 											>
 												Create
 											</Button>
 										</Link>
-									</Grid>
-								</React.Fragment>
-							)}
-					</Grid>
-				)}
+									)}
+									{icedTxState.txState !==
+										TxState.displayWrongNetwork && (
+										<Button
+											className={classes.createButton}
+											disabled
+										>
+											Create
+										</Button>
+									)}
+								</Grid>
+							</React.Fragment>
+						)}
+				</Grid>
+			)}
 		</div>
 	);
 }

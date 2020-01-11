@@ -408,8 +408,9 @@ export default function TransactionCard(props: TxCardProps) {
 					progress: Progress.awaitingModalConfirm,
 					progressText: ``,
 					prepayment: false,
-					closeBtn: true,
-					btn: ''
+					closeBtn: false,
+					btn: 'Close',
+					btnFunc: () => modalClose()
 				};
 			case TxState.displayGelatoWallet:
 				return {
@@ -712,7 +713,7 @@ export default function TransactionCard(props: TxCardProps) {
 					progress: Progress.awaitingMetamaskConfirm,
 					progressText: `Waiting for Metamask confirmation`,
 					prepayment: true,
-					closeBtn: true,
+					closeBtn: false,
 					btn: ''
 				};
 			case TxState.waitingCreate:
@@ -1037,7 +1038,8 @@ export default function TransactionCard(props: TxCardProps) {
 					</Grid>
 				)}
 				{txState !== TxState.cancelled &&
-					txState > TxState.displayLogIntoMetamask && (
+					txState > TxState.displayLogIntoMetamask &&
+					txState !== TxState.displayWrongNetwork && (
 						<Grid
 							className={classes.gridItem}
 							container
@@ -1126,6 +1128,7 @@ export default function TransactionCard(props: TxCardProps) {
 					)}
 				{txState !== TxState.postCreate &&
 					txState !== TxState.cancelled &&
+					txState !== TxState.displayWrongNetwork &&
 					txState > TxState.displayLogIntoMetamask && (
 						<React.Fragment>
 							<Grid
