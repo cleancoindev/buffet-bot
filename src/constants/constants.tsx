@@ -15,6 +15,9 @@ export const COLOURS = {
 	pink: '#E50078'
 };
 
+export const SELECTED_CHAIN_ID = 3;
+export const SELECTED_NETWORK_NAME = 'Ropsten';
+
 export const DEFAULT_DATA_ACTION = {
 	id: 0,
 	app: '',

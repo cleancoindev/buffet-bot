@@ -16,7 +16,8 @@ import {
 	UPDATE_TX_STATE,
 	COLOURS,
 	UPDATE_PAST_TRANSACTIONS,
-	CLOSE_MODAL
+	CLOSE_MODAL,
+	SELECTED_NETWORK_NAME
 } from '../constants/constants';
 import {
 	getTokenSymbol,
@@ -363,8 +364,11 @@ export default function TransactionCard(props: TxCardProps) {
 				case 4:
 					prefix = 'rinkeby.';
 					break;
+				case 42:
+					prefix = 'kovan.';
+					break;
 				default:
-					prefix = 'rinkeby.';
+					prefix = '';
 					break;
 			}
 			setEtherscanPrefix(prefix);
@@ -396,6 +400,16 @@ export default function TransactionCard(props: TxCardProps) {
 					btnFunc: () => {
 						activate(injected);
 					}
+				};
+
+			case TxState.displayWrongNetwork:
+				return {
+					title: `Please connect to the ${SELECTED_NETWORK_NAME} Ethereum network.`,
+					progress: Progress.awaitingModalConfirm,
+					progressText: ``,
+					prepayment: false,
+					closeBtn: true,
+					btn: ''
 				};
 			case TxState.displayGelatoWallet:
 				return {
@@ -823,36 +837,6 @@ export default function TransactionCard(props: TxCardProps) {
 									txState: TxState.waitingCancel
 								});
 								await tx.wait();
-
-								// Successfully cancelled => Update Table to pastTransactions in global state to relfect cancel
-								const updatedPastTransaction = {
-									...pastTransaction,
-									status: 'cancelled'
-								};
-								const updatedPastTransactions = [
-									...icedTxState.pastTransactions
-								];
-
-								// Replace old pastTx in global state with updated pastTx where status = cancelled
-								updatedPastTransactions.forEach((tx, index) => {
-									if (
-										tx.executionClaimId ===
-										updatedPastTransaction.executionClaimId
-									) {
-										updatedPastTransactions.splice(
-											index,
-											1,
-											updatedPastTransaction
-										);
-									}
-								});
-
-								dispatch({
-									type: UPDATE_PAST_TRANSACTIONS,
-									pastTransactions: updatedPastTransactions
-								});
-
-								// Update state for showing refreshed Overview of past transactions
 
 								console.log('Change TxState to postCancel');
 								dispatch({

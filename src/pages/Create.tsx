@@ -17,7 +17,8 @@ import {
 	SELECT_ACTION,
 	UPDATE_TX_STATE,
 	OPEN_MODAL,
-	CLOSE_MODAL
+	CLOSE_MODAL,
+	SELECTED_CHAIN_ID
 } from '../constants/constants';
 import TransactionModal from '../components/Modal';
 import { TxState, ChainIds } from '../constants/interfaces';
@@ -144,10 +145,10 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 				// User is already logged in => Change to insufficientBalance
 				if (web3.active) {
 					// Check if the object is injected by metamask
-					console.log('Change TxState to insufficientBalance');
+					console.log('Change TxState to displayWrongNetwork');
 					dispatch({
 						type: UPDATE_TX_STATE,
-						txState: TxState.insufficientBalance
+						txState: TxState.displayWrongNetwork
 					});
 				} else {
 					// No Metamask installed => Show install Metamask Modal
@@ -156,7 +157,24 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 
 				break;
 
-			// 3. Check if user has sufficient ETH Balance
+			// 3. Check if user is connected to the correct network
+			case TxState.displayWrongNetwork:
+				// User is already logged in => Change to insufficientBalance
+				if (web3.chainId === SELECTED_CHAIN_ID) {
+					// Check if the object is injected by metamask
+					console.log('Change TxState to insufficientBalance');
+					dispatch({
+						type: UPDATE_TX_STATE,
+						txState: TxState.insufficientBalance
+					});
+				} else {
+					// No Metamask installed => Show install Metamask Modal
+					console.log('User has to switch networks');
+				}
+
+				break;
+
+			// 4. Check if user has sufficient ETH Balance
 			case TxState.insufficientBalance:
 				// User is already logged in => Change to insufficientBalance
 				web3.library
@@ -181,7 +199,8 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 						}
 					});
 				break;
-			// 4. Check if user has gelato proxy
+
+			// 5. Check if user has gelato proxy
 			case TxState.displayGelatoWallet:
 				// User is already logged in => Change to insufficientBalance
 				console.log('Checking if user is registered');
@@ -199,6 +218,7 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 
 				// let proxyAddress = await gelatoCore.useProxyOfUser(context.account)
 				break;
+			// 6. Display Approve
 			case TxState.displayApprove:
 				if (activeStep === 2) {
 					// User is already logged in => Change to insufficientBalance

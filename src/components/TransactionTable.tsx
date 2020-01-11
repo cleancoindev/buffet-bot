@@ -456,7 +456,7 @@ export default function EnhancedTable() {
 
 			setDisplayedRows(newRows);
 		} catch (err) {
-			console.log('Could not fetch past execution claims');
+			// console.log('Could not fetch past execution claims');
 
 			// Do UseEffect 5 times, if it API request still fails, stop
 			renderCounter < 5
@@ -468,7 +468,6 @@ export default function EnhancedTable() {
 	}
 
 	useEffect(() => {
-		console.log(renderCounter);
 		fetchPastExecutionClaims();
 		// this will clear Timeout when component unmont like in willComponentUnmount
 	}, [renderCounter]);
@@ -486,15 +485,9 @@ export default function EnhancedTable() {
 	};
 
 	const showDetails = (event: React.MouseEvent<unknown>, row: Data) => {
-		// console.log('show details');
-		// console.log(row);
-		// console.log(pastTransactions[row.view]);
-		// dispatch({
-		// 	type: UPDATE_PAST_TRANSACTIONS,
-		// 	pastTransactions: DEFAULT_PAST_TRANSACTIONS
-		// });
+
 		history.push(`/dashboard/${row.view}`);
-		// Route to new page
+
 	};
 
 	const handleRequestSort = (
