@@ -24,6 +24,7 @@ export const DEFAULT_DATA_ACTION = {
 	title: '',
 	address: '',
 	params: emptyParamArray, // [ ]
+	abi: emptyStringArray,
 	inputLabels: emptyStringArray, // [ ]
 	userInputTypes: emptyUserInputTypeArray, // [ ]
 	userInputs: emptyUserInputArray, // [ ]
@@ -36,6 +37,7 @@ export const DEFAULT_DATA_CONDITION = {
 	title: '',
 	address: '',
 	params: emptyParamArray, // [ ]
+	abi: emptyStringArray,
 	inputLabels: emptyStringArray, // [ ]
 	userInputTypes: emptyUserInputTypeArray, // [ ]
 	userInputs: emptyUserInputArray // [ ]

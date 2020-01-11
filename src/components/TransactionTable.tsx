@@ -400,7 +400,6 @@ export default function EnhancedTable() {
 			);
 			const json = await response.json();
 			const executionClaims = json.data.users[0].executionClaims;
-			console.log(executionClaims);
 
 			let newRows: Array<Data> = [];
 

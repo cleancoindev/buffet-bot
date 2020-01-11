@@ -80,18 +80,11 @@ export function getTokenByAddress(address: string) {
 
 export function encodeActionPayload(
 	userInput: Array<string | number | ethers.utils.BigNumber>,
-	inputParameter: Array<Params>,
+	abi: Array<string>,
 	user: string,
 	userProxy: string
 ) {
-	const actionKyberTradeABI = [
-		{
-			name: 'action',
-			type: 'function',
-			inputs: inputParameter
-		}
-	];
-	const iFace = new utils.Interface(actionKyberTradeABI);
+	const iFace = new utils.Interface(abi);
 	//@DEV CHANGE UINT inputs into BigNumbers
 
 	// Insert user address into userInput Array at index 0
@@ -110,16 +103,9 @@ export function encodeActionPayload(
 
 export function encodeTriggerPayload(
 	userInput: Array<string | number | ethers.utils.BigNumber>,
-	inputParameter: Array<Params>
+	abi: Array<string>
 ) {
-	const triggerTimestampPassedABI = [
-		{
-			name: 'fired',
-			type: 'function',
-			inputs: inputParameter
-		}
-	];
-	const iFace = new utils.Interface(triggerTimestampPassedABI);
+	const iFace = new utils.Interface(abi);
 
 	const triggerPayloadWithSelector = iFace.functions.fired.encode(userInput);
 

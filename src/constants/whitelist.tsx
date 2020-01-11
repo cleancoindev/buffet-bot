@@ -79,6 +79,7 @@ export const CTYPES = [
 		title: 'Time',
 		address: '0x525EB0c1279f1CC690D01a2Fcb78A0D5d156D1Ee',
 		params: [{ type: 'uint256', name: '_timestamp' }],
+		abi: ['function fired(uint256 _timestamp)'],
 		userInputTypes: [InputType.Date],
 		inputLabels: ['Pick a Date and Time'],
 		userInputs: []
@@ -124,6 +125,10 @@ export const ATYPES = [
 			{ type: 'address', name: '_dest' },
 			{ type: 'uint256', name: '_minConversionRate' }
 		],
+		abi: [
+			'function action(address _user, address _userProxy, address _src, uint256 _srcAmount, address _dest, uint256 _minConversionAmount)'
+		],
+
 		userInputTypes: [
 			InputType.Token,
 			InputType.TokenAmount,

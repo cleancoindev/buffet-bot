@@ -311,12 +311,12 @@ export default function TransactionCard(props: TxCardProps) {
 	function encodeActionAndTrigger(account: string, userProxy: string) {
 		const encodedTrigger = encodeTriggerPayload(
 			icedTxState.trigger.userInputs,
-			icedTxState.trigger.params
+			icedTxState.trigger.abi
 		);
 
 		const encodedAction = encodeActionPayload(
 			icedTxState.action.userInputs,
-			icedTxState.action.params,
+			icedTxState.action.abi,
 			account,
 			userProxy
 		);
@@ -481,7 +481,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.preGelatoWallet:
 				return {
-					title: `First, lets create a gelato wallet for you!`,
+					title: `Please confirm the transaction in Metamask!`,
 					progress: Progress.awaitingMetamaskConfirm,
 					progressText: `Waiting for Metamask confirmation`,
 					prepayment: false,
@@ -603,11 +603,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.preApprove:
 				return {
-					title: `Approve gelato to move ${getTokenSymbol(
-						icedTxState.action.userInputs[
-							icedTxState.action.approvalIndex
-						].toString()
-					)} for you`,
+					title: `Please confirm the transaction in Metamask`,
 					progress: Progress.awaitingMetamaskConfirm,
 					progressText: `Waiting for Metamask confirmation`,
 					prepayment: false,
@@ -712,7 +708,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.preCreate:
 				return {
-					title: `Create your Frozen Transaction`,
+					title: `Please confirm the transaction in Metamask`,
 					progress: Progress.awaitingMetamaskConfirm,
 					progressText: `Waiting for Metamask confirmation`,
 					prepayment: true,
