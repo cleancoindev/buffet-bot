@@ -9,16 +9,12 @@ import { Grid, Divider } from '@material-ui/core';
 
 // Import Local Components
 import InputField from './InputField';
-import { COLOURS } from '../constants/constants';
+import { COLOURS, BOX } from '../constants/constants';
 import TransactionSummary from './TransactionSummary';
 
 const useStyles = makeStyles(theme => ({
 	box: {
-		background: 'none',
-		// border: '3px outset #E50078',
-		border: `3px outset ${COLOURS.salmon}`,
-
-		borderRadius: '2px 2px 2px 2px'
+		...BOX
 	},
 	boxTitle: {
 		fontSize: '16px',
@@ -82,34 +78,35 @@ export default function StepperContent(props: StepperContentProps) {
 							direction="column"
 							justify="flex-start"
 							alignItems="flex-start"
-							className={classes.box}
+							// className={classes.box}
 							style={{
 								paddingLeft: '24px',
 								minHeight: '200px',
 								textAlign: 'left'
 							}}
 						>
-							<h1>
+							{/* <h1>
 								{' '}
 								Step: {stepIndex + 1} - Define the trigger that
 								will trigger the action
-							</h1>
+							</h1> */}
 							<h2>
 								{' '}
 								Trigger:{' '}
 								<span style={{ color: COLOURS.salmon }}>
 									{trigger.title}{' '}
 								</span>
-								on{' '}
+								{/* on{' '}
 								<span style={{ color: COLOURS.salmon }}>
 									{trigger.app}
-								</span>{' '}
+								</span>{' '} */}
 							</h2>
 							<Divider
 								style={{
 									background: 'white',
-									width: '100%',
-									marginTop: '16px'
+									marginBottom: '8px',
+									marginTop: '16px',
+									width: 'calc(100% - 24px)'
 								}}
 							/>
 							{triggerInputTypes.map((input, key) => (
@@ -144,32 +141,33 @@ export default function StepperContent(props: StepperContentProps) {
 							direction="column"
 							justify="flex-start"
 							alignItems="flex-start"
-							className={classes.box}
+							// className={classes.box}
 							style={{
 								paddingLeft: '24px',
 								minHeight: '200px'
 							}}
 						>
-							<h1>
+							{/* <h1>
 								{' '}
 								Step: {stepIndex + 1} - Define the action gelato
 								should execute on your behalf
-							</h1>
+							</h1> */}
 							<h2>
 								Action:{' '}
 								<span style={{ color: COLOURS.salmon }}>
 									{action.title}
 								</span>{' '}
-								with{' '}
+								{/* with{' '}
 								<span style={{ color: COLOURS.salmon }}>
 									{action.app}
-								</span>{' '}
+								</span>{' '} */}
 							</h2>
 							<Divider
 								style={{
 									background: 'white',
-									width: '100%',
-									marginTop: '16px'
+									width: 'calc(100% - 24px)',
+									marginTop: '16px',
+									marginBottom: '8px'
 								}}
 							/>
 							{actionInputTypes.map((input, key) => (

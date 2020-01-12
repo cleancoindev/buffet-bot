@@ -31,7 +31,8 @@ import {
 import {
 	UPDATE_PAST_TRANSACTIONS,
 	COLOURS,
-	CANCEL_EXECUTION_CLAIM
+	CANCEL_EXECUTION_CLAIM,
+	BOX
 } from '../constants/constants';
 import { useWeb3React } from '@web3-react/core';
 import { useGelatoCore } from '../hooks/hooks';
@@ -212,14 +213,12 @@ const StyledTableCell = withStyles((theme: Theme) =>
 			// backgroundColor: theme.palette.common.white,
 			background: 'none',
 			color: 'white',
-			border: `2px outset ${COLOURS.salmon}`,
-			borderRadius: '2px 2px 2px 2px'
+			...BOX
 		},
 		body: {
 			fontSize: 14,
 			color: 'white',
-			border: `2px outset ${COLOURS.salmon}`,
-			borderRadius: '2px 2px 2px 2px'
+			...BOX
 		}
 	})
 )(TableCell);
@@ -229,8 +228,7 @@ const StyledTableRow = withStyles((theme: Theme) =>
 		root: {
 			'&:nth-of-type(odd)': {
 				// backgroundColor: theme.palette.background.default,
-				border: `3px outset ${COLOURS.salmon}`,
-				borderRadius: '2px 2px 2px 2px'
+				...BOX
 			}
 		}
 	})

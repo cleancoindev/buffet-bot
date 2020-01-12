@@ -49,8 +49,14 @@ const useStyles = makeStyles((theme: Theme) =>
 		},
 		stepper: {
 			background: 'none',
+			'& .MuiStepIcon-root.MuiStepIcon-root': {
+				color: COLOURS.salmon50
+			},
 			'& .MuiStepIcon-root.MuiStepIcon-active': {
 				color: COLOURS.salmon
+			},
+			'& .MuiStepIcon-root.MuiStepIcon-completed': {
+				color: 'white'
 			}
 		},
 		title: {
@@ -64,6 +70,11 @@ const useStyles = makeStyles((theme: Theme) =>
 			// completed: {
 			// 	color: 'white'
 			// }
+		},
+		active: {
+			'& $line': {
+				borderColor: '#784af4'
+			}
 		}
 	})
 );
@@ -115,8 +126,6 @@ export default function StepperParent(props: StepperProps) {
 							icedTxState={icedTxState}
 							classes={classes}
 							activeStep={activeStep}
-							// {"@DEV WHAT DOES INPUTS DO?"}
-							inputs={['uint256', 'uint256']}
 						></StepperContent>
 						{/* </Typography> */}
 						<div style={{ marginBottom: '24px' }}>

@@ -6,7 +6,7 @@ import {
 	ActionWhitelistData
 } from '../constants/interfaces';
 
-import { Grid, makeStyles } from '@material-ui/core';
+import { Grid, makeStyles, Divider } from '@material-ui/core';
 
 // Import Local Components
 import InputField from './InputField';
@@ -19,16 +19,13 @@ import {
 	decodeActionPayload
 } from '../helpers/helpers';
 import { RouteComponentProps } from 'react-router-dom';
-import { COLOURS } from '../constants/constants';
+import { BOX, COLOURS } from '../constants/constants';
 import { ethers } from 'ethers';
 
 const useStyles = makeStyles(theme => ({
 	box: {
-		background: 'none',
 		// border: '3px outset #E50078',
-		border: `3px outset ${COLOURS.salmon}`,
-
-		borderRadius: '2px 2px 2px 2px'
+		...BOX
 	},
 	boxTitle: {
 		fontSize: '16px',
@@ -89,30 +86,33 @@ export default function TransactionSummary(props: TxSummaryParams) {
 					direction="column"
 					justify="flex-start"
 					alignItems="flex-start"
-					className={classes.box}
+					// className={classes.box}
 					style={{
 						paddingLeft: '24px'
 					}}
 				>
-					<h1> Summary</h1>
+					<h2> Summary</h2>
 					<h2 style={{ textAlign: 'left' }}>
-						This Iced Transaction will{' '}
-						<span style={{ color: COLOURS.salmon }}>
-							{action.title}
-						</span>{' '}
-						when the Trigger{' '}
+						IF{' '}
 						<span style={{ color: COLOURS.salmon }}>
 							{trigger.title}{' '}
-						</span>
-						is fired
+						</span>{' '}
+						is activated
 					</h2>
-					{/* <Divider
+					<h2>
+						Then{' '}
+						<span style={{ color: COLOURS.salmon }}>
+							{action.title}
+						</span>
+					</h2>
+					<Divider
 						style={{
 							background: 'white',
-							width: '100%',
-							marginTop: '16px'
+							marginBottom: '8px',
+							marginTop: '16px',
+							width: 'calc(100% - 24px)'
 						}}
-					/> */}
+					/>
 				</Grid>
 			</Grid>
 			<Grid
@@ -130,7 +130,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 					direction="column"
 					justify="flex-start"
 					alignItems="flex-start"
-					className={classes.box}
+					// className={classes.box}
 					style={{
 						paddingLeft: '24px',
 						minHeight: '200px'
@@ -155,6 +155,14 @@ export default function TransactionSummary(props: TxSummaryParams) {
 							disabled={true}
 						></InputField>
 					))}
+					<Divider
+						style={{
+							background: 'white',
+							marginBottom: '8px',
+							marginTop: '16px',
+							width: 'calc(100% - 24px)'
+						}}
+					/>
 				</Grid>
 			</Grid>
 			<Grid
@@ -172,7 +180,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 					direction="column"
 					justify="flex-start"
 					alignItems="flex-start"
-					className={classes.box}
+					// className={classes.box}
 					style={{
 						paddingLeft: '24px',
 						minHeight: '200px'
@@ -196,15 +204,6 @@ export default function TransactionSummary(props: TxSummaryParams) {
 							disabled={true}
 						></InputField>
 					))}
-					{/* <Divider
-								style={{
-									background: 'white',
-									width: '100%',
-									marginTop: '16px'
-								}}
-							/>
-							<h1>Required prepayment:</h1>
-							<h2>0.06ETH ($1.08)</h2> */}
 				</Grid>
 			</Grid>
 		</div>

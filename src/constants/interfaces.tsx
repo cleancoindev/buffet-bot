@@ -117,7 +117,6 @@ export interface MatchParams {
 export interface StepperContentProps {
 	activeStep: number;
 	classes: Record<string, string>;
-	inputs: Array<string>;
 	icedTxState: IcedTx;
 }
 

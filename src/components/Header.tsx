@@ -123,14 +123,19 @@ const BootstrapButton = withStyles({
 
 const useStyles = makeStyles(theme => ({
 	appBar: {
-		background: 'transparent'
+		background: 'transparent',
+		paddingTop: '16px'
 	},
 	menuButton: {
 		marginRight: 'auto',
 		textDecoration: 'none',
 		color: 'white',
 		cursor: 'pointer',
-		'&:hover': { color: COLOURS.salmon }
+		'&:hover': { color: COLOURS.salmon },
+		display: 'flex',
+		flexDirection: 'row',
+		justify: 'center',
+		alignItems: 'center'
 	},
 	title: {
 		flexGrow: 1
@@ -187,11 +192,20 @@ export default function ButtonAppBar() {
 	return (
 		<React.Fragment>
 			<AppBar className={classes.appBar} position="static">
-				<Toolbar>
+				<Toolbar style={{ paddingLeft: '0px', paddingRight: '0px' }}>
 					{/* <Link className={classes.menuButton} to="/"> */}
-					<Typography className={classes.menuButton} variant="h6">
-						gelato finance
-					</Typography>
+					<div className={classes.menuButton}>
+						<img
+							src="./logo192.png"
+							alt="logo"
+							style={{
+								width: '40px',
+								marginRight: '8px'
+							}}
+						/>
+
+						<Typography variant="h5">gelato finance</Typography>
+					</div>
 					{/* </Link> */}
 					<Hidden xsDown>
 						{active && (

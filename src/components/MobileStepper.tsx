@@ -61,7 +61,6 @@ export default function DotsMobileStepper(props: StepperProps) {
 					icedTxState={icedTxState}
 					classes={classes}
 					activeStep={activeStep}
-					inputs={['uint256', 'uint256']}
 				></StepperContent>
 			</div>
 		</React.Fragment>

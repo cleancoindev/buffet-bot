@@ -39,14 +39,14 @@ const useStyles = makeStyles((theme: Theme) =>
 			'& .MuiOutlinedInput-root.Mui-disabled': {
 				'& fieldset': {
 					borderColor: COLOURS.salmon,
-					borderWidth: 2
+					borderWidth: 1
 				}
 			}
 		},
 		select: {
 			'& fieldset': {
 				borderColor: COLOURS.salmon,
-				borderWidth: 2,
+				borderWidth: 1,
 				color: 'white',
 				'& .MuiOutlinedInput:hover': {
 					borderColor: 'white'

@@ -22,6 +22,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import GlobalStateProvider from './state/GlobalState';
 import TransactionOverview from './pages/TransactionOverview';
 import TransactionModal from './components/Modal';
+import { COLOURS, BOX } from './constants/constants';
+import { WarningMessage } from './components/WarningMessage';
 
 function App() {
 	return (
@@ -29,11 +31,16 @@ function App() {
 			<CssBaseline />
 			<Router>
 				<div className="App">
-					<Header></Header>
 					<div className="container">
+						<Header></Header>
+						<WarningMessage></WarningMessage>
 						<Container
-							// style={{ background: 'white' }}
-							maxWidth="lg"
+							style={{
+								// marginTop: '48px',
+								marginTop: '32px',
+								padding: '8px',
+								...BOX
+							}}
 						>
 							<Switch>
 								<Route

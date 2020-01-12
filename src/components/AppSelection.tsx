@@ -30,16 +30,17 @@ import {
 	TriggerWhitelistData,
 	TxState
 } from '../constants/interfaces';
-import { RESET_CONDITION, RESET_ACTION, COLOURS } from '../constants/constants';
+import {
+	RESET_CONDITION,
+	RESET_ACTION,
+	COLOURS,
+	BOX
+} from '../constants/constants';
 import { useWeb3React } from '@web3-react/core';
 
 const useStyles = makeStyles(theme => ({
 	box: {
-		background: 'black',
-		// border: '3px outset #E50078',
-		border: `3px outset ${COLOURS.salmon}`,
-
-		borderRadius: '2px 2px 2px 2px'
+		...BOX
 	},
 	boxTitle: {
 		fontSize: '16px',
@@ -124,12 +125,12 @@ export default function AppSelection() {
 	// }
 
 	return (
-		<div className={classes.box}>
-			<h1>{`Create a conditional transaction by defining a trigger and action`}</h1>
+		<div /*className={classes.box}*/>
+			{/* <h1>{`Create a conditional transaction by defining a trigger and action`}</h1> */}
 			<Grid
 				container
 				direction="row"
-				justify="space-evenly"
+				justify="space-between"
 				alignItems="center"
 				style={{ padding: '16px' }}
 			>
@@ -141,9 +142,6 @@ export default function AppSelection() {
 					direction="column"
 					justify="space-evenly"
 					alignItems="stretch"
-					style={{
-						height: '200px'
-					}}
 				>
 					<Grid
 						container
@@ -178,7 +176,10 @@ export default function AppSelection() {
 						<ArrowForwardIcon fontSize="large" />
 					</Hidden>
 					<Hidden smUp>
-						<ArrowDownwardIcon fontSize="large" />
+						<ArrowDownwardIcon
+							style={{ marginTop: '8px', marginBottom: '8px' }}
+							fontSize="large"
+						/>
 					</Hidden>
 				</Grid>
 				<Grid
@@ -189,7 +190,6 @@ export default function AppSelection() {
 					direction="column"
 					justify="space-evenly"
 					alignItems="stretch"
-					style={{ height: '200px' }}
 				>
 					<Grid
 						container
@@ -219,9 +219,11 @@ export default function AppSelection() {
 						direction="row"
 						justify="space-evenly"
 						alignItems="stretch"
-						style={{
-							marginTop: '16px'
-						}}
+						style={
+							{
+								// marginTop: '16px'
+							}
+						}
 					>
 						<h2 style={{ textAlign: 'center' }}>
 							Gelato will{' '}

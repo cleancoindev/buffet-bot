@@ -15,6 +15,11 @@ export const COLOURS = {
 	pink: '#E50078'
 };
 
+export const BOX = {
+	border: `1.5px solid ${COLOURS.salmon}`,
+	borderRadius: '1px 1px 1px 1px'
+};
+
 export const ETH = {
 	address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
 	symbol: 'ETH',
@@ -118,7 +123,7 @@ export const INPUT_CSS = {
 		width: '100%',
 		'& input:valid + fieldset': {
 			borderColor: COLOURS.salmon,
-			borderWidth: 2
+			borderWidth: 1
 		},
 		// '& input:invalid + fieldset': {
 		// 	borderColor: 'red',
@@ -144,7 +149,7 @@ export const INPUT_CSS = {
 		'& .MuiOutlinedInput-root.Mui-disabled': {
 			'& fieldset': {
 				borderColor: COLOURS.salmon,
-				borderWidth: 2
+				borderWidth: 1
 			}
 		},
 		'& .MuiFormLabel-root': {
