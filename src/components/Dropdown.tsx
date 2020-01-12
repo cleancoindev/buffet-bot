@@ -37,46 +37,48 @@ interface AppDropdownProps {
 	data: Array<TriggerWhitelistData | ActionWhitelistData>;
 	triggerOrAction: number;
 	app: boolean;
-	updateTriggerOrAction: Function;
+	// updateTriggerOrAction: Function;
 }
 
 export default function AppDropdown(props: AppDropdownProps) {
-	const { app, data, triggerOrAction, updateTriggerOrAction } = props;
-	const { dispatch } = useIcedTxContext();
+	const { app, data, triggerOrAction /*updateTriggerOrAction*/ } = props;
+	const { dispatch, icedTxState } = useIcedTxContext();
 	const classes = useStyles();
 	const [state, setState] = React.useState('');
 
 	// Dispatch Reducer
-	const selectTrigger = (id: string) => {
-		updateTriggerOrAction(TriggerOrAction.Trigger, id);
-	};
-	const selectAction = (id: string) => {
-		updateTriggerOrAction(TriggerOrAction.Action, id);
-	};
+	// const selectTrigger = (id: string) => {
+	// 	updateTriggerOrAction(TriggerOrAction.Trigger, id);
+	// };
+	// const selectAction = (id: string) => {
+	// 	updateTriggerOrAction(TriggerOrAction.Action, id);
+	// };
 
-	const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+	const handleChange = (event: React.ChangeEvent<{ value: any }>) => {
 		// @DEV potential BUG
-		if (app) {
-			setState(`${event.target.value}`);
-			// IF trigger, update trigger, else update action
-			triggerOrAction === TriggerOrAction.Trigger
-				? selectTrigger(`${event.target.value}`)
-				: selectAction(`${event.target.value}`);
+		const functionId = event.target.value as string;
+		// if (app) {
+		// 	setState(newId);
+		// 	// IF trigger, update trigger, else update action
+		// 	triggerOrAction === TriggerOrAction.Trigger
+		// 		? selectTrigger(`${event.target.value}`)
+		// 		: selectAction(`${event.target.value}`);
+		// } else {
+		console.log(icedTxState);
+		console.log(functionId);
+		if (triggerOrAction === TriggerOrAction.Trigger) {
+			dispatch({ type: SELECT_CONDITION, id: functionId });
 		} else {
-			const functionId = `${event.target.value}`;
-			if (triggerOrAction === TriggerOrAction.Trigger) {
-				dispatch({ type: SELECT_CONDITION, id: functionId });
-			} else {
-				dispatch({ type: SELECT_ACTION, id: functionId });
-			}
-			setState(`${functionId}`);
+			dispatch({ type: SELECT_ACTION, id: functionId });
 		}
+		setState(functionId);
+		//}
 	};
 
-	function getApps(
+	function getTitles(
 		appList: Array<TriggerWhitelistData | ActionWhitelistData>
 	) {
-		const appTitles = appList.map(item => item.app);
+		const appTitles = appList.map(item => item.title);
 		return appTitles.filter(
 			(item, index) => appTitles.indexOf(item) === index
 		);
@@ -102,7 +104,7 @@ export default function AppDropdown(props: AppDropdownProps) {
 			>
 				<option value={app ? '' : 0}>Select...</option>
 				{app &&
-					getApps(data).map((value, key) => (
+					getTitles(data).map((value, key) => (
 						<option key={key} value={value}>
 							{value}
 						</option>

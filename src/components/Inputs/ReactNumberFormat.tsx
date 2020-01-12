@@ -110,6 +110,8 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				convertToWei
 					? updateUserInput(index, weiAmount)
 					: updateUserInput(index, newValue);
+			} else if (inputType === InputType.Number) {
+				updateUserInput(index, newValue);
 			}
 		} else if (newValue === '.') {
 			setValues({

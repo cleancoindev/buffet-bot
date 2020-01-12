@@ -100,18 +100,10 @@ export default function TransactionSummary(props: TxSummaryParams) {
 						<span style={{ color: COLOURS.salmon }}>
 							{action.title}
 						</span>{' '}
-						with{' '}
-						<span style={{ color: COLOURS.salmon }}>
-							{action.app}
-						</span>{' '}
 						when the Trigger{' '}
 						<span style={{ color: COLOURS.salmon }}>
 							{trigger.title}{' '}
 						</span>
-						on{' '}
-						<span style={{ color: COLOURS.salmon }}>
-							{trigger.app}
-						</span>{' '}
 						is fired
 					</h2>
 					{/* <Divider
@@ -150,10 +142,6 @@ export default function TransactionSummary(props: TxSummaryParams) {
 						<span style={{ color: COLOURS.salmon }}>
 							{trigger.title}{' '}
 						</span>
-						on{' '}
-						<span style={{ color: COLOURS.salmon }}>
-							{trigger.app}
-						</span>{' '}
 					</h2>
 					{triggerInputTypes.map((input, key) => (
 						<InputField
@@ -194,10 +182,6 @@ export default function TransactionSummary(props: TxSummaryParams) {
 						Action Summary:{' '}
 						<span style={{ color: COLOURS.salmon }}>
 							{action.title}
-						</span>{' '}
-						with{' '}
-						<span style={{ color: COLOURS.salmon }}>
-							{action.app}
 						</span>{' '}
 					</h2>
 					{actionInputTypes.map((input, key) => (

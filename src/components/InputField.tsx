@@ -107,10 +107,12 @@ export default function LayoutTextFields(props: InputProps) {
 	// If user already inputted values, prefill inputs from state, otherwise display the default values
 	// œDEV make default values specific for each trigger and action, not global
 	function returnDefaultValue(): string | number {
-		console.log(inputs);
 		// If user has inputted something, go in here
 		if (inputs[0] !== undefined) {
 			if (inputs[index] !== undefined) {
+				console.log('##############');
+				console.log(inputs[index]);
+				console.log('##############');
 				// If the inputted value is of inputType TokenAmount
 				if (inputType === InputType.TokenAmount) {
 					const tokenIndex = index - 1;
@@ -155,6 +157,8 @@ export default function LayoutTextFields(props: InputProps) {
 					const date = new Date();
 					const timestamp = date.getTime();
 					return (timestamp / 1000).toString();
+				case InputType.Address:
+					return '0x0';
 				default:
 					return 'error';
 			}
@@ -180,6 +184,13 @@ export default function LayoutTextFields(props: InputProps) {
 			}
 		}
 	}
+
+	const handleAddressChange = (event: React.ChangeEvent<{ value: any }>) => {
+		const newAddress = event.target.value;
+		// Update global state
+		updateUserInput(index, newAddress);
+		//
+	};
 
 	function renderInput() {
 		switch (inputType) {
@@ -286,9 +297,11 @@ export default function LayoutTextFields(props: InputProps) {
 						<TextField
 							className={classes.root}
 							required
+							style={{ marginTop: '0px', marginBottom: '0px' }}
 							id="outlined-full-width"
-							label="Label"
-							placeholder="Placeholder"
+							label={label}
+							defaultValue={returnDefaultValue()}
+							onChange={handleAddressChange}
 							// helperText="Full width!"
 							// Import TextField CSS
 							margin="normal"

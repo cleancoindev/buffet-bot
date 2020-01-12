@@ -15,6 +15,13 @@ export const COLOURS = {
 	pink: '#E50078'
 };
 
+export const ETH = {
+	address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+	symbol: 'ETH',
+	name: 'Ether',
+	decimals: 18
+};
+
 export const SELECTED_CHAIN_ID = 3;
 export const SELECTED_NETWORK_NAME = 'Ropsten';
 

@@ -441,8 +441,8 @@ export default function EnhancedTable() {
 				// console.log(action);
 				const newData = createData(
 					executionClaim.executionClaimId.toString(),
-					`${trigger.title} on ${trigger.app}`,
-					`${action.title} on ${action.app}`,
+					trigger.title,
+					action.title,
 					stringifyTimestamp(executionClaim.mintingDate),
 					statusString,
 					index,
@@ -484,9 +484,7 @@ export default function EnhancedTable() {
 	};
 
 	const showDetails = (event: React.MouseEvent<unknown>, row: Data) => {
-
 		history.push(`/dashboard/${row.view}`);
-
 	};
 
 	const handleRequestSort = (

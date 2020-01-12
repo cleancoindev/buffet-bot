@@ -28,24 +28,31 @@ export const EXECUTOR_ADDRESS = {
 
 // Triggers
 export const CTYPES = [
-	// {
-	// 	id: 1,
-	// 	app: 'Your Wallet',
-	// 	title: 'Increase in token balance',
-	// 	address: '0x0',
-	// 	params: [
-	// 		{ type: 'address', name: 'seller' },
-	// 		{ type: 'uint256', name: 'amount' },
-	// 		{ type: 'uint256', name: 'currentBalance' }
-	// 	],
-	// 	userInputTypes: [InputType.Token, InputType.Number, InputType.GetValue],
-	// 	inputLabels: [
-	// 		'Select Token',
-	// 		'Increase Amount',
-	// 		'Your current Balance'
-	// 	],
-	// 	userInputs: []
-	// },
+	{
+		id: 1,
+		app: 'Your Wallet',
+		title: 'Increase in token balance',
+		address: '0x81E15f02834C3eBBd5C26337b49Ed5ec3aE1197E',
+		params: [
+			{ type: 'address', name: '_account' },
+			{ type: 'address', name: '_coin' },
+			{ type: 'uint256', name: '_refBalance' }
+		],
+		abi: [
+			'function fired(address _account, address _coin, uint256 _refBalance)'
+		],
+		userInputTypes: [
+			InputType.Address,
+			InputType.Token,
+			InputType.TokenAmount
+		],
+		inputLabels: [
+			'Input the Address which balance to track',
+			'Select the Token',
+			'Enter the balance which should activate the trigger'
+		],
+		userInputs: []
+	},
 
 	// // Use isGreater as bool
 	// {
@@ -103,7 +110,7 @@ export const ATYPES = [
 	{
 		id: 2,
 		app: 'Kyber',
-		title: 'Trade Tokens',
+		title: 'Trade Tokens on Kyber Network',
 		address: '0x05B0C94eA8EEf2A4Ec19E717C30552298851c761',
 		/*
 		 // Standard Action Params

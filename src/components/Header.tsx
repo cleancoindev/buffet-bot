@@ -38,7 +38,9 @@ import {
 	COLOURS,
 	SELECTED_CHAIN_ID,
 	UPDATE_TX_STATE,
-	OPEN_MODAL
+	OPEN_MODAL,
+	RESET_CONDITION,
+	RESET_ACTION
 } from '../constants/constants';
 import { useIcedTxContext } from '../state/GlobalState';
 import { TxState } from '../constants/interfaces';
@@ -164,7 +166,6 @@ export default function ButtonAppBar() {
 
 	const { account, active, activate, chainId } = useWeb3React();
 	const { dispatch } = useIcedTxContext();
-	console.log(chainId);
 
 	// Web3 Logic
 
@@ -187,12 +188,21 @@ export default function ButtonAppBar() {
 		<React.Fragment>
 			<AppBar className={classes.appBar} position="static">
 				<Toolbar>
-					<Link className={classes.menuButton} to="/">
-						<Typography variant="h6">gelato finance</Typography>
-					</Link>
+					{/* <Link className={classes.menuButton} to="/"> */}
+					<Typography className={classes.menuButton} variant="h6">
+						gelato finance
+					</Typography>
+					{/* </Link> */}
 					<Hidden xsDown>
 						{active && (
-							<BootstrapButton onClick={() => history.push('/')}>
+							<BootstrapButton
+								onClick={() => {
+									// First refresh state of Create Page to start from the beginning
+									dispatch({ type: RESET_CONDITION });
+									dispatch({ type: RESET_ACTION });
+									history.push('/');
+								}}
+							>
 								Create New
 							</BootstrapButton>
 						)}

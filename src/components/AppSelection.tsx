@@ -1,4 +1,4 @@
-import React, { Props } from 'react';
+import React, { Props, useEffect } from 'react';
 
 // Routing
 import { Link } from 'react-router-dom';
@@ -69,60 +69,63 @@ export default function AppSelection() {
 	//const { updateIcedTx, icedTxState, resetIcedTxInput } = useIcedTxContext();
 	const { dispatch, icedTxState } = useIcedTxContext();
 
+	console.log(icedTxState);
 	// Import Web3react Context
-	const web3 = useWeb3React();
+	useEffect(() => {
+		console.log('RENDER');
+	}, []);
 	// console.log(web3);
 
 	// Local State
-	const [userSelection, setUserSelection] = React.useState<UserSelection>({
-		triggerApp: '',
-		actionApp: '',
-		triggerAppFunctions: [],
-		actionAppFunctions: []
-	});
+	// const [userSelection, setUserSelection] = React.useState<UserSelection>({
+	// 	triggerApp: '',
+	// 	actionApp: '',
+	// 	triggerAppFunctions: [],
+	// 	actionAppFunctions: []
+	// });
 
-	// console.log(userSelection);
+	// // console.log(userSelection);
 
-	function updateTriggerOrAction(
-		selectedTriggerOrAction: TriggerOrAction,
-		app: string
-	) {
-		// console.log(app);
-		const result: Array<ActionWhitelistData | TriggerWhitelistData> = [];
-		const triggerOrAction = { app: '', type: '' };
-		if (selectedTriggerOrAction === TriggerOrAction.Trigger) {
-			CTYPES.forEach(type => {
-				if (type.app === app) {
-					result.push(type);
-				}
-			});
-			triggerOrAction.app = 'triggerApp';
-			triggerOrAction.type = 'triggerAppFunctions';
-			// resetIcedTxInput(TriggerOrAction.Trigger);
-			// RESET THE CONDITION to SELECT...
-			dispatch({ type: RESET_CONDITION });
-		} else {
-			ATYPES.forEach(type => {
-				if (type.app === app) {
-					result.push(type);
-				}
-			});
-			triggerOrAction.app = 'actionApp';
-			triggerOrAction.type = 'actionAppFunctions';
-			// resetIcedTxInput(TriggerOrAction.Action);
-			// RESET THE CONDITION to SELECT...
-			dispatch({ type: RESET_ACTION });
-		}
-		setUserSelection({
-			...userSelection,
-			[triggerOrAction.app]: app,
-			[triggerOrAction.type]: result
-		});
-	}
+	// function updateTriggerOrAction(
+	// 	selectedTriggerOrAction: TriggerOrAction,
+	// 	app: string
+	// ) {
+	// 	// console.log(app);
+	// 	const result: Array<ActionWhitelistData | TriggerWhitelistData> = [];
+	// 	const triggerOrAction = { app: '', type: '' };
+	// 	if (selectedTriggerOrAction === TriggerOrAction.Trigger) {
+	// 		CTYPES.forEach(type => {
+	// 			if (type.app === app) {
+	// 				result.push(type);
+	// 			}
+	// 		});
+	// 		triggerOrAction.app = 'triggerApp';
+	// 		triggerOrAction.type = 'triggerAppFunctions';
+	// 		// resetIcedTxInput(TriggerOrAction.Trigger);
+	// 		// RESET THE CONDITION to SELECT...
+	// 		dispatch({ type: RESET_CONDITION });
+	// 	} else {
+	// 		ATYPES.forEach(type => {
+	// 			if (type.app === app) {
+	// 				result.push(type);
+	// 			}
+	// 		});
+	// 		triggerOrAction.app = 'actionApp';
+	// 		triggerOrAction.type = 'actionAppFunctions';
+	// 		// resetIcedTxInput(TriggerOrAction.Action);
+	// 		// RESET THE CONDITION to SELECT...
+	// 		dispatch({ type: RESET_ACTION });
+	// 	}
+	// 	setUserSelection({
+	// 		...userSelection,
+	// 		[triggerOrAction.app]: app,
+	// 		[triggerOrAction.type]: result
+	// 	});
+	// }
 
 	return (
 		<div className={classes.box}>
-			<h1>{`Automate sending transactions to ethereum dapps with gelato`}</h1>
+			<h1>{`Create a conditional transaction by defining a trigger and action`}</h1>
 			<Grid
 				container
 				direction="row"
@@ -148,13 +151,13 @@ export default function AppSelection() {
 						justify="flex-start"
 						className={classes.box}
 					>
-						<p className={classes.boxTitle}>Listen to this dApp</p>
+						<p className={classes.boxTitle}>Trigger</p>
 						<Dropdown
-							app
+							app={false}
 							// userSelection={userSelection}
 							triggerOrAction={TriggerOrAction.Trigger}
 							data={CTYPES}
-							updateTriggerOrAction={updateTriggerOrAction}
+							// updateTriggerOrAction={updateTriggerOrAction}
 						/>
 					</Grid>
 					{/* <Grid container item justify="flex-start" style={{background: "yellow"}}>
@@ -194,171 +197,82 @@ export default function AppSelection() {
 						justify="flex-start"
 						className={classes.box}
 					>
-						<p className={classes.boxTitle}>
-							Send Transaction to this dApp
-						</p>
+						<p className={classes.boxTitle}>Action</p>
 						<Dropdown
-							app
+							app={false}
 							// userSelection={userSelection}
 							triggerOrAction={TriggerOrAction.Action}
 							data={ATYPES}
-							updateTriggerOrAction={updateTriggerOrAction}
+							// updateTriggerOrAction={updateTriggerOrAction}
 						/>
 					</Grid>
 				</Grid>
 			</Grid>
 			<Divider variant="middle" />
-			{userSelection.triggerApp !== '' && userSelection.actionApp !== '' && (
-				<Grid
-					container
-					direction="row"
-					justify="space-evenly"
-					alignItems="center"
-					style={{ padding: '10px' }}
-				>
+
+			{icedTxState.trigger.id !== 0 && icedTxState.action.id !== 0 && (
+				<React.Fragment>
 					<Grid
 						container
 						item
-						sm={4}
 						xs={12}
-						direction="column"
+						direction="row"
 						justify="space-evenly"
 						alignItems="stretch"
-						style={{ height: '200px' }}
+						style={{
+							marginTop: '16px'
+						}}
 					>
-						<Grid
-							container
-							item
-							justify="flex-start"
-							className={classes.box}
-						>
-							<p className={classes.boxTitle}>Select Trigger</p>
-							<Dropdown
-								app={false}
-								// userSelection={userSelection}
-								triggerOrAction={TriggerOrAction.Trigger}
-								data={userSelection.triggerAppFunctions}
-								updateTriggerOrAction={updateTriggerOrAction}
-							/>
-						</Grid>
+						<h2 style={{ textAlign: 'center' }}>
+							Gelato will{' '}
+							<span style={{ color: '#E50078' }}>
+								{icedTxState.action.title}
+							</span>{' '}
+							on your behalf, when the trigger{' '}
+							<span style={{ color: '#E50078' }}>
+								{icedTxState.trigger.title}{' '}
+							</span>
+							is activated
+						</h2>
 					</Grid>
 					<Grid
 						container
 						item
-						sm={2}
 						xs={12}
-						direction="column"
-						justify="center"
-						alignItems="center"
-						style={{}}
-					>
-						<Hidden xsDown>
-							<ArrowForwardIcon fontSize="large" />
-						</Hidden>
-						<Hidden smUp>
-							<ArrowDownwardIcon fontSize="large" />
-						</Hidden>
-					</Grid>
-					<Grid
-						container
-						item
-						sm={4}
-						xs={12}
-						direction="column"
+						direction="row"
 						justify="space-evenly"
 						alignItems="stretch"
-						style={{ height: '200px' }}
+						style={{
+							marginTop: '16px'
+						}}
 					>
-						<Grid
-							container
-							item
-							justify="flex-start"
-							className={classes.box}
-						>
-							<p className={classes.boxTitle}>Select Action</p>
-							<Dropdown
-								app={false}
-								// userSelection={userSelection}
-								triggerOrAction={TriggerOrAction.Action}
-								data={userSelection.actionAppFunctions}
-								updateTriggerOrAction={updateTriggerOrAction}
-							/>
-						</Grid>
-					</Grid>
-					{userSelection.triggerApp !== '' &&
-						userSelection.actionApp !== '' &&
-						icedTxState.trigger.id !== 0 &&
-						icedTxState.action.id !== 0 && (
-							<React.Fragment>
-								<Grid
-									container
-									item
-									xs={12}
-									direction="row"
-									justify="space-evenly"
-									alignItems="stretch"
-									style={{
-										marginTop: '16px'
-									}}
+						{icedTxState.txState ===
+							TxState.displayWrongNetwork && (
+							<Link
+								to={`create/${icedTxState.trigger.id}/${icedTxState.action.id}`}
+								style={{ textDecoration: 'none' }}
+							>
+								<Button
+									className={classes.createButton}
+									disabled
 								>
-									<h2 style={{ textAlign: 'center' }}>
-										Gelato will{' '}
-										<span style={{ color: '#E50078' }}>
-											{icedTxState.action.title}
-										</span>{' '}
-										with{' '}
-										<span style={{ color: '#E50078' }}>
-											{icedTxState.action.app}
-										</span>{' '}
-										on your behalf, when the trigger{' '}
-										<span style={{ color: '#E50078' }}>
-											{icedTxState.trigger.title}{' '}
-										</span>
-										on{' '}
-										<span style={{ color: '#E50078' }}>
-											{icedTxState.trigger.app}
-										</span>{' '}
-										is fulfilled
-									</h2>
-								</Grid>
-								<Grid
-									container
-									item
-									xs={12}
-									direction="row"
-									justify="space-evenly"
-									alignItems="stretch"
-									style={{
-										marginTop: '16px'
-									}}
-								>
-									{icedTxState.txState ===
-										TxState.displayWrongNetwork && (
-										<Link
-											to={`create/${icedTxState.trigger.id}/${icedTxState.action.id}`}
-											style={{ textDecoration: 'none' }}
-										>
-											<Button
-												className={classes.createButton}
-												disabled
-											>
-												Create
-											</Button>
-										</Link>
-									)}
-									{icedTxState.txState !==
-										TxState.displayWrongNetwork && (
-										<Button
-											className={classes.createButton}
-											disabled
-										>
-											Create
-										</Button>
-									)}
-								</Grid>
-							</React.Fragment>
+									Create
+								</Button>
+							</Link>
 						)}
-				</Grid>
+						{icedTxState.txState !==
+							TxState.displayWrongNetwork && (
+							<Link
+								to={`create/${icedTxState.trigger.id}/${icedTxState.action.id}`}
+								style={{ textDecoration: 'none' }}
+							>
+								<Button className={classes.createButton}>
+									Create
+								</Button>
+							</Link>
+						)}
+					</Grid>
+				</React.Fragment>
 			)}
 		</div>
 	);

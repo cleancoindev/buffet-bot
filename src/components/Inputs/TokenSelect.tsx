@@ -16,7 +16,8 @@ import {
 	UPDATE_CONDITION_INPUTS,
 	UPDATE_ACTION_INPUTS,
 	INPUT_CSS,
-	COLOURS
+	COLOURS,
+	ETH
 } from '../../constants/constants';
 import { TOKEN_LIST } from '../../constants/whitelist';
 import { ethers } from 'ethers';
@@ -73,14 +74,16 @@ interface TokenSelectProps
 	disabled: boolean;
 }
 
-const findToken = (address: string) => {
-	const foundToken = TOKEN_LIST.find(
+const findToken = (address: string, triggerOrAction: TriggerOrAction) => {
+	let tokenList = [...TOKEN_LIST];
+	if (triggerOrAction === TriggerOrAction.Trigger) tokenList.push(ETH);
+	const foundToken = tokenList.find(
 		singleToken => singleToken.address === address
 	);
 	if (foundToken === undefined) {
 		// ERROR
 		console.log('Failed to find Token!');
-		return TOKEN_LIST[0];
+		return tokenList[0];
 	} else {
 		return foundToken;
 	}
@@ -92,8 +95,16 @@ export default function TokenSelect(props: TokenSelectProps) {
 
 	// @DEV Add a trigger that always two different tokens will be shown by default
 
+	// If action, dont display ETH
+	let tokenList = [...TOKEN_LIST];
+	if (triggerOrAction === TriggerOrAction.Trigger) {
+		tokenList.push(ETH);
+	}
+
 	// Pref
-	const [token, setToken] = React.useState<Token>(findToken(defaultToken));
+	const [token, setToken] = React.useState<Token>(
+		findToken(defaultToken, triggerOrAction)
+	);
 	// console.log(token)
 	// console.log(icedTxState)
 	// console.log(triggerOrAction)
@@ -131,7 +142,7 @@ export default function TokenSelect(props: TokenSelectProps) {
 
 	const handleChange = (event: React.ChangeEvent<{ value: any }>) => {
 		const tokenAddress = event.target.value as string;
-		const tokenObject = findToken(tokenAddress);
+		const tokenObject = findToken(tokenAddress, triggerOrAction);
 		if (tokenObject === undefined) {
 			console.log('ERROR in fetching Token');
 			return 'ERROR in finding Token';
@@ -178,7 +189,7 @@ export default function TokenSelect(props: TokenSelectProps) {
 				disabled={disabled}
 				// input={<SalmonSelect />}
 			>
-				{TOKEN_LIST.map((possibleToken, key) => (
+				{tokenList.map((possibleToken, key) => (
 					<MenuItem key={key} value={possibleToken.address}>
 						{possibleToken.symbol}
 					</MenuItem>
