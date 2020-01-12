@@ -88,10 +88,11 @@ const BootstrapButton = withStyles({
 		textTransform: 'none',
 		fontSize: 16,
 		padding: '6px 12px',
-		border: '1px solid',
 		marginLeft: '16px',
 		lineHeight: 1.5,
+		border: '0.5px solid',
 		borderColor: COLOURS.salmon,
+		// borderRadius: '1px 1px 1px 1px',
 		color: 'white',
 		fontFamily: [
 			'-apple-system',
