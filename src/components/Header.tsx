@@ -7,6 +7,7 @@ import { Link, useHistory } from 'react-router-dom';
 import {
 	createStyles,
 	makeStyles,
+	withStyles,
 	useTheme,
 	Theme
 } from '@material-ui/core/styles';
@@ -27,13 +28,96 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import Divider from '@material-ui/core/Divider';
+import WarningIcon from '@material-ui/icons/Warning';
 
 // Web3 React
 import { useWeb3React } from '@web3-react/core';
 import { useEagerConnect, useInactiveListener } from '../hooks/hooks';
 import { injected } from '../constants/connectors';
+import {
+	COLOURS,
+	SELECTED_CHAIN_ID,
+	UPDATE_TX_STATE,
+	OPEN_MODAL
+} from '../constants/constants';
+import { useIcedTxContext } from '../state/GlobalState';
+import { TxState } from '../constants/interfaces';
 
 const drawerWidth = 240;
+
+const BootstrapButtonDanger = withStyles({
+	root: {
+		boxShadow: 'none',
+		textTransform: 'none',
+		fontSize: 16,
+		padding: '6px 12px',
+		border: '1px solid',
+		marginLeft: '16px',
+		lineHeight: 1.5,
+		borderColor: 'red',
+		backgroundColor: 'red',
+		color: 'white',
+		fontFamily: [
+			'-apple-system',
+			'BlinkMacSystemFont',
+			'"Segoe UI"',
+			'Roboto',
+			'"Helvetica Neue"',
+			'Arial',
+			'sans-serif',
+			'"Apple Color Emoji"',
+			'"Segoe UI Emoji"',
+			'"Segoe UI Symbol"'
+		].join(','),
+		'&:hover': {
+			backgroundColor: 'red',
+			borderColor: 'red',
+			boxShadow: 'none'
+		}
+		// '&:focus': {
+		// 	boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)'
+		// }
+	}
+})(Button);
+
+const BootstrapButton = withStyles({
+	root: {
+		boxShadow: 'none',
+		textTransform: 'none',
+		fontSize: 16,
+		padding: '6px 12px',
+		border: '1px solid',
+		marginLeft: '16px',
+		lineHeight: 1.5,
+		borderColor: COLOURS.salmon,
+		color: 'white',
+		fontFamily: [
+			'-apple-system',
+			'BlinkMacSystemFont',
+			'"Segoe UI"',
+			'Roboto',
+			'"Helvetica Neue"',
+			'Arial',
+			'sans-serif',
+			'"Apple Color Emoji"',
+			'"Segoe UI Emoji"',
+			'"Segoe UI Symbol"'
+		].join(','),
+		'&:hover': {
+			backgroundColor: COLOURS.salmon50,
+			borderColor: 'white',
+			boxShadow: 'none'
+		},
+		'&:active': {
+			boxShadow: 'none',
+			backgroundColor: '#0062cc',
+			borderColor: '#005cbf'
+		}
+		// '&:focus': {
+		// 	boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)'
+		// }
+	}
+})(Button);
 
 const useStyles = makeStyles(theme => ({
 	appBar: {
@@ -42,7 +126,9 @@ const useStyles = makeStyles(theme => ({
 	menuButton: {
 		marginRight: 'auto',
 		textDecoration: 'none',
-		color: 'white'
+		color: 'white',
+		cursor: 'pointer',
+		'&:hover': { color: COLOURS.salmon }
 	},
 	title: {
 		flexGrow: 1
@@ -75,8 +161,10 @@ export default function ButtonAppBar() {
 	const handleDrawerToggle = () => {
 		setMobileOpen(!mobileOpen);
 	};
-	const { active, activate, deactivate } = useWeb3React();
-	const web3React = useWeb3React();
+
+	const { account, active, activate, chainId } = useWeb3React();
+	const { dispatch } = useIcedTxContext();
+	console.log(chainId);
 
 	// Web3 Logic
 
@@ -87,11 +175,8 @@ export default function ButtonAppBar() {
 	useInactiveListener(!triedEager);
 
 	const logInLogOutMetamask = async () => {
-		if (active) {
-			console.log('log metamask out');
-			await deactivate();
-		} else {
-			console.log('log metamask in');
+		if (!active) {
+			console.log('log into metamask');
 			await activate(injected);
 		}
 	};
@@ -106,18 +191,46 @@ export default function ButtonAppBar() {
 						<Typography variant="h6">gelato finance</Typography>
 					</Link>
 					<Hidden xsDown>
-						<Button
-							onClick={() => history.push('/dashboard')}
-							style={{ color: 'white' }}
-						>
-							Overview
-						</Button>
-						<Button
-							onClick={logInLogOutMetamask}
-							style={{ color: 'white' }}
-						>
-							{active ? 'LogOut' : 'Connect'}
-						</Button>
+						{active && (
+							<BootstrapButton onClick={() => history.push('/')}>
+								Create New
+							</BootstrapButton>
+						)}
+						{active && chainId === SELECTED_CHAIN_ID && (
+							<BootstrapButton
+								onClick={() => history.push('/dashboard')}
+							>
+								{account
+									? `${account.substring(
+											0,
+											6
+									  )}...${account.substring(37, 41)}`
+									: 'Connected'}
+							</BootstrapButton>
+						)}
+						{active && chainId !== SELECTED_CHAIN_ID && (
+							<BootstrapButtonDanger
+								startIcon={<WarningIcon />}
+								onClick={() => {
+									// Update TxState
+									dispatch({
+										type: UPDATE_TX_STATE,
+										txState: TxState.displayWrongNetwork
+									});
+									// Open Modal
+									dispatch({
+										type: OPEN_MODAL
+									});
+								}}
+							>
+								{'Wrong Network'}
+							</BootstrapButtonDanger>
+						)}
+						{!active && (
+							<BootstrapButton onClick={logInLogOutMetamask}>
+								{'Connect With Metamask'}
+							</BootstrapButton>
+						)}
 					</Hidden>
 					<Hidden smUp>
 						<IconButton

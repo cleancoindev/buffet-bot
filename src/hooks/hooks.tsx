@@ -7,6 +7,7 @@ import { GELATO_CORE_ADDRESS, TOKEN_LIST } from '../constants/whitelist';
 import { ethers } from 'ethers';
 
 import GELATO_CORE_ABI from '../constants/abis/gelatoCore.json';
+import { SELECTED_CHAIN_ID } from '../constants/constants';
 
 export function useEagerConnect() {
 	const { activate, active } = useWeb3React();
@@ -95,12 +96,13 @@ export function useInactiveListener(suppress: boolean = false) {
 
 export function useGelatoCore() {
 	const web3 = useWeb3React();
-	if (web3.active) {
+	if (web3.active && SELECTED_CHAIN_ID === web3.chainId) {
 		const signer = web3.library.getSigner();
 		const chainId = web3.chainId as ChainIds;
 		const gelatoCoreAddress = GELATO_CORE_ADDRESS[chainId];
 		return new ethers.Contract(gelatoCoreAddress, GELATO_CORE_ABI, signer);
 	} else {
-		console.log('ERROR, NOT active');
+		console.log('Cannot find gelatoCore');
+		// throw Error('Cannot find gelatoCore');
 	}
 }

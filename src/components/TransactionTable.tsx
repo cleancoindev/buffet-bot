@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
 // Material UI
 import {
 	createStyles,
-	lighten,
 	makeStyles,
 	Theme,
 	withStyles
@@ -24,16 +23,18 @@ import Paper from '@material-ui/core/Paper';
 
 import { useIcedTxContext } from '../state/GlobalState';
 import {
-	findConditionByAddress,
+	findTriggerByAddress,
 	findActionByAddress,
 	stringifyTimestamp
 } from '../helpers/helpers';
 
 import {
-	DEFAULT_PAST_TRANSACTIONS,
 	UPDATE_PAST_TRANSACTIONS,
-	COLOURS
+	COLOURS,
+	CANCEL_EXECUTION_CLAIM
 } from '../constants/constants';
+import { useWeb3React } from '@web3-react/core';
+import { useGelatoCore } from '../hooks/hooks';
 
 /*
 Event from SC
@@ -55,7 +56,7 @@ Event from SC
 What is needed:
 - executionClaimId
 - userProxy (used to filter, should be done by GraphQL)
-- trigger address => identifier for condition
+- trigger address => identifier for trigger
 - action address => idendifier for action
 - trigger payload, value to decode
 - action payload, same
@@ -63,32 +64,6 @@ What is needed:
 - Expiry Date - maybe
 - Prepayment - maybe
 */
-
-const rows: Array<Data> = [];
-
-// FETCH DATA FROM API => Using dummy data for now
-
-// iterate over fetched DEFAULT_PAST_TRANSACTIONS
-DEFAULT_PAST_TRANSACTIONS.forEach((executionClaim, index) => {
-	// With address, find condition and action
-	const condition = findConditionByAddress(executionClaim.conditionAddress);
-	const action = findActionByAddress(executionClaim.actionAddress);
-
-	// æDEV USE THIS Decoding when the view button is being clicked
-
-	const newData = createData(
-		executionClaim.id,
-		`${condition.title} on ${condition.app}`,
-		`${action.title} on ${action.app}`,
-		stringifyTimestamp(executionClaim.timestamp),
-		executionClaim.status,
-		index,
-		'CANCEL'
-	);
-	rows.push(newData);
-
-	// Date when the claim was created
-});
 
 // const rows = [
 // 	createData(
@@ -153,13 +128,13 @@ interface HeadCell {
 }
 
 // interface IcedTxStateTable {
-// 	condition: ConditionWhitelistData;
+// 	trigger: TriggerWhitelistData;
 // 	action: ActionWhitelistData;
 // }
 
 interface Data {
 	id: string;
-	condition: string;
+	trigger: string;
 	action: string;
 	date: string;
 	status: string;
@@ -169,14 +144,14 @@ interface Data {
 
 function createData(
 	id: string,
-	condition: string,
+	trigger: string,
 	action: string,
 	date: string,
 	status: string,
 	view: number,
 	cancel: string
 ): Data {
-	return { id, condition, action, date, status, view, cancel };
+	return { id, trigger, action, date, status, view, cancel };
 }
 
 const headCells: HeadCell[] = [
@@ -187,10 +162,10 @@ const headCells: HeadCell[] = [
 		label: 'id'
 	},
 	{
-		id: 'condition',
+		id: 'trigger',
 		numeric: true,
 		disablePadding: false,
-		label: 'Condition'
+		label: 'Trigger'
 	},
 	{ id: 'action', numeric: true, disablePadding: false, label: 'Action' },
 	{ id: 'date', numeric: true, disablePadding: false, label: 'Created at' },
@@ -210,7 +185,7 @@ const headCells: HeadCell[] = [
 		id: 'cancel',
 		numeric: true,
 		disablePadding: false,
-		label: 'Cancel & Refund'
+		label: 'Cancel'
 	}
 ];
 
@@ -358,30 +333,160 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function EnhancedTable() {
-	const { dispatch } = useIcedTxContext();
+	const {
+		dispatch,
+		icedTxState: { pastTransactions }
+	} = useIcedTxContext();
+	const web3 = useWeb3React();
 
+	const gelatoCore = useGelatoCore();
 	// Router Context
 	let history = useHistory();
 
 	const classes = useStyles();
-	const [order, setOrder] = React.useState<Order>('asc');
+	const [order, setOrder] = React.useState<Order>('desc');
 	// @ DEV CHANGED TO ID FROM CALORIES
-	const [orderBy, setOrderBy] = React.useState<keyof Data>('id');
+	const [orderBy, setOrderBy] = React.useState<keyof Data>('date');
 	const [selected, setSelected] = React.useState<string[]>([]);
 	const [page /*setPage*/] = React.useState(0);
 	const [dense /*setDense*/] = React.useState(false);
 	const [rowsPerPage /*setRowsPerPage*/] = React.useState(5);
 
-	const showDetails = (event: React.MouseEvent<unknown>, row: Data) => {
-		console.log('show details');
-		console.log(row);
-		console.log(DEFAULT_PAST_TRANSACTIONS[row.view]);
+	// THE GRAPH API Fetching
+
+	let account: string;
+	if (!web3.active) {
+		account = '0x0';
+	} else {
+		account = web3.account as string;
+	}
+
+	const rows: Array<Data> = [];
+
+	const [displayedRows, setDisplayedRows] = React.useState(rows);
+	const [renderCounter, setRenderCounter] = React.useState(0);
+
+	async function fetchPastExecutionClaims() {
+		try {
+			const response = await fetch(
+				'https://api.thegraph.com/subgraphs/name/gelatodigital/gelato-ropsten',
+				{
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						query: `{
+							users (where: {address:"${account}"}) {
+							  executionClaims {
+								id
+								executionClaimId
+								selectedExecutor
+								proxyAddress
+								trigger
+								triggerPayload
+								action
+								actionPayload
+								expiryDate
+								prepayment
+								mintingDate
+								executionDate
+								status
+								triggerGasActionTotalGasMinExecutionGas
+							  }
+							}
+						  }
+						  `
+					})
+				}
+			);
+			const json = await response.json();
+			const executionClaims = json.data.users[0].executionClaims;
+
+			let newRows: Array<Data> = [];
+
+			// Change global state
+			dispatch({
+				type: UPDATE_PAST_TRANSACTIONS,
+				pastTransactions: executionClaims
+			});
+
+			executionClaims.forEach((executionClaim: any, index: any) => {
+				// With address, find trigger and action
+				const trigger = findTriggerByAddress(executionClaim.trigger);
+
+				const action = findActionByAddress(executionClaim.action);
+
+				// Set default status string
+				let statusString: string = 'open';
+
+				switch (executionClaim.status) {
+					case 'open':
+						statusString = 'open';
+						break;
+					case 'executedSuccess':
+						statusString = 'succesfully executed';
+						break;
+					case 'executedFailure':
+						statusString = 'failed to execute - please contract us';
+						break;
+					case 'cancelled':
+						statusString = 'cancelled';
+						break;
+					case 'expired':
+						statusString = 'expired';
+						break;
+				}
+
+				// @DEV USE THIS Decoding when the view button is being clicked
+				// console.log(trigger);
+				// console.log(action);
+				const newData = createData(
+					executionClaim.executionClaimId.toString(),
+					`${trigger.title} on ${trigger.app}`,
+					`${action.title} on ${action.app}`,
+					stringifyTimestamp(executionClaim.mintingDate),
+					statusString,
+					index,
+					'CANCEL'
+				);
+				newRows.push(newData);
+
+				// Date when the claim was created
+			});
+
+			setDisplayedRows(newRows);
+		} catch (err) {
+			// console.log('Could not fetch past execution claims');
+
+			// Do UseEffect 5 times, if it API request still fails, stop
+			renderCounter < 5
+				? setRenderCounter(renderCounter + 1)
+				: console.log(
+						'Could not connect to users account, stop useEffect'
+				  );
+		}
+	}
+
+	useEffect(() => {
+		fetchPastExecutionClaims();
+		// this will clear Timeout when component unmont like in willComponentUnmount
+	}, [renderCounter]);
+
+	// Cancel ExecutionClaim
+
+	const cancelExecutionClaim = async (executionClaimId: string) => {
+		// Update Tx State
+		// Update pastTransactionId
+		// Open MOdal
 		dispatch({
-			type: UPDATE_PAST_TRANSACTIONS,
-			pastTransactions: DEFAULT_PAST_TRANSACTIONS
+			type: CANCEL_EXECUTION_CLAIM,
+			pastTransactionId: executionClaimId
 		});
-		history.push(`/dashboard/${DEFAULT_PAST_TRANSACTIONS[row.view].id}`);
-		// Route to new page
+	};
+
+	const showDetails = (event: React.MouseEvent<unknown>, row: Data) => {
+
+		history.push(`/dashboard/${row.view}`);
+
 	};
 
 	const handleRequestSort = (
@@ -398,7 +503,7 @@ export default function EnhancedTable() {
 	) => {
 		if (event.target.checked) {
 			// @DEV CHANGED NAME TO ID
-			const newSelecteds = rows.map(n => n.id);
+			const newSelecteds = displayedRows.map(n => n.id);
 			setSelected(newSelecteds);
 			return;
 		}
@@ -428,11 +533,15 @@ export default function EnhancedTable() {
 	const isSelected = (name: string) => selected.indexOf(name) !== -1;
 
 	const emptyRows =
-		rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+		rowsPerPage -
+		Math.min(rowsPerPage, displayedRows.length - page * rowsPerPage);
 
 	return (
 		<React.Fragment>
 			<div className={classes.root}>
+				{/* <Button color={'secondary'} onClick={fetchPastExecutionClaims}>
+					Fetch
+				</Button> */}
 				<Paper className={classes.paper}>
 					<EnhancedTableToolbar numSelected={selected.length} />
 
@@ -449,10 +558,13 @@ export default function EnhancedTable() {
 							orderBy={orderBy}
 							onSelectAllClick={handleSelectAllClick}
 							onRequestSort={handleRequestSort}
-							rowCount={rows.length}
+							rowCount={displayedRows.length}
 						/>
 						<TableBody>
-							{stableSort(rows, getSorting(order, orderBy))
+							{stableSort(
+								displayedRows,
+								getSorting(order, orderBy)
+							)
 								.slice(
 									page * rowsPerPage,
 									page * rowsPerPage + rowsPerPage
@@ -477,7 +589,7 @@ export default function EnhancedTable() {
 												{row.id}
 											</StyledTableCell>
 											<StyledTableCell align="left">
-												{row.condition}
+												{row.trigger}
 											</StyledTableCell>
 											<StyledTableCell align="left">
 												{row.action}
@@ -498,7 +610,7 @@ export default function EnhancedTable() {
 														justifyContent:
 															'center',
 														alignItems: 'center',
-														marginRight: '8px',
+														// marginRight: '8px',
 														cursor: 'pointer'
 													}}
 												>
@@ -516,24 +628,35 @@ export default function EnhancedTable() {
 											</StyledTableCell>
 											<StyledTableCell align="left">
 												{/* {row.cancel} */}
-												<div
-													onClick={(): void =>
-														console.log('Cancel')
-													}
-													style={{
-														display: 'flex',
-														justifyContent:
-															'center',
-														alignItems: 'center',
-														marginRight: '20px',
-														cursor: 'pointer'
-													}}
-												>
-													<CancelIcon
-														// color="primary"
-														fontSize={'small'}
-													></CancelIcon>
-												</div>
+												{row.status !== 'cancelled' &&
+													row.status !== 'expired' &&
+													row.status !==
+														'succesfully executed' && (
+														<div
+															onClick={() =>
+																cancelExecutionClaim(
+																	row.id
+																)
+															}
+															style={{
+																display: 'flex',
+																justifyContent:
+																	'center',
+																alignItems:
+																	'center',
+																// marginRight: '20px',
+																cursor:
+																	'pointer'
+															}}
+														>
+															<CancelIcon
+																// color="primary"
+																fontSize={
+																	'small'
+																}
+															></CancelIcon>
+														</div>
+													)}
 											</StyledTableCell>
 										</StyledTableRow>
 									);

@@ -1,5 +1,6 @@
 import { InputType, Params } from './interfaces';
 import { ethers } from 'ethers';
+import { EXECUTOR_ADDRESS } from './whitelist';
 
 const emptyUserInputArray: Array<string | number | ethers.utils.BigNumber> = [];
 const emptyUserInputTypeArray: Array<InputType> = [];
@@ -14,12 +15,16 @@ export const COLOURS = {
 	pink: '#E50078'
 };
 
+export const SELECTED_CHAIN_ID = 3;
+export const SELECTED_NETWORK_NAME = 'Ropsten';
+
 export const DEFAULT_DATA_ACTION = {
 	id: 0,
 	app: '',
 	title: '',
 	address: '',
 	params: emptyParamArray, // [ ]
+	abi: emptyStringArray,
 	inputLabels: emptyStringArray, // [ ]
 	userInputTypes: emptyUserInputTypeArray, // [ ]
 	userInputs: emptyUserInputArray, // [ ]
@@ -32,28 +37,54 @@ export const DEFAULT_DATA_CONDITION = {
 	title: '',
 	address: '',
 	params: emptyParamArray, // [ ]
+	abi: emptyStringArray,
 	inputLabels: emptyStringArray, // [ ]
 	userInputTypes: emptyUserInputTypeArray, // [ ]
 	userInputs: emptyUserInputArray // [ ]
 };
 
+/*
+Interface
+
+	selectedExecutor: string;
+	id: string;
+	userProxy: string;
+	trigger: string;
+	triggerPayload: string;
+	action: string;
+	actionPayload: string;
+	triggerGasActionTotalGasMinExecutionGas: number;
+	expiryDate: string;
+	prepayment: string;
+	// Graph specific values
+	mintingDate: string;
+	executionDate?: string;
+	status: string;
+}
+
+*/
+
 export const DEFAULT_PAST_TRANSACTIONS = [
 	{
-		id: '0',
-		conditionAddress: '0x1',
-		actionAddress: '0x5',
-		conditionPayload: '0x030949304934009413094309320493049039049204',
+		selectedExecutor: EXECUTOR_ADDRESS[3],
+		id: '0x1',
+		executionClaimId: '1',
+		proxyAddress: '0x0',
+		trigger: '0x1',
+		triggerPayload: '0x030949304934009413094309320493049039049204',
+		action: '0x5',
 		actionPayload: '0x030949304934009413094309320493049039049204',
 		expiryDate: '12353434312',
 		prepayment: '1009032030020',
-		timestamp: '1576759372',
-		status: 'open'
+		mintingDate: '1576759372',
+		status: 'open',
+		triggerGasActionTotalGasMinExecutionGas: [0, 1, 2]
 	}
 	// {
 	// 	id: '0',
-	// 	conditionAddress: '0x2',
+	// 	triggerAddress: '0x2',
 	// 	actionAddress: '0x4',
-	// 	conditionPayload: '0x030949304934009413094309320493049039049204',
+	// 	triggerPayload: '0x030949304934009413094309320493049039049204',
 	// 	actionPayload: '0x030949304934009413094309320493049039049204',
 	// 	expiryDate: '12353434312',
 	// 	prepayment: '1009032030020',
@@ -71,6 +102,9 @@ export const SELECT_CONDITION = 'SELECT_CONDITION';
 export const SELECT_ACTION = 'SELECT_ACTION';
 export const UPDATE_TX_STATE = 'UPDATE_TX_STATE';
 export const UPDATE_PAST_TRANSACTIONS = 'UPDATE_PAST_TRANSACTIONS';
+export const OPEN_MODAL = 'OPEN_MODAL';
+export const CLOSE_MODAL = 'CLOSE_MODAL';
+export const CANCEL_EXECUTION_CLAIM = 'CANCEL_EXECUTION_CLAIM';
 
 export const INPUT_CSS = {
 	root: {

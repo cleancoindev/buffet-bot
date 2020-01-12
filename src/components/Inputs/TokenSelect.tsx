@@ -11,7 +11,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 import { useIcedTxContext } from '../../state/GlobalState';
-import { ConditionOrAction, Token } from '../../constants/interfaces';
+import { TriggerOrAction, Token } from '../../constants/interfaces';
 import {
 	UPDATE_CONDITION_INPUTS,
 	UPDATE_ACTION_INPUTS,
@@ -67,7 +67,7 @@ interface TokenSelectProps
 	extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
 	label: string;
 	index: number;
-	conditionOrAction: ConditionOrAction;
+	triggerOrAction: TriggerOrAction;
 	// @DEV CHANGE later when implented better DEFAULT VALUE system, this should only be string
 	defaultToken: string;
 	disabled: boolean;
@@ -87,19 +87,19 @@ const findToken = (address: string) => {
 };
 
 export default function TokenSelect(props: TokenSelectProps) {
-	const { defaultToken, label, index, conditionOrAction, disabled } = props;
+	const { defaultToken, label, index, triggerOrAction, disabled } = props;
 	const { dispatch, icedTxState } = useIcedTxContext();
 
-	// @DEV Add a condition that always two different tokens will be shown by default
+	// @DEV Add a trigger that always two different tokens will be shown by default
 
 	// Pref
 	const [token, setToken] = React.useState<Token>(findToken(defaultToken));
 	// console.log(token)
 	// console.log(icedTxState)
-	// console.log(conditionOrAction)
+	// console.log(triggerOrAction)
 
 	// updateUser Input
-	const updateConditionInputs = (index: number, value: any) => {
+	const updateTriggerInputs = (index: number, value: any) => {
 		// Default Index => @DEV Restructure Dispatcher later
 		dispatch({ type: UPDATE_CONDITION_INPUTS, index, value });
 	};
@@ -109,11 +109,11 @@ export default function TokenSelect(props: TokenSelectProps) {
 		dispatch({ type: UPDATE_ACTION_INPUTS, index, value });
 	};
 
-	// Based on whether the input is a condition or action, select a different dispatch function
+	// Based on whether the input is a trigger or action, select a different dispatch function
 	let updateUserInput: Function;
 	updateUserInput =
-		conditionOrAction === ConditionOrAction.Condition
-			? updateConditionInputs
+		triggerOrAction === TriggerOrAction.Trigger
+			? updateTriggerInputs
 			: updateActionInputs;
 
 	const classes = useStyles();

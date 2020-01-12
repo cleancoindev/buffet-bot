@@ -6,21 +6,44 @@ import {
 	RESET_ACTION,
 	UPDATE_ACTION_INPUTS,
 	UPDATE_TX_STATE,
-	UPDATE_PAST_TRANSACTIONS
+	UPDATE_PAST_TRANSACTIONS,
+	OPEN_MODAL,
+	CLOSE_MODAL,
+	CANCEL_EXECUTION_CLAIM
 } from './constants';
-import { Dispatch, SetStateAction } from 'react';
 import { ethers } from 'ethers';
+
+/* We need
+	address _selectedExecutor,
+	uint256 _executionClaimId,
+	IGelatoUserProxy _userProxy,
+	IGelatoTrigger _trigger,
+	bytes calldata _triggerPayloadWithSelector,
+	IGelatoAction _action,
+	bytes calldata _actionPayloadWithSelector,
+	uint256[3] calldata _triggerGasActionTotalGasMinExecutionGas,
+	uint256 _executionClaimExpiryDate,
+	uint256 _mintingDeposit
+
+
+*/
 
 export interface PastTransaction {
 	id: string;
-	conditionAddress: string;
-	actionAddress: string;
-	conditionPayload: string;
+	executionClaimId: string;
+	selectedExecutor: string;
+	proxyAddress: string;
+	trigger: string;
+	triggerPayload: string;
+	action: string;
 	actionPayload: string;
 	expiryDate: string;
 	prepayment: string;
-	timestamp: string;
+	// Graph specific values
+	mintingDate: string;
+	executionDate?: string;
 	status: string;
+	triggerGasActionTotalGasMinExecutionGas: Array<number>;
 }
 
 export interface Params {
@@ -33,6 +56,7 @@ export interface ActionWhitelistData {
 	app: string;
 	title: string;
 	address: string;
+	abi: Array<string>;
 	params: Array<Params>;
 	inputLabels: Array<string>;
 	userInputTypes: Array<InputType>;
@@ -40,11 +64,12 @@ export interface ActionWhitelistData {
 	approvalIndex: number;
 }
 
-export interface ConditionWhitelistData {
+export interface TriggerWhitelistData {
 	id: number;
 	app: string;
 	title: string;
 	address: string;
+	abi: Array<string>;
 	params: Array<Params>;
 	inputLabels: Array<string>;
 	userInputTypes: Array<InputType>;
@@ -52,21 +77,23 @@ export interface ConditionWhitelistData {
 }
 
 export interface UserSelection {
-	conditionApp: string;
+	triggerApp: string;
 	actionApp: string;
-	conditionAppFunctions: Array<ConditionWhitelistData>;
+	triggerAppFunctions: Array<TriggerWhitelistData>;
 	actionAppFunctions: Array<ActionWhitelistData>;
 }
 
 export interface IcedTx {
-	condition: ConditionWhitelistData;
+	trigger: TriggerWhitelistData;
 	action: ActionWhitelistData;
 	txState: TxState;
 	pastTransactions: Array<PastTransaction>;
+	modalOpen: boolean;
+	pastTransactionId: string;
 }
 
-export enum ConditionOrAction {
-	Condition,
+export enum TriggerOrAction {
+	Trigger,
 	Action
 }
 
@@ -118,20 +145,25 @@ export type KyberToken = Array<Token>;
 
 // Transaction Statea
 export enum TxState {
-	displayInstallMetamask = 0,
-	displayLogIntoMetamask = 1,
-	displayGelatoWallet = 2,
-	preGelatoWallet = 3,
-	waitingGelatoWallet = 4,
-	postGelatoWallet = 5,
-	displayApprove = 6,
-	preApprove = 7,
-	displayCreate = 8,
-	preCreate = 9,
-	waitingCreate = 10,
-	postCreate = 11,
-	cancelled = 12,
-	insufficientBalance = 13
+	displayInstallMetamask,
+	displayLogIntoMetamask,
+	displayWrongNetwork,
+	displayGelatoWallet,
+	preGelatoWallet,
+	waitingGelatoWallet,
+	postGelatoWallet,
+	displayApprove,
+	preApprove,
+	displayCreate,
+	preCreate,
+	waitingCreate,
+	postCreate,
+	displayCancel,
+	preCancel,
+	waitingCancel,
+	postCancel,
+	cancelled,
+	insufficientBalance
 	// waitingApprove,
 	// postApprove,
 }
@@ -147,14 +179,14 @@ interface SelectAction {
 	id: string;
 }
 
-interface SelectCondition {
+interface SelectTrigger {
 	// UPDATE_ACTION
 	type: typeof SELECT_CONDITION;
 	// Id of Action
 	id: string;
 }
 
-interface UpdateConditionInputs {
+interface UpdateTriggerInputs {
 	// UPDATE_ACTION
 	type: typeof UPDATE_CONDITION_INPUTS;
 	// Id of Action
@@ -170,7 +202,7 @@ interface UpdateActionInputs {
 	value: any;
 }
 
-interface ResetCondition {
+interface ResetTrigger {
 	// UPDATE_ACTION
 	type: typeof RESET_CONDITION;
 }
@@ -190,20 +222,36 @@ interface UpdatePastTransactions {
 	pastTransactions: Array<PastTransaction>;
 }
 
+interface OpenModal {
+	type: typeof OPEN_MODAL;
+}
+
+interface CloseModal {
+	type: typeof CLOSE_MODAL;
+}
+
+interface UpdateSelectedTx {
+	type: typeof CANCEL_EXECUTION_CLAIM;
+	pastTransactionId: string;
+}
+
 // export interface Action {
 // 	type: string;
-// 	conditionOrAction: ConditionOrAction;
+// 	triggerOrAction: TriggerOrAction;
 // 	id: string;
 // 	index: number;
 // 	value: string | number;
 // }
 
 export type Action =
-	| ResetCondition
+	| ResetTrigger
 	| ResetAction
 	| UpdateActionInputs
-	| UpdateConditionInputs
-	| SelectCondition
+	| UpdateTriggerInputs
+	| SelectTrigger
 	| SelectAction
 	| UpdateTxState
-	| UpdatePastTransactions;
+	| UpdatePastTransactions
+	| OpenModal
+	| CloseModal
+	| UpdateSelectedTx;

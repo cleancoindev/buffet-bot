@@ -1,7 +1,7 @@
 import { InputType } from './interfaces';
 
 export const APPS = {
-	conditions: ['Your Wallet', 'Calendar', 'Kyber'],
+	triggers: ['Your Wallet', 'Calendar', 'Kyber'],
 	actions: ['Your Wallet', 'Kyber', 'Fulcrum']
 };
 
@@ -14,17 +14,19 @@ export const APPS = {
 // Smart Contract Addresses
 export const GELATO_CORE_ADDRESS = {
 	1: '0x0',
-	3: '0x0Fcf27B454b344645a94788A3e820A0D2dab7F0e',
+	3: '0x653F3612e5A649EB93D60a55A0f0A2C8e0cF6A73',
 	4: '0x501aF774Eb578203CC34E7171273124A93706C06',
 	42: '0x0'
 };
 
 export const EXECUTOR_ADDRESS = {
+	1: '0x0',
 	3: '0x203AdbbA2402a36C202F207caA8ce81f1A4c7a72',
-	4: '0x203AdbbA2402a36C202F207caA8ce81f1A4c7a72'
+	4: '0x203AdbbA2402a36C202F207caA8ce81f1A4c7a72',
+	42: '0x0'
 };
 
-// Conditions
+// Triggers
 export const CTYPES = [
 	// {
 	// 	id: 1,
@@ -75,8 +77,9 @@ export const CTYPES = [
 		id: 4,
 		app: 'Calendar',
 		title: 'Time',
-		address: '0xBdA9E16D8506C3AB2431fD4EE081c6d8a847FBaD',
+		address: '0x525EB0c1279f1CC690D01a2Fcb78A0D5d156D1Ee',
 		params: [{ type: 'uint256', name: '_timestamp' }],
+		abi: ['function fired(uint256 _timestamp)'],
 		userInputTypes: [InputType.Date],
 		inputLabels: ['Pick a Date and Time'],
 		userInputs: []
@@ -101,15 +104,31 @@ export const ATYPES = [
 		id: 2,
 		app: 'Kyber',
 		title: 'Trade Tokens',
-		address: '0x5e2C7234DC00eF98B52B694b29824AcF30dBA53e',
-		// params: ['uint256', 'address', 'address', 'bool'],
+		address: '0x05B0C94eA8EEf2A4Ec19E717C30552298851c761',
+		/*
+		 // Standard Action Params
+        address _user,
+        address _userProxy,
+        // Specific Action Params
+        address _src,
+        uint256 _srcAmt,
+        address _dest,
+        uint256 _minConversionRate
+
+		*/
+
 		params: [
 			{ type: 'address', name: '_user' },
+			{ type: 'address', name: '_userProxy' },
 			{ type: 'address', name: '_src' },
 			{ type: 'uint256', name: '_srcAmt' },
 			{ type: 'address', name: '_dest' },
 			{ type: 'uint256', name: '_minConversionRate' }
 		],
+		abi: [
+			'function action(address _user, address _userProxy, address _src, uint256 _srcAmount, address _dest, uint256 _minConversionAmount)'
+		],
+
 		userInputTypes: [
 			InputType.Token,
 			InputType.TokenAmount,
@@ -140,21 +159,44 @@ export const ATYPES = [
 ];
 
 // Add network to tokenList
+// Rinkeby
+// export const TOKEN_LIST = [
+// 	{
+// 		address: '0x732fBA98dca813C3A630b53a8bFc1d6e87B1db65',
+// 		symbol: 'OMG',
+// 		name: 'OmiseGo',
+// 		decimals: 18
+// 	},
+// 	{
+// 		address: '0x725d648E6ff2B8C44c96eFAEa29b305e5bb1526a',
+// 		symbol: 'MANA',
+// 		name: 'MANA',
+// 		decimals: 18
+// 	},
+// 	{
+// 		address: '0x6FA355a7b6bD2D6bD8b927C489221BFBb6f1D7B2',
+// 		symbol: 'KNC',
+// 		name: 'Kyber Network',
+// 		decimals: 18
+// 	}
+// ];
+
+// Ropsten
 export const TOKEN_LIST = [
 	{
-		address: '0x732fBA98dca813C3A630b53a8bFc1d6e87B1db65',
+		address: '0x4BFBa4a8F28755Cb2061c413459EE562c6B9c51b',
 		symbol: 'OMG',
 		name: 'OmiseGo',
 		decimals: 18
 	},
 	{
-		address: '0x725d648E6ff2B8C44c96eFAEa29b305e5bb1526a',
+		address: '0x72fd6C7C1397040A66F33C2ecC83A0F71Ee46D5c',
 		symbol: 'MANA',
 		name: 'MANA',
 		decimals: 18
 	},
 	{
-		address: '0x6FA355a7b6bD2D6bD8b927C489221BFBb6f1D7B2',
+		address: '0x4E470dc7321E84CA96FcAEDD0C8aBCebbAEB68C6',
 		symbol: 'KNC',
 		name: 'Kyber Network',
 		decimals: 18
@@ -163,7 +205,7 @@ export const TOKEN_LIST = [
 
 /*
 export const LIST = {
-	conditions: {
+	triggers: {
 		Your Wallet: {
 			tokenBalance: {
 				title: "Token Balance",

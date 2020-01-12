@@ -1,7 +1,7 @@
 import React, { Dispatch } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { InputType, ConditionOrAction } from '../constants/interfaces';
+import { InputType, TriggerOrAction } from '../constants/interfaces';
 import DateAndTimePicker from './Inputs/DatePicker';
 import TokenSelect from './Inputs/TokenSelect';
 import { useIcedTxContext } from '../state/GlobalState';
@@ -35,7 +35,7 @@ interface InputProps {
 	inputType: InputType;
 	label: string;
 	index: number;
-	conditionOrAction: ConditionOrAction;
+	triggerOrAction: TriggerOrAction;
 	inputs: Array<string | number | ethers.utils.BigNumber>;
 	app: string;
 	disabled: boolean;
@@ -48,7 +48,7 @@ export default function LayoutTextFields(props: InputProps) {
 		inputType,
 		label,
 		index,
-		conditionOrAction,
+		triggerOrAction,
 		inputs,
 		disabled
 	} = props;
@@ -56,7 +56,7 @@ export default function LayoutTextFields(props: InputProps) {
 	const { dispatch, icedTxState } = useIcedTxContext();
 
 	// updateUser Input
-	const updateConditionInputs = (index: number, value: any) => {
+	const updateTriggerInputs = (index: number, value: any) => {
 		// Default Index => @DEV Restructure Dispatcher later
 		dispatch({ type: UPDATE_CONDITION_INPUTS, index, value });
 	};
@@ -66,11 +66,11 @@ export default function LayoutTextFields(props: InputProps) {
 		dispatch({ type: UPDATE_ACTION_INPUTS, index, value });
 	};
 
-	// Based on whether the input is a condition or action, select a different dispatch function
+	// Based on whether the input is a trigger or action, select a different dispatch function
 	let updateUserInput: Function;
 	updateUserInput =
-		conditionOrAction === ConditionOrAction.Condition
-			? updateConditionInputs
+		triggerOrAction === TriggerOrAction.Trigger
+			? updateTriggerInputs
 			: updateActionInputs;
 
 	// CSS Classes
@@ -94,8 +94,8 @@ export default function LayoutTextFields(props: InputProps) {
 			case 'Kyber':
 				// If user inputted price is greater than current price, return true, otherwise false
 				if (
-					icedTxState.condition.userInputs[3] >
-					icedTxState.condition.userInputs[5]
+					icedTxState.trigger.userInputs[3] >
+					icedTxState.trigger.userInputs[5]
 				) {
 					updateUserInput(index, true);
 				} else {
@@ -105,8 +105,9 @@ export default function LayoutTextFields(props: InputProps) {
 	}
 
 	// If user already inputted values, prefill inputs from state, otherwise display the default values
-	// œDEV make default values specific for each condition and action, not global
+	// œDEV make default values specific for each trigger and action, not global
 	function returnDefaultValue(): string | number {
+		console.log(inputs);
 		// If user has inputted something, go in here
 		if (inputs[0] !== undefined) {
 			if (inputs[index] !== undefined) {
@@ -150,6 +151,10 @@ export default function LayoutTextFields(props: InputProps) {
 					if (index !== 0) defaultToken = TOKEN_LIST[1];
 					updateUserInput(index, defaultToken.address);
 					return defaultToken.address;
+				case InputType.Date:
+					const date = new Date();
+					const timestamp = date.getTime();
+					return (timestamp / 1000).toString();
 				default:
 					return 'error';
 			}
@@ -185,6 +190,7 @@ export default function LayoutTextFields(props: InputProps) {
 							label={label}
 							index={index}
 							disabled={disabled}
+							defaultValue={returnDefaultValue()}
 						></DateAndTimePicker>
 					</div>
 				);
@@ -194,7 +200,7 @@ export default function LayoutTextFields(props: InputProps) {
 						<TokenSelect
 							defaultToken={returnStringDefaultValue()}
 							index={index}
-							conditionOrAction={conditionOrAction}
+							triggerOrAction={triggerOrAction}
 							label={label}
 							disabled={disabled}
 						/>
@@ -212,6 +218,7 @@ export default function LayoutTextFields(props: InputProps) {
 							inputs={inputs}
 							defaultValue={returnDefaultValue()}
 							convertToWei
+							disabled={disabled}
 						></ReactNumberFormat>
 					</div>
 				);
@@ -226,6 +233,7 @@ export default function LayoutTextFields(props: InputProps) {
 							inputs={inputs}
 							defaultValue={returnDefaultValue()}
 							convertToWei={false}
+							disabled={disabled}
 						></ReactNumberFormat>
 						{/* <TextField
 							className={classes.root}

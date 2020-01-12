@@ -11,11 +11,14 @@ import MobileStepper from '../components/MobileStepper';
 // Types
 import { RouteComponentProps } from 'react-router-dom';
 import { useIcedTxContext } from '../state/GlobalState';
-import { findConditionById, findActionById } from '../helpers/helpers';
+import { findTriggerById, findActionById } from '../helpers/helpers';
 import {
 	SELECT_CONDITION,
 	SELECT_ACTION,
-	UPDATE_TX_STATE
+	UPDATE_TX_STATE,
+	OPEN_MODAL,
+	CLOSE_MODAL,
+	SELECTED_CHAIN_ID
 } from '../constants/constants';
 import TransactionModal from '../components/Modal';
 import { TxState, ChainIds } from '../constants/interfaces';
@@ -28,7 +31,7 @@ import ERC20_ABI from '../constants/abis/erc20.json';
 import { useGelatoCore } from '../hooks/hooks';
 
 interface Params {
-	conditionId: string;
+	triggerId: string;
 	actionId: string;
 }
 
@@ -36,7 +39,7 @@ interface Params {
 
 export default function Create({ match }: RouteComponentProps<Params>) {
 	const {
-		params: { conditionId, actionId }
+		params: { triggerId, actionId }
 	} = match;
 	const { icedTxState, dispatch } = useIcedTxContext();
 
@@ -51,27 +54,27 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 
 	// When component renders, 1) Check that icedTx state exist, if not 2) check if correct params were inputted in URL, if not, 3) setNotFound = true
 	useEffect(() => {
-		if (icedTxState.condition.id === 0 || icedTxState.action.id === 0) {
+		if (icedTxState.trigger.id === 0 || icedTxState.action.id === 0) {
 			// See if inputted params in URL exist in whitelist
-			// console.log(conditionId, actionId)
-			const paramCondition = findConditionById(conditionId);
+			// console.log(triggerId, actionId)
+			const paramTrigger = findTriggerById(triggerId);
 			const paramAction = findActionById(actionId);
-			// console.log(paramCondition)
+			// console.log(paramTrigger)
 			// console.log(paramAction)
-			if (paramCondition.id === 0 || paramAction.id === 0) {
+			if (paramTrigger.id === 0 || paramAction.id === 0) {
 				// Render IcedTx not found
 				setNotFound(true);
 			} else {
 				// updateIcedTx(
-				// 	ConditionOrAction.Condition,
-				// 	paramCondition.id.toString()
+				// 	TriggerOrAction.Trigger,
+				// 	paramTrigger.id.toString()
 				// );
 				dispatch({
 					type: SELECT_CONDITION,
-					id: paramCondition.id.toString()
+					id: paramTrigger.id.toString()
 				});
 				// updateIcedTx(
-				// 	ConditionOrAction.Action,
+				// 	TriggerOrAction.Action,
 				// 	paramAction.id.toString()
 				// );
 				dispatch({
@@ -103,21 +106,8 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 	};
 
 	function getSteps() {
-		return ['Set Condition', 'Set Action', 'Create IcedTx'];
+		return ['Set Trigger', 'Set Action', 'Create IcedTx'];
 	}
-
-	// MODAL STUFF
-
-	// Modal Stuff
-	const [modalOpen, setModalOpen] = React.useState(false);
-
-	const modalClickOpen = () => {
-		setModalOpen(true);
-	};
-
-	const modalClose = () => {
-		setModalOpen(false);
-	};
 
 	// ########################### Checks before minting
 	const preTxCheck = () => {
@@ -155,10 +145,10 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 				// User is already logged in => Change to insufficientBalance
 				if (web3.active) {
 					// Check if the object is injected by metamask
-					console.log('Change TxState to insufficientBalance');
+					console.log('Change TxState to displayWrongNetwork');
 					dispatch({
 						type: UPDATE_TX_STATE,
-						txState: TxState.insufficientBalance
+						txState: TxState.displayWrongNetwork
 					});
 				} else {
 					// No Metamask installed => Show install Metamask Modal
@@ -167,7 +157,24 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 
 				break;
 
-			// 3. Check if user has sufficient ETH Balance
+			// 3. Check if user is connected to the correct network
+			case TxState.displayWrongNetwork:
+				// User is already logged in => Change to insufficientBalance
+				if (web3.chainId === SELECTED_CHAIN_ID) {
+					// Check if the object is injected by metamask
+					console.log('Change TxState to insufficientBalance');
+					dispatch({
+						type: UPDATE_TX_STATE,
+						txState: TxState.insufficientBalance
+					});
+				} else {
+					// No Metamask installed => Show install Metamask Modal
+					console.log('User has to switch networks');
+				}
+
+				break;
+
+			// 4. Check if user has sufficient ETH Balance
 			case TxState.insufficientBalance:
 				// User is already logged in => Change to insufficientBalance
 				web3.library
@@ -192,9 +199,11 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 						}
 					});
 				break;
-			// 4. Check if user has gelato proxy
+
+			// 5. Check if user has gelato proxy
 			case TxState.displayGelatoWallet:
 				// User is already logged in => Change to insufficientBalance
+				console.log('Checking if user is registered');
 				gelatoCore.isUser(web3.account).then((result: boolean) => {
 					const isUser = result;
 					// User has Proxy
@@ -209,6 +218,7 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 
 				// let proxyAddress = await gelatoCore.useProxyOfUser(context.account)
 				break;
+			// 6. Display Approve
 			case TxState.displayApprove:
 				if (activeStep === 2) {
 					// User is already logged in => Change to insufficientBalance
@@ -256,11 +266,32 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 				break;
 			default:
 				console.log('default');
+				if (
+					icedTxState.txState === TxState.displayCancel ||
+					icedTxState.txState === TxState.preCancel ||
+					icedTxState.txState === TxState.postCancel
+				) {
+					console.log('User wanted to cancel, refresh txState');
+					dispatch({
+						type: UPDATE_TX_STATE,
+						txState: TxState.displayInstallMetamask
+					});
+				}
 		}
 
 		// 5. Check if user has sufficient token approval
 
 		// 6. READY to mint
+	};
+
+	const modalOpen = icedTxState.modalOpen;
+	const modalClickOpen = () => {
+		console.log('setting modal to true');
+		dispatch({ type: OPEN_MODAL });
+		console.log(modalOpen);
+	};
+	const modalClose = () => {
+		dispatch({ type: CLOSE_MODAL });
 	};
 
 	useEffect(() => {
@@ -312,14 +343,12 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 					<h1> 404 - Page not found. Please return to homepage</h1>
 				)}
 			</Grid>
-			<TransactionModal
-				txState={icedTxState.txState}
-				title={'Confirm in Metamask'}
+			{/* <TransactionModal
 				modalOpen={modalOpen}
 				modalClickOpen={modalClickOpen}
 				modalClose={modalClose}
 				icedTxState={icedTxState}
-			></TransactionModal>
+			></TransactionModal> */}
 		</React.Fragment>
 	);
 }

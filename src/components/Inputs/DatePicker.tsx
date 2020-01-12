@@ -36,6 +36,7 @@ interface InputProps {
 	index: number;
 	label: string;
 	disabled: boolean;
+	defaultValue: string | number;
 }
 
 const materialTheme = createMuiTheme({
@@ -87,28 +88,48 @@ interface TextFieldWrapProps {
 	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	value: Date;
 	label: string;
+	disabled: boolean;
 }
 
 const TextFieldWrap = (props: TextFieldWrapProps) => {
 	const labelClasses = useInputStyles();
-	const { setOpen, value, label } = props;
+	const { setOpen, value, label, disabled } = props;
 
 	return (
 		<FormControl style={{ width: '100%' }}>
-			<TextField
-				placeholder={'placeholder'}
-				className={labelClasses.root}
-				fullWidth
-				margin="normal"
-				InputLabelProps={{
-					shrink: true
-				}}
-				variant="outlined"
-				onClick={() => setOpen(true)}
-				defaultValue={value}
-				id="outlined-full-width"
-				label={label}
-			/>
+			{!disabled && (
+				<TextField
+					placeholder={'placeholder'}
+					className={labelClasses.root}
+					fullWidth
+					margin="normal"
+					InputLabelProps={{
+						shrink: true
+					}}
+					variant="outlined"
+					onClick={() => setOpen(true)}
+					defaultValue={value}
+					id="outlined-full-width"
+					label={label}
+					disabled={disabled}
+				/>
+			)}
+			{disabled && (
+				<TextField
+					placeholder={'placeholder'}
+					className={labelClasses.root}
+					fullWidth
+					margin="normal"
+					InputLabelProps={{
+						shrink: true
+					}}
+					variant="outlined"
+					defaultValue={value}
+					id="outlined-full-width"
+					label={label}
+					disabled={disabled}
+				/>
+			)}
 		</FormControl>
 	);
 };
@@ -116,24 +137,17 @@ const TextFieldWrap = (props: TextFieldWrapProps) => {
 // #################################################
 
 export default function DateAndTimePicker(props: InputProps) {
-	const { index, label, disabled } = props;
+	const { index, label, defaultValue, disabled } = props;
 	// @DEV TO DO:
 	// SET MIN AND MAX DATE, see api https://material-ui-pickers.dev/api/DateTimePicker
 
 	const { dispatch, icedTxState } = useIcedTxContext();
 	// Set state with either NOW or global state
-	let defaultDate;
+	const defaultDate = timestampToDate(defaultValue);
 
-	if (icedTxState.condition.userInputs[index] === undefined) {
-		defaultDate = new Date();
-	} else {
-		defaultDate = icedTxState.condition.userInputs[index];
-
-		// @DEV only works with toString() Due to function not accepting BigNumbers. SHould not be a problem though
-		defaultDate = timestampToDate(defaultDate.toString());
-	}
 	const [selectedDate, handleDateChange] = useState(defaultDate);
 
+	// @DEV DO we need that useEffect?
 	React.useEffect(() => {
 		// Set state wih default token
 		dispatch({
@@ -145,7 +159,7 @@ export default function DateAndTimePicker(props: InputProps) {
 		// updateUserInput(
 		// 	index,
 		// 	dateToTimestamp(selectedDate),
-		// 	ConditionOrAction.Condition
+		// 	TriggerOrAction.Trigger
 		// );
 	}, []);
 
@@ -155,11 +169,11 @@ export default function DateAndTimePicker(props: InputProps) {
 			const stringDate: string = date.toString();
 			const newDate = new Date(stringDate);
 
-			// index: number, value: number, conditionOrAction
+			// index: number, value: number, triggerOrAction
 			// updateUserInput(
 			// 	index,
 			// 	dateToTimestamp(newDate),
-			// 	ConditionOrAction.Condition
+			// 	TriggerOrAction.Trigger
 			// );
 			dispatch({
 				type: UPDATE_CONDITION_INPUTS,
@@ -195,7 +209,6 @@ export default function DateAndTimePicker(props: InputProps) {
 					<DateTimePicker
 						open={isOpen}
 						onClose={() => setIsOpen(false)}
-						disabled={disabled}
 						label={label}
 						style={{ width: '100%' }}
 						inputVariant="outlined"
@@ -211,6 +224,7 @@ export default function DateAndTimePicker(props: InputProps) {
 								setOpen={setIsOpen}
 								value={selectedDate}
 								label={label}
+								disabled={disabled}
 								// {...props}
 								// name={name}
 								// input={{

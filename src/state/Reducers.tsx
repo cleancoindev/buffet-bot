@@ -1,12 +1,13 @@
 // Import Interfaces
 import {
-	ConditionOrAction,
+	TriggerOrAction,
 	IcedTx,
 	Action,
 	ActionWhitelistData,
-	ConditionWhitelistData
+	TriggerWhitelistData,
+	TxState
 } from '../constants/interfaces';
-import { findConditionById, findActionById } from '../helpers/helpers';
+import { findTriggerById, findActionById } from '../helpers/helpers';
 import {
 	RESET_CONDITION,
 	SELECT_CONDITION,
@@ -17,19 +18,22 @@ import {
 	UPDATE_TX_STATE,
 	DEFAULT_DATA_CONDITION,
 	DEFAULT_DATA_ACTION,
-	UPDATE_PAST_TRANSACTIONS
+	UPDATE_PAST_TRANSACTIONS,
+	OPEN_MODAL,
+	CLOSE_MODAL,
+	CANCEL_EXECUTION_CLAIM
 } from '../constants/constants';
 
 function updateIcedTx(
 	state: IcedTx,
-	conditionOrAction: ConditionOrAction,
+	triggerOrAction: TriggerOrAction,
 	id: string
 ) {
 	let varName = '';
-	let updatedData: ActionWhitelistData | ConditionWhitelistData;
-	if (conditionOrAction === ConditionOrAction.Condition) {
-		updatedData = findConditionById(id);
-		varName = 'condition';
+	let updatedData: ActionWhitelistData | TriggerWhitelistData;
+	if (triggerOrAction === TriggerOrAction.Trigger) {
+		updatedData = findTriggerById(id);
+		varName = 'trigger';
 	} else {
 		updatedData = findActionById(id);
 		varName = 'action';
@@ -42,23 +46,23 @@ function updateUserInput(
 	state: IcedTx,
 	index: number,
 	value: any,
-	conditionOrAction: ConditionOrAction
+	triggerOrAction: TriggerOrAction
 ) {
 	// Update userInputArray
 	const stateCopy = state;
-	if (conditionOrAction === ConditionOrAction.Condition) {
-		stateCopy.condition.userInputs[index] = value;
+	if (triggerOrAction === TriggerOrAction.Trigger) {
+		stateCopy.trigger.userInputs[index] = value;
 	} else {
 		stateCopy.action.userInputs[index] = value;
 	}
 	return stateCopy;
 }
 
-function resetIcedTx(state: IcedTx, conditionOrAction: ConditionOrAction) {
+function resetIcedTx(state: IcedTx, triggerOrAction: TriggerOrAction) {
 	const stateCopy = state;
-	if (conditionOrAction === ConditionOrAction.Condition) {
-		stateCopy.condition = DEFAULT_DATA_CONDITION;
-	} else if (conditionOrAction === ConditionOrAction.Action) {
+	if (triggerOrAction === TriggerOrAction.Trigger) {
+		stateCopy.trigger = DEFAULT_DATA_CONDITION;
+	} else if (triggerOrAction === TriggerOrAction.Action) {
 		stateCopy.action = DEFAULT_DATA_ACTION;
 	}
 	// console.log("reset")
@@ -79,41 +83,41 @@ export const SELECT_ACTION = 'SELECT_ACTION';
 export const icedTxReducer = (state: IcedTx, action: Action) => {
 	switch (action.type) {
 		case SELECT_CONDITION:
-			return updateIcedTx(state, ConditionOrAction.Condition, action.id);
+			return updateIcedTx(state, TriggerOrAction.Trigger, action.id);
 		case SELECT_ACTION:
-			return updateIcedTx(state, ConditionOrAction.Action, action.id);
+			return updateIcedTx(state, TriggerOrAction.Action, action.id);
 		case UPDATE_CONDITION_INPUTS:
 			return updateUserInput(
 				state,
 				action.index,
 				action.value,
-				ConditionOrAction.Condition
+				TriggerOrAction.Trigger
 			);
 		case UPDATE_ACTION_INPUTS:
 			return updateUserInput(
 				state,
 				action.index,
 				action.value,
-				ConditionOrAction.Action
+				TriggerOrAction.Action
 			);
 		case RESET_CONDITION:
-			return resetIcedTx(state, ConditionOrAction.Condition);
+			return resetIcedTx(state, TriggerOrAction.Trigger);
 		case RESET_ACTION:
-			return resetIcedTx(state, ConditionOrAction.Action);
+			return resetIcedTx(state, TriggerOrAction.Action);
 		case UPDATE_TX_STATE:
 			return { ...state, txState: action.txState };
 		case UPDATE_PAST_TRANSACTIONS:
 			return { ...state, pastTransactions: action.pastTransactions };
-		// case ADD_USER_INPUT:
-		// 	return updateUserInput(
-		// 		state,
-		// 		action.index,
-		// 		action.value,
-		// 		action.conditionOrAction
-		// 	);
-		// case RESET_ACTION_CONDITION_TO_DEFAULT:
-		// 	return resetIcedTx(action.conditionOrAction, state);
-		// default:
-		// 	return state;
+		case OPEN_MODAL:
+			return { ...state, modalOpen: true };
+		case CLOSE_MODAL:
+			return { ...state, modalOpen: false };
+		case CANCEL_EXECUTION_CLAIM:
+			return {
+				...state,
+				pastTransactionId: action.pastTransactionId,
+				modalOpen: true,
+				txState: TxState.displayCancel
+			};
 	}
 };

@@ -4,9 +4,9 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 import {
-	ConditionWhitelistData,
+	TriggerWhitelistData,
 	ActionWhitelistData,
-	ConditionOrAction
+	TriggerOrAction
 } from '../constants/interfaces';
 import { useIcedTxContext } from '../state/GlobalState';
 import {
@@ -34,37 +34,37 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface AppDropdownProps {
-	data: Array<ConditionWhitelistData | ActionWhitelistData>;
-	conditionOrAction: number;
+	data: Array<TriggerWhitelistData | ActionWhitelistData>;
+	triggerOrAction: number;
 	app: boolean;
-	updateConditionOrAction: Function;
+	updateTriggerOrAction: Function;
 }
 
 export default function AppDropdown(props: AppDropdownProps) {
-	const { app, data, conditionOrAction, updateConditionOrAction } = props;
+	const { app, data, triggerOrAction, updateTriggerOrAction } = props;
 	const { dispatch } = useIcedTxContext();
 	const classes = useStyles();
 	const [state, setState] = React.useState('');
 
 	// Dispatch Reducer
-	const selectCondition = (id: string) => {
-		updateConditionOrAction(ConditionOrAction.Condition, id);
+	const selectTrigger = (id: string) => {
+		updateTriggerOrAction(TriggerOrAction.Trigger, id);
 	};
 	const selectAction = (id: string) => {
-		updateConditionOrAction(ConditionOrAction.Action, id);
+		updateTriggerOrAction(TriggerOrAction.Action, id);
 	};
 
 	const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
 		// @DEV potential BUG
 		if (app) {
 			setState(`${event.target.value}`);
-			// IF condition, update condition, else update action
-			conditionOrAction === ConditionOrAction.Condition
-				? selectCondition(`${event.target.value}`)
+			// IF trigger, update trigger, else update action
+			triggerOrAction === TriggerOrAction.Trigger
+				? selectTrigger(`${event.target.value}`)
 				: selectAction(`${event.target.value}`);
 		} else {
 			const functionId = `${event.target.value}`;
-			if (conditionOrAction === ConditionOrAction.Condition) {
+			if (triggerOrAction === TriggerOrAction.Trigger) {
 				dispatch({ type: SELECT_CONDITION, id: functionId });
 			} else {
 				dispatch({ type: SELECT_ACTION, id: functionId });
@@ -74,7 +74,7 @@ export default function AppDropdown(props: AppDropdownProps) {
 	};
 
 	function getApps(
-		appList: Array<ConditionWhitelistData | ActionWhitelistData>
+		appList: Array<TriggerWhitelistData | ActionWhitelistData>
 	) {
 		const appTitles = appList.map(item => item.app);
 		return appTitles.filter(

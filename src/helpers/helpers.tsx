@@ -11,12 +11,7 @@ export function stringifyTimestamp(timestamp: string) {
 	return `${date.toLocaleDateString()} - ${date.toLocaleTimeString()}`;
 }
 
-export function decodePayload(payload: string, inputTypes: Array<Params>) {
-	// do ethers.js decoding like in well timed
-	return ['0x0', '0x1', '1', '1200'];
-}
-
-export function findConditionById(id: string) {
+export function findTriggerById(id: string) {
 	let returnData = DEFAULT_DATA_CONDITION;
 
 	CTYPES.forEach(type => {
@@ -27,11 +22,14 @@ export function findConditionById(id: string) {
 	return returnData;
 }
 
-export function findConditionByAddress(address: string) {
+export function findTriggerByAddress(address: string) {
 	let returnData = DEFAULT_DATA_CONDITION;
 
 	CTYPES.forEach(type => {
-		if (type.address === address) {
+		if (
+			ethers.utils.getAddress(type.address) ===
+			ethers.utils.getAddress(address)
+		) {
 			returnData = type;
 		}
 	});
@@ -51,7 +49,10 @@ export function findActionById(id: string) {
 export function findActionByAddress(address: string) {
 	let returnData = DEFAULT_DATA_ACTION;
 	ATYPES.forEach(type => {
-		if (type.address === address) {
+		if (
+			ethers.utils.getAddress(type.address) ===
+			ethers.utils.getAddress(address)
+		) {
 			returnData = type;
 		}
 	});
@@ -65,9 +66,13 @@ export function getTokenSymbol(address: string) {
 
 // @DEV Potenital bug in returning error string
 export function getTokenByAddress(address: string) {
-	const token = TOKEN_LIST.find(token => token.address === address);
+	const token = TOKEN_LIST.find(
+		token =>
+			ethers.utils.getAddress(token.address) ===
+			ethers.utils.getAddress(address)
+	);
 	if (token === undefined) {
-		throw Error('Could not find Token with selected addrress');
+		throw Error(`Could not find Token with address ${address}`);
 	} else {
 		return token;
 	}
@@ -75,23 +80,19 @@ export function getTokenByAddress(address: string) {
 
 export function encodeActionPayload(
 	userInput: Array<string | number | ethers.utils.BigNumber>,
-	inputParameter: Array<Params>,
-	user: string
+	abi: Array<string>,
+	user: string,
+	userProxy: string
 ) {
-	const actionKyberTradeABI = [
-		{
-			name: 'action',
-			type: 'function',
-			inputs: inputParameter
-		}
-	];
-	const iFace = new utils.Interface(actionKyberTradeABI);
+	const iFace = new utils.Interface(abi);
 	//@DEV CHANGE UINT inputs into BigNumbers
 
 	// Insert user address into userInput Array at index 0
 	// Make copy to not change global userInput variable
 	const copyUserInput = [...userInput];
 	copyUserInput.splice(0, 0, user);
+	copyUserInput.splice(1, 0, userProxy);
+	console.log(copyUserInput);
 
 	const actionPayloadWithSelector = iFace.functions.action.encode(
 		copyUserInput
@@ -102,19 +103,47 @@ export function encodeActionPayload(
 
 export function encodeTriggerPayload(
 	userInput: Array<string | number | ethers.utils.BigNumber>,
-	inputParameter: Array<Params>
+	abi: Array<string>
 ) {
-	const triggerTimestampPassedABI = [
-		{
-			name: 'fired',
-			type: 'function',
-			inputs: inputParameter
-		}
-	];
-	const iFace = new utils.Interface(triggerTimestampPassedABI);
-	const timestamp = '0';
+	const iFace = new utils.Interface(abi);
 
 	const triggerPayloadWithSelector = iFace.functions.fired.encode(userInput);
 
 	return triggerPayloadWithSelector;
+}
+
+export function decodeActionPayload(
+	payload: string,
+	inputParameter: Array<Params>
+) {
+	const decodedPayload = ethers.utils.defaultAbiCoder.decode(
+		paramsToSimpleParams(inputParameter),
+		ethers.utils.hexDataSlice(payload, 4)
+	);
+
+	// Delete Index 0 and 1 (user address and proxy address), as those will not be displayed
+	decodedPayload.splice(0, 1);
+	decodedPayload.splice(0, 1);
+	return decodedPayload;
+}
+
+export function decodeTriggerPayload(
+	payload: string,
+	inputParameter: Array<Params>
+) {
+	const decodedPayload = ethers.utils.defaultAbiCoder.decode(
+		paramsToSimpleParams(inputParameter),
+		ethers.utils.hexDataSlice(payload, 4)
+	);
+	console.log(decodedPayload);
+
+	return decodedPayload;
+}
+
+export function paramsToSimpleParams(inputParameter: Array<Params>) {
+	let simpleParams: Array<string> = [];
+	inputParameter.forEach(parameter => {
+		simpleParams.push(parameter.type);
+	});
+	return simpleParams;
 }
