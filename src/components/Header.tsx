@@ -196,7 +196,7 @@ export default function ButtonAppBar() {
 					{/* <Link className={classes.menuButton} to="/"> */}
 					<div className={classes.menuButton}>
 						<img
-							src="./logo192.png"
+							src="./Gelato_Logo.png"
 							alt="logo"
 							style={{
 								width: '40px',

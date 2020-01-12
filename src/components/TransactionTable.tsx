@@ -37,56 +37,6 @@ import {
 import { useWeb3React } from '@web3-react/core';
 import { useGelatoCore } from '../hooks/hooks';
 
-/*
-Event from SC
-
- // =============
-	emit LogExecutionClaimMinted(
-		_selectedExecutor,
-		executionClaimId,
-		userProxy,
-		_trigger,
-		_triggerPayloadWithSelector,
-		_action,
-		_actionPayloadWithSelector,
-		triggerGasActionTotalGasMinExecutionGas,
-		executionClaimExpiryDate,
-		msg.value
-);
-
-What is needed:
-- executionClaimId
-- userProxy (used to filter, should be done by GraphQL)
-- trigger address => identifier for trigger
-- action address => idendifier for action
-- trigger payload, value to decode
-- action payload, same
-- Block number => to get creation date
-- Expiry Date - maybe
-- Prepayment - maybe
-*/
-
-// const rows = [
-// 	createData(
-// 		'1',
-// 		'Price on Kyber',
-// 		'Sell on Kyber',
-// 		'11.12.2019 - 12:00',
-// 		'waiting',
-// 		'VIEW',
-// 		'CANCEL'
-// 	),
-// 	createData(
-// 		'2',
-// 		'Increase in Tokens on your Wallet',
-// 		'Sell on Kyber',
-// 		'11.12.2019 - 12:00',
-// 		'waiting',
-// 		'VIEW',
-// 		'CANCEL'
-// 	)
-// ];
-
 function desc<T>(a: T, b: T, orderBy: keyof T) {
 	if (b[orderBy] < a[orderBy]) {
 		return -1;
@@ -160,7 +110,7 @@ const headCells: HeadCell[] = [
 		id: 'id',
 		numeric: true,
 		disablePadding: false,
-		label: 'id'
+		label: '#'
 	},
 	{
 		id: 'trigger',
@@ -213,12 +163,16 @@ const StyledTableCell = withStyles((theme: Theme) =>
 			// backgroundColor: theme.palette.common.white,
 			background: 'none',
 			color: 'white',
-			...BOX
+			fontWeight: 'bold',
+			borderBottom: `1.5px solid ${COLOURS.salmon}`
+			// borderRight: `1.5px solid ${COLOURS.salmon}`
+			// ...BOX
 		},
 		body: {
 			fontSize: 14,
 			color: 'white',
-			...BOX
+			borderBottom: `1.5px solid ${COLOURS.salmon}`,
+			borderRadius: '1px 1px 1px 1px'
 		}
 	})
 )(TableCell);
@@ -228,7 +182,7 @@ const StyledTableRow = withStyles((theme: Theme) =>
 		root: {
 			'&:nth-of-type(odd)': {
 				// backgroundColor: theme.palette.background.default,
-				...BOX
+				// ...BOX
 			}
 		}
 	})
@@ -308,9 +262,9 @@ const useStyles = makeStyles((theme: Theme) =>
 			marginBottom: theme.spacing(2),
 			overflowX: 'auto',
 			// minWidth: 750,
-			background: 'transparent',
-			border: `3px outset ${COLOURS.salmon}`,
-			borderRadius: '2px 2px 2px 2px'
+			background: 'transparent'
+			// border: `3px outset ${COLOURS.salmon}`,
+			// borderRadius: '2px 2px 2px 2px'
 		},
 		table: {
 			// color: 'white'
@@ -582,7 +536,7 @@ export default function EnhancedTable() {
 											selected={isItemSelected}
 										>
 											<StyledTableCell align="left">
-												{row.id}
+												{index + 1}
 											</StyledTableCell>
 											<StyledTableCell align="left">
 												{row.trigger}
