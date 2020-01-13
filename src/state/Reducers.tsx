@@ -21,7 +21,9 @@ import {
 	UPDATE_PAST_TRANSACTIONS,
 	OPEN_MODAL,
 	CLOSE_MODAL,
-	CANCEL_EXECUTION_CLAIM
+	CANCEL_EXECUTION_CLAIM,
+	INPUT_ERROR,
+	INPUT_OK
 } from '../constants/constants';
 
 function updateIcedTx(
@@ -118,6 +120,17 @@ export const icedTxReducer = (state: IcedTx, action: Action) => {
 				pastTransactionId: action.pastTransactionId,
 				modalOpen: true,
 				txState: TxState.displayCancel
+			};
+		case INPUT_ERROR:
+			return {
+				...state,
+				error: { isError: true, msg: action.msg },
+				txState: TxState.inputError
+			};
+		case INPUT_OK:
+			return {
+				...state,
+				error: { isError: false, msg: '' }
 			};
 	}
 };

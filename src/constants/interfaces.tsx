@@ -9,7 +9,9 @@ import {
 	UPDATE_PAST_TRANSACTIONS,
 	OPEN_MODAL,
 	CLOSE_MODAL,
-	CANCEL_EXECUTION_CLAIM
+	CANCEL_EXECUTION_CLAIM,
+	INPUT_ERROR,
+	INPUT_OK
 } from './constants';
 import { ethers } from 'ethers';
 
@@ -90,6 +92,12 @@ export interface IcedTx {
 	pastTransactions: Array<PastTransaction>;
 	modalOpen: boolean;
 	pastTransactionId: string;
+	error: Error;
+}
+
+export interface Error {
+	isError: boolean;
+	msg: string;
 }
 
 export enum TriggerOrAction {
@@ -162,9 +170,8 @@ export enum TxState {
 	waitingCancel,
 	postCancel,
 	cancelled,
-	insufficientBalance
-	// waitingApprove,
-	// postApprove,
+	insufficientBalance,
+	inputError
 }
 
 export type ChainIds = 1 | 3 | 4 | 42;
@@ -234,6 +241,15 @@ interface UpdateSelectedTx {
 	pastTransactionId: string;
 }
 
+interface InputError {
+	type: typeof INPUT_ERROR;
+	msg: string;
+}
+
+interface InputOk {
+	type: typeof INPUT_OK;
+}
+
 // export interface Action {
 // 	type: string;
 // 	triggerOrAction: TriggerOrAction;
@@ -253,4 +269,6 @@ export type Action =
 	| UpdatePastTransactions
 	| OpenModal
 	| CloseModal
-	| UpdateSelectedTx;
+	| UpdateSelectedTx
+	| InputError
+	| InputOk;

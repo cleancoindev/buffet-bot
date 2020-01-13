@@ -8,7 +8,9 @@ import { useIcedTxContext } from '../state/GlobalState';
 import {
 	UPDATE_CONDITION_INPUTS,
 	UPDATE_ACTION_INPUTS,
-	INPUT_CSS
+	INPUT_CSS,
+	INPUT_ERROR,
+	INPUT_OK
 } from '../constants/constants';
 import { TOKEN_LIST } from '../constants/whitelist';
 import { ethers } from 'ethers';
@@ -54,6 +56,11 @@ export default function LayoutTextFields(props: InputProps) {
 	} = props;
 	// Context
 	const { dispatch, icedTxState } = useIcedTxContext();
+
+	// Error Bool, default false
+	// Applied to:
+	// // Address
+	const [error, setError] = React.useState(false);
 
 	// updateUser Input
 	const updateTriggerInputs = (index: number, value: any) => {
@@ -183,6 +190,25 @@ export default function LayoutTextFields(props: InputProps) {
 
 	const handleAddressChange = (event: React.ChangeEvent<{ value: any }>) => {
 		const newAddress = event.target.value;
+
+		// Validate address
+		try {
+			ethers.utils.getAddress(newAddress);
+			setError(false);
+			if (icedTxState.error.isError) {
+				dispatch({ type: INPUT_OK });
+			}
+		} catch (error) {
+			setError(true);
+			if (!icedTxState.error.isError) {
+				console.log('Error');
+				dispatch({
+					type: INPUT_ERROR,
+					msg: `Please fix the address for input field: '${label}'`
+				});
+			}
+		}
+
 		// Update global state
 		updateUserInput(index, newAddress);
 		//
@@ -298,6 +324,7 @@ export default function LayoutTextFields(props: InputProps) {
 							label={label}
 							defaultValue={returnDefaultValue()}
 							onChange={handleAddressChange}
+							error={error}
 							// helperText="Full width!"
 							// Import TextField CSS
 							margin="normal"

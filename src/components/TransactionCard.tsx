@@ -902,6 +902,23 @@ export default function TransactionCard(props: TxCardProps) {
 						modalClose();
 					}
 				};
+			case TxState.inputError:
+				return {
+					title: `${icedTxState.error.msg}`,
+					progress: Progress.cancelled,
+					progressText: `Please check all inputs again`,
+					prepayment: false,
+					closeBtn: false,
+					btn: 'OK',
+					btnFunc: () => {
+						console.log('Change TxState to insufficientBalance');
+						dispatch({
+							type: UPDATE_TX_STATE,
+							txState: TxState.insufficientBalance
+						});
+						modalClose();
+					}
+				};
 			default:
 				return {
 					title: `DEFAULT VALUE`,
@@ -1038,6 +1055,7 @@ export default function TransactionCard(props: TxCardProps) {
 					</Grid>
 				)}
 				{txState !== TxState.cancelled &&
+					txState !== TxState.inputError &&
 					txState > TxState.displayLogIntoMetamask &&
 					txState !== TxState.displayWrongNetwork && (
 						<Grid
@@ -1128,6 +1146,7 @@ export default function TransactionCard(props: TxCardProps) {
 					)}
 				{txState !== TxState.postCreate &&
 					txState !== TxState.cancelled &&
+					txState !== TxState.inputError &&
 					txState !== TxState.displayWrongNetwork &&
 					txState > TxState.displayLogIntoMetamask && (
 						<React.Fragment>
@@ -1236,17 +1255,13 @@ export default function TransactionCard(props: TxCardProps) {
 							}}
 						>
 							<h4 style={{ margin: '0px' }}>
-								If the{' '}
+								If the trigger{' '}
 								<span style={{ color: COLOURS.salmon }}>
 									{icedTxState.trigger.title}
 								</span>{' '}
-								trigger you chose is fired, gelato will{' '}
+								is activated, gelato will{' '}
 								<span style={{ color: COLOURS.salmon }}>
 									{icedTxState.action.title}
-								</span>{' '}
-								on{' '}
-								<span style={{ color: COLOURS.salmon }}>
-									{icedTxState.action.app}
 								</span>{' '}
 								on your behalf
 							</h4>

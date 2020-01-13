@@ -30,7 +30,8 @@ export const DEFAULT_ICED_TX = {
 	txState: TxState.displayInstallMetamask,
 	pastTransactions: { ...DEFAULT_PAST_TRANSACTIONS },
 	pastTransactionId: '0',
-	modalOpen: false
+	modalOpen: false,
+	error: { isError: false, msg: '' }
 };
 
 // interface InitContextProps {

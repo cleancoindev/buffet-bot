@@ -94,7 +94,14 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 	// Stepper Functions
 	function handleNext() {
 		// @ DEV INCLUDE VALIDATION, ONLY ALLOW IF ALL INPUT FIELDS HAVE BEEN VALIDATED
-		setActiveStep(prevActiveStep => prevActiveStep + 1);
+		if (!icedTxState.error.isError) {
+			setActiveStep(prevActiveStep => prevActiveStep + 1);
+			console.log('cotinrue');
+		} else {
+			// Open Modal and show error
+			console.log('openModal');
+			dispatch({ type: OPEN_MODAL });
+		}
 	}
 
 	const handleBack = () => {

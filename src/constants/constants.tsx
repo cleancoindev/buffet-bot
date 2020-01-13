@@ -119,6 +119,8 @@ export const UPDATE_PAST_TRANSACTIONS = 'UPDATE_PAST_TRANSACTIONS';
 export const OPEN_MODAL = 'OPEN_MODAL';
 export const CLOSE_MODAL = 'CLOSE_MODAL';
 export const CANCEL_EXECUTION_CLAIM = 'CANCEL_EXECUTION_CLAIM';
+export const INPUT_ERROR = 'INPUT_ERROR';
+export const INPUT_OK = 'INPUT_OK';
 
 export const INPUT_CSS = {
 	root: {
