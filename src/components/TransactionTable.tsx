@@ -171,8 +171,8 @@ const StyledTableCell = withStyles((theme: Theme) =>
 		body: {
 			fontSize: 14,
 			color: 'white',
-			borderBottom: `1.5px solid ${COLOURS.salmon}`,
-			borderRadius: '1px 1px 1px 1px'
+			borderBottom: `1.5px solid ${COLOURS.salmon}`
+			// borderRadius: '1px 1px 1px 1px'
 		}
 	})
 )(TableCell);

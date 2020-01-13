@@ -10,18 +10,10 @@ import {
 	INPUT_CSS
 } from '../../constants/constants';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-	createMuiTheme,
-	createStyles,
-	Theme,
-	TextField,
-	FormControl
-} from '@material-ui/core';
+import { createMuiTheme, TextField, FormControl } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 
-import { Overrides } from '@material-ui/core/styles/overrides';
 import { MuiPickersOverrides } from '@material-ui/pickers/typings/overrides';
-import { ethers } from 'ethers';
 
 type overridesNameToClassKey = {
 	[P in keyof MuiPickersOverrides]: keyof MuiPickersOverrides[P];
@@ -149,6 +141,7 @@ export default function DateAndTimePicker(props: InputProps) {
 
 	// @DEV DO we need that useEffect?
 	React.useEffect(() => {
+		console.log('Changing the condition State');
 		// Set state wih default token
 		dispatch({
 			type: UPDATE_CONDITION_INPUTS,

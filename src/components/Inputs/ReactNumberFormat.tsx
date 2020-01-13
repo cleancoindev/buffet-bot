@@ -82,7 +82,6 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 	) => {
 		// updateUser Input
 		const newValue = event.target.value as string;
-		console.log(newValue);
 
 		if (newValue !== '' && newValue !== '.') {
 			setValues({
@@ -105,7 +104,6 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				);
 				// console.log(weiAmount.toString());
 				// Update global state
-				console.log('updatingUserInput');
 				// If we need to convert the input from userfriendly amount to WEi amount, take the converted amount, else take the original
 				convertToWei
 					? updateUserInput(index, weiAmount)

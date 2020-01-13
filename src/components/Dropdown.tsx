@@ -64,8 +64,6 @@ export default function AppDropdown(props: AppDropdownProps) {
 		// 		? selectTrigger(`${event.target.value}`)
 		// 		: selectAction(`${event.target.value}`);
 		// } else {
-		console.log(icedTxState);
-		console.log(functionId);
 		if (triggerOrAction === TriggerOrAction.Trigger) {
 			dispatch({ type: SELECT_CONDITION, id: functionId });
 		} else {

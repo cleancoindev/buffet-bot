@@ -110,9 +110,6 @@ export default function LayoutTextFields(props: InputProps) {
 		// If user has inputted something, go in here
 		if (inputs[0] !== undefined) {
 			if (inputs[index] !== undefined) {
-				console.log('##############');
-				console.log(inputs[index]);
-				console.log('##############');
 				// If the inputted value is of inputType TokenAmount
 				if (inputType === InputType.TokenAmount) {
 					const tokenIndex = index - 1;
@@ -140,7 +137,6 @@ export default function LayoutTextFields(props: InputProps) {
 					updateUserInput(index, 1);
 					return 1;
 				case InputType.TokenAmount:
-					console.log('token amount else');
 					const oneEthInWei = ethers.constants.WeiPerEther;
 					updateUserInput(index, oneEthInWei);
 					return 1;

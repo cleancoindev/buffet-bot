@@ -121,9 +121,9 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 					// Check if the object is injected by metamask
 					if (ethereum.isMetaMask) {
 						// Yes it is metamask
-						console.log('Metamask is installed');
+						// console.log('Metamask is installed');
 						// Change txState to "Login with metamask"
-						console.log('Change TxState to displayLogIntoMetamask');
+						// console.log('Change TxState to displayLogIntoMetamask');
 						dispatch({
 							type: UPDATE_TX_STATE,
 							txState: TxState.displayLogIntoMetamask
@@ -145,14 +145,14 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 				// User is already logged in => Change to insufficientBalance
 				if (web3.active) {
 					// Check if the object is injected by metamask
-					console.log('Change TxState to displayWrongNetwork');
+					// console.log('Change TxState to displayWrongNetwork');
 					dispatch({
 						type: UPDATE_TX_STATE,
 						txState: TxState.displayWrongNetwork
 					});
 				} else {
 					// No Metamask installed => Show install Metamask Modal
-					console.log('User has to log into metamask');
+					// console.log('User has to log into metamask');
 				}
 
 				break;
@@ -162,7 +162,7 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 				// User is already logged in => Change to insufficientBalance
 				if (web3.chainId === SELECTED_CHAIN_ID) {
 					// Check if the object is injected by metamask
-					console.log('Change TxState to insufficientBalance');
+					// console.log('Change TxState to insufficientBalance');
 					dispatch({
 						type: UPDATE_TX_STATE,
 						txState: TxState.insufficientBalance
@@ -187,9 +187,9 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 						// We make initial check that user has sufficient ETH, e.g. more than 0.01ETH => Balance greater than cost of minting
 						if (hypotheticalMintingCosts.lte(userBalance)) {
 							// Change txState to displayGelatoWallet
-							console.log(
-								'Change TxState to displayGelatoWallet'
-							);
+							// console.log(
+							// 	'Change TxState to displayGelatoWallet'
+							// );
 							dispatch({
 								type: UPDATE_TX_STATE,
 								txState: TxState.displayGelatoWallet
@@ -203,12 +203,12 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 			// 5. Check if user has gelato proxy
 			case TxState.displayGelatoWallet:
 				// User is already logged in => Change to insufficientBalance
-				console.log('Checking if user is registered');
+				// console.log('Checking if user is registered');
 				gelatoCore.isUser(web3.account).then((result: boolean) => {
 					const isUser = result;
 					// User has Proxy
 					if (isUser) {
-						console.log('Change TxState to displayApprove');
+						// console.log('Change TxState to displayApprove');
 						dispatch({
 							type: UPDATE_TX_STATE,
 							txState: TxState.displayApprove
@@ -286,9 +286,8 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 
 	const modalOpen = icedTxState.modalOpen;
 	const modalClickOpen = () => {
-		console.log('setting modal to true');
+		// console.log('setting modal to true');
 		dispatch({ type: OPEN_MODAL });
-		console.log(modalOpen);
 	};
 	const modalClose = () => {
 		dispatch({ type: CLOSE_MODAL });

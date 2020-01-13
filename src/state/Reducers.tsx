@@ -16,7 +16,7 @@ import {
 	UPDATE_CONDITION_INPUTS,
 	RESET_ACTION,
 	UPDATE_TX_STATE,
-	DEFAULT_DATA_CONDITION,
+	DEFAULT_DATA_TRIGGER,
 	DEFAULT_DATA_ACTION,
 	UPDATE_PAST_TRANSACTIONS,
 	OPEN_MODAL,
@@ -49,7 +49,7 @@ function updateUserInput(
 	triggerOrAction: TriggerOrAction
 ) {
 	// Update userInputArray
-	const stateCopy = state;
+	const stateCopy = { ...state };
 	if (triggerOrAction === TriggerOrAction.Trigger) {
 		stateCopy.trigger.userInputs[index] = value;
 	} else {
@@ -59,11 +59,11 @@ function updateUserInput(
 }
 
 function resetIcedTx(state: IcedTx, triggerOrAction: TriggerOrAction) {
-	const stateCopy = state;
+	const stateCopy = { ...state };
 	if (triggerOrAction === TriggerOrAction.Trigger) {
-		stateCopy.trigger = DEFAULT_DATA_CONDITION;
+		stateCopy.trigger = { ...DEFAULT_DATA_TRIGGER };
 	} else if (triggerOrAction === TriggerOrAction.Action) {
-		stateCopy.action = DEFAULT_DATA_ACTION;
+		stateCopy.action = { ...DEFAULT_DATA_ACTION };
 	}
 	// console.log("reset")
 	return stateCopy;

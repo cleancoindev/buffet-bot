@@ -1,10 +1,17 @@
-import { ATYPES, CTYPES, TOKEN_LIST } from '../constants/whitelist';
+import { ATYPES, TTYPES, TOKEN_LIST } from '../constants/whitelist';
 import {
 	DEFAULT_DATA_ACTION,
-	DEFAULT_DATA_CONDITION
+	DEFAULT_DATA_TRIGGER,
+	EMPTY_USER_INPUT_TYPE_ARRAY
 } from '../constants/constants';
 import { utils, ethers } from 'ethers';
-import { Params } from '../constants/interfaces';
+import {
+	Params,
+	ActionWhitelistData,
+	TriggerWhitelistData,
+	InputType,
+	TriggerOrAction
+} from '../constants/interfaces';
 
 export function stringifyTimestamp(timestamp: string) {
 	let date = new Date(parseInt(timestamp) * 1000);
@@ -12,20 +19,24 @@ export function stringifyTimestamp(timestamp: string) {
 }
 
 export function findTriggerById(id: string) {
-	let returnData = DEFAULT_DATA_CONDITION;
+	let returnData = { ...DEFAULT_DATA_TRIGGER };
+	const clonedTriggers = deepCloneTriggers();
 
-	CTYPES.forEach(type => {
+	clonedTriggers.forEach(type => {
 		if (type.id === parseInt(id)) {
 			returnData = type;
 		}
 	});
+
 	return returnData;
 }
 
 export function findTriggerByAddress(address: string) {
-	let returnData = DEFAULT_DATA_CONDITION;
+	let returnData = { ...DEFAULT_DATA_TRIGGER };
 
-	CTYPES.forEach(type => {
+	const clonedTriggers = deepCloneTriggers();
+
+	clonedTriggers.forEach(type => {
 		if (
 			ethers.utils.getAddress(type.address) ===
 			ethers.utils.getAddress(address)
@@ -37,8 +48,9 @@ export function findTriggerByAddress(address: string) {
 }
 
 export function findActionById(id: string) {
-	let returnData = DEFAULT_DATA_ACTION;
-	ATYPES.forEach(type => {
+	let returnData = { ...DEFAULT_DATA_ACTION };
+	const clonedActions = deepCloneActions();
+	clonedActions.forEach(type => {
 		if (type.id === parseInt(id)) {
 			returnData = type;
 		}
@@ -47,8 +59,9 @@ export function findActionById(id: string) {
 }
 
 export function findActionByAddress(address: string) {
-	let returnData = DEFAULT_DATA_ACTION;
-	ATYPES.forEach(type => {
+	let returnData = { ...DEFAULT_DATA_ACTION };
+	const clonedActions = deepCloneActions();
+	clonedActions.forEach(type => {
 		if (
 			ethers.utils.getAddress(type.address) ===
 			ethers.utils.getAddress(address)
@@ -60,13 +73,15 @@ export function findActionByAddress(address: string) {
 }
 // @DEV Potenital bug in returning error string
 export function getTokenSymbol(address: string) {
-	const token = TOKEN_LIST.find(token => token.address === address);
+	const tokenList = TOKEN_LIST;
+	const token = tokenList.find(token => token.address === address);
 	return token === undefined ? 'ERROR Get Token Symbol' : token.symbol;
 }
 
 // @DEV Potenital bug in returning error string
 export function getTokenByAddress(address: string) {
-	const token = TOKEN_LIST.find(
+	const tokenList = [...TOKEN_LIST];
+	const token = tokenList.find(
 		token =>
 			ethers.utils.getAddress(token.address) ===
 			ethers.utils.getAddress(address)
@@ -80,11 +95,11 @@ export function getTokenByAddress(address: string) {
 
 export function encodeActionPayload(
 	userInput: Array<string | number | ethers.utils.BigNumber>,
-	abi: Array<string>,
+	abi: string,
 	user: string,
 	userProxy: string
 ) {
-	const iFace = new utils.Interface(abi);
+	const iFace = new utils.Interface([abi]);
 	//@DEV CHANGE UINT inputs into BigNumbers
 
 	// Insert user address into userInput Array at index 0
@@ -92,7 +107,6 @@ export function encodeActionPayload(
 	const copyUserInput = [...userInput];
 	copyUserInput.splice(0, 0, user);
 	copyUserInput.splice(1, 0, userProxy);
-	console.log(copyUserInput);
 
 	const actionPayloadWithSelector = iFace.functions.action.encode(
 		copyUserInput
@@ -103,9 +117,9 @@ export function encodeActionPayload(
 
 export function encodeTriggerPayload(
 	userInput: Array<string | number | ethers.utils.BigNumber>,
-	abi: Array<string>
+	abi: string
 ) {
-	const iFace = new utils.Interface(abi);
+	const iFace = new utils.Interface([abi]);
 
 	const triggerPayloadWithSelector = iFace.functions.fired.encode(userInput);
 
@@ -147,3 +161,125 @@ export function paramsToSimpleParams(inputParameter: Array<Params>) {
 	});
 	return simpleParams;
 }
+
+export const deeepCloneActions = () => {
+	const dataCopy: Array<ActionWhitelistData> = [];
+};
+
+export const deepCloneTriggers = () => {
+	const dataCopy: Array<TriggerWhitelistData> = [];
+	TTYPES.forEach(data => {
+		// clone Id
+		const clonedId = data.id;
+
+		// clone app
+		const clonedApp = data.app;
+
+		// clone title
+		const clonedTitle = data.title;
+
+		// clone address
+		const clonedAddress = data.address;
+
+		// clone params
+		const clonedParams: Array<Params> = [];
+		data.params.map(param => {
+			const clonedParam = { ...param };
+			clonedParams.push(clonedParam);
+		});
+
+		// clone abi
+		const clonedAbi = data.abi;
+
+		// clone userInputTypes
+		const clonedUserInputTypes: Array<InputType> = [];
+		data.userInputTypes.forEach(userInputType => {
+			const clonedUserInputType = userInputType;
+			clonedUserInputTypes.push(clonedUserInputType);
+		});
+
+		// clone inputLabels
+		const clonedInputLabels: Array<string> = [];
+		data.inputLabels.forEach(inputLabel => {
+			const clonedInputLabel = inputLabel;
+			clonedInputLabels.push(clonedInputLabel);
+		});
+
+		// empty user Input
+		const emptyUserInput: Array<string> = [];
+
+		dataCopy.push({
+			id: clonedId,
+			app: clonedApp,
+			title: clonedTitle,
+			address: clonedAddress,
+			params: clonedParams,
+			abi: clonedAbi,
+			userInputTypes: clonedUserInputTypes,
+			inputLabels: clonedInputLabels,
+			userInputs: emptyUserInput
+		});
+	});
+	return dataCopy;
+};
+
+export const deepCloneActions = () => {
+	const dataCopy: Array<ActionWhitelistData> = [];
+	ATYPES.forEach(data => {
+		// clone Id
+		const clonedId = data.id;
+
+		// clone app
+		const clonedApp = data.app;
+
+		// clone title
+		const clonedTitle = data.title;
+
+		// clone address
+		const clonedAddress = data.address;
+
+		// clone params
+		const clonedParams: Array<Params> = [];
+		data.params.map(param => {
+			const clonedParam = { ...param };
+			clonedParams.push(clonedParam);
+		});
+
+		// clone abi
+		const clonedAbi = data.abi;
+
+		// clone userInputTypes
+		const clonedUserInputTypes: Array<InputType> = [];
+		data.userInputTypes.forEach(userInputType => {
+			const clonedUserInputType = userInputType;
+			clonedUserInputTypes.push(clonedUserInputType);
+		});
+
+		// clone inputLabels
+		const clonedInputLabels: Array<string> = [];
+		data.inputLabels.forEach(inputLabel => {
+			const clonedInputLabel = inputLabel;
+			clonedInputLabels.push(clonedInputLabel);
+		});
+
+		// empty user Input
+		const emptyUserInput: Array<string> = [];
+
+		// empty user Input
+		const clonedApprovalIndex = data.approvalIndex;
+
+		dataCopy.push({
+			id: clonedId,
+			app: clonedApp,
+			title: clonedTitle,
+			address: clonedAddress,
+			params: clonedParams,
+			abi: clonedAbi,
+			userInputTypes: clonedUserInputTypes,
+			inputLabels: clonedInputLabels,
+			userInputs: emptyUserInput,
+			approvalIndex: clonedApprovalIndex
+		});
+	});
+	return dataCopy;
+};

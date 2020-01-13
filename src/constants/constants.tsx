@@ -2,11 +2,13 @@ import { InputType, Params } from './interfaces';
 import { ethers } from 'ethers';
 import { EXECUTOR_ADDRESS } from './whitelist';
 
-const emptyUserInputArray: Array<string | number | ethers.utils.BigNumber> = [];
-const emptyUserInputTypeArray: Array<InputType> = [];
+export const EMPTY_USER_INPUT_ARRAY: Array<
+	string | number | ethers.utils.BigNumber
+> = [];
+export const EMPTY_USER_INPUT_TYPE_ARRAY: Array<InputType> = [];
 
-const emptyParamArray: Array<Params> = [];
-const emptyStringArray: Array<string> = [];
+export const EMPTY_PARAM_ARRAY: Array<Params> = [];
+export const EMPTY_STRING_ARRAY: Array<string> = [];
 
 export const COLOURS = {
 	salmon: '#E91E63',
@@ -35,24 +37,24 @@ export const DEFAULT_DATA_ACTION = {
 	app: '',
 	title: '',
 	address: '',
-	params: emptyParamArray, // [ ]
-	abi: emptyStringArray,
-	inputLabels: emptyStringArray, // [ ]
-	userInputTypes: emptyUserInputTypeArray, // [ ]
-	userInputs: emptyUserInputArray, // [ ]
+	params: EMPTY_PARAM_ARRAY, // [ ]
+	abi: '',
+	inputLabels: EMPTY_STRING_ARRAY, // [ ]
+	userInputTypes: EMPTY_USER_INPUT_TYPE_ARRAY, // [ ]
+	userInputs: EMPTY_USER_INPUT_ARRAY, // [ ]
 	approvalIndex: 999 // 999 means no approval in action
 };
 
-export const DEFAULT_DATA_CONDITION = {
+export const DEFAULT_DATA_TRIGGER = {
 	id: 0,
 	app: '',
 	title: '',
 	address: '',
-	params: emptyParamArray, // [ ]
-	abi: emptyStringArray,
-	inputLabels: emptyStringArray, // [ ]
-	userInputTypes: emptyUserInputTypeArray, // [ ]
-	userInputs: emptyUserInputArray // [ ]
+	params: EMPTY_PARAM_ARRAY, // [ ]
+	abi: '',
+	inputLabels: EMPTY_STRING_ARRAY, // [ ]
+	userInputTypes: EMPTY_USER_INPUT_TYPE_ARRAY, // [ ]
+	userInputs: EMPTY_USER_INPUT_ARRAY // [ ]
 };
 
 /*

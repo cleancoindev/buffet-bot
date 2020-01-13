@@ -1,16 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
 // Routing
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 // Material UI
-import {
-	createStyles,
-	makeStyles,
-	withStyles,
-	useTheme,
-	Theme
-} from '@material-ui/core/styles';
+import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -26,7 +20,6 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import Divider from '@material-ui/core/Divider';
 import WarningIcon from '@material-ui/icons/Warning';
 
@@ -183,7 +176,6 @@ export default function ButtonAppBar() {
 
 	const logInLogOutMetamask = async () => {
 		if (!active) {
-			console.log('log into metamask');
 			await activate(injected);
 		}
 	};

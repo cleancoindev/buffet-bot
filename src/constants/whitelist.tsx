@@ -5,6 +5,8 @@ export const APPS = {
 	actions: ['Your Wallet', 'Kyber', 'Fulcrum']
 };
 
+const EMPTY_STRING_ARRAY: Array<string> = [];
+
 // GENERAL NOTES
 /*
 - use 'address' in params instead of ERC20, as the decoder function most likely does not know what address is
@@ -14,7 +16,7 @@ export const APPS = {
 // Smart Contract Addresses
 export const GELATO_CORE_ADDRESS = {
 	1: '0x0',
-	3: '0x653F3612e5A649EB93D60a55A0f0A2C8e0cF6A73',
+	3: '0x563700A8A6740C8a474DF8F289716afDc30ED07a',
 	4: '0x501aF774Eb578203CC34E7171273124A93706C06',
 	42: '0x0'
 };
@@ -27,31 +29,30 @@ export const EXECUTOR_ADDRESS = {
 };
 
 // Triggers
-export const CTYPES = [
+export const TTYPES = [
 	{
 		id: 1,
 		app: 'Your Wallet',
 		title: 'Increase in token balance',
-		address: '0x81E15f02834C3eBBd5C26337b49Ed5ec3aE1197E',
+		address: '0x4EF151A39B87B8D4b326746DAE4dd19a2fEc9742',
 		params: [
 			{ type: 'address', name: '_account' },
 			{ type: 'address', name: '_coin' },
 			{ type: 'uint256', name: '_refBalance' }
 		],
-		abi: [
-			'function fired(address _account, address _coin, uint256 _refBalance)'
-		],
+		abi:
+			'function fired(address _account, address _coin, uint256 _refBalance)',
 		userInputTypes: [
 			InputType.Address,
 			InputType.Token,
 			InputType.TokenAmount
 		],
 		inputLabels: [
-			'Input the Address which balance to track',
-			'Select the Token',
-			'Enter the balance which should activate the trigger'
+			'Address which balance to monitor',
+			'Token',
+			'Future balance which should activate the trigger'
 		],
-		userInputs: []
+		userInputs: EMPTY_STRING_ARRAY
 	},
 
 	// // Use isGreater as bool
@@ -86,10 +87,10 @@ export const CTYPES = [
 		title: 'Time',
 		address: '0x525EB0c1279f1CC690D01a2Fcb78A0D5d156D1Ee',
 		params: [{ type: 'uint256', name: '_timestamp' }],
-		abi: ['function fired(uint256 _timestamp)'],
+		abi: 'function fired(uint256 _timestamp)',
 		userInputTypes: [InputType.Date],
 		inputLabels: ['Pick a Date and Time'],
-		userInputs: []
+		userInputs: EMPTY_STRING_ARRAY
 	}
 ];
 
@@ -132,10 +133,8 @@ export const ATYPES = [
 			{ type: 'address', name: '_dest' },
 			{ type: 'uint256', name: '_minConversionRate' }
 		],
-		abi: [
-			'function action(address _user, address _userProxy, address _src, uint256 _srcAmount, address _dest, uint256 _minConversionAmount)'
-		],
-
+		abi:
+			'function action(address _user, address _userProxy, address _src, uint256 _srcAmount, address _dest, uint256 _minConversionAmount)',
 		userInputTypes: [
 			InputType.Token,
 			InputType.TokenAmount,
@@ -209,53 +208,3 @@ export const TOKEN_LIST = [
 		decimals: 18
 	}
 ];
-
-/*
-export const LIST = {
-	triggers: {
-		Your Wallet: {
-			tokenBalance: {
-				title: "Token Balance",
-				address: "0x0"
-			},
-			etherBalance: {
-				title: "Ether Balance",
-				address: "0x0"
-			}
-		},
-		Calendar: {
-			time: {
-				title: "Time",
-				address: "0x0"
-			}
-		},
-		Kyber: {
-			price: {
-				title: "Price",
-				address: "0x0"
-			}
-		}
-	},
-	actions: {
-		Your Wallet: {
-			sendToken: {
-				title: "Send Token to address",
-				address: "0x0"
-			}
-		},
-		Kyber: {
-			swap: {
-				title: "Swap Token",
-				address: "0x0"
-			}
-		},
-		Fulcrum: {
-			marginTrade: {
-				title: "Margin Trade",
-				address: "0x0"
-			}
-		}
-	}
-};
-
-*/

@@ -14,7 +14,7 @@ import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 
-import { ATYPES, CTYPES } from '../constants/whitelist';
+import { ATYPES, TTYPES } from '../constants/whitelist';
 
 // Local components
 import Dropdown from './Dropdown';
@@ -68,61 +68,17 @@ export default function AppSelection() {
 	const classes = useStyles();
 	// Import global state
 	//const { updateIcedTx, icedTxState, resetIcedTxInput } = useIcedTxContext();
-	const { dispatch, icedTxState } = useIcedTxContext();
+	const { icedTxState } = useIcedTxContext();
 
-	console.log(icedTxState);
 	// Import Web3react Context
 	useEffect(() => {
 		console.log('RENDER');
 	}, []);
-	// console.log(web3);
 
-	// Local State
-	// const [userSelection, setUserSelection] = React.useState<UserSelection>({
-	// 	triggerApp: '',
-	// 	actionApp: '',
-	// 	triggerAppFunctions: [],
-	// 	actionAppFunctions: []
-	// });
-
-	// // console.log(userSelection);
-
-	// function updateTriggerOrAction(
-	// 	selectedTriggerOrAction: TriggerOrAction,
-	// 	app: string
-	// ) {
-	// 	// console.log(app);
-	// 	const result: Array<ActionWhitelistData | TriggerWhitelistData> = [];
-	// 	const triggerOrAction = { app: '', type: '' };
-	// 	if (selectedTriggerOrAction === TriggerOrAction.Trigger) {
-	// 		CTYPES.forEach(type => {
-	// 			if (type.app === app) {
-	// 				result.push(type);
-	// 			}
-	// 		});
-	// 		triggerOrAction.app = 'triggerApp';
-	// 		triggerOrAction.type = 'triggerAppFunctions';
-	// 		// resetIcedTxInput(TriggerOrAction.Trigger);
-	// 		// RESET THE CONDITION to SELECT...
-	// 		dispatch({ type: RESET_CONDITION });
-	// 	} else {
-	// 		ATYPES.forEach(type => {
-	// 			if (type.app === app) {
-	// 				result.push(type);
-	// 			}
-	// 		});
-	// 		triggerOrAction.app = 'actionApp';
-	// 		triggerOrAction.type = 'actionAppFunctions';
-	// 		// resetIcedTxInput(TriggerOrAction.Action);
-	// 		// RESET THE CONDITION to SELECT...
-	// 		dispatch({ type: RESET_ACTION });
-	// 	}
-	// 	setUserSelection({
-	// 		...userSelection,
-	// 		[triggerOrAction.app]: app,
-	// 		[triggerOrAction.type]: result
-	// 	});
-	// }
+	console.log('AppSelection');
+	console.log(TTYPES);
+	const availableTriggers = [...TTYPES];
+	const availableActions = [...ATYPES];
 
 	return (
 		<div /*className={classes.box}*/>
@@ -154,7 +110,7 @@ export default function AppSelection() {
 							app={false}
 							// userSelection={userSelection}
 							triggerOrAction={TriggerOrAction.Trigger}
-							data={CTYPES}
+							data={availableTriggers}
 							// updateTriggerOrAction={updateTriggerOrAction}
 						/>
 					</Grid>
@@ -202,7 +158,7 @@ export default function AppSelection() {
 							app={false}
 							// userSelection={userSelection}
 							triggerOrAction={TriggerOrAction.Action}
-							data={ATYPES}
+							data={availableActions}
 							// updateTriggerOrAction={updateTriggerOrAction}
 						/>
 					</Grid>

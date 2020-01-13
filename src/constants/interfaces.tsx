@@ -56,7 +56,7 @@ export interface ActionWhitelistData {
 	app: string;
 	title: string;
 	address: string;
-	abi: Array<string>;
+	abi: string;
 	params: Array<Params>;
 	inputLabels: Array<string>;
 	userInputTypes: Array<InputType>;
@@ -69,7 +69,7 @@ export interface TriggerWhitelistData {
 	app: string;
 	title: string;
 	address: string;
-	abi: Array<string>;
+	abi: string;
 	params: Array<Params>;
 	inputLabels: Array<string>;
 	userInputTypes: Array<InputType>;
