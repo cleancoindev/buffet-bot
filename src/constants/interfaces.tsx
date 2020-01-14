@@ -11,7 +11,8 @@ import {
 	CLOSE_MODAL,
 	CANCEL_EXECUTION_CLAIM,
 	INPUT_ERROR,
-	INPUT_OK
+	INPUT_OK,
+	UPDATE_GET_VALUE_INPUT
 } from './constants';
 import { ethers } from 'ethers';
 
@@ -76,6 +77,8 @@ export interface TriggerWhitelistData {
 	inputLabels: Array<string>;
 	userInputTypes: Array<InputType>;
 	userInputs: Array<string | number | ethers.utils.BigNumber>;
+	getTriggerValueAbi: string;
+	getTriggerValueInput: string;
 }
 
 export interface UserSelection {
@@ -250,6 +253,11 @@ interface InputOk {
 	type: typeof INPUT_OK;
 }
 
+interface UpdateGetValueInput {
+	type: typeof UPDATE_GET_VALUE_INPUT;
+	newGetValueInput: string;
+}
+
 // export interface Action {
 // 	type: string;
 // 	triggerOrAction: TriggerOrAction;
@@ -271,4 +279,5 @@ export type Action =
 	| CloseModal
 	| UpdateSelectedTx
 	| InputError
-	| InputOk;
+	| InputOk
+	| UpdateGetValueInput;

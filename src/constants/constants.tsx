@@ -52,6 +52,8 @@ export const DEFAULT_DATA_TRIGGER = {
 	address: '',
 	params: EMPTY_PARAM_ARRAY, // [ ]
 	abi: '',
+	getTriggerValueAbi: '',
+	getTriggerValueInput: '',
 	inputLabels: EMPTY_STRING_ARRAY, // [ ]
 	userInputTypes: EMPTY_USER_INPUT_TYPE_ARRAY, // [ ]
 	userInputs: EMPTY_USER_INPUT_ARRAY // [ ]
@@ -121,6 +123,7 @@ export const CLOSE_MODAL = 'CLOSE_MODAL';
 export const CANCEL_EXECUTION_CLAIM = 'CANCEL_EXECUTION_CLAIM';
 export const INPUT_ERROR = 'INPUT_ERROR';
 export const INPUT_OK = 'INPUT_OK';
+export const UPDATE_GET_VALUE_INPUT = 'UPDATE_GET_VALUE_INPUT';
 
 export const INPUT_CSS = {
 	root: {

@@ -111,6 +111,7 @@ export default function StepperContent(props: StepperContentProps) {
 							/>
 							{triggerInputTypes.map((input, key) => (
 								<InputField
+									trigger={trigger}
 									key={`Trigger-${key}`}
 									index={key}
 									inputType={input}
@@ -172,6 +173,7 @@ export default function StepperContent(props: StepperContentProps) {
 							/>
 							{actionInputTypes.map((input, key) => (
 								<InputField
+									action={action}
 									index={key}
 									key={`Action-${key}`}
 									inputType={input}

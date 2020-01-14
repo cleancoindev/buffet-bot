@@ -23,7 +23,8 @@ import {
 	CLOSE_MODAL,
 	CANCEL_EXECUTION_CLAIM,
 	INPUT_ERROR,
-	INPUT_OK
+	INPUT_OK,
+	UPDATE_GET_VALUE_INPUT
 } from '../constants/constants';
 
 function updateIcedTx(
@@ -57,6 +58,15 @@ function updateUserInput(
 	} else {
 		stateCopy.action.userInputs[index] = value;
 	}
+	return stateCopy;
+}
+
+function setTriggerGetValue(state: IcedTx, newValue: string) {
+	console.log('setTriggerValue in reducer');
+	const stateCopy = { ...state };
+
+	stateCopy.trigger.getTriggerValueInput = newValue;
+
 	return stateCopy;
 }
 
@@ -132,5 +142,7 @@ export const icedTxReducer = (state: IcedTx, action: Action) => {
 				...state,
 				error: { isError: false, msg: '' }
 			};
+		case UPDATE_GET_VALUE_INPUT:
+			return setTriggerGetValue(state, action.newGetValueInput);
 	}
 };

@@ -24,6 +24,7 @@ import {
 	DEFAULT_PAST_TRANSACTIONS
 } from '../constants/constants';
 
+// @DEV Make Deep Copies
 export const DEFAULT_ICED_TX = {
 	trigger: { ...DEFAULT_DATA_TRIGGER },
 	action: { ...DEFAULT_DATA_ACTION },

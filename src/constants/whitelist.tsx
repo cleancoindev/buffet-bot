@@ -42,15 +42,20 @@ export const TTYPES = [
 		],
 		abi:
 			'function fired(address _account, address _coin, uint256 _refBalance)',
+		getTriggerValueAbi:
+			'function getTriggerValue(address _account, address _coin, uint256) view returns (uint256)',
+		getTriggerValueInput: '0',
 		userInputTypes: [
 			InputType.Address,
 			InputType.Token,
-			InputType.TokenAmount
+			InputType.TokenAmount,
+			InputType.StatelessGetValue
 		],
 		inputLabels: [
 			'Address which balance to monitor',
 			'Token',
-			'Future balance which should activate the trigger'
+			'Future balance which should activate the trigger',
+			'Current Balance'
 		],
 		userInputs: EMPTY_STRING_ARRAY
 	},
@@ -88,6 +93,8 @@ export const TTYPES = [
 		address: '0x525EB0c1279f1CC690D01a2Fcb78A0D5d156D1Ee',
 		params: [{ type: 'uint256', name: '_timestamp' }],
 		abi: 'function fired(uint256 _timestamp)',
+		getTriggerValueAbi: '',
+		getTriggerValueInput: '0',
 		userInputTypes: [InputType.Date],
 		inputLabels: ['Pick a Date and Time'],
 		userInputs: EMPTY_STRING_ARRAY

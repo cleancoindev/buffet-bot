@@ -2,7 +2,8 @@ import { ATYPES, TTYPES, TOKEN_LIST } from '../constants/whitelist';
 import {
 	DEFAULT_DATA_ACTION,
 	DEFAULT_DATA_TRIGGER,
-	EMPTY_USER_INPUT_TYPE_ARRAY
+	EMPTY_USER_INPUT_TYPE_ARRAY,
+	ETH
 } from '../constants/constants';
 import { utils, ethers } from 'ethers';
 import {
@@ -92,6 +93,21 @@ export function getTokenByAddress(address: string) {
 		return token;
 	}
 }
+
+export const getTokenWithEthByAddress = (address: string) => {
+	let tokenList = [...TOKEN_LIST];
+	tokenList.push(ETH);
+	const token = tokenList.find(
+		token =>
+			ethers.utils.getAddress(token.address) ===
+			ethers.utils.getAddress(address)
+	);
+	if (token === undefined) {
+		throw Error(`Could not find Token with address ${address}`);
+	} else {
+		return token;
+	}
+};
 
 export function encodeActionPayload(
 	userInput: Array<string | number | ethers.utils.BigNumber>,
@@ -191,6 +207,14 @@ export const deepCloneTriggers = () => {
 		// clone abi
 		const clonedAbi = data.abi;
 
+		// clone getTriggerValueAbi
+		let clonedGetTriggerValueAbi = '';
+		clonedGetTriggerValueAbi = data.getTriggerValueAbi;
+
+		// clone getTriggerValueAbi
+		let clonedGetTriggerValueInput = '';
+		clonedGetTriggerValueInput = data.getTriggerValueInput;
+
 		// clone userInputTypes
 		const clonedUserInputTypes: Array<InputType> = [];
 		data.userInputTypes.forEach(userInputType => {
@@ -217,7 +241,9 @@ export const deepCloneTriggers = () => {
 			abi: clonedAbi,
 			userInputTypes: clonedUserInputTypes,
 			inputLabels: clonedInputLabels,
-			userInputs: emptyUserInput
+			userInputs: emptyUserInput,
+			getTriggerValueAbi: clonedGetTriggerValueAbi,
+			getTriggerValueInput: clonedGetTriggerValueInput
 		});
 	});
 	return dataCopy;

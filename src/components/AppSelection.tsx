@@ -71,12 +71,8 @@ export default function AppSelection() {
 	const { icedTxState } = useIcedTxContext();
 
 	// Import Web3react Context
-	useEffect(() => {
-		console.log('RENDER');
-	}, []);
+	// useEffect(() => {}, []);
 
-	console.log('AppSelection');
-	console.log(TTYPES);
 	const availableTriggers = [...TTYPES];
 	const availableActions = [...ATYPES];
 

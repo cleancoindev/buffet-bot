@@ -1,7 +1,13 @@
-import React, { Dispatch } from 'react';
+import React, { Dispatch, useEffect } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { InputType, TriggerOrAction } from '../constants/interfaces';
+import {
+	InputType,
+	TriggerOrAction,
+	ActionWhitelistData,
+	TriggerWhitelistData,
+	TxState
+} from '../constants/interfaces';
 import DateAndTimePicker from './Inputs/DatePicker';
 import TokenSelect from './Inputs/TokenSelect';
 import { useIcedTxContext } from '../state/GlobalState';
@@ -10,14 +16,19 @@ import {
 	UPDATE_ACTION_INPUTS,
 	INPUT_CSS,
 	INPUT_ERROR,
-	INPUT_OK
+	INPUT_OK,
+	DEFAULT_DATA_TRIGGER
 } from '../constants/constants';
 import { TOKEN_LIST } from '../constants/whitelist';
 import { ethers } from 'ethers';
-import { getTokenByAddress } from '../helpers/helpers';
+import {
+	getTokenByAddress,
+	getTokenWithEthByAddress
+} from '../helpers/helpers';
 
 // Number formater
 import ReactNumberFormat from './Inputs/ReactNumberFormat';
+import { useWeb3React } from '@web3-react/core';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -41,6 +52,8 @@ interface InputProps {
 	inputs: Array<string | number | ethers.utils.BigNumber>;
 	app: string;
 	disabled: boolean;
+	trigger?: TriggerWhitelistData;
+	action?: ActionWhitelistData;
 }
 
 export default function LayoutTextFields(props: InputProps) {
@@ -52,10 +65,19 @@ export default function LayoutTextFields(props: InputProps) {
 		index,
 		triggerOrAction,
 		inputs,
-		disabled
+		disabled,
+		trigger,
+		action
 	} = props;
 	// Context
+
 	const { dispatch, icedTxState } = useIcedTxContext();
+
+	const { active, account, library } = useWeb3React();
+
+	const [getValueState, setGetValueState] = React.useState(
+		icedTxState.trigger.getTriggerValueInput
+	);
 
 	// Error Bool, default false
 	// Applied to:
@@ -85,15 +107,75 @@ export default function LayoutTextFields(props: InputProps) {
 
 	// Func should call getValue() in smart contract and return the respective value in a disabled Text field
 	// Params: Contract address | Contract Parameters
-	function callGetValue() {
-		// CALL Smart Contract get value
-		return 999;
-	}
+	const callGetValue = async () => {
+		// Get abi
+		let newValue = icedTxState.trigger.getTriggerValueInput;
+		// WHen on summary page, return global state
+		console.log(inputType);
+		console.log(newValue);
+		if (disabled) return newValue;
+		// console.log(newValue);
 
-	function callGetValueAndSetState() {
-		const returnValue = callGetValue();
-		updateUserInput(index, returnValue);
-		return returnValue;
+		if (trigger && active && account) {
+			const abi = trigger.getTriggerValueAbi;
+
+			const triggerAddress = trigger.address;
+
+			const tokenAddress = inputs[1];
+
+			try {
+				const token = getTokenWithEthByAddress(tokenAddress.toString());
+
+				const signer = library.getSigner();
+
+				//Instantiate contract
+				const triggerContract = new ethers.Contract(
+					triggerAddress,
+					[abi],
+					signer
+				);
+
+				// get value
+				try {
+					newValue = await triggerContract.getTriggerValue(...inputs);
+
+					// Convert fetched wei amount to human reable amount
+
+					// @DEV Check if that works with eth
+
+					const humanFriendlyAmount = ethers.utils.formatUnits(
+						newValue,
+						token.decimals
+					);
+
+					// convert Value into human readable form
+					return humanFriendlyAmount.toString();
+				} catch (error) {
+					// console.log(error);
+					newValue = '1';
+					return newValue;
+				}
+			} catch (error) {
+				// console.log('token not in state yet');
+				newValue = '2';
+				return newValue;
+			}
+		} else {
+			newValue = '3';
+			return newValue;
+		}
+	};
+
+	async function callGetValueAndSetState() {
+		// Only at first render set state, otherwise infinite loop
+		if (inputs[index] === undefined) {
+			const returnValue = await callGetValue();
+			// updateUserInput(index, returnValue);
+			setGetValueState(returnValue);
+			return returnValue;
+		} else {
+			console.log('already in state');
+		}
 	}
 
 	function deriveBool() {
@@ -149,8 +231,15 @@ export default function LayoutTextFields(props: InputProps) {
 					return 1;
 				case InputType.Address:
 					// return user address
-					updateUserInput(index, '0x0');
-					return '0x0';
+					let defaultAddress = '';
+					if (account) {
+						defaultAddress = account;
+					} else {
+						defaultAddress = '0x0';
+					}
+
+					updateUserInput(index, defaultAddress);
+					return defaultAddress;
 				case InputType.Token:
 					let defaultToken = TOKEN_LIST[0];
 					if (index !== 0) defaultToken = TOKEN_LIST[1];
@@ -310,6 +399,7 @@ export default function LayoutTextFields(props: InputProps) {
 								shrink: true
 							}}
 							variant="outlined"
+							disabled={true}
 						/>
 					</div>
 				);
@@ -337,16 +427,16 @@ export default function LayoutTextFields(props: InputProps) {
 					</div>
 				);
 			case InputType.StatelessGetValue:
+				callGetValueAndSetState();
 				return (
 					<div className={classes.form}>
-						<TextField
+						{/* <TextField
+							className={classes.root}
 							required
 							style={{ marginTop: '0px', marginBottom: '0px' }}
 							id="outlined-full-width"
 							label={label}
-							defaultValue={callGetValue()}
-							// Import TextField CSS
-							className={classes.root}
+							value={getValueState}
 							// placeholder="Placeholder"
 							// helperText="Full width!"
 							fullWidth
@@ -355,7 +445,17 @@ export default function LayoutTextFields(props: InputProps) {
 								shrink: true
 							}}
 							variant="outlined"
-						/>
+						/> */}
+						<ReactNumberFormat
+							updateUserInput={updateUserInput}
+							label={label}
+							index={index}
+							inputType={inputType}
+							inputs={inputs}
+							defaultValue={getValueState}
+							convertToWei
+							disabled={true}
+						></ReactNumberFormat>
 					</div>
 				);
 			case InputType.Bool:
