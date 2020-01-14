@@ -26,6 +26,7 @@ import {
 	INPUT_OK,
 	UPDATE_GET_VALUE_INPUT
 } from '../constants/constants';
+import { ethers } from 'ethers';
 
 function updateIcedTx(
 	state: IcedTx,
@@ -61,7 +62,7 @@ function updateUserInput(
 	return stateCopy;
 }
 
-function setTriggerGetValue(state: IcedTx, newValue: string) {
+function setTriggerGetValue(state: IcedTx, newValue: ethers.utils.BigNumber) {
 	console.log('setTriggerValue in reducer');
 	const stateCopy = { ...state };
 

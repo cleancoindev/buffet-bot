@@ -3,12 +3,14 @@ import { ethers } from 'ethers';
 import { EXECUTOR_ADDRESS } from './whitelist';
 
 export const EMPTY_USER_INPUT_ARRAY: Array<
-	string | number | ethers.utils.BigNumber
+	string | number | ethers.utils.BigNumber | boolean
 > = [];
 export const EMPTY_USER_INPUT_TYPE_ARRAY: Array<InputType> = [];
 
 export const EMPTY_PARAM_ARRAY: Array<Params> = [];
 export const EMPTY_STRING_ARRAY: Array<string> = [];
+
+export const BIG_NUM_ZERO = ethers.constants.Zero;
 
 export const COLOURS = {
 	salmon: '#E91E63',
@@ -53,11 +55,12 @@ export const DEFAULT_DATA_TRIGGER = {
 	params: EMPTY_PARAM_ARRAY, // [ ]
 	abi: '',
 	getTriggerValueAbi: '',
-	getTriggerValueInput: '',
+	getTriggerValueInput: BIG_NUM_ZERO,
 	tokenIndex: 999,
 	inputLabels: EMPTY_STRING_ARRAY, // [ ]
 	userInputTypes: EMPTY_USER_INPUT_TYPE_ARRAY, // [ ]
-	userInputs: EMPTY_USER_INPUT_ARRAY // [ ]
+	userInputs: EMPTY_USER_INPUT_ARRAY, // [ ]
+	boolIndex: 999
 };
 
 /*
@@ -91,7 +94,7 @@ export const DEFAULT_PAST_TRANSACTIONS = [
 		triggerPayload: '0x030949304934009413094309320493049039049204',
 		action: '0x5',
 		actionPayload: '0x030949304934009413094309320493049039049204',
-		expiryDate: '12353434312',
+		expiryDate: '1',
 		prepayment: '1009032030020',
 		mintingDate: '1576759372',
 		status: 'open',

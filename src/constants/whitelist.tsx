@@ -1,4 +1,7 @@
 import { InputType } from './interfaces';
+import { ethers } from 'ethers';
+
+export const BIG_NUM_ZERO = ethers.constants.Zero;
 
 export const APPS = {
 	triggers: ['Your Wallet', 'Calendar', 'Kyber'],
@@ -33,71 +36,90 @@ export const TTYPES = [
 	{
 		id: 1,
 		app: 'Your Wallet',
-		title: 'Increase in token balance',
-		address: '0x4EF151A39B87B8D4b326746DAE4dd19a2fEc9742',
+		title: 'Token balance',
+		address: '0xaf4c11A90e98D0C5ecFb403C62Cc8Dfe8DF11030',
 		params: [
 			{ type: 'address', name: '_account' },
 			{ type: 'address', name: '_coin' },
-			{ type: 'uint256', name: '_refBalance' }
+			{ type: 'uint256', name: '_refBalance' },
+			{ type: 'bool', name: '_greaterElseSmaller' }
 		],
 		abi:
-			'function fired(address _account, address _coin, uint256 _refBalance)',
+			'function fired(address _account, address _coin, uint256 _refBalance, bool _greaterElseSmaller)',
 		getTriggerValueAbi:
-			'function getTriggerValue(address _account, address _coin, uint256) view returns (uint256)',
-		getTriggerValueInput: '0',
+			'function getTriggerValue(address _account, address _coin, uint256, bool) view returns (uint256)',
+		getTriggerValueInput: BIG_NUM_ZERO,
 		userInputTypes: [
 			InputType.Address,
 			InputType.Token,
 			InputType.TokenAmount,
+			InputType.Bool,
 			InputType.StatelessGetValue
 		],
 		tokenIndex: 1,
+		// Which is the independent variable for the bool is greater than defintion
+		boolIndex: 2,
 		inputLabels: [
 			'Address which balance to monitor',
 			'Token',
 			'Future balance which should activate the trigger',
+			'',
 			'Current Balance'
 		],
 		userInputs: EMPTY_STRING_ARRAY
 	},
 
-	// // Use isGreater as bool
-	// {
-	// 	id: 3,
-	// 	app: 'Kyber',
-	// 	title: 'Price',
-	// 	address: '0x1',
-	// 	params: ['address', 'address', 'uint256', 'uint256', 'bool'],
-	// 	userInputTypes: [
-	// 		InputType.Token,
-	// 		InputType.Token,
-	// 		InputType.Number,
-	// 		InputType.Number,
-	// 		InputType.Bool,
-	// 		InputType.StatelessGetValue
-	// 	],
-	// 	inputLabels: [
-	// 		'Sell Token',
-	// 		'Buy Token',
-	// 		'Sell Volume (default 1) - The higher, the more reliable',
-	// 		'Price to trigger trade',
-	// 		'True if inputted price is greater, false if lower',
-	// 		'Current Price'
-	// 	],
-	// 	userInputs: []
-	// },
+	// Use isGreater as bool
+	{
+		id: 2,
+		app: 'Kyber',
+		title: 'Price on Kyber',
+		address: '0xb033FdEe78C657cB155484e7708d329947eDF45A',
+		params: [
+			{ type: 'address', name: '_src' },
+			{ type: 'uint256', name: '_srcAmount' },
+			{ type: 'address', name: '_dest' },
+			{ type: 'uint256', name: '_refRate' },
+			{ type: 'bool', name: '_greaterElseSmaller' }
+		],
+		userInputTypes: [
+			InputType.Token,
+			InputType.TokenAmount,
+			InputType.Token,
+			InputType.Number,
+			InputType.Bool,
+			InputType.StatelessGetValue
+		],
+		abi:
+			'function fired(address _src, uint256 _srcAmount, address _dest, uint256 _refRate, bool _greaterElseSmaller)',
+		getTriggerValueAbi:
+			'function getTriggerValue(address _src, uint256 _srcAmount, address _dest, uint256, bool) view returns (uint256)',
+		tokenIndex: 0,
+		boolIndex: 1,
+		getTriggerValueInput: BIG_NUM_ZERO,
+		inputLabels: [
+			'Sell Token',
+			'Sell Volume',
+			'Buy Token',
+			'Price which activates trigger',
+			'',
+			'Current Price'
+		],
+		userInputs: EMPTY_STRING_ARRAY
+	},
 
 	{
-		id: 4,
+		id: 3,
 		app: 'Calendar',
 		title: 'Time',
 		address: '0x525EB0c1279f1CC690D01a2Fcb78A0D5d156D1Ee',
 		params: [{ type: 'uint256', name: '_timestamp' }],
 		abi: 'function fired(uint256 _timestamp)',
 		getTriggerValueAbi: '',
-		getTriggerValueInput: '0',
+		getTriggerValueInput: BIG_NUM_ZERO,
 		// 99 means nothing
 		tokenIndex: 999,
+		boolIndex: 999,
 		userInputTypes: [InputType.Date],
 		inputLabels: ['Pick a Date and Time'],
 		userInputs: EMPTY_STRING_ARRAY
@@ -218,3 +240,10 @@ export const TOKEN_LIST = [
 		decimals: 18
 	}
 ];
+
+export interface Token {
+	address: string;
+	symbol: string;
+	name: string;
+	decimals: number;
+}

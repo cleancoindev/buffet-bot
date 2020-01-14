@@ -17,19 +17,18 @@ import {
 	INPUT_CSS,
 	INPUT_ERROR,
 	INPUT_OK,
-	DEFAULT_DATA_TRIGGER
+	DEFAULT_DATA_TRIGGER,
+	BIG_NUM_ZERO
 } from '../constants/constants';
 import { TOKEN_LIST } from '../constants/whitelist';
 import { ethers } from 'ethers';
-import {
-	getTokenByAddress,
-	getTokenWithEthByAddress,
-	isEth
-} from '../helpers/helpers';
+import { getTokenByAddress, isEth } from '../helpers/helpers';
 
 // Number formater
 import ReactNumberFormat from './Inputs/ReactNumberFormat';
 import { useWeb3React } from '@web3-react/core';
+import { userInfo } from 'os';
+import { isBool, isBigNumber, isString } from '../helpers/typeguards';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -50,7 +49,7 @@ interface InputProps {
 	label: string;
 	index: number;
 	triggerOrAction: TriggerOrAction;
-	inputs: Array<string | number | ethers.utils.BigNumber>;
+	inputs: Array<string | number | ethers.utils.BigNumber | boolean>;
 	app: string;
 	disabled: boolean;
 	trigger?: TriggerWhitelistData;
@@ -114,28 +113,19 @@ export default function LayoutTextFields(props: InputProps) {
 		// Get abi
 		let newValue = icedTxState.trigger.getTriggerValueInput;
 		// WHen on summary page, return global state
-		console.log(inputType);
-		console.log(newValue);
+
 		if (disabled) return newValue;
-		// console.log(newValue);
 
 		if (trigger && active && account) {
 			const abi = trigger.getTriggerValueAbi;
-
 			const triggerAddress = trigger.address;
 
 			const tokenAddress = inputs[tokenIndex];
 
-			let token;
+			let token = getTokenByAddress(tokenAddress.toString());
 
 			try {
 				// Find token object by address
-
-				triggerOrAction === TriggerOrAction.Trigger
-					? (token = getTokenWithEthByAddress(
-							tokenAddress.toString()
-					  ))
-					: (token = getTokenByAddress(tokenAddress.toString()));
 
 				const signer = library.getSigner();
 
@@ -144,13 +134,11 @@ export default function LayoutTextFields(props: InputProps) {
 				if (isEth(tokenAddress.toString())) {
 					try {
 						newValue = await library.getBalance(account);
-						const humanFriendlyAmount = ethers.utils.formatEther(
-							newValue
-						);
 						// convert Value into human readable form
-						return humanFriendlyAmount.toString();
+						return newValue;
 					} catch (error) {
-						newValue = '0';
+						newValue = BIG_NUM_ZERO;
+						// console.log(1);
 						return newValue;
 					}
 				} else {
@@ -165,153 +153,189 @@ export default function LayoutTextFields(props: InputProps) {
 						newValue = await triggerContract.getTriggerValue(
 							...inputs
 						);
-						console.log('####');
-						console.log(newValue.toString());
-						console.log('####');
-
 						// Convert fetched wei amount to human reable amount
 
-						// @DEV Check if that works with eth
-
-						const humanFriendlyAmount = ethers.utils.formatUnits(
-							newValue,
-							token.decimals
-						);
-
 						// convert Value into human readable form
-						return humanFriendlyAmount.toString();
+						return newValue;
 					} catch (error) {
 						// console.log(error);
-						newValue = '0';
+						newValue = BIG_NUM_ZERO;
+						// console.log(2);
 						return newValue;
 					}
 				}
 			} catch (error) {
 				// console.log('token not in state yet');
-				newValue = '0';
+				newValue = BIG_NUM_ZERO;
+				// console.log(3);
 				return newValue;
 			}
 		} else {
-			newValue = '0';
+			newValue = BIG_NUM_ZERO;
+			// console.log(4);
 			return newValue;
 		}
 	};
 
 	async function callGetValueAndSetState() {
 		// Only at first render set state, otherwise infinite loop
-		if (inputs[index] === undefined) {
+
+		if (inputs[0] !== undefined) {
 			const returnValue = await callGetValue();
 			// updateUserInput(index, returnValue);
-			setGetValueState(returnValue);
-			return returnValue;
-		} else {
-			console.log('already in state');
+			// Only set state if the return value is different
+			if (!returnValue.eq(getValueState)) {
+				setGetValueState(returnValue);
+			}
 		}
 	}
 
-	function deriveBool() {
-		switch (app) {
-			case 'Kyber':
-				// If user inputted price is greater than current price, return true, otherwise false
-				if (
-					icedTxState.trigger.userInputs[3] >
-					icedTxState.trigger.userInputs[5]
-				) {
-					updateUserInput(index, true);
-				} else {
-					updateUserInput(index, false);
+	// call at every new render
+	const deriveBool = () => {
+		if (inputs[0] !== undefined) {
+			if (inputs[index] !== undefined) {
+				if (triggerOrAction === TriggerOrAction.Trigger) {
+					const shouldBeGreaterForTrue = inputs[
+						icedTxState.trigger.boolIndex
+					] as ethers.utils.BigNumber;
+
+					// dependent parameter that determines if greater or smaller
+
+					// getTriggerValueInput independent variable
+					const getTriggerValueInput = icedTxState.trigger
+						.getTriggerValueInput as ethers.utils.BigNumber;
+
+					// Make comparison with bigNumbers
+
+					// If parameter is greater than getTriggerValueInput => bool _ isGreater => true
+					if (shouldBeGreaterForTrue.gte(getTriggerValueInput)) {
+						// Set bool to true, only if it's not already true
+						if (isBool(inputs[index])) {
+							if (inputs[index] === false) {
+								console.log('set to true');
+								updateUserInput(index, true);
+							} else {
+								console.log('already true, dont set again');
+							}
+						} else {
+							console.log('Type not bool');
+						}
+					}
+					// If parameter is smaller then getTriggerValueInput => bool _isGreater => false
+					else {
+						// Set bool to false
+						if (isBool(inputs[index])) {
+							if (inputs[index] === true) {
+								console.log('set to false');
+								updateUserInput(index, false);
+							} else {
+								console.log('already false, dont set again');
+							}
+						} else {
+							console.log('Type not bool');
+						}
+					}
 				}
+			}
+			// If it is undefined, set dummy way
+			else {
+				console.log('default false');
+				updateUserInput(index, false);
+			}
+		} else {
+			console.log('default false');
+			updateUserInput(index, false);
 		}
-	}
+	};
 
 	// If user already inputted values, prefill inputs from state, otherwise display the default values
 	// œDEV make default values specific for each trigger and action, not global
-	function returnDefaultValue(): string | number {
+	function returnDefaultBigInt(): ethers.utils.BigNumber {
+		const ZERO = ethers.constants.Zero;
 		// If user has inputted something, go in here
 		if (inputs[0] !== undefined) {
 			if (inputs[index] !== undefined) {
-				// If the inputted value is of inputType TokenAmount
-				if (inputType === InputType.TokenAmount) {
-					const tokenIndex = index - 1;
-					const tokenAddress = inputs[tokenIndex].toString();
-
-					// Find token object by address
-					// Find token object by address
-					let token;
-					triggerOrAction === TriggerOrAction.Trigger
-						? (token = getTokenWithEthByAddress(tokenAddress))
-						: (token = getTokenByAddress(tokenAddress));
-
-					const humanReadableAmount = ethers.utils.formatUnits(
-						inputs[index].toString(),
-						token.decimals
-					);
-
-					return humanReadableAmount.toString();
-				} else {
-					return inputs[index].toString();
+				console.log(inputs[index]);
+				// @DEV isBugNUmber typeguard does not work
+				if (isBigNumber(inputs[index])) {
+					console.log('is big number');
 				}
+				// If the inputted value is of inputType TokenAmount
+				// if (inputType === InputType.TokenAmount) {
+				// 	const tokenAddress = inputs[tokenIndex];
+
+				// 	// Find token object by address
+				// 	// Find token object by address
+				// 	// let token = getTokenByAddress(tokenAddress.toString());
+				// 	// console.log(inputs[index]);
+				// 	// const humanReadableAmount = ethers.utils.formatUnits(
+				// 	// 	inputs[index].toString(),
+				// 	// 	token.decimals
+				// 	// );
+
+				// 	// console.log(humanReadableAmount);
+
+				// 	// return ethers.utils.bigNumberify(humanReadableAmount);
+				// 	return inputs[index] as ethers.utils.BigNumber;
+				// } else if (isBigNumber(inputs[index])) {
+				// 	updateUserInput(index, ZERO);
+				// 	return inputs[index] as ethers.utils.BigNumber;
+				// } else {
+				// 	throw Error('failed to fetch input from state');
+				// }
+				return inputs[index] as ethers.utils.BigNumber;
 			} else {
-				throw Error('error, value from state is undefined');
+				updateUserInput(index, ZERO);
+				return ZERO;
 			}
 		}
 		// If new render, go in here
 		else {
-			switch (inputType) {
-				case InputType.Number:
-					updateUserInput(index, 1);
-					return 1;
-				case InputType.TokenAmount:
-					const oneEthInWei = ethers.constants.WeiPerEther;
-					updateUserInput(index, oneEthInWei);
-					return 1;
-				case InputType.Address:
-					// return user address
-					let defaultAddress = '';
-					if (account) {
-						defaultAddress = account;
-					} else {
-						defaultAddress = '0x0';
-					}
-
-					updateUserInput(index, defaultAddress);
-					return defaultAddress;
-				case InputType.Token:
-					let defaultToken = TOKEN_LIST[0];
-					if (index !== 0) defaultToken = TOKEN_LIST[1];
-					updateUserInput(index, defaultToken.address);
-					return defaultToken.address;
-				case InputType.Date:
-					const date = new Date();
-					const timestamp = date.getTime();
-					return (timestamp / 1000).toString();
-				case InputType.Address:
-					return '0x0';
-				default:
-					return 'error';
-			}
+			updateUserInput(index, ZERO);
+			return ZERO;
 		}
 	}
 
-	function returnStringDefaultValue() {
-		if (inputs[0] !== undefined || inputs[index] !== undefined) {
-			return inputs[index].toString();
-		}
-		// If new render, go in here
-		else {
-			switch (inputType) {
-				case InputType.Address:
-					// return user address
-					return '0x0';
-				case InputType.Token:
-					let defaultToken = TOKEN_LIST[0];
-					if (index !== 0) defaultToken = TOKEN_LIST[1];
-					return defaultToken.address;
-				default:
-					return 'error';
+	const returnDefaultString = (): string => {
+		// FETCH FROM STATE
+		if (inputs[0] !== undefined) {
+			if (inputs[index] !== undefined) {
+				return inputs[index] as string;
 			}
+			// Else, Use default value
+			else {
+				return getDefaultStringValue();
+			}
+		} else {
+			return getDefaultStringValue();
 		}
-	}
+	};
+
+	const getDefaultStringValue = () => {
+		switch (inputType) {
+			case InputType.Address:
+				let defaultAddress = '';
+				if (account) {
+					defaultAddress = account;
+				} else {
+					defaultAddress = '0x0';
+				}
+				updateUserInput(index, defaultAddress);
+				return defaultAddress;
+			case InputType.Token:
+				let defaultToken = TOKEN_LIST[0];
+				if (index !== 0) defaultToken = TOKEN_LIST[1];
+				updateUserInput(index, defaultToken.address);
+				console.log(defaultToken.address);
+				return defaultToken.address;
+			case InputType.Date:
+				const date = new Date();
+				const timestamp = date.getTime();
+				return (timestamp / 1000).toString();
+			default:
+				return '';
+		}
+	};
 
 	const handleAddressChange = (event: React.ChangeEvent<{ value: any }>) => {
 		const newAddress = event.target.value;
@@ -348,7 +372,7 @@ export default function LayoutTextFields(props: InputProps) {
 							label={label}
 							index={index}
 							disabled={disabled}
-							defaultValue={returnDefaultValue()}
+							defaultValue={returnDefaultString()}
 						></DateAndTimePicker>
 					</div>
 				);
@@ -356,7 +380,7 @@ export default function LayoutTextFields(props: InputProps) {
 				return (
 					<div className={classes.form}>
 						<TokenSelect
-							defaultToken={returnStringDefaultValue()}
+							defaultToken={returnDefaultString()}
 							index={index}
 							triggerOrAction={triggerOrAction}
 							label={label}
@@ -374,7 +398,7 @@ export default function LayoutTextFields(props: InputProps) {
 							index={index}
 							inputType={inputType}
 							inputs={inputs}
-							defaultValue={returnDefaultValue()}
+							defaultValue={returnDefaultBigInt()}
 							convertToWei
 							disabled={disabled}
 							tokenIndex={tokenIndex}
@@ -391,7 +415,7 @@ export default function LayoutTextFields(props: InputProps) {
 							index={index}
 							inputType={inputType}
 							inputs={inputs}
-							defaultValue={returnDefaultValue()}
+							defaultValue={returnDefaultBigInt()}
 							convertToWei={false}
 							disabled={disabled}
 							tokenIndex={tokenIndex}
@@ -429,7 +453,6 @@ export default function LayoutTextFields(props: InputProps) {
 							style={{ marginTop: '0px', marginBottom: '0px' }}
 							id="outlined-full-width"
 							label={label}
-							defaultValue={callGetValueAndSetState()}
 							// Import TextField CSS
 							// placeholder="Placeholder"
 							// helperText="Full width!"
@@ -452,7 +475,7 @@ export default function LayoutTextFields(props: InputProps) {
 							style={{ marginTop: '0px', marginBottom: '0px' }}
 							id="outlined-full-width"
 							label={label}
-							defaultValue={returnDefaultValue()}
+							defaultValue={returnDefaultString()}
 							onChange={handleAddressChange}
 							error={error}
 							// helperText="Full width!"
@@ -468,41 +491,32 @@ export default function LayoutTextFields(props: InputProps) {
 				);
 			case InputType.StatelessGetValue:
 				callGetValueAndSetState();
-				return (
-					<div className={classes.form}>
-						{/* <TextField
-							className={classes.root}
-							required
-							style={{ marginTop: '0px', marginBottom: '0px' }}
-							id="outlined-full-width"
-							label={label}
-							value={getValueState}
-							// placeholder="Placeholder"
-							// helperText="Full width!"
-							fullWidth
-							margin="normal"
-							InputLabelProps={{
-								shrink: true
-							}}
-							variant="outlined"
-						/> */}
-						<ReactNumberFormat
-							updateUserInput={updateUserInput}
-							label={label}
-							index={index}
-							inputType={inputType}
-							inputs={inputs}
-							defaultValue={getValueState}
-							convertToWei
-							disabled={true}
-							tokenIndex={tokenIndex}
-							triggerOrAction={triggerOrAction}
-						></ReactNumberFormat>
-					</div>
-				);
+				// Only display in creation, not summary
+				if (!disabled) {
+					return (
+						<div className={classes.form}>
+							<ReactNumberFormat
+								updateUserInput={updateUserInput}
+								label={label}
+								index={index}
+								inputType={inputType}
+								inputs={inputs}
+								defaultValue={getValueState}
+								convertToWei
+								disabled={true}
+								tokenIndex={tokenIndex}
+								triggerOrAction={triggerOrAction}
+							></ReactNumberFormat>
+						</div>
+					);
+				} else {
+					return <React.Fragment></React.Fragment>;
+				}
 			case InputType.Bool:
-				// No render
-				deriveBool();
+				// Dont call when showing sumamry
+				if (!disabled) {
+					deriveBool();
+				}
 				return <React.Fragment></React.Fragment>;
 			default:
 				return <div className={classes.form}></div>;

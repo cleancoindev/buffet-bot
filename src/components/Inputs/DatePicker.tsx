@@ -14,6 +14,7 @@ import { createMuiTheme, TextField, FormControl } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 
 import { MuiPickersOverrides } from '@material-ui/pickers/typings/overrides';
+import { ethers } from 'ethers';
 
 type overridesNameToClassKey = {
 	[P in keyof MuiPickersOverrides]: keyof MuiPickersOverrides[P];
@@ -28,7 +29,8 @@ interface InputProps {
 	index: number;
 	label: string;
 	disabled: boolean;
-	defaultValue: string | number;
+	// boolean missing
+	defaultValue: string | number | ethers.utils.BigNumber;
 }
 
 const materialTheme = createMuiTheme({
@@ -135,7 +137,7 @@ export default function DateAndTimePicker(props: InputProps) {
 
 	const { dispatch, icedTxState } = useIcedTxContext();
 	// Set state with either NOW or global state
-	const defaultDate = timestampToDate(defaultValue);
+	const defaultDate = timestampToDate(defaultValue.toString());
 
 	const [selectedDate, handleDateChange] = useState(defaultDate);
 

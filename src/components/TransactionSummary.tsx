@@ -52,8 +52,8 @@ const useStyles = makeStyles(theme => ({
 interface TxSummaryParams {
 	trigger: TriggerWhitelistData;
 	action: ActionWhitelistData;
-	triggerInputs: Array<string | number | ethers.utils.BigNumber>;
-	actionInputs: Array<string | number | ethers.utils.BigNumber>;
+	triggerInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
+	actionInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
 }
 
 export default function TransactionSummary(props: TxSummaryParams) {

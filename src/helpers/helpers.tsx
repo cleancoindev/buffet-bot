@@ -1,4 +1,4 @@
-import { ATYPES, TTYPES, TOKEN_LIST } from '../constants/whitelist';
+import { ATYPES, TTYPES, TOKEN_LIST, Token } from '../constants/whitelist';
 import {
 	DEFAULT_DATA_ACTION,
 	DEFAULT_DATA_TRIGGER,
@@ -79,8 +79,19 @@ export function getTokenSymbol(address: string) {
 	return token === undefined ? 'ERROR Get Token Symbol' : token.symbol;
 }
 
+// Returns String
+export const convertWeiToHumanReadable = (
+	weiAmount: ethers.utils.BigNumber,
+	token: Token
+): string => {
+	return ethers.utils.formatUnits(weiAmount, token.decimals);
+};
+
 // @DEV Potenital bug in returning error string
 export function getTokenByAddress(address: string) {
+	if (isEth(address)) {
+		return ETH;
+	}
 	const tokenList = [...TOKEN_LIST];
 	const token = tokenList.find(
 		token =>
@@ -94,23 +105,8 @@ export function getTokenByAddress(address: string) {
 	}
 }
 
-export const getTokenWithEthByAddress = (address: string) => {
-	let tokenList = [...TOKEN_LIST];
-	tokenList.push(ETH);
-	const token = tokenList.find(
-		token =>
-			ethers.utils.getAddress(token.address) ===
-			ethers.utils.getAddress(address)
-	);
-	if (token === undefined) {
-		throw Error(`Could not find Token with address ${address}`);
-	} else {
-		return token;
-	}
-};
-
 export function encodeActionPayload(
-	userInput: Array<string | number | ethers.utils.BigNumber>,
+	userInput: Array<string | number | ethers.utils.BigNumber | boolean>,
 	abi: string,
 	user: string,
 	userProxy: string
@@ -132,7 +128,7 @@ export function encodeActionPayload(
 }
 
 export function encodeTriggerPayload(
-	userInput: Array<string | number | ethers.utils.BigNumber>,
+	userInput: Array<string | number | ethers.utils.BigNumber | boolean>,
 	abi: string
 ) {
 	const iFace = new utils.Interface([abi]);
@@ -211,9 +207,11 @@ export const deepCloneTriggers = () => {
 		let clonedGetTriggerValueAbi = '';
 		clonedGetTriggerValueAbi = data.getTriggerValueAbi;
 
+		// clone boolIndex:
+		const clonedBoolIndex = data.boolIndex;
+
 		// clone getTriggerValueAbi
-		let clonedGetTriggerValueInput = '';
-		clonedGetTriggerValueInput = data.getTriggerValueInput;
+		let clonedGetTriggerValueInput = data.getTriggerValueInput;
 
 		// clone userInputTypes
 		const clonedUserInputTypes: Array<InputType> = [];
@@ -247,7 +245,8 @@ export const deepCloneTriggers = () => {
 			inputLabels: clonedInputLabels,
 			userInputs: emptyUserInput,
 			getTriggerValueAbi: clonedGetTriggerValueAbi,
-			getTriggerValueInput: clonedGetTriggerValueInput
+			getTriggerValueInput: clonedGetTriggerValueInput,
+			boolIndex: clonedBoolIndex
 		});
 	});
 	return dataCopy;
@@ -260,6 +259,8 @@ export const isEth = (address: string) => {
 		: (isEther = false);
 	return isEther;
 };
+
+export const getToken = () => {};
 
 export const deepCloneActions = () => {
 	const dataCopy: Array<ActionWhitelistData> = [];

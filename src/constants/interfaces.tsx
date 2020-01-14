@@ -63,7 +63,7 @@ export interface ActionWhitelistData {
 	params: Array<Params>;
 	inputLabels: Array<string>;
 	userInputTypes: Array<InputType>;
-	userInputs: Array<string | number | ethers.utils.BigNumber>;
+	userInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
 	tokenIndex: number;
 }
 
@@ -77,9 +77,10 @@ export interface TriggerWhitelistData {
 	inputLabels: Array<string>;
 	tokenIndex: number;
 	userInputTypes: Array<InputType>;
-	userInputs: Array<string | number | ethers.utils.BigNumber>;
+	userInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
 	getTriggerValueAbi: string;
-	getTriggerValueInput: string;
+	getTriggerValueInput: ethers.utils.BigNumber;
+	boolIndex: number;
 }
 
 export interface UserSelection {
@@ -178,6 +179,13 @@ export enum TxState {
 	inputError
 }
 
+export interface Token {
+	address: string;
+	symbol: string;
+	name: string;
+	decimals: number;
+}
+
 export type ChainIds = 1 | 3 | 4 | 42;
 
 // Action interfaces
@@ -256,7 +264,7 @@ interface InputOk {
 
 interface UpdateGetValueInput {
 	type: typeof UPDATE_GET_VALUE_INPUT;
-	newGetValueInput: string;
+	newGetValueInput: ethers.utils.BigNumber;
 }
 
 // export interface Action {
