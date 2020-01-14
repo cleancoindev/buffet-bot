@@ -23,7 +23,8 @@ import { TOKEN_LIST } from '../constants/whitelist';
 import { ethers } from 'ethers';
 import {
 	getTokenByAddress,
-	getTokenWithEthByAddress
+	getTokenWithEthByAddress,
+	isEth
 } from '../helpers/helpers';
 
 // Number formater
@@ -125,45 +126,73 @@ export default function LayoutTextFields(props: InputProps) {
 
 			const tokenAddress = inputs[tokenIndex];
 
+			let token;
+
 			try {
-				const token = getTokenWithEthByAddress(tokenAddress.toString());
+				// Find token object by address
+
+				triggerOrAction === TriggerOrAction.Trigger
+					? (token = getTokenWithEthByAddress(
+							tokenAddress.toString()
+					  ))
+					: (token = getTokenByAddress(tokenAddress.toString()));
 
 				const signer = library.getSigner();
 
 				//Instantiate contract
-				const triggerContract = new ethers.Contract(
-					triggerAddress,
-					[abi],
-					signer
-				);
 
-				// get value
-				try {
-					newValue = await triggerContract.getTriggerValue(...inputs);
-
-					// Convert fetched wei amount to human reable amount
-
-					// @DEV Check if that works with eth
-
-					const humanFriendlyAmount = ethers.utils.formatUnits(
-						newValue,
-						token.decimals
+				if (isEth(tokenAddress.toString())) {
+					try {
+						newValue = await library.getBalance(account);
+						const humanFriendlyAmount = ethers.utils.formatEther(
+							newValue
+						);
+						// convert Value into human readable form
+						return humanFriendlyAmount.toString();
+					} catch (error) {
+						newValue = '0';
+						return newValue;
+					}
+				} else {
+					const triggerContract = new ethers.Contract(
+						triggerAddress,
+						[abi],
+						signer
 					);
 
-					// convert Value into human readable form
-					return humanFriendlyAmount.toString();
-				} catch (error) {
-					// console.log(error);
-					newValue = '1';
-					return newValue;
+					// get value
+					try {
+						newValue = await triggerContract.getTriggerValue(
+							...inputs
+						);
+						console.log('####');
+						console.log(newValue.toString());
+						console.log('####');
+
+						// Convert fetched wei amount to human reable amount
+
+						// @DEV Check if that works with eth
+
+						const humanFriendlyAmount = ethers.utils.formatUnits(
+							newValue,
+							token.decimals
+						);
+
+						// convert Value into human readable form
+						return humanFriendlyAmount.toString();
+					} catch (error) {
+						// console.log(error);
+						newValue = '0';
+						return newValue;
+					}
 				}
 			} catch (error) {
 				// console.log('token not in state yet');
-				newValue = '2';
+				newValue = '0';
 				return newValue;
 			}
 		} else {
-			newValue = '3';
+			newValue = '0';
 			return newValue;
 		}
 	};
@@ -207,7 +236,12 @@ export default function LayoutTextFields(props: InputProps) {
 					const tokenAddress = inputs[tokenIndex].toString();
 
 					// Find token object by address
-					const token = getTokenByAddress(tokenAddress);
+					// Find token object by address
+					let token;
+					triggerOrAction === TriggerOrAction.Trigger
+						? (token = getTokenWithEthByAddress(tokenAddress))
+						: (token = getTokenByAddress(tokenAddress));
+
 					const humanReadableAmount = ethers.utils.formatUnits(
 						inputs[index].toString(),
 						token.decimals
@@ -344,6 +378,7 @@ export default function LayoutTextFields(props: InputProps) {
 							convertToWei
 							disabled={disabled}
 							tokenIndex={tokenIndex}
+							triggerOrAction={triggerOrAction}
 						></ReactNumberFormat>
 					</div>
 				);
@@ -360,6 +395,7 @@ export default function LayoutTextFields(props: InputProps) {
 							convertToWei={false}
 							disabled={disabled}
 							tokenIndex={tokenIndex}
+							triggerOrAction={triggerOrAction}
 						></ReactNumberFormat>
 						{/* <TextField
 							className={classes.root}
@@ -460,6 +496,7 @@ export default function LayoutTextFields(props: InputProps) {
 							convertToWei
 							disabled={true}
 							tokenIndex={tokenIndex}
+							triggerOrAction={triggerOrAction}
 						></ReactNumberFormat>
 					</div>
 				);

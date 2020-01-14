@@ -253,6 +253,14 @@ export const deepCloneTriggers = () => {
 	return dataCopy;
 };
 
+export const isEth = (address: string) => {
+	let isEther: boolean;
+	ethers.utils.getAddress(ETH.address) === ethers.utils.getAddress(address)
+		? (isEther = true)
+		: (isEther = false);
+	return isEther;
+};
+
 export const deepCloneActions = () => {
 	const dataCopy: Array<ActionWhitelistData> = [];
 	ATYPES.forEach(data => {

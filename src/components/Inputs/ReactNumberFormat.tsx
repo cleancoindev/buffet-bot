@@ -6,9 +6,16 @@ import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import { INPUT_CSS, UPDATE_GET_VALUE_INPUT } from '../../constants/constants';
-import { InputType } from '../../constants/interfaces';
+import {
+	InputType,
+	TriggerWhitelistData,
+	TriggerOrAction
+} from '../../constants/interfaces';
 import { ethers } from 'ethers';
-import { getTokenByAddress } from '../../helpers/helpers';
+import {
+	getTokenByAddress,
+	getTokenWithEthByAddress
+} from '../../helpers/helpers';
 import { useIcedTxContext } from '../../state/GlobalState';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -60,6 +67,7 @@ interface ReactNumberFormatProps {
 	convertToWei: boolean;
 	disabled: boolean;
 	tokenIndex: number;
+	triggerOrAction: TriggerOrAction;
 }
 
 export default function ReactNumberFormat(props: ReactNumberFormatProps) {
@@ -72,7 +80,8 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		defaultValue,
 		convertToWei,
 		disabled,
-		tokenIndex
+		tokenIndex,
+		triggerOrAction
 	} = props;
 	const classes = useStyles();
 
@@ -108,7 +117,10 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				const tokenAddress = inputs[tokenIndex].toString();
 
 				// Find token object by address
-				const token = getTokenByAddress(tokenAddress);
+				let token;
+				triggerOrAction === TriggerOrAction.Trigger
+					? (token = getTokenWithEthByAddress(tokenAddress))
+					: (token = getTokenByAddress(tokenAddress));
 
 				const weiAmount = ethers.utils.parseUnits(
 					newValue.toString(),
