@@ -64,7 +64,7 @@ export interface ActionWhitelistData {
 	inputLabels: Array<string>;
 	userInputTypes: Array<InputType>;
 	userInputs: Array<string | number | ethers.utils.BigNumber>;
-	approvalIndex: number;
+	tokenIndex: number;
 }
 
 export interface TriggerWhitelistData {
@@ -75,6 +75,7 @@ export interface TriggerWhitelistData {
 	abi: string;
 	params: Array<Params>;
 	inputLabels: Array<string>;
+	tokenIndex: number;
 	userInputTypes: Array<InputType>;
 	userInputs: Array<string | number | ethers.utils.BigNumber>;
 	getTriggerValueAbi: string;

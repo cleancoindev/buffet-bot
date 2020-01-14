@@ -51,6 +51,7 @@ export const TTYPES = [
 			InputType.TokenAmount,
 			InputType.StatelessGetValue
 		],
+		tokenIndex: 1,
 		inputLabels: [
 			'Address which balance to monitor',
 			'Token',
@@ -95,6 +96,8 @@ export const TTYPES = [
 		abi: 'function fired(uint256 _timestamp)',
 		getTriggerValueAbi: '',
 		getTriggerValueInput: '0',
+		// 99 means nothing
+		tokenIndex: 999,
 		userInputTypes: [InputType.Date],
 		inputLabels: ['Pick a Date and Time'],
 		userInputs: EMPTY_STRING_ARRAY
@@ -112,7 +115,7 @@ export const ATYPES = [
 	// 	userInputTypes: [InputType.Token, InputType.Number, InputType.Address],
 	// 	inputLabels: ['Token to send', 'Amount', 'Receiving Address'],
 	// 	userInputs: [],
-	// 	approvalIndex: 0
+	// 	tokenIndex: 0
 	// },
 
 	{
@@ -155,7 +158,7 @@ export const ATYPES = [
 			'Minimum Conversion Rate'
 		],
 		userInputs: [],
-		approvalIndex: 0
+		tokenIndex: 0
 	}
 
 	// {
@@ -167,7 +170,7 @@ export const ATYPES = [
 	// 	userInputTypes: [InputType.Token],
 	// 	inputLabels: [''],
 	// 	userInputs: [],
-	// 	approvalIndex: 0
+	// 	tokenIndex: 0
 	// }
 ];
 

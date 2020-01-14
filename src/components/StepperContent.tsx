@@ -120,6 +120,7 @@ export default function StepperContent(props: StepperContentProps) {
 									inputs={triggerInputs}
 									app={triggerApp}
 									disabled={false}
+									tokenIndex={trigger.tokenIndex}
 								></InputField>
 							))}
 						</Grid>
@@ -182,6 +183,7 @@ export default function StepperContent(props: StepperContentProps) {
 									inputs={actionInputs}
 									app={actionApp}
 									disabled={false}
+									tokenIndex={action.tokenIndex}
 								></InputField>
 							))}
 						</Grid>

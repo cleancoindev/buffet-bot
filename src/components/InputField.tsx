@@ -54,6 +54,7 @@ interface InputProps {
 	disabled: boolean;
 	trigger?: TriggerWhitelistData;
 	action?: ActionWhitelistData;
+	tokenIndex: number;
 }
 
 export default function LayoutTextFields(props: InputProps) {
@@ -67,7 +68,8 @@ export default function LayoutTextFields(props: InputProps) {
 		inputs,
 		disabled,
 		trigger,
-		action
+		action,
+		tokenIndex
 	} = props;
 	// Context
 
@@ -121,7 +123,7 @@ export default function LayoutTextFields(props: InputProps) {
 
 			const triggerAddress = trigger.address;
 
-			const tokenAddress = inputs[1];
+			const tokenAddress = inputs[tokenIndex];
 
 			try {
 				const token = getTokenWithEthByAddress(tokenAddress.toString());
@@ -341,6 +343,7 @@ export default function LayoutTextFields(props: InputProps) {
 							defaultValue={returnDefaultValue()}
 							convertToWei
 							disabled={disabled}
+							tokenIndex={tokenIndex}
 						></ReactNumberFormat>
 					</div>
 				);
@@ -356,6 +359,7 @@ export default function LayoutTextFields(props: InputProps) {
 							defaultValue={returnDefaultValue()}
 							convertToWei={false}
 							disabled={disabled}
+							tokenIndex={tokenIndex}
 						></ReactNumberFormat>
 						{/* <TextField
 							className={classes.root}
@@ -455,6 +459,7 @@ export default function LayoutTextFields(props: InputProps) {
 							defaultValue={getValueState}
 							convertToWei
 							disabled={true}
+							tokenIndex={tokenIndex}
 						></ReactNumberFormat>
 					</div>
 				);

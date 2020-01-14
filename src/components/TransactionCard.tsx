@@ -192,7 +192,7 @@ export default function TransactionCard(props: TxCardProps) {
 				const signer = library.getSigner();
 				const tokenAddress =
 					icedTxState.action.userInputs[
-						icedTxState.action.approvalIndex
+						icedTxState.action.tokenIndex
 					];
 				const erc20 = new ethers.Contract(
 					tokenAddress.toString(),
@@ -514,7 +514,7 @@ export default function TransactionCard(props: TxCardProps) {
 				return {
 					title: `Approve gelato to move ${getTokenSymbol(
 						icedTxState.action.userInputs[
-							icedTxState.action.approvalIndex
+							icedTxState.action.tokenIndex
 						].toString()
 					)} for you`,
 					progress: Progress.awaitingModalConfirm,
@@ -537,7 +537,7 @@ export default function TransactionCard(props: TxCardProps) {
 						const signer = library.getSigner();
 						const tokenAddress =
 							icedTxState.action.userInputs[
-								icedTxState.action.approvalIndex
+								icedTxState.action.tokenIndex
 							];
 						console.log(ERC20_ABI);
 						const erc20 = new ethers.Contract(

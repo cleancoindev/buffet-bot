@@ -222,6 +222,9 @@ export const deepCloneTriggers = () => {
 			clonedUserInputTypes.push(clonedUserInputType);
 		});
 
+		// empty user Input
+		const clonedTokenIndex = data.tokenIndex;
+
 		// clone inputLabels
 		const clonedInputLabels: Array<string> = [];
 		data.inputLabels.forEach(inputLabel => {
@@ -239,6 +242,7 @@ export const deepCloneTriggers = () => {
 			address: clonedAddress,
 			params: clonedParams,
 			abi: clonedAbi,
+			tokenIndex: clonedTokenIndex,
 			userInputTypes: clonedUserInputTypes,
 			inputLabels: clonedInputLabels,
 			userInputs: emptyUserInput,
@@ -292,7 +296,7 @@ export const deepCloneActions = () => {
 		const emptyUserInput: Array<string> = [];
 
 		// empty user Input
-		const clonedApprovalIndex = data.approvalIndex;
+		const clonedTokenIndex = data.tokenIndex;
 
 		dataCopy.push({
 			id: clonedId,
@@ -304,7 +308,7 @@ export const deepCloneActions = () => {
 			userInputTypes: clonedUserInputTypes,
 			inputLabels: clonedInputLabels,
 			userInputs: emptyUserInput,
-			approvalIndex: clonedApprovalIndex
+			tokenIndex: clonedTokenIndex
 		});
 	});
 	return dataCopy;

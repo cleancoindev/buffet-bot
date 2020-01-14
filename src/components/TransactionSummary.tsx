@@ -153,6 +153,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 							inputs={triggerInputs}
 							app={triggerApp}
 							disabled={true}
+							tokenIndex={trigger.tokenIndex}
 						></InputField>
 					))}
 					<Divider
@@ -202,6 +203,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 							inputs={actionInputs}
 							app={actionApp}
 							disabled={true}
+							tokenIndex={action.tokenIndex}
 						></InputField>
 					))}
 				</Grid>

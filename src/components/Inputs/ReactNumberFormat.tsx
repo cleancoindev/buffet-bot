@@ -59,6 +59,7 @@ interface ReactNumberFormatProps {
 	defaultValue: string | number;
 	convertToWei: boolean;
 	disabled: boolean;
+	tokenIndex: number;
 }
 
 export default function ReactNumberFormat(props: ReactNumberFormatProps) {
@@ -70,7 +71,8 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		inputs,
 		defaultValue,
 		convertToWei,
-		disabled
+		disabled,
+		tokenIndex
 	} = props;
 	const classes = useStyles();
 
@@ -79,7 +81,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		numberformat: defaultValue.toString()
 	});
 
-	const { dispatch } = useIcedTxContext();
+	const { dispatch, icedTxState } = useIcedTxContext();
 
 	useEffect(() => {
 		// If inputs are disabled, and we make an async request to fetch some value for getValue, run this useEffect to update the state
@@ -102,8 +104,8 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				// get index of token in question
 				// @DEV Assuming that token in question always comes one index before tokenAmount
 				// @DEV change to approval amount
-				const tokenIndex = index - 1;
-				const tokenAddress = inputs[1].toString();
+
+				const tokenAddress = inputs[tokenIndex].toString();
 
 				// Find token object by address
 				const token = getTokenByAddress(tokenAddress);

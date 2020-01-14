@@ -42,7 +42,7 @@ export const DEFAULT_DATA_ACTION = {
 	inputLabels: EMPTY_STRING_ARRAY, // [ ]
 	userInputTypes: EMPTY_USER_INPUT_TYPE_ARRAY, // [ ]
 	userInputs: EMPTY_USER_INPUT_ARRAY, // [ ]
-	approvalIndex: 999 // 999 means no approval in action
+	tokenIndex: 999 // 999 means no approval in action
 };
 
 export const DEFAULT_DATA_TRIGGER = {
@@ -54,6 +54,7 @@ export const DEFAULT_DATA_TRIGGER = {
 	abi: '',
 	getTriggerValueAbi: '',
 	getTriggerValueInput: '',
+	tokenIndex: 999,
 	inputLabels: EMPTY_STRING_ARRAY, // [ ]
 	userInputTypes: EMPTY_USER_INPUT_TYPE_ARRAY, // [ ]
 	userInputs: EMPTY_USER_INPUT_ARRAY // [ ]
