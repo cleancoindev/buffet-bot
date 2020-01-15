@@ -14,6 +14,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import CancelIcon from '@material-ui/icons/Cancel';
+import TablePagination from '@material-ui/core/TablePagination';
 
 import TableRow from '@material-ui/core/TableRow';
 
@@ -259,7 +260,7 @@ const useStyles = makeStyles((theme: Theme) =>
 		},
 		paper: {
 			width: '100%',
-			marginBottom: theme.spacing(2),
+			marginBottom: theme.spacing(1),
 			overflowX: 'auto',
 			// minWidth: 750,
 			background: 'transparent'
@@ -268,6 +269,10 @@ const useStyles = makeStyles((theme: Theme) =>
 		},
 		table: {
 			// color: 'white'
+		},
+		tablePagination: {
+			color: 'white',
+			marginTop: theme.spacing(1)
 		},
 		visuallyHidden: {
 			border: 0,
@@ -300,9 +305,9 @@ export default function EnhancedTable() {
 	// @ DEV CHANGED TO ID FROM CALORIES
 	const [orderBy, setOrderBy] = React.useState<keyof Data>('date');
 	const [selected, setSelected] = React.useState<string[]>([]);
-	const [page /*setPage*/] = React.useState(0);
+	const [page, setPage] = React.useState(0);
 	const [dense /*setDense*/] = React.useState(false);
-	const [rowsPerPage /*setRowsPerPage*/] = React.useState(5);
+	const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
 	// THE GRAPH API Fetching
 
@@ -328,7 +333,7 @@ export default function EnhancedTable() {
 					body: JSON.stringify({
 						query: `{
 							users (where: {address:"${account}"}) {
-							  executionClaims {
+								executionClaims (orderBy:mintingDate) {
 								id
 								executionClaimId
 								selectedExecutor
@@ -361,6 +366,7 @@ export default function EnhancedTable() {
 				pastTransactions: executionClaims
 			});
 
+			let counter = 1;
 			executionClaims.forEach((executionClaim: any, index: any) => {
 				// With address, find trigger and action
 				const trigger = findTriggerByAddress(executionClaim.trigger);
@@ -392,7 +398,7 @@ export default function EnhancedTable() {
 				// console.log(trigger);
 				// console.log(action);
 				const newData = createData(
-					executionClaim.executionClaimId.toString(),
+					counter.toString(),
 					trigger.title,
 					action.title,
 					stringifyTimestamp(executionClaim.mintingDate),
@@ -401,6 +407,7 @@ export default function EnhancedTable() {
 					'CANCEL'
 				);
 				newRows.push(newData);
+				counter = counter + 1;
 
 				// Date when the claim was created
 			});
@@ -480,6 +487,17 @@ export default function EnhancedTable() {
 		setSelected(newSelected);
 	};
 
+	const handleChangePage = (event: unknown, newPage: number) => {
+		setPage(newPage);
+	};
+
+	const handleChangeRowsPerPage = (
+		event: React.ChangeEvent<HTMLInputElement>
+	) => {
+		setRowsPerPage(parseInt(event.target.value, 10));
+		setPage(0);
+	};
+
 	const isSelected = (name: string) => selected.indexOf(name) !== -1;
 
 	const emptyRows =
@@ -536,7 +554,7 @@ export default function EnhancedTable() {
 											selected={isItemSelected}
 										>
 											<StyledTableCell align="left">
-												{index + 1}
+												{row.id}
 											</StyledTableCell>
 											<StyledTableCell align="left">
 												{row.trigger}
@@ -624,6 +642,16 @@ export default function EnhancedTable() {
 							)}
 						</TableBody>
 					</Table>
+					<TablePagination
+						className={classes.tablePagination}
+						rowsPerPageOptions={[5, 10, 25]}
+						component="div"
+						count={displayedRows.length}
+						rowsPerPage={rowsPerPage}
+						page={page}
+						onChangePage={handleChangePage}
+						onChangeRowsPerPage={handleChangeRowsPerPage}
+					/>
 				</Paper>
 			</div>
 		</React.Fragment>
