@@ -144,6 +144,7 @@ export interface StepperProps {
 	modalClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
 	steps: Array<string>;
 	icedTxState: IcedTx;
+	preTxCheck: Function;
 }
 
 export interface Token {

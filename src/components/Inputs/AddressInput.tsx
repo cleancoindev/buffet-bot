@@ -88,8 +88,6 @@ export default function AddressInput(props: AddressInputProps) {
 
 	const { dispatch, icedTxState } = useIcedTxContext();
 
-	console.log(icedTxState.error);
-
 	// At first render, check validity of input
 	// useEffect(() => {
 	// 	validateAddressInput('0x0');

@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 	warningMessage: {
 		// ${({ theme }) => theme.flexRowNoWrap}
 		// cursor: 'pointer',
-		flex: '1 0 auto',
+		// flex: '1 0 auto',
 		alignItems: 'center',
 		position: 'relative',
 		padding: '0.5rem 1rem',

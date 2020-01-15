@@ -24,6 +24,7 @@ import TransactionOverview from './pages/TransactionOverview';
 import TransactionModal from './components/Modal';
 import { COLOURS, BOX } from './constants/constants';
 import { WarningMessage } from './components/WarningMessage';
+import Footer from './components/Footer';
 
 function App() {
 	return (
@@ -35,37 +36,46 @@ function App() {
 						<Header></Header>
 						<WarningMessage></WarningMessage>
 						<Container
+							className={'sub-container'}
 							style={{
 								// marginTop: '48px',
 								marginTop: '32px',
-								padding: '8px',
-								...BOX
+								padding: '0px'
 							}}
 						>
-							<Switch>
-								<Route
-									path="/"
-									exact
-									component={Configurator}
-								/>
-								<Route
-									path="/dashboard"
-									exact
-									component={Dashboard}
-								/>
-								<Route
-									path="/dashboard/:transactionId"
-									component={TransactionOverview}
-								/>
-								<Route
-									path="/create/:triggerId/:actionId"
-									component={Create}
-								/>
+							<div
+								style={{
+									...BOX,
+									margin: '0',
+									padding: '0'
+								}}
+							>
+								<Switch>
+									<Route
+										path="/"
+										exact
+										component={Configurator}
+									/>
+									<Route
+										path="/dashboard"
+										exact
+										component={Dashboard}
+									/>
+									<Route
+										path="/dashboard/:transactionId"
+										component={TransactionOverview}
+									/>
+									<Route
+										path="/create/:triggerId/:actionId"
+										component={Create}
+									/>
 
-								{/*Last route acts as an try catch*/}
-								<Route path="/" component={Configurator} />
-							</Switch>
+									{/*Last route acts as an try catch*/}
+									<Route path="/" component={Configurator} />
+								</Switch>
+							</div>
 						</Container>
+						<Footer></Footer>
 					</div>
 					<TransactionModal></TransactionModal>
 				</div>

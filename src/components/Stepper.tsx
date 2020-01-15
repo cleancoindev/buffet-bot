@@ -90,7 +90,8 @@ export default function StepperParent(props: StepperProps) {
 		handleNext,
 		handleBack,
 		// modalOpen,
-		modalClickOpen
+		modalClickOpen,
+		preTxCheck
 	} = props;
 
 	const { dispatch } = useIcedTxContext();
@@ -147,19 +148,12 @@ export default function StepperParent(props: StepperProps) {
 									variant="contained"
 									color="primary"
 									onClick={() => {
-										if (active) {
-											dispatch({
-												type: UPDATE_TX_STATE,
-												txState:
-													TxState.displayGelatoWallet
-											});
-										} else {
-											dispatch({
-												type: UPDATE_TX_STATE,
-												txState:
-													TxState.displayLogIntoMetamask
-											});
-										}
+										// @ DEV should need that, but in order to display create right away, we dont do it
+										// dispatch({
+										// 	type: UPDATE_TX_STATE,
+										// 	txState:
+										// 		TxState.displayInstallMetamask
+										// });
 										dispatch({ type: OPEN_MODAL });
 									}}
 									className={classes.nextButton}

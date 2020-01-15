@@ -38,9 +38,6 @@ import {
 import { useIcedTxContext } from '../state/GlobalState';
 import { TxState } from '../constants/interfaces';
 
-// Import Logo component
-import Logo from './Logo';
-
 const drawerWidth = 240;
 
 const BootstrapButtonDanger = withStyles({
@@ -192,7 +189,7 @@ export default function ButtonAppBar() {
 					{/* <Link className={classes.menuButton} to="/"> */}
 					<div className={classes.menuButton}>
 						<img
-							src="images/gelato_logo.png"
+							src={`${process.env.PUBLIC_URL}/images/gelato_logo.png`}
 							alt="logo"
 							style={{
 								width: '40px',

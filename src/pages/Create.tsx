@@ -190,8 +190,9 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 					.getBalance(web3.account)
 					.then((result: ethers.utils.BigNumber) => {
 						const userBalance = result;
+						// $0.2
 						const hypotheticalMintingCosts = ethers.utils.bigNumberify(
-							'10000000000000000'
+							'1200000000000000'
 						);
 						// We make initial check that user has sufficient ETH, e.g. more than 0.01ETH => Balance greater than cost of minting
 						if (hypotheticalMintingCosts.lte(userBalance)) {
@@ -287,10 +288,6 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 				}
 				break;
 		}
-
-		// 5. Check if user has sufficient token approval
-
-		// 6. READY to mint
 	};
 
 	const modalOpen = icedTxState.modalOpen;
@@ -333,6 +330,7 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 					<React.Fragment>
 						<Hidden xsDown>
 							<Stepper
+								preTxCheck={preTxCheck}
 								icedTxState={icedTxState}
 								steps={getSteps()}
 								activeStep={activeStep}
@@ -346,6 +344,7 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 						</Hidden>
 						<Hidden smUp>
 							<MobileStepper
+								preTxCheck={preTxCheck}
 								icedTxState={icedTxState}
 								steps={getSteps()}
 								activeStep={activeStep}

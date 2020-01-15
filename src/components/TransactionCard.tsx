@@ -382,6 +382,7 @@ export default function TransactionCard(props: TxCardProps) {
 	}, [active, txState]);
 
 	function returnModalContent(txState: TxState): ModalContent {
+		console.log(txState);
 		switch (txState) {
 			case TxState.displayInstallMetamask:
 				return {
