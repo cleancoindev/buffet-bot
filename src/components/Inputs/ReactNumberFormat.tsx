@@ -5,7 +5,14 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
-import { INPUT_CSS, UPDATE_GET_VALUE_INPUT } from '../../constants/constants';
+import {
+	INPUT_CSS,
+	UPDATE_GET_VALUE_INPUT,
+	BIG_NUM_ZERO,
+	BIG_NUM_ONE,
+	INPUT_ERROR,
+	INPUT_OK
+} from '../../constants/constants';
 import {
 	InputType,
 	TriggerWhitelistData,
@@ -17,7 +24,6 @@ import {
 	convertWeiToHumanReadable
 } from '../../helpers/helpers';
 import { useIcedTxContext } from '../../state/GlobalState';
-import { Zero } from 'ethers/constants';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -94,16 +100,27 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 	// 	defaultValue,
 	// 	token.decimals
 	// );
+	let initialValueBigInt: ethers.utils.BigNumber = BIG_NUM_ZERO;
+	let initialValueString = '0';
+	if (inputType === InputType.Number || inputType === InputType.TokenAmount) {
+		initialValueBigInt = BIG_NUM_ONE;
+		initialValueString = '1';
+	}
 
 	const [values, setValues] = React.useState<State>({
 		textmask: '(1  )    -    ',
-		numberformat: defaultValue.eq(Zero)
-			? '0'
+		numberformat: defaultValue.eq(initialValueBigInt)
+			? initialValueString
 			: convertWeiToHumanReadable(
 					defaultValue,
 					getTokenByAddress(inputs[tokenIndex].toString())
 			  )
 	});
+
+	// Error Bool, default false
+	// Applied to:
+	// // Number
+	const [error, setError] = React.useState(false);
 
 	const { dispatch, icedTxState } = useIcedTxContext();
 
@@ -138,6 +155,11 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 
 	// We always store the WEI amount in global state, but in local state we store the userFriendly version
 	const handleNewValue = (newValue: string) => {
+		// Validate defaultValue
+		// We need value 0
+		// validateUserInput();
+
+		// Set local and global state
 		if (newValue !== '' && newValue !== '.') {
 			// setValues({
 			// 	...values,
@@ -202,21 +224,56 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		handleNewValue(newValue);
 	};
 
+	// @DEV we do indirect validation through default values. Value 0 is imporant e.g. when wanting balance to go to zero
+	// If default value is equal to ZERO => show error
+	/*
+	const validateUserInput = () => {
+		console.log('validating');
+		// Dont do for statelessGetValue
+		if (inputType !== InputType.StatelessGetValue) {
+			// If default value is equal to ZERO => Set error
+			if (defaultValue.eq(BIG_NUM_ZERO)) {
+				console.log(' Error');
+				setError(true);
+				if (!icedTxState.error.isError) {
+					console.log('set Error');
+					dispatch({
+						type: INPUT_ERROR,
+						msg: `Input for '${label}' can't be 0`
+					});
+				}
+			}
+			// IF input is greater than zero => Set Input = OK
+			else {
+				setError(false);
+				console.log('no error');
+				if (icedTxState.error.isError) {
+					console.log('set NO Error');
+					dispatch({
+						type: INPUT_OK
+					});
+				}
+			}
+		}
+	};
+	*/
+
 	return (
 		<TextField
 			className={classes.root}
 			label={label}
 			value={values.numberformat}
 			onChange={handleChange('numberformat')}
-			id="formatted-numberformat-input"
+			id={`formatted-numberformat-input-${triggerOrAction}-${index}`}
 			InputProps={{
 				inputComponent: NumberFormatCustom as any
 			}}
 			InputLabelProps={{
 				shrink: true
 			}}
+			error={error}
 			variant="outlined"
-			key={`num-"${index}`}
+			key={`num-textfield-${triggerOrAction}-${index}`}
 			disabled={disabled}
 		/>
 	);

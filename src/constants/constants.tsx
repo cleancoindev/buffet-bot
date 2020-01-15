@@ -11,6 +11,7 @@ export const EMPTY_PARAM_ARRAY: Array<Params> = [];
 export const EMPTY_STRING_ARRAY: Array<string> = [];
 
 export const BIG_NUM_ZERO = ethers.constants.Zero;
+export const BIG_NUM_ONE = ethers.constants.One;
 
 export const COLOURS = {
 	salmon: '#E91E63',

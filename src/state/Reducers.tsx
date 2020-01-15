@@ -63,7 +63,6 @@ function updateUserInput(
 }
 
 function setTriggerGetValue(state: IcedTx, newValue: ethers.utils.BigNumber) {
-	console.log('setTriggerValue in reducer');
 	const stateCopy = { ...state };
 
 	stateCopy.trigger.getTriggerValueInput = newValue;

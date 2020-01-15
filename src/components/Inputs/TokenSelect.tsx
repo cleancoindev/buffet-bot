@@ -150,6 +150,8 @@ export default function TokenSelect(props: TokenSelectProps) {
 		// Update local state
 		setToken(tokenObject);
 		// Update global state
+		console.log('change TokenAddress to');
+		console.log(tokenAddress);
 		updateUserInput(index, tokenObject.address);
 	};
 
@@ -190,7 +192,10 @@ export default function TokenSelect(props: TokenSelectProps) {
 				// input={<SalmonSelect />}
 			>
 				{tokenList.map((possibleToken, key) => (
-					<MenuItem key={key} value={possibleToken.address}>
+					<MenuItem
+						key={`${key}-${index}-${disabled}-${triggerOrAction}`}
+						value={possibleToken.address}
+					>
 						{possibleToken.symbol}
 					</MenuItem>
 				))}

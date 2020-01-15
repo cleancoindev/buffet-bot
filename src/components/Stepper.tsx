@@ -8,7 +8,8 @@ import Button from '@material-ui/core/Button';
 // Local Components
 import StepperContent from './StepperContent';
 import { StepperProps, TxState } from '../constants/interfaces';
-import { COLOURS } from '../constants/constants';
+import { COLOURS, UPDATE_TX_STATE, OPEN_MODAL } from '../constants/constants';
+import { useIcedTxContext } from '../state/GlobalState';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -91,6 +92,8 @@ export default function StepperParent(props: StepperProps) {
 		modalClickOpen
 	} = props;
 
+	const { dispatch } = useIcedTxContext();
+
 	return (
 		<div className={classes.root}>
 			<Stepper
@@ -140,7 +143,13 @@ export default function StepperParent(props: StepperProps) {
 								<Button
 									variant="contained"
 									color="primary"
-									onClick={modalClickOpen}
+									onClick={() => {
+										dispatch({
+											type: UPDATE_TX_STATE,
+											txState: TxState.displayGelatoWallet
+										});
+										dispatch({ type: OPEN_MODAL });
+									}}
 									className={classes.nextButton}
 								>
 									{'Confirm'}

@@ -1,7 +1,8 @@
 import { InputType } from './interfaces';
 import { ethers } from 'ethers';
 
-export const BIG_NUM_ZERO = ethers.constants.Zero;
+const BIG_NUM_ZERO = ethers.constants.Zero;
+const BIG_NUM_ONE = ethers.constants.One;
 
 export const APPS = {
 	triggers: ['Your Wallet', 'Calendar', 'Kyber'],
@@ -74,7 +75,7 @@ export const TTYPES = [
 		id: 2,
 		app: 'Kyber',
 		title: 'Price on Kyber',
-		address: '0xb033FdEe78C657cB155484e7708d329947eDF45A',
+		address: '0x61Bd89De0912c5E07d03f2c533D29A8eB78dc925',
 		params: [
 			{ type: 'address', name: '_src' },
 			{ type: 'uint256', name: '_srcAmount' },
@@ -86,7 +87,7 @@ export const TTYPES = [
 			InputType.Token,
 			InputType.TokenAmount,
 			InputType.Token,
-			InputType.Number,
+			InputType.TokenAmount,
 			InputType.Bool,
 			InputType.StatelessGetValue
 		],
@@ -94,8 +95,9 @@ export const TTYPES = [
 			'function fired(address _src, uint256 _srcAmount, address _dest, uint256 _refRate, bool _greaterElseSmaller)',
 		getTriggerValueAbi:
 			'function getTriggerValue(address _src, uint256 _srcAmount, address _dest, uint256, bool) view returns (uint256)',
+		// Always 0
 		tokenIndex: 0,
-		boolIndex: 1,
+		boolIndex: 3,
 		getTriggerValueInput: BIG_NUM_ZERO,
 		inputLabels: [
 			'Sell Token',
@@ -128,23 +130,45 @@ export const TTYPES = [
 
 // Actions
 export const ATYPES = [
-	// {
-	// 	id: 1,
-	// 	app: 'Your Wallet',
-	// 	title: 'Send Tokens',
-	// 	address: '0x3',
-	// 	params: ['address', 'uint256', 'address'],
-	// 	userInputTypes: [InputType.Token, InputType.Number, InputType.Address],
-	// 	inputLabels: ['Token to send', 'Amount', 'Receiving Address'],
-	// 	userInputs: [],
-	// 	tokenIndex: 0
-	// },
+	{
+		id: 1,
+		app: 'ERC 20',
+		title: 'Send Tokens',
+		address: '0x8FdAf109e391C304939CF64C9B9912b320AdfE56',
+		/*
+		IERC20 _src,
+        uint256 _srcAmt,
+        address _beneficiary
+		*/
+		params: [
+			{ type: 'address', name: '_user' },
+			{ type: 'address', name: '_userProxy' },
+			{ type: 'address', name: '_src' },
+			{ type: 'uint256', name: '_srcAmt' },
+			{ type: 'address', name: '_beneficiary' }
+		],
+		abi:
+			'function action(address _user, address _userProxy, address _src, uint256 _srcAmount, address _beneficiary)',
+		userInputTypes: [
+			InputType.Token,
+			InputType.TokenAmount,
+			InputType.Address
+		],
+		inputLabels: [
+			'Token you want to send',
+			'Amount',
+			'Address that will receive the tokens'
+		],
+		userInputs: EMPTY_STRING_ARRAY,
+		// For Actions, token Index is 0 as the first two parameters are added only before encoding
+		tokenIndex: 0
+	},
 
 	{
 		id: 2,
 		app: 'Kyber',
-		title: 'Trade Tokens on Kyber Network',
-		address: '0x05B0C94eA8EEf2A4Ec19E717C30552298851c761',
+		title: 'Trade Tokens on Kyber',
+		address: '0x67f647bDF012A718d5F9bD9C7bEd6e5a2023ccC6',
 		/*
 		 // Standard Action Params
         address _user,
@@ -162,24 +186,21 @@ export const ATYPES = [
 			{ type: 'address', name: '_userProxy' },
 			{ type: 'address', name: '_src' },
 			{ type: 'uint256', name: '_srcAmt' },
-			{ type: 'address', name: '_dest' },
-			{ type: 'uint256', name: '_minConversionRate' }
+			{ type: 'address', name: '_dest' }
 		],
 		abi:
-			'function action(address _user, address _userProxy, address _src, uint256 _srcAmount, address _dest, uint256 _minConversionAmount)',
+			'function action(address _user, address _userProxy, address _src, uint256 _srcAmount, address _dest)',
 		userInputTypes: [
 			InputType.Token,
 			InputType.TokenAmount,
-			InputType.Token,
-			InputType.Number
+			InputType.Token
 		],
 		inputLabels: [
 			'Token you want to sell',
 			'Sell Amount',
-			'Token you want to buy',
-			'Minimum Conversion Rate'
+			'Token you want to buy'
 		],
-		userInputs: [],
+		userInputs: EMPTY_STRING_ARRAY,
 		tokenIndex: 0
 	}
 

@@ -18,7 +18,8 @@ import {
 	INPUT_ERROR,
 	INPUT_OK,
 	DEFAULT_DATA_TRIGGER,
-	BIG_NUM_ZERO
+	BIG_NUM_ZERO,
+	BIG_NUM_ONE
 } from '../constants/constants';
 import { TOKEN_LIST } from '../constants/whitelist';
 import { ethers } from 'ethers';
@@ -126,44 +127,38 @@ export default function LayoutTextFields(props: InputProps) {
 
 			try {
 				// Find token object by address
-
 				const signer = library.getSigner();
 
+				const triggerContract = new ethers.Contract(
+					triggerAddress,
+					[abi],
+					signer
+				);
+
+				// get value
+				try {
+					newValue = await triggerContract.getTriggerValue(...inputs);
+					// Convert fetched wei amount to human reable amount
+
+					// convert Value into human readable form
+					return newValue;
+				} catch (error) {
+					// console.log(error);
+					newValue = BIG_NUM_ZERO;
+					// console.log(2);
+					return newValue;
+				}
 				//Instantiate contract
 
-				if (isEth(tokenAddress.toString())) {
-					try {
-						newValue = await library.getBalance(account);
-						// convert Value into human readable form
-						return newValue;
-					} catch (error) {
-						newValue = BIG_NUM_ZERO;
-						// console.log(1);
-						return newValue;
-					}
-				} else {
-					const triggerContract = new ethers.Contract(
-						triggerAddress,
-						[abi],
-						signer
-					);
-
-					// get value
-					try {
-						newValue = await triggerContract.getTriggerValue(
-							...inputs
-						);
-						// Convert fetched wei amount to human reable amount
-
-						// convert Value into human readable form
-						return newValue;
-					} catch (error) {
-						// console.log(error);
-						newValue = BIG_NUM_ZERO;
-						// console.log(2);
-						return newValue;
-					}
-				}
+				// try {
+				// 	newValue = await library.getBalance(account);
+				// 	// convert Value into human readable form
+				// 	return newValue;
+				// } catch (error) {
+				// 	newValue = BIG_NUM_ZERO;
+				// 	// console.log(1);
+				// 	return newValue;
+				// }
 			} catch (error) {
 				// console.log('token not in state yet');
 				newValue = BIG_NUM_ZERO;
@@ -248,6 +243,7 @@ export default function LayoutTextFields(props: InputProps) {
 		}
 	};
 
+	// DEFAULT 1
 	// If user already inputted values, prefill inputs from state, otherwise display the default values
 	// œDEV make default values specific for each trigger and action, not global
 	function returnDefaultBigInt(): ethers.utils.BigNumber {
@@ -255,7 +251,6 @@ export default function LayoutTextFields(props: InputProps) {
 		// If user has inputted something, go in here
 		if (inputs[0] !== undefined) {
 			if (inputs[index] !== undefined) {
-				console.log(inputs[index]);
 				// @DEV isBugNUmber typeguard does not work
 				if (isBigNumber(inputs[index])) {
 					console.log('is big number');
@@ -285,14 +280,14 @@ export default function LayoutTextFields(props: InputProps) {
 				// }
 				return inputs[index] as ethers.utils.BigNumber;
 			} else {
-				updateUserInput(index, ZERO);
-				return ZERO;
+				updateUserInput(index, BIG_NUM_ONE);
+				return BIG_NUM_ONE;
 			}
 		}
 		// If new render, go in here
 		else {
-			updateUserInput(index, ZERO);
-			return ZERO;
+			updateUserInput(index, BIG_NUM_ONE);
+			return BIG_NUM_ONE;
 		}
 	}
 
@@ -319,6 +314,10 @@ export default function LayoutTextFields(props: InputProps) {
 					defaultAddress = account;
 				} else {
 					defaultAddress = '0x0';
+					dispatch({
+						type: INPUT_ERROR,
+						msg: `Input field '${label}' hat to be a correct Ethereum address`
+					});
 				}
 				updateUserInput(index, defaultAddress);
 				return defaultAddress;
@@ -337,6 +336,8 @@ export default function LayoutTextFields(props: InputProps) {
 		}
 	};
 
+	// Used to validate address
+
 	const handleAddressChange = (event: React.ChangeEvent<{ value: any }>) => {
 		const newAddress = event.target.value;
 
@@ -351,9 +352,10 @@ export default function LayoutTextFields(props: InputProps) {
 			setError(true);
 			if (!icedTxState.error.isError) {
 				console.log('Error');
+				console.log(icedTxState.txState);
 				dispatch({
 					type: INPUT_ERROR,
-					msg: `Please fix the address for input field: '${label}'`
+					msg: `Input field '${label}' hat to be a correct Ethereum address`
 				});
 			}
 		}
@@ -385,6 +387,7 @@ export default function LayoutTextFields(props: InputProps) {
 							triggerOrAction={triggerOrAction}
 							label={label}
 							disabled={disabled}
+							key={`address-input-${disabled}-${triggerOrAction}-${index}`}
 						/>
 					</div>
 				);
@@ -403,6 +406,7 @@ export default function LayoutTextFields(props: InputProps) {
 							disabled={disabled}
 							tokenIndex={tokenIndex}
 							triggerOrAction={triggerOrAction}
+							key={`tokenAmount-input-${disabled}-${triggerOrAction}-${index}`}
 						></ReactNumberFormat>
 					</div>
 				);
@@ -420,6 +424,7 @@ export default function LayoutTextFields(props: InputProps) {
 							disabled={disabled}
 							tokenIndex={tokenIndex}
 							triggerOrAction={triggerOrAction}
+							key={`number-input-${disabled}-${triggerOrAction}-${index}`}
 						></ReactNumberFormat>
 						{/* <TextField
 							className={classes.root}
@@ -478,6 +483,7 @@ export default function LayoutTextFields(props: InputProps) {
 							defaultValue={returnDefaultString()}
 							onChange={handleAddressChange}
 							error={error}
+							key={`address-input-${disabled}-${triggerOrAction}-${index}`}
 							// helperText="Full width!"
 							// Import TextField CSS
 							margin="normal"
@@ -506,6 +512,7 @@ export default function LayoutTextFields(props: InputProps) {
 								disabled={true}
 								tokenIndex={tokenIndex}
 								triggerOrAction={triggerOrAction}
+								key={`getValue-input-${disabled}-${triggerOrAction}-${index}`}
 							></ReactNumberFormat>
 						</div>
 					);

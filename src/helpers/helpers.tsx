@@ -2,7 +2,6 @@ import { ATYPES, TTYPES, TOKEN_LIST, Token } from '../constants/whitelist';
 import {
 	DEFAULT_DATA_ACTION,
 	DEFAULT_DATA_TRIGGER,
-	EMPTY_USER_INPUT_TYPE_ARRAY,
 	ETH
 } from '../constants/constants';
 import { utils, ethers } from 'ethers';
@@ -10,8 +9,7 @@ import {
 	Params,
 	ActionWhitelistData,
 	TriggerWhitelistData,
-	InputType,
-	TriggerOrAction
+	InputType
 } from '../constants/interfaces';
 
 export function stringifyTimestamp(timestamp: string) {
@@ -161,7 +159,6 @@ export function decodeTriggerPayload(
 		paramsToSimpleParams(inputParameter),
 		ethers.utils.hexDataSlice(payload, 4)
 	);
-	console.log(decodedPayload);
 
 	return decodedPayload;
 }

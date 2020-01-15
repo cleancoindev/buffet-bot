@@ -244,7 +244,6 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 								icedTxState.action.userInputs[
 									icedTxState.action.tokenIndex
 								];
-							console.log(tokenAddress);
 							const erc20 = new ethers.Contract(
 								tokenAddress.toString(),
 								JSON.stringify(ERC20_ABI),
@@ -272,7 +271,7 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 				}
 				break;
 			default:
-				console.log('default');
+				// console.log('default');
 				if (
 					icedTxState.txState === TxState.displayCancel ||
 					icedTxState.txState === TxState.preCancel ||

@@ -29,7 +29,7 @@ import {
 import { useWeb3React } from '@web3-react/core';
 import { injected } from '../constants/connectors';
 import { useGelatoCore } from '../hooks/hooks';
-import { EXECUTOR_ADDRESS } from '../constants/whitelist';
+import { EXECUTOR_ADDRESS, TOKEN_LIST } from '../constants/whitelist';
 import { ethers } from 'ethers';
 
 // Smart Contract ABIs
@@ -695,7 +695,7 @@ export default function TransactionCard(props: TxCardProps) {
 									txState: TxState.postCreate
 								});
 							} catch (error) {
-								console.log(error);
+								// console.log(error);
 								console.log('Change TxState to cancelled');
 								dispatch({
 									type: UPDATE_TX_STATE,
@@ -894,12 +894,12 @@ export default function TransactionCard(props: TxCardProps) {
 					closeBtn: false,
 					btn: 'Close',
 					btnFunc: () => {
+						modalClose();
 						console.log('Change TxState to insufficientBalance');
 						dispatch({
 							type: UPDATE_TX_STATE,
 							txState: TxState.insufficientBalance
 						});
-						modalClose();
 					}
 				};
 			case TxState.inputError:
@@ -911,12 +911,12 @@ export default function TransactionCard(props: TxCardProps) {
 					closeBtn: false,
 					btn: 'OK',
 					btnFunc: () => {
-						console.log('Change TxState to insufficientBalance');
-						dispatch({
-							type: UPDATE_TX_STATE,
-							txState: TxState.insufficientBalance
-						});
+						console.log('Change TxState to displayApprove');
 						modalClose();
+						// dispatch({
+						// 	type: UPDATE_TX_STATE,
+						// 	txState: TxState.displayApprove
+						// });
 					}
 				};
 			default:
