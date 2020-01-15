@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 // Routing
 import { useHistory } from 'react-router-dom';
@@ -37,6 +37,9 @@ import {
 } from '../constants/constants';
 import { useIcedTxContext } from '../state/GlobalState';
 import { TxState } from '../constants/interfaces';
+
+// Import Logo component
+import Logo from './Logo';
 
 const drawerWidth = 240;
 
@@ -189,7 +192,7 @@ export default function ButtonAppBar() {
 					{/* <Link className={classes.menuButton} to="/"> */}
 					<div className={classes.menuButton}>
 						<img
-							src="./Gelato_Logo.png"
+							src="images/gelato_logo.png"
 							alt="logo"
 							style={{
 								width: '40px',
