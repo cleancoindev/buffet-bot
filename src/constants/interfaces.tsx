@@ -157,26 +157,26 @@ export type KyberToken = Array<Token>;
 
 // Transaction Statea
 export enum TxState {
-	displayInstallMetamask,
-	displayLogIntoMetamask,
-	displayWrongNetwork,
-	displayGelatoWallet,
-	preGelatoWallet,
-	waitingGelatoWallet,
-	postGelatoWallet,
-	displayApprove,
-	preApprove,
-	displayCreate,
-	preCreate,
-	waitingCreate,
-	postCreate,
-	displayCancel,
-	preCancel,
-	waitingCancel,
-	postCancel,
-	cancelled,
-	insufficientBalance,
-	inputError
+	displayInstallMetamask = 0,
+	displayLogIntoMetamask = 1,
+	displayWrongNetwork = 2,
+	displayGelatoWallet = 3,
+	preGelatoWallet = 4,
+	waitingGelatoWallet = 5,
+	postGelatoWallet = 6,
+	displayApprove = 7,
+	preApprove = 8,
+	displayCreate = 9,
+	preCreate = 10,
+	waitingCreate = 11,
+	postCreate = 12,
+	displayCancel = 13,
+	preCancel = 14,
+	waitingCancel = 15,
+	postCancel = 16,
+	cancelled = 17,
+	insufficientBalance = 18,
+	inputError = 19
 }
 
 export interface Token {
@@ -256,10 +256,12 @@ interface UpdateSelectedTx {
 interface InputError {
 	type: typeof INPUT_ERROR;
 	msg: string;
+	txState: TxState;
 }
 
 interface InputOk {
 	type: typeof INPUT_OK;
+	txState: TxState;
 }
 
 interface UpdateGetValueInput {

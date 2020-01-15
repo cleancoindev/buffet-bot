@@ -10,6 +10,7 @@ import StepperContent from './StepperContent';
 import { StepperProps, TxState } from '../constants/interfaces';
 import { COLOURS, UPDATE_TX_STATE, OPEN_MODAL } from '../constants/constants';
 import { useIcedTxContext } from '../state/GlobalState';
+import { useWeb3React } from '@web3-react/core';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -94,6 +95,8 @@ export default function StepperParent(props: StepperProps) {
 
 	const { dispatch } = useIcedTxContext();
 
+	const { active } = useWeb3React();
+
 	return (
 		<div className={classes.root}>
 			<Stepper
@@ -144,10 +147,19 @@ export default function StepperParent(props: StepperProps) {
 									variant="contained"
 									color="primary"
 									onClick={() => {
-										dispatch({
-											type: UPDATE_TX_STATE,
-											txState: TxState.displayGelatoWallet
-										});
+										if (active) {
+											dispatch({
+												type: UPDATE_TX_STATE,
+												txState:
+													TxState.displayGelatoWallet
+											});
+										} else {
+											dispatch({
+												type: UPDATE_TX_STATE,
+												txState:
+													TxState.displayLogIntoMetamask
+											});
+										}
 										dispatch({ type: OPEN_MODAL });
 									}}
 									className={classes.nextButton}

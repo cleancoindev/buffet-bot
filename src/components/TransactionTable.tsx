@@ -366,7 +366,7 @@ export default function EnhancedTable() {
 				pastTransactions: executionClaims
 			});
 
-			let counter = 1;
+			let counter = 0;
 			executionClaims.forEach((executionClaim: any, index: any) => {
 				// With address, find trigger and action
 				const trigger = findTriggerByAddress(executionClaim.trigger);
@@ -554,7 +554,7 @@ export default function EnhancedTable() {
 											selected={isItemSelected}
 										>
 											<StyledTableCell align="left">
-												{row.id}
+												{parseInt(row.id) + 1}
 											</StyledTableCell>
 											<StyledTableCell align="left">
 												{row.trigger}

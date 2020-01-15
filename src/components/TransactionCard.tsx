@@ -103,6 +103,8 @@ export default function TransactionCard(props: TxCardProps) {
 		modalClose
 	} = props;
 
+	console.log('render');
+
 	// Get gelatoCore
 	const gelatoCore = useGelatoCore();
 
@@ -226,9 +228,13 @@ export default function TransactionCard(props: TxCardProps) {
 				break;
 
 			case TxState.displayCancel:
-				const pastTransaction = icedTxState.pastTransactions.find(
-					tx => tx.executionClaimId === icedTxState.pastTransactionId
-				);
+				console.log(icedTxState.pastTransactionId);
+				console.log(icedTxState.pastTransactions);
+				const pastTransaction =
+					icedTxState.pastTransactions[
+						parseInt(icedTxState.pastTransactionId)
+					];
+				console.log(pastTransaction);
 
 				const estimate = await gelatoCore.estimate.cancelExecutionClaim(
 					pastTransaction?.selectedExecutor,
@@ -399,6 +405,8 @@ export default function TransactionCard(props: TxCardProps) {
 					btn: 'Open Metamask',
 					btnFunc: () => {
 						activate(injected);
+						console.log('modal close');
+						modalClose();
 					}
 				};
 
@@ -750,11 +758,10 @@ export default function TransactionCard(props: TxCardProps) {
 							txState: TxState.preCancel
 						});
 
-						const pastTransaction = icedTxState.pastTransactions.find(
-							tx =>
-								tx.executionClaimId ===
-								icedTxState.pastTransactionId
-						);
+						const pastTransaction =
+							icedTxState.pastTransactions[
+								parseInt(icedTxState.pastTransactionId)
+							];
 
 						// User has Proxy
 						if (
@@ -898,7 +905,7 @@ export default function TransactionCard(props: TxCardProps) {
 						console.log('Change TxState to insufficientBalance');
 						dispatch({
 							type: UPDATE_TX_STATE,
-							txState: TxState.insufficientBalance
+							txState: TxState.displayInstallMetamask
 						});
 					}
 				};
@@ -906,7 +913,24 @@ export default function TransactionCard(props: TxCardProps) {
 				return {
 					title: `${icedTxState.error.msg}`,
 					progress: Progress.cancelled,
-					progressText: `Please check all inputs again`,
+					progressText: `Please input a correct value`,
+					prepayment: false,
+					closeBtn: false,
+					btn: 'OK',
+					btnFunc: () => {
+						console.log('Change TxState to displayApprove');
+						modalClose();
+						// dispatch({
+						// 	type: UPDATE_TX_STATE,
+						// 	txState: TxState.displayApprove
+						// });
+					}
+				};
+			case TxState.insufficientBalance:
+				return {
+					title: `Insufficient ETH Balance`,
+					progress: Progress.cancelled,
+					progressText: `You require more ETH`,
 					prepayment: false,
 					closeBtn: false,
 					btn: 'OK',

@@ -135,12 +135,13 @@ export const icedTxReducer = (state: IcedTx, action: Action) => {
 			return {
 				...state,
 				error: { isError: true, msg: action.msg },
-				txState: TxState.inputError
+				txState: action.txState
 			};
 		case INPUT_OK:
 			return {
 				...state,
-				error: { isError: false, msg: '' }
+				error: { isError: false, msg: '' },
+				txState: action.txState
 			};
 		case UPDATE_GET_VALUE_INPUT:
 			return setTriggerGetValue(state, action.newGetValueInput);

@@ -43,6 +43,8 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 	} = match;
 	const { icedTxState, dispatch } = useIcedTxContext();
 
+	console.log(icedTxState.txState);
+
 	// web3React context
 	const web3 = useWeb3React();
 
@@ -283,6 +285,7 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 						txState: TxState.displayInstallMetamask
 					});
 				}
+				break;
 		}
 
 		// 5. Check if user has sufficient token approval
@@ -300,7 +303,20 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 	};
 
 	useEffect(() => {
-		preTxCheck();
+		if (icedTxState.error.isError) {
+			dispatch({
+				type: UPDATE_TX_STATE,
+				txState: TxState.inputError
+			});
+		} else {
+			preTxCheck();
+			if (!web3.active) {
+				dispatch({
+					type: UPDATE_TX_STATE,
+					txState: TxState.displayLogIntoMetamask
+				});
+			}
+		}
 	}, [icedTxState.txState, web3.active, activeStep]);
 
 	// MODAL STUFF END

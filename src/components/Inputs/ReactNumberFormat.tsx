@@ -132,23 +132,29 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		if (inputs[0] !== undefined) {
 			if (inputType === InputType.StatelessGetValue) {
 				// handleNewValue(defaultValue.toString());
-				const tokenAddress = inputs[tokenIndex].toString();
-				// Find token object by address
-				let token = getTokenByAddress(tokenAddress);
-				const humanReadableAmount = convertWeiToHumanReadable(
-					defaultValue,
-					token
-				);
 
-				// Set state for all
-				setValues({
-					...values,
-					numberformat: humanReadableAmount
-				});
-				dispatch({
-					type: UPDATE_GET_VALUE_INPUT,
-					newGetValueInput: defaultValue
-				});
+				// Find token object by address
+				try {
+					const tokenAddress = inputs[tokenIndex] as string;
+
+					let token = getTokenByAddress(tokenAddress);
+					const humanReadableAmount = convertWeiToHumanReadable(
+						defaultValue,
+						token
+					);
+
+					// Set state for all
+					setValues({
+						...values,
+						numberformat: humanReadableAmount
+					});
+					dispatch({
+						type: UPDATE_GET_VALUE_INPUT,
+						newGetValueInput: defaultValue
+					});
+				} catch (error) {
+					console.log(error);
+				}
 			}
 		}
 	}, [defaultValue]);

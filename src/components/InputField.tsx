@@ -1,4 +1,4 @@
-import React, { Dispatch, useEffect } from 'react';
+import React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import {
@@ -6,7 +6,7 @@ import {
 	TriggerOrAction,
 	ActionWhitelistData,
 	TriggerWhitelistData,
-	TxState
+	Token
 } from '../constants/interfaces';
 import DateAndTimePicker from './Inputs/DatePicker';
 import TokenSelect from './Inputs/TokenSelect';
@@ -15,21 +15,18 @@ import {
 	UPDATE_CONDITION_INPUTS,
 	UPDATE_ACTION_INPUTS,
 	INPUT_CSS,
-	INPUT_ERROR,
-	INPUT_OK,
-	DEFAULT_DATA_TRIGGER,
 	BIG_NUM_ZERO,
 	BIG_NUM_ONE
 } from '../constants/constants';
 import { TOKEN_LIST } from '../constants/whitelist';
 import { ethers } from 'ethers';
-import { getTokenByAddress, isEth } from '../helpers/helpers';
+import { getTokenByAddress } from '../helpers/helpers';
 
 // Number formater
 import ReactNumberFormat from './Inputs/ReactNumberFormat';
 import { useWeb3React } from '@web3-react/core';
-import { userInfo } from 'os';
-import { isBool, isBigNumber, isString } from '../helpers/typeguards';
+import { isBool, isBigNumber } from '../helpers/typeguards';
+import AddressInput from './Inputs/AddressInput';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -82,11 +79,6 @@ export default function LayoutTextFields(props: InputProps) {
 		icedTxState.trigger.getTriggerValueInput
 	);
 
-	// Error Bool, default false
-	// Applied to:
-	// // Address
-	const [error, setError] = React.useState(false);
-
 	// updateUser Input
 	const updateTriggerInputs = (index: number, value: any) => {
 		// Default Index => @DEV Restructure Dispatcher later
@@ -121,9 +113,14 @@ export default function LayoutTextFields(props: InputProps) {
 			const abi = trigger.getTriggerValueAbi;
 			const triggerAddress = trigger.address;
 
-			const tokenAddress = inputs[tokenIndex];
-
-			let token = getTokenByAddress(tokenAddress.toString());
+			const tokenAddress = inputs[tokenIndex] as string;
+			let token: Token;
+			try {
+				token = getTokenByAddress(tokenAddress);
+			} catch (error) {
+				newValue = BIG_NUM_ZERO;
+				return newValue;
+			}
 
 			try {
 				// Find token object by address
@@ -207,13 +204,13 @@ export default function LayoutTextFields(props: InputProps) {
 						// Set bool to true, only if it's not already true
 						if (isBool(inputs[index])) {
 							if (inputs[index] === false) {
-								console.log('set to true');
+								// console.log('set to true');
 								updateUserInput(index, true);
 							} else {
-								console.log('already true, dont set again');
+								// console.log('already true, dont set again');
 							}
 						} else {
-							console.log('Type not bool');
+							// console.log('Type not bool');
 						}
 					}
 					// If parameter is smaller then getTriggerValueInput => bool _isGreater => false
@@ -221,24 +218,24 @@ export default function LayoutTextFields(props: InputProps) {
 						// Set bool to false
 						if (isBool(inputs[index])) {
 							if (inputs[index] === true) {
-								console.log('set to false');
+								// console.log('set to false');
 								updateUserInput(index, false);
 							} else {
-								console.log('already false, dont set again');
+								// console.log('already false, dont set again');
 							}
 						} else {
-							console.log('Type not bool');
+							// console.log('Type not bool');
 						}
 					}
 				}
 			}
 			// If it is undefined, set dummy way
 			else {
-				console.log('default false');
+				// console.log('default false');
 				updateUserInput(index, false);
 			}
 		} else {
-			console.log('default false');
+			// console.log('default false');
 			updateUserInput(index, false);
 		}
 	};
@@ -255,29 +252,6 @@ export default function LayoutTextFields(props: InputProps) {
 				if (isBigNumber(inputs[index])) {
 					console.log('is big number');
 				}
-				// If the inputted value is of inputType TokenAmount
-				// if (inputType === InputType.TokenAmount) {
-				// 	const tokenAddress = inputs[tokenIndex];
-
-				// 	// Find token object by address
-				// 	// Find token object by address
-				// 	// let token = getTokenByAddress(tokenAddress.toString());
-				// 	// console.log(inputs[index]);
-				// 	// const humanReadableAmount = ethers.utils.formatUnits(
-				// 	// 	inputs[index].toString(),
-				// 	// 	token.decimals
-				// 	// );
-
-				// 	// console.log(humanReadableAmount);
-
-				// 	// return ethers.utils.bigNumberify(humanReadableAmount);
-				// 	return inputs[index] as ethers.utils.BigNumber;
-				// } else if (isBigNumber(inputs[index])) {
-				// 	updateUserInput(index, ZERO);
-				// 	return inputs[index] as ethers.utils.BigNumber;
-				// } else {
-				// 	throw Error('failed to fetch input from state');
-				// }
 				return inputs[index] as ethers.utils.BigNumber;
 			} else {
 				updateUserInput(index, BIG_NUM_ONE);
@@ -308,24 +282,10 @@ export default function LayoutTextFields(props: InputProps) {
 
 	const getDefaultStringValue = () => {
 		switch (inputType) {
-			case InputType.Address:
-				let defaultAddress = '';
-				if (account) {
-					defaultAddress = account;
-				} else {
-					defaultAddress = '0x0';
-					dispatch({
-						type: INPUT_ERROR,
-						msg: `Input field '${label}' hat to be a correct Ethereum address`
-					});
-				}
-				updateUserInput(index, defaultAddress);
-				return defaultAddress;
 			case InputType.Token:
 				let defaultToken = TOKEN_LIST[0];
 				if (index !== 0) defaultToken = TOKEN_LIST[1];
 				updateUserInput(index, defaultToken.address);
-				console.log(defaultToken.address);
 				return defaultToken.address;
 			case InputType.Date:
 				const date = new Date();
@@ -334,35 +294,6 @@ export default function LayoutTextFields(props: InputProps) {
 			default:
 				return '';
 		}
-	};
-
-	// Used to validate address
-
-	const handleAddressChange = (event: React.ChangeEvent<{ value: any }>) => {
-		const newAddress = event.target.value;
-
-		// Validate address
-		try {
-			ethers.utils.getAddress(newAddress);
-			setError(false);
-			if (icedTxState.error.isError) {
-				dispatch({ type: INPUT_OK });
-			}
-		} catch (error) {
-			setError(true);
-			if (!icedTxState.error.isError) {
-				console.log('Error');
-				console.log(icedTxState.txState);
-				dispatch({
-					type: INPUT_ERROR,
-					msg: `Input field '${label}' hat to be a correct Ethereum address`
-				});
-			}
-		}
-
-		// Update global state
-		updateUserInput(index, newAddress);
-		//
 	};
 
 	function renderInput() {
@@ -426,27 +357,6 @@ export default function LayoutTextFields(props: InputProps) {
 							triggerOrAction={triggerOrAction}
 							key={`number-input-${disabled}-${triggerOrAction}-${index}`}
 						></ReactNumberFormat>
-						{/* <TextField
-							className={classes.root}
-							inputProps={{ min: 0 }}
-							required
-							id="outlined-full-width"
-							label={label}
-							style={{ marginTop: '0px', marginBottom: '0px' }}
-							// Import TextField CSS
-							defaultValue={returnDefaultValue()}
-							// placeholder="1"
-							// helperText="Full width!"
-							fullWidth
-							onChange={handleChangeNumber}
-							margin="normal"
-							type="number"
-							InputLabelProps={{
-								shrink: true
-							}}
-							variant="outlined"
-							disabled={disabled}
-						/> */}
 					</div>
 				);
 			case InputType.GetValue:
@@ -474,25 +384,20 @@ export default function LayoutTextFields(props: InputProps) {
 			case InputType.Address:
 				return (
 					<div className={classes.form}>
-						<TextField
-							className={classes.root}
-							required
-							style={{ marginTop: '0px', marginBottom: '0px' }}
-							id="outlined-full-width"
-							label={label}
-							defaultValue={returnDefaultString()}
-							onChange={handleAddressChange}
-							error={error}
+						<AddressInput
+							trigger={trigger}
 							key={`address-input-${disabled}-${triggerOrAction}-${index}`}
-							// helperText="Full width!"
-							// Import TextField CSS
-							margin="normal"
-							InputLabelProps={{
-								shrink: true
-							}}
-							variant="outlined"
+							index={index}
+							inputType={inputType}
+							label={label}
+							triggerOrAction={TriggerOrAction.Trigger}
+							inputs={inputs}
+							app={app}
 							disabled={disabled}
-						/>
+							tokenIndex={index}
+							classes={classes}
+							updateUserInput={updateUserInput}
+						></AddressInput>
 					</div>
 				);
 			case InputType.StatelessGetValue:

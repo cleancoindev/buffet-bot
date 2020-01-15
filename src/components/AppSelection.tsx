@@ -34,7 +34,10 @@ import {
 	RESET_CONDITION,
 	RESET_ACTION,
 	COLOURS,
-	BOX
+	BOX,
+	UPDATE_TX_STATE,
+	SELECTED_CHAIN_ID,
+	OPEN_MODAL
 } from '../constants/constants';
 import { useWeb3React } from '@web3-react/core';
 
@@ -68,13 +71,92 @@ export default function AppSelection() {
 	const classes = useStyles();
 	// Import global state
 	//const { updateIcedTx, icedTxState, resetIcedTxInput } = useIcedTxContext();
-	const { icedTxState } = useIcedTxContext();
+	const { icedTxState, dispatch } = useIcedTxContext();
+
+	const web3 = useWeb3React();
 
 	// Import Web3react Context
 	// useEffect(() => {}, []);
 
 	const availableTriggers = [...TTYPES];
 	const availableActions = [...ATYPES];
+
+	useEffect(() => {
+		preTxCheck();
+	}, [icedTxState.txState, web3.active]);
+
+	const preTxCheck = () => {
+		const { ethereum } = window as any;
+
+		console.log(icedTxState.txState);
+		if (!web3.active) {
+			dispatch({
+				type: UPDATE_TX_STATE,
+				txState: TxState.displayLogIntoMetamask
+			});
+			return 0;
+		}
+		switch (icedTxState.txState) {
+			case TxState.displayInstallMetamask:
+				// Web3 object is injected
+				if (typeof ethereum !== 'undefined') {
+					// Check if the object is injected by metamask
+					if (ethereum.isMetaMask) {
+						// Yes it is metamask
+						// console.log('Metamask is installed');
+						// Change txState to "Login with metamask"
+						// console.log('Change TxState to displayLogIntoMetamask');
+						dispatch({
+							type: UPDATE_TX_STATE,
+							txState: TxState.displayLogIntoMetamask
+						});
+					} else {
+						// No Metamask installed => Show install Metamask Modal
+						console.log(
+							'No Metamask is installed - Render Install metamask modal'
+							// No need to change icedTx.txState
+						);
+					}
+				} else {
+					// No ethereum provider => Still install metamask
+				}
+				break;
+
+			// 2. Check if user is logged into metamask and has approved gelato
+			case TxState.displayLogIntoMetamask:
+				// User is already logged in => Change to insufficientBalance
+				if (web3.active) {
+					// Check if the object is injected by metamask
+					// console.log('Change TxState to displayWrongNetwork');
+					dispatch({
+						type: UPDATE_TX_STATE,
+						txState: TxState.displayWrongNetwork
+					});
+				} else {
+					// No Metamask installed => Show install Metamask Modal
+					// console.log('User has to log into metamask');
+				}
+
+				break;
+
+			// 3. Check if user is connected to the correct network
+			case TxState.displayWrongNetwork:
+				// User is already logged in => Change to insufficientBalance
+				if (web3.chainId === SELECTED_CHAIN_ID) {
+					// Check if the object is injected by metamask
+					// console.log('Change TxState to insufficientBalance');
+					dispatch({
+						type: UPDATE_TX_STATE,
+						txState: TxState.insufficientBalance
+					});
+				} else {
+					// No Metamask installed => Show install Metamask Modal
+					console.log('User has to switch networks');
+				}
+
+				break;
+		}
+	};
 
 	return (
 		<div /*className={classes.box}*/>
@@ -214,17 +296,28 @@ export default function AppSelection() {
 								</Button>
 							</Link>
 						)}
-						{icedTxState.txState !==
-							TxState.displayWrongNetwork && (
-							<Link
-								to={`create/${icedTxState.trigger.id}/${icedTxState.action.id}`}
-								style={{ textDecoration: 'none' }}
-							>
-								<Button className={classes.createButton}>
+						{icedTxState.txState !== TxState.displayWrongNetwork &&
+							web3.active && (
+								<Link
+									to={`create/${icedTxState.trigger.id}/${icedTxState.action.id}`}
+									style={{ textDecoration: 'none' }}
+								>
+									<Button className={classes.createButton}>
+										Create
+									</Button>
+								</Link>
+							)}
+						{icedTxState.txState !== TxState.displayWrongNetwork &&
+							!web3.active && (
+								<Button
+									onClick={() =>
+										dispatch({ type: OPEN_MODAL })
+									}
+									className={classes.createButton}
+								>
 									Create
 								</Button>
-							</Link>
-						)}
+							)}
 					</Grid>
 				</React.Fragment>
 			)}
