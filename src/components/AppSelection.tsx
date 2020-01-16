@@ -85,12 +85,10 @@ export default function AppSelection() {
 
 	useEffect(() => {
 		preTxCheck();
-	}, [icedTxState.txState, web3.active]);
+	}, [icedTxState.txState, web3.active, web3.chainId]);
 
 	const preTxCheck = () => {
 		const { ethereum } = window as any;
-
-		console.log(icedTxState.txState);
 		if (!web3.active) {
 			dispatch({
 				type: UPDATE_TX_STATE,
@@ -173,11 +171,13 @@ export default function AppSelection() {
 				<Grid
 					container
 					item
-					sm={4}
+					md={5}
+					sm={5}
 					xs={12}
 					direction="column"
 					justify="space-evenly"
 					alignItems="stretch"
+					style={{}}
 				>
 					<Grid
 						container
@@ -201,6 +201,7 @@ export default function AppSelection() {
 				<Grid
 					container
 					item
+					md={2}
 					sm={2}
 					xs={12}
 					direction="column"
@@ -221,11 +222,13 @@ export default function AppSelection() {
 				<Grid
 					container
 					item
-					sm={4}
+					md={5}
+					sm={5}
 					xs={12}
 					direction="column"
 					justify="space-evenly"
 					alignItems="stretch"
+					style={{}}
 				>
 					<Grid
 						container
@@ -289,18 +292,18 @@ export default function AppSelection() {
 					>
 						{icedTxState.txState ===
 							TxState.displayWrongNetwork && (
-							<Link
-								to={`create/${icedTxState.trigger.id}/${icedTxState.action.id}`}
-								style={{ textDecoration: 'none' }}
+							<Button
+								className={classes.createButton}
+								endIcon={<FlashOnOutlinedIcon />}
+								onClick={() =>
+									// Open Modal
+									dispatch({
+										type: OPEN_MODAL
+									})
+								}
 							>
-								<Button
-									className={classes.createButton}
-									disabled
-									endIcon={<FlashOnOutlinedIcon />}
-								>
-									Create
-								</Button>
-							</Link>
+								Create
+							</Button>
 						)}
 						{icedTxState.txState !== TxState.displayWrongNetwork &&
 							web3.active && (

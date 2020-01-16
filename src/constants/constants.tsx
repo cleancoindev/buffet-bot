@@ -64,6 +64,9 @@ export const DEFAULT_DATA_TRIGGER = {
 	boolIndex: 999
 };
 
+// ID that determines which trigger to render by default at initial render of root
+export const DEFAULT_TRIGGER_ID = '2';
+
 /*
 Interface
 
@@ -165,7 +168,14 @@ export const INPUT_CSS = {
 			}
 		},
 		'& .MuiFormLabel-root': {
-			color: 'white'
+			color: 'white !important'
 		}
+
+		// '& .MuiInputBase-input-405': {
+		// 	color: 'white'
+		// },
+		// '& .MuiFormLabel-root-371': {
+		// 	color: 'white'
+		// }
 	}
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // Routing
 import { useHistory } from 'react-router-dom';
@@ -33,7 +33,9 @@ import {
 	UPDATE_TX_STATE,
 	OPEN_MODAL,
 	RESET_CONDITION,
-	RESET_ACTION
+	RESET_ACTION,
+	SELECT_CONDITION,
+	DEFAULT_TRIGGER_ID
 } from '../constants/constants';
 import { useIcedTxContext } from '../state/GlobalState';
 import { TxState } from '../constants/interfaces';
@@ -53,18 +55,7 @@ const BootstrapButtonDanger = withStyles({
 		borderColor: 'red',
 		backgroundColor: 'red',
 		color: 'white',
-		fontFamily: [
-			'-apple-system',
-			'BlinkMacSystemFont',
-			'"Segoe UI"',
-			'Roboto',
-			'"Helvetica Neue"',
-			'Arial',
-			'sans-serif',
-			'"Apple Color Emoji"',
-			'"Segoe UI Emoji"',
-			'"Segoe UI Symbol"'
-		].join(','),
+
 		'&:hover': {
 			backgroundColor: 'red',
 			borderColor: 'red',
@@ -88,18 +79,7 @@ const BootstrapButton = withStyles({
 		borderColor: COLOURS.salmon,
 		// borderRadius: '1px 1px 1px 1px',
 		color: 'white',
-		fontFamily: [
-			'-apple-system',
-			'BlinkMacSystemFont',
-			'"Segoe UI"',
-			'Roboto',
-			'"Helvetica Neue"',
-			'Arial',
-			'sans-serif',
-			'"Apple Color Emoji"',
-			'"Segoe UI Emoji"',
-			'"Segoe UI Symbol"'
-		].join(','),
+
 		'&:hover': {
 			backgroundColor: COLOURS.salmon50,
 			borderColor: 'white',
@@ -169,6 +149,13 @@ export default function ButtonAppBar() {
 
 	// Web3 Logic
 
+	// Set default selected Trigger, as header only gets mounted once
+	useEffect(() => {
+		console.log('Mount header');
+		const functionId = DEFAULT_TRIGGER_ID;
+		dispatch({ type: SELECT_CONDITION, id: functionId });
+	}, []);
+
 	// handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
 	const triedEager = useEagerConnect();
 
@@ -203,7 +190,7 @@ export default function ButtonAppBar() {
 					</div>
 					{/* </Link> */}
 					<Hidden xsDown>
-						{active && (
+						{active && chainId === SELECTED_CHAIN_ID && (
 							<BootstrapButton
 								onClick={() => {
 									// First refresh state of Create Page to start from the beginning

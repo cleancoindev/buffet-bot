@@ -11,10 +11,12 @@ import {
 } from '../../constants/constants';
 import { makeStyles } from '@material-ui/core/styles';
 import { createMuiTheme, TextField, FormControl } from '@material-ui/core';
-import { ThemeProvider } from '@material-ui/styles';
+import { ThemeProvider, useTheme } from '@material-ui/styles';
 
 import { MuiPickersOverrides } from '@material-ui/pickers/typings/overrides';
 import { ethers } from 'ethers';
+
+import '../../index.css';
 
 type overridesNameToClassKey = {
 	[P in keyof MuiPickersOverrides]: keyof MuiPickersOverrides[P];
@@ -40,6 +42,11 @@ const materialTheme = createMuiTheme({
 				backgroundColor: COLOURS.salmon
 			}
 		},
+		// MuiTypography: {
+		// 	h3: {
+		// 		fontSize: '2.3rem'
+		// 	}
+		// },
 		MuiTabs: {
 			root: {
 				background: `${COLOURS.salmon} !important`
@@ -74,9 +81,6 @@ const materialTheme = createMuiTheme({
 });
 
 // #################################################
-const useInputStyles = makeStyles({
-	...INPUT_CSS
-});
 
 interface TextFieldWrapProps {
 	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -86,15 +90,28 @@ interface TextFieldWrapProps {
 }
 
 const TextFieldWrap = (props: TextFieldWrapProps) => {
+	const theme = useTheme();
+
+	const useInputStyles = makeStyles({
+		...INPUT_CSS,
+		typography: {
+			fontFamily: 'PT Mono'
+		},
+		'&.test *': {
+			backgroundColor: 'red',
+			color: 'white !important'
+		}
+	});
 	const labelClasses = useInputStyles();
 	const { setOpen, value, label, disabled } = props;
 
 	return (
-		<FormControl style={{ width: '100%' }}>
+		<FormControl className="datepickerWrapper" style={{ width: '100%' }}>
 			{!disabled && (
 				<TextField
+					style={{}}
 					placeholder={'placeholder'}
-					className={labelClasses.root}
+					className={'datepicker'}
 					fullWidth
 					margin="normal"
 					InputLabelProps={{
@@ -110,8 +127,9 @@ const TextFieldWrap = (props: TextFieldWrapProps) => {
 			)}
 			{disabled && (
 				<TextField
+					style={{ color: 'white !important' }}
 					placeholder={'placeholder'}
-					className={labelClasses.root}
+					className={'datepicker'}
 					fullWidth
 					margin="normal"
 					InputLabelProps={{
@@ -119,7 +137,7 @@ const TextFieldWrap = (props: TextFieldWrapProps) => {
 					}}
 					variant="outlined"
 					defaultValue={value}
-					id="outlined-full-width"
+					id="outlined-full-width-1"
 					label={label}
 					disabled={disabled}
 				/>
