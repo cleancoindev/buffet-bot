@@ -9,7 +9,8 @@ import {
 	Params,
 	ActionWhitelistData,
 	TriggerWhitelistData,
-	InputType
+	InputType,
+	ChainIds
 } from '../constants/interfaces';
 
 export function stringifyTimestamp(timestamp: string) {
@@ -30,14 +31,14 @@ export function findTriggerById(id: string) {
 	return returnData;
 }
 
-export function findTriggerByAddress(address: string) {
+export function findTriggerByAddress(address: string, networkId: ChainIds) {
 	let returnData = { ...DEFAULT_DATA_TRIGGER };
 
 	const clonedTriggers = deepCloneTriggers();
 
 	clonedTriggers.forEach(type => {
 		if (
-			ethers.utils.getAddress(type.address) ===
+			ethers.utils.getAddress(type.address[networkId]) ===
 			ethers.utils.getAddress(address)
 		) {
 			returnData = type;
@@ -57,12 +58,12 @@ export function findActionById(id: string) {
 	return returnData;
 }
 
-export function findActionByAddress(address: string) {
+export function findActionByAddress(address: string, networkId: ChainIds) {
 	let returnData = { ...DEFAULT_DATA_ACTION };
 	const clonedActions = deepCloneActions();
 	clonedActions.forEach(type => {
 		if (
-			ethers.utils.getAddress(type.address) ===
+			ethers.utils.getAddress(type.address[networkId]) ===
 			ethers.utils.getAddress(address)
 		) {
 			returnData = type;
@@ -188,7 +189,7 @@ export const deepCloneTriggers = () => {
 		const clonedTitle = data.title;
 
 		// clone address
-		const clonedAddress = data.address;
+		const clonedAddress = { ...data.address };
 
 		// clone params
 		const clonedParams: Array<Params> = [];
@@ -272,7 +273,7 @@ export const deepCloneActions = () => {
 		const clonedTitle = data.title;
 
 		// clone address
-		const clonedAddress = data.address;
+		const clonedAddress = { ...data.address };
 
 		// clone params
 		const clonedParams: Array<Params> = [];

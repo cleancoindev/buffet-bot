@@ -157,9 +157,9 @@ export default function TransactionCard(props: TxCardProps) {
 		// @DEV ADD TRY/CATCHS to all ETHEREUM TRANSACTIONS
 		const gasEstimate = await gelatoCore.estimate.mintExecutionClaim(
 			EXECUTOR_ADDRESS[networkId],
-			icedTxState.trigger.address,
+			icedTxState.trigger.address[networkId],
 			encodedTrigger,
-			icedTxState.action.address,
+			icedTxState.action.address[networkId],
 			encodedAction,
 			// @DEV make dynamic
 			{
@@ -290,8 +290,8 @@ export default function TransactionCard(props: TxCardProps) {
 	async function getPrepaymentAmount() {
 		const prepayment = await gelatoCore.getMintingDepositPayable(
 			EXECUTOR_ADDRESS[networkId],
-			icedTxState.trigger.address,
-			icedTxState.action.address
+			icedTxState.trigger.address[networkId],
+			icedTxState.action.address[networkId]
 		);
 
 		return prepayment;
@@ -493,7 +493,7 @@ export default function TransactionCard(props: TxCardProps) {
 				return {
 					title: `Please confirm the transaction in Metamask!`,
 					progress: Progress.awaitingMetamaskConfirm,
-					progressText: `Waiting for Metamask confirmation`,
+					progressText: `Waiting for confirmation`,
 					prepayment: false,
 					closeBtn: false,
 					btn: ''
@@ -502,7 +502,7 @@ export default function TransactionCard(props: TxCardProps) {
 				return {
 					title: `Creating your gelato wallet ...`,
 					progress: Progress.awaitingeMining,
-					progressText: `Transaction in progress, please wait`,
+					progressText: `Transaction in progress...`,
 					prepayment: false,
 					closeBtn: false,
 					btn: ''
@@ -615,7 +615,7 @@ export default function TransactionCard(props: TxCardProps) {
 				return {
 					title: `Please confirm the transaction in Metamask`,
 					progress: Progress.awaitingMetamaskConfirm,
-					progressText: `Waiting for Metamask confirmation`,
+					progressText: `Waiting for confirmation`,
 					prepayment: false,
 					closeBtn: true,
 					btn: ''
@@ -682,9 +682,9 @@ export default function TransactionCard(props: TxCardProps) {
 							try {
 								const tx = await gelatoCore.mintExecutionClaim(
 									EXECUTOR_ADDRESS[networkId],
-									icedTxState.trigger.address,
+									icedTxState.trigger.address[networkId],
 									encodedTrigger,
-									icedTxState.action.address,
+									icedTxState.action.address[networkId],
 									encodedAction,
 									// @DEV make dynamic
 									overrides
@@ -720,7 +720,7 @@ export default function TransactionCard(props: TxCardProps) {
 				return {
 					title: `Please confirm the transaction in Metamask`,
 					progress: Progress.awaitingMetamaskConfirm,
-					progressText: `Waiting for Metamask confirmation`,
+					progressText: `Waiting for confirmation`,
 					prepayment: true,
 					closeBtn: false,
 					btn: ''
@@ -729,7 +729,7 @@ export default function TransactionCard(props: TxCardProps) {
 				return {
 					title: `Creating Frozen Transaction ...`,
 					progress: Progress.awaitingeMining,
-					progressText: `Transaction in progress, please wait`,
+					progressText: `Transaction in progress...`,
 					prepayment: true,
 					closeBtn: false,
 					btn: ''
@@ -865,7 +865,7 @@ export default function TransactionCard(props: TxCardProps) {
 				return {
 					title: `Cancel your Frozen Transaction`,
 					progress: Progress.awaitingMetamaskConfirm,
-					progressText: `Waiting for Metamask confirmation`,
+					progressText: `Waiting for confirmation`,
 					prepayment: true,
 					closeBtn: true,
 					btn: ''
@@ -874,7 +874,7 @@ export default function TransactionCard(props: TxCardProps) {
 				return {
 					title: `Cancelling Frozen Transaction ...`,
 					progress: Progress.awaitingeMining,
-					progressText: `Transaction in progress, please wait`,
+					progressText: `Transaction in progress...`,
 					prepayment: true,
 					closeBtn: false,
 					btn: ''
@@ -948,7 +948,7 @@ export default function TransactionCard(props: TxCardProps) {
 				return {
 					title: `DEFAULT VALUE`,
 					progress: Progress.awaitingMetamaskConfirm,
-					progressText: `Waiting for Metamask confirmation`,
+					progressText: `Waiting for confirmation`,
 					prepayment: false,
 					closeBtn: false,
 					btn: ''
@@ -1048,7 +1048,7 @@ export default function TransactionCard(props: TxCardProps) {
 						{modalContent.progress ===
 							Progress.awaitingMetamaskConfirm && (
 							<CircularProgress
-								size={32}
+								size={24}
 								style={{ marginRight: '8px' }}
 							/>
 						)}
@@ -1071,12 +1071,12 @@ export default function TransactionCard(props: TxCardProps) {
 							// <React.Fragment>
 							// <ProgressBar />
 							<CircularProgress
-								size={32}
+								size={24}
 								style={{ marginRight: '8px' }}
 							/>
 							// </React.Fragment>
 						)}
-						<h4>{modalContent.progressText}</h4>
+						<h5>{modalContent.progressText}</h5>
 					</Grid>
 				)}
 				{txState !== TxState.cancelled &&

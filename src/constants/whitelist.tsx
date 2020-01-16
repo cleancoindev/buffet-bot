@@ -22,14 +22,14 @@ export const GELATO_CORE_ADDRESS = {
 	1: '0x0',
 	3: '0x563700A8A6740C8a474DF8F289716afDc30ED07a',
 	4: '0x501aF774Eb578203CC34E7171273124A93706C06',
-	42: '0x0'
+	42: '0xaD944A44Bd6d2BEAa15c49BF300AeDde5d2936B9'
 };
 
 export const EXECUTOR_ADDRESS = {
 	1: '0x0',
 	3: '0x203AdbbA2402a36C202F207caA8ce81f1A4c7a72',
 	4: '0x203AdbbA2402a36C202F207caA8ce81f1A4c7a72',
-	42: '0x0'
+	42: '0x203AdbbA2402a36C202F207caA8ce81f1A4c7a72'
 };
 
 // Triggers
@@ -38,7 +38,12 @@ export const TTYPES = [
 		id: 1,
 		app: 'Your Wallet',
 		title: 'Token balance',
-		address: '0xaf4c11A90e98D0C5ecFb403C62Cc8Dfe8DF11030',
+		address: {
+			1: '',
+			3: '0xaf4c11A90e98D0C5ecFb403C62Cc8Dfe8DF11030',
+			4: '',
+			42: '0xe4bD22dfdfcD88df04944be0c745e9961e8dc22b'
+		},
 		params: [
 			{ type: 'address', name: '_account' },
 			{ type: 'address', name: '_coin' },
@@ -75,7 +80,12 @@ export const TTYPES = [
 		id: 2,
 		app: 'Kyber',
 		title: 'Price on Kyber',
-		address: '0x61Bd89De0912c5E07d03f2c533D29A8eB78dc925',
+		address: {
+			1: '',
+			3: '0x61Bd89De0912c5E07d03f2c533D29A8eB78dc925',
+			4: '',
+			42: '0x49A791153dbEe3fBc081Ce159d51C70A89323e73'
+		},
 		params: [
 			{ type: 'address', name: '_src' },
 			{ type: 'uint256', name: '_srcAmount' },
@@ -114,7 +124,12 @@ export const TTYPES = [
 		id: 3,
 		app: 'Calendar',
 		title: 'Time',
-		address: '0x525EB0c1279f1CC690D01a2Fcb78A0D5d156D1Ee',
+		address: {
+			1: '',
+			3: '0x525EB0c1279f1CC690D01a2Fcb78A0D5d156D1Ee',
+			4: '',
+			42: '0x591DB4982dD2E184b8F4b8DA9599295Dd379F732'
+		},
 		params: [{ type: 'uint256', name: '_timestamp' }],
 		abi: 'function fired(uint256 _timestamp)',
 		getTriggerValueAbi: '',
@@ -134,7 +149,12 @@ export const ATYPES = [
 		id: 1,
 		app: 'ERC 20',
 		title: 'Send Tokens',
-		address: '0x8FdAf109e391C304939CF64C9B9912b320AdfE56',
+		address: {
+			1: '',
+			3: '0x8FdAf109e391C304939CF64C9B9912b320AdfE56',
+			4: '',
+			42: '0x83D85e7b95eAe643Dc58c6C397701Bf3dd3Dff91'
+		},
 		/*
 		IERC20 _src,
         uint256 _srcAmt,
@@ -168,7 +188,56 @@ export const ATYPES = [
 		id: 2,
 		app: 'Kyber',
 		title: 'Trade Tokens on Kyber',
-		address: '0x67f647bDF012A718d5F9bD9C7bEd6e5a2023ccC6',
+		address: {
+			1: '',
+			3: '0x67f647bDF012A718d5F9bD9C7bEd6e5a2023ccC6',
+			4: '',
+			42: '0xf0FBC8a0C751399984950569C246c4BA866107dE'
+		},
+		/*
+		 // Standard Action Params
+        address _user,
+        address _userProxy,
+        // Specific Action Params
+        address _src,
+        uint256 _srcAmt,
+        address _dest,
+        uint256 _minConversionRate
+
+		*/
+
+		params: [
+			{ type: 'address', name: '_user' },
+			{ type: 'address', name: '_userProxy' },
+			{ type: 'address', name: '_src' },
+			{ type: 'uint256', name: '_srcAmt' },
+			{ type: 'address', name: '_dest' }
+		],
+		abi:
+			'function action(address _user, address _userProxy, address _src, uint256 _srcAmount, address _dest)',
+		userInputTypes: [
+			InputType.Token,
+			InputType.TokenAmount,
+			InputType.Token
+		],
+		inputLabels: [
+			'Token you want to sell',
+			'Sell Amount',
+			'Token you want to buy'
+		],
+		userInputs: EMPTY_STRING_ARRAY,
+		tokenIndex: 0
+	},
+	{
+		id: 3,
+		app: 'Fulcrum',
+		title: 'Buy Leverage Tokens on Fulcrum',
+		address: {
+			1: '',
+			3: '0x0',
+			4: '',
+			42: '0xF1531B0B71aa97EaF46876EF73dc4218F0e02DFC'
+		},
 		/*
 		 // Standard Action Params
         address _user,
@@ -203,18 +272,6 @@ export const ATYPES = [
 		userInputs: EMPTY_STRING_ARRAY,
 		tokenIndex: 0
 	}
-
-	// {
-	// 	id: 3,
-	// 	app: 'Fulcrum',
-	// 	title: 'Margin Trade Tokens',
-	// 	address: '0x5',
-	// 	params: ['uint256', 'address', 'address', 'bool'],
-	// 	userInputTypes: [InputType.Token],
-	// 	inputLabels: [''],
-	// 	userInputs: [],
-	// 	tokenIndex: 0
-	// }
 ];
 
 // Add network to tokenList
@@ -241,23 +298,51 @@ export const ATYPES = [
 // ];
 
 // Ropsten
+// export const TOKEN_LIST = [
+// 	{
+// 		address: '0x4BFBa4a8F28755Cb2061c413459EE562c6B9c51b',
+// 		symbol: 'OMG',
+// 		name: 'OmiseGo',
+// 		decimals: 18
+// 	},
+// 	{
+// 		address: '0x72fd6C7C1397040A66F33C2ecC83A0F71Ee46D5c',
+// 		symbol: 'MANA',
+// 		name: 'MANA',
+// 		decimals: 18
+// 	},
+// 	{
+// 		address: '0x4E470dc7321E84CA96FcAEDD0C8aBCebbAEB68C6',
+// 		symbol: 'KNC',
+// 		name: 'Kyber Network',
+// 		decimals: 18
+// 	}
+// ];
+
+// Kovan
 export const TOKEN_LIST = [
 	{
-		address: '0x4BFBa4a8F28755Cb2061c413459EE562c6B9c51b',
+		address: '0xdB7ec4E4784118D9733710e46F7C83fE7889596a',
 		symbol: 'OMG',
 		name: 'OmiseGo',
 		decimals: 18
 	},
 	{
-		address: '0x72fd6C7C1397040A66F33C2ecC83A0F71Ee46D5c',
+		address: '0xcb78b457c1F79a06091EAe744aA81dc75Ecb1183',
 		symbol: 'MANA',
 		name: 'MANA',
 		decimals: 18
 	},
 	{
-		address: '0x4E470dc7321E84CA96FcAEDD0C8aBCebbAEB68C6',
+		address: '0xad67cB4d63C9da94AcA37fDF2761AaDF780ff4a2',
 		symbol: 'KNC',
 		name: 'Kyber Network',
+		decimals: 18
+	},
+	{
+		address: '0xC4375B7De8af5a38a93548eb8453a498222C4fF2',
+		symbol: 'DAI',
+		name: 'DAI',
 		decimals: 18
 	}
 ];

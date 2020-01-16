@@ -19,6 +19,8 @@ import {
 import { on } from 'cluster';
 import { render } from '@testing-library/react';
 import { DEFAULT_PAST_TRANSACTIONS } from '../constants/constants';
+import { useWeb3React } from '@web3-react/core';
+import { ChainIds } from '../constants/interfaces';
 
 interface TxOverviewParams {
 	transactionId: string;
@@ -33,6 +35,7 @@ export default function TransactionOverview({
 		params: { transactionId }
 	} = match;
 	const { icedTxState } = useIcedTxContext();
+	const web3 = useWeb3React();
 	const history = useHistory();
 
 	// Route to dashboard if no state is avaiable
@@ -53,8 +56,14 @@ export default function TransactionOverview({
 	// Get respective triggers and action
 	// console.log(pastTransaction.trigger);
 	// console.log(pastTransaction.action);
-	const trigger = findTriggerByAddress(pastTransaction.trigger);
-	const action = findActionByAddress(pastTransaction.action);
+	const trigger = findTriggerByAddress(
+		pastTransaction.trigger,
+		web3.chainId as ChainIds
+	);
+	const action = findActionByAddress(
+		pastTransaction.action,
+		web3.chainId as ChainIds
+	);
 	// Get user inputs by decoding payloads
 	const triggerInputs = decodeTriggerPayload(
 		pastTransaction.triggerPayload,

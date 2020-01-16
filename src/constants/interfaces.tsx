@@ -54,11 +54,18 @@ export interface Params {
 	name: string;
 }
 
+export interface Addresses {
+	1: string;
+	3: string;
+	4: string;
+	42: string;
+}
+
 export interface ActionWhitelistData {
 	id: number;
 	app: string;
 	title: string;
-	address: string;
+	address: Addresses;
 	abi: string;
 	params: Array<Params>;
 	inputLabels: Array<string>;
@@ -71,7 +78,7 @@ export interface TriggerWhitelistData {
 	id: number;
 	app: string;
 	title: string;
-	address: string;
+	address: Addresses;
 	abi: string;
 	params: Array<Params>;
 	inputLabels: Array<string>;

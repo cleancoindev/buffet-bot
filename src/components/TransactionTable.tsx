@@ -37,6 +37,7 @@ import {
 } from '../constants/constants';
 import { useWeb3React } from '@web3-react/core';
 import { useGelatoCore } from '../hooks/hooks';
+import { ChainIds } from '../constants/interfaces';
 
 function desc<T>(a: T, b: T, orderBy: keyof T) {
 	if (b[orderBy] < a[orderBy]) {
@@ -322,11 +323,33 @@ export default function EnhancedTable() {
 
 	const [displayedRows, setDisplayedRows] = React.useState(rows);
 	const [renderCounter, setRenderCounter] = React.useState(0);
+	let graphName: string = '';
+	switch (web3.chainId) {
+		case 1:
+			graphName = 'gelato-mainet';
+
+			break;
+		case 3:
+			graphName = 'gelato-ropsten';
+
+			break;
+		case 4:
+			graphName = 'gelato-rinkeby';
+
+			break;
+		case 42:
+			graphName = 'gelato-kovan';
+
+			break;
+		default:
+			graphName = 'gelato-mainet';
+			break;
+	}
 
 	async function fetchPastExecutionClaims() {
 		try {
 			const response = await fetch(
-				'https://api.thegraph.com/subgraphs/name/gelatodigital/gelato-ropsten',
+				`https://api.thegraph.com/subgraphs/name/gelatodigital/${graphName}`,
 				{
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
@@ -369,9 +392,15 @@ export default function EnhancedTable() {
 			let counter = 0;
 			executionClaims.forEach((executionClaim: any, index: any) => {
 				// With address, find trigger and action
-				const trigger = findTriggerByAddress(executionClaim.trigger);
+				const trigger = findTriggerByAddress(
+					executionClaim.trigger,
+					web3.chainId as ChainIds
+				);
 
-				const action = findActionByAddress(executionClaim.action);
+				const action = findActionByAddress(
+					executionClaim.action,
+					web3.chainId as ChainIds
+				);
 
 				// Set default status string
 				let statusString: string = 'open';

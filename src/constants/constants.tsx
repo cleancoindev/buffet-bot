@@ -32,14 +32,14 @@ export const ETH = {
 	decimals: 18
 };
 
-export const SELECTED_CHAIN_ID = 3;
-export const SELECTED_NETWORK_NAME = 'Ropsten';
+export const SELECTED_CHAIN_ID = 42;
+export const SELECTED_NETWORK_NAME = 'Kovan';
 
 export const DEFAULT_DATA_ACTION = {
 	id: 0,
 	app: '',
 	title: '',
-	address: '',
+	address: { 1: '', 3: '', 4: '', 42: '' },
 	params: EMPTY_PARAM_ARRAY, // [ ]
 	abi: '',
 	inputLabels: EMPTY_STRING_ARRAY, // [ ]
@@ -52,7 +52,7 @@ export const DEFAULT_DATA_TRIGGER = {
 	id: 0,
 	app: '',
 	title: '',
-	address: '',
+	address: { 1: '', 3: '', 4: '', 42: '' },
 	params: EMPTY_PARAM_ARRAY, // [ ]
 	abi: '',
 	getTriggerValueAbi: '',

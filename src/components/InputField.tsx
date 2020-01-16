@@ -6,7 +6,8 @@ import {
 	TriggerOrAction,
 	ActionWhitelistData,
 	TriggerWhitelistData,
-	Token
+	Token,
+	ChainIds
 } from '../constants/interfaces';
 import DateAndTimePicker from './Inputs/DatePicker';
 import TokenSelect from './Inputs/TokenSelect';
@@ -73,7 +74,7 @@ export default function LayoutTextFields(props: InputProps) {
 
 	const { dispatch, icedTxState } = useIcedTxContext();
 
-	const { active, account, library } = useWeb3React();
+	const { active, account, library, chainId } = useWeb3React();
 
 	const [getValueState, setGetValueState] = React.useState(
 		icedTxState.trigger.getTriggerValueInput
@@ -111,7 +112,7 @@ export default function LayoutTextFields(props: InputProps) {
 
 		if (trigger && active && account) {
 			const abi = trigger.getTriggerValueAbi;
-			const triggerAddress = trigger.address;
+			const triggerAddress = trigger.address[chainId as ChainIds];
 
 			const tokenAddress = inputs[tokenIndex] as string;
 			let token: Token;
