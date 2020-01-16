@@ -155,7 +155,7 @@ export interface StepperProps {
 }
 
 export interface Token {
-	address: string;
+	address: Addresses;
 	symbol: string;
 	name: string;
 	decimals: number;
@@ -185,13 +185,6 @@ export enum TxState {
 	cancelled = 17,
 	insufficientBalance = 18,
 	inputError = 19
-}
-
-export interface Token {
-	address: string;
-	symbol: string;
-	name: string;
-	decimals: number;
 }
 
 export type ChainIds = 1 | 3 | 4 | 42;

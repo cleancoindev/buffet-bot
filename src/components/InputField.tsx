@@ -17,9 +17,11 @@ import {
 	UPDATE_ACTION_INPUTS,
 	INPUT_CSS,
 	BIG_NUM_ZERO,
-	BIG_NUM_ONE
+	BIG_NUM_ONE,
+	SELECTED_CHAIN_ID,
+	SELECTED_NETWORK_NAME
 } from '../constants/constants';
-import { TOKEN_LIST } from '../constants/whitelist';
+import { KYBER_TOKEN_LIST } from '../constants/tokens';
 import { ethers } from 'ethers';
 import { getTokenByAddress } from '../helpers/helpers';
 
@@ -76,6 +78,12 @@ export default function LayoutTextFields(props: InputProps) {
 
 	const { active, account, library, chainId } = useWeb3React();
 
+	// In case network Id is not defined yet, use default
+	let networkId: ChainIds = SELECTED_CHAIN_ID;
+	if (chainId !== undefined) {
+		networkId = chainId as ChainIds;
+	}
+
 	const [getValueState, setGetValueState] = React.useState(
 		icedTxState.trigger.getTriggerValueInput
 	);
@@ -117,7 +125,7 @@ export default function LayoutTextFields(props: InputProps) {
 			const tokenAddress = inputs[tokenIndex] as string;
 			let token: Token;
 			try {
-				token = getTokenByAddress(tokenAddress);
+				token = getTokenByAddress(tokenAddress, chainId as ChainIds);
 			} catch (error) {
 				newValue = BIG_NUM_ZERO;
 				return newValue;
@@ -284,10 +292,13 @@ export default function LayoutTextFields(props: InputProps) {
 	const getDefaultStringValue = () => {
 		switch (inputType) {
 			case InputType.Token:
-				let defaultToken = TOKEN_LIST[0];
-				if (index !== 0) defaultToken = TOKEN_LIST[1];
-				updateUserInput(index, defaultToken.address);
-				return defaultToken.address;
+				let defaultToken = KYBER_TOKEN_LIST[0];
+				if (index !== 0) defaultToken = KYBER_TOKEN_LIST[1];
+				console.log(defaultToken);
+				console.log(networkId);
+				console.log(defaultToken.address[networkId]);
+				updateUserInput(index, defaultToken.address[networkId]);
+				return defaultToken.address[networkId];
 			case InputType.Date:
 				const date = new Date();
 				const timestamp = date.getTime();
@@ -314,7 +325,7 @@ export default function LayoutTextFields(props: InputProps) {
 				return (
 					<div className={classes.form}>
 						<TokenSelect
-							defaultToken={returnDefaultString()}
+							defaultTokenAddress={returnDefaultString()}
 							index={index}
 							triggerOrAction={triggerOrAction}
 							label={label}

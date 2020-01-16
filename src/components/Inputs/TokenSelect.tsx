@@ -11,17 +11,19 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 import { useIcedTxContext } from '../../state/GlobalState';
-import { TriggerOrAction, Token } from '../../constants/interfaces';
+import { TriggerOrAction, Token, ChainIds } from '../../constants/interfaces';
 import {
 	UPDATE_CONDITION_INPUTS,
 	UPDATE_ACTION_INPUTS,
 	INPUT_CSS,
 	COLOURS,
-	ETH
+	ETH,
+	SELECTED_CHAIN_ID
 } from '../../constants/constants';
-import { TOKEN_LIST } from '../../constants/whitelist';
+import { KYBER_TOKEN_LIST } from '../../constants/tokens';
 import { ethers } from 'ethers';
 import { getTokenByAddress } from '../../helpers/helpers';
+import { useWeb3React } from '@web3-react/core';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -70,40 +72,39 @@ interface TokenSelectProps
 	index: number;
 	triggerOrAction: TriggerOrAction;
 	// @DEV CHANGE later when implented better DEFAULT VALUE system, this should only be string
-	defaultToken: string;
+	defaultTokenAddress: string;
 	disabled: boolean;
 }
 
-const findToken = (address: string, triggerOrAction: TriggerOrAction) => {
-	let tokenList = [...TOKEN_LIST];
-	if (triggerOrAction === TriggerOrAction.Trigger) tokenList.push(ETH);
-	const foundToken = tokenList.find(
-		singleToken => singleToken.address === address
-	);
-	if (foundToken === undefined) {
-		// ERROR
-		console.log('Failed to find Token!');
-		return tokenList[0];
-	} else {
-		return foundToken;
-	}
-};
-
 export default function TokenSelect(props: TokenSelectProps) {
-	const { defaultToken, label, index, triggerOrAction, disabled } = props;
+	const {
+		defaultTokenAddress,
+		label,
+		index,
+		triggerOrAction,
+		disabled
+	} = props;
 	const { dispatch, icedTxState } = useIcedTxContext();
+	const { chainId } = useWeb3React();
+
+	// In case network Id is not defined yet, use default
+	let networkId: ChainIds = SELECTED_CHAIN_ID;
+	if (chainId !== undefined) {
+		networkId = chainId as ChainIds;
+	}
 
 	// @DEV Add a trigger that always two different tokens will be shown by default
 
 	// If action, dont display ETH
-	let tokenList = [...TOKEN_LIST];
+	let tokenList = [...KYBER_TOKEN_LIST];
 	if (triggerOrAction === TriggerOrAction.Trigger) {
 		tokenList.push(ETH);
 	}
 
 	// Pref
+	console.log(defaultTokenAddress);
 	const [token, setToken] = React.useState<Token>(
-		findToken(defaultToken, triggerOrAction)
+		getTokenByAddress(defaultTokenAddress, networkId)
 	);
 	// console.log(token)
 	// console.log(icedTxState)
@@ -137,12 +138,12 @@ export default function TokenSelect(props: TokenSelectProps) {
 	React.useEffect(() => {
 		setLabelWidth(inputLabel.current!.offsetWidth);
 		// Set state wih default token
-		updateUserInput(index, token.address);
+		updateUserInput(index, token.address[networkId]);
 	}, []);
 
 	const handleChange = (event: React.ChangeEvent<{ value: any }>) => {
 		const tokenAddress = event.target.value as string;
-		const tokenObject = findToken(tokenAddress, triggerOrAction);
+		const tokenObject = getTokenByAddress(tokenAddress, networkId);
 		if (tokenObject === undefined) {
 			console.log('ERROR in fetching Token');
 			return 'ERROR in finding Token';
@@ -185,7 +186,7 @@ export default function TokenSelect(props: TokenSelectProps) {
 				open={open}
 				onClose={handleClose}
 				onOpen={handleOpen}
-				value={token.address}
+				value={token.address[networkId]}
 				onChange={handleChange}
 				labelWidth={labelWidth}
 				disabled={disabled}
@@ -194,7 +195,7 @@ export default function TokenSelect(props: TokenSelectProps) {
 				{tokenList.map((possibleToken, key) => (
 					<MenuItem
 						key={`${key}-${index}-${disabled}-${triggerOrAction}`}
-						value={possibleToken.address}
+						value={possibleToken.address[networkId]}
 					>
 						{possibleToken.symbol}
 					</MenuItem>

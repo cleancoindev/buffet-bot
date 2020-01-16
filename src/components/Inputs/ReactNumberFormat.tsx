@@ -11,12 +11,14 @@ import {
 	BIG_NUM_ZERO,
 	BIG_NUM_ONE,
 	INPUT_ERROR,
-	INPUT_OK
+	INPUT_OK,
+	SELECTED_CHAIN_ID
 } from '../../constants/constants';
 import {
 	InputType,
 	TriggerWhitelistData,
-	TriggerOrAction
+	TriggerOrAction,
+	ChainIds
 } from '../../constants/interfaces';
 import { ethers } from 'ethers';
 import {
@@ -24,6 +26,7 @@ import {
 	convertWeiToHumanReadable
 } from '../../helpers/helpers';
 import { useIcedTxContext } from '../../state/GlobalState';
+import { useWeb3React } from '@web3-react/core';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -91,6 +94,13 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		triggerOrAction
 	} = props;
 	const classes = useStyles();
+	const { chainId, active } = useWeb3React();
+
+	// In case network Id is not defined yet, use default
+	let networkId: ChainIds = SELECTED_CHAIN_ID;
+	if (chainId !== undefined) {
+		networkId = chainId as ChainIds;
+	}
 
 	// Convert defaultValue into human readable version
 
@@ -113,7 +123,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 			? initialValueString
 			: convertWeiToHumanReadable(
 					defaultValue,
-					getTokenByAddress(inputs[tokenIndex].toString())
+					getTokenByAddress(inputs[tokenIndex].toString(), networkId)
 			  )
 	});
 
@@ -137,7 +147,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				try {
 					const tokenAddress = inputs[tokenIndex] as string;
 
-					let token = getTokenByAddress(tokenAddress);
+					let token = getTokenByAddress(tokenAddress, networkId);
 					const humanReadableAmount = convertWeiToHumanReadable(
 						defaultValue,
 						token
@@ -173,7 +183,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 			// });
 			const tokenAddress = inputs[tokenIndex].toString();
 			// Find token object by address
-			let token = getTokenByAddress(tokenAddress);
+			let token = getTokenByAddress(tokenAddress, chainId as ChainIds);
 
 			// Handle special case if InputType is TokenAmount
 			if (inputType === InputType.TokenAmount) {

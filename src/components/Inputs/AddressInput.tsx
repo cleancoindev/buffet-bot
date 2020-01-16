@@ -1,5 +1,4 @@
-import React, { Dispatch, useEffect } from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import {
 	InputType,
@@ -8,43 +7,12 @@ import {
 	TriggerWhitelistData,
 	TxState
 } from '../../constants/interfaces';
-import DateAndTimePicker from '.././Inputs/DatePicker';
-import TokenSelect from '.././Inputs/TokenSelect';
+
 import { useIcedTxContext } from '../../state/GlobalState';
-import {
-	UPDATE_CONDITION_INPUTS,
-	UPDATE_ACTION_INPUTS,
-	INPUT_CSS,
-	INPUT_ERROR,
-	INPUT_OK,
-	DEFAULT_DATA_TRIGGER,
-	BIG_NUM_ZERO,
-	BIG_NUM_ONE,
-	UPDATE_TX_STATE
-} from '../../constants/constants';
-import { TOKEN_LIST } from '../../constants/whitelist';
+import { INPUT_ERROR, INPUT_OK } from '../../constants/constants';
 import { ethers } from 'ethers';
-import { getTokenByAddress, isEth } from '../../helpers/helpers';
 
-// Number formater
-import ReactNumberFormat from '.././Inputs/ReactNumberFormat';
 import { useWeb3React } from '@web3-react/core';
-import { userInfo } from 'os';
-import { isBool, isBigNumber, isString } from '../../helpers/typeguards';
-
-const useStyles = makeStyles((theme: Theme) =>
-	createStyles({
-		form: {
-			marginTop: '24px',
-			// display: "flex",
-			width: '100%',
-			paddingRight: theme.spacing(3),
-			paddingBottom: theme.spacing(2)
-		},
-		// Import TextField CSS
-		...INPUT_CSS
-	})
-);
 
 interface AddressInputProps {
 	inputType: InputType;

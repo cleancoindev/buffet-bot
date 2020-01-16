@@ -243,32 +243,32 @@ export const ATYPES = [
         address _user,
         address _userProxy,
         // Specific Action Params
-        address _src,
-        uint256 _srcAmt,
-        address _dest,
-        uint256 _minConversionRate
+       	address _depositTokenAddress,
+        uint256 _depositAmount,
+        address _pTokenAddress
 
 		*/
 
 		params: [
 			{ type: 'address', name: '_user' },
 			{ type: 'address', name: '_userProxy' },
-			{ type: 'address', name: '_src' },
-			{ type: 'uint256', name: '_srcAmt' },
-			{ type: 'address', name: '_dest' }
+			{ type: 'address', name: '_depositTokenAddress' },
+			{ type: 'uint256', name: '_depositAmount' },
+			{ type: 'address', name: '_pTokenAddress' }
 		],
 		abi:
-			'function action(address _user, address _userProxy, address _src, uint256 _srcAmount, address _dest)',
+			'function action(address _user, address _userProxy, address _depositTokenAddress, uint256 _depositAmount, address _pTokenAddress)',
 		userInputTypes: [
 			InputType.Token,
 			InputType.TokenAmount,
 			InputType.Token
 		],
 		inputLabels: [
-			'Token you want to sell',
-			'Sell Amount',
-			'Token you want to buy'
+			'Deposit Token Address',
+			'Deposit Amount',
+			'Leverage Token you want to buy'
 		],
+
 		userInputs: EMPTY_STRING_ARRAY,
 		tokenIndex: 0
 	}
@@ -276,7 +276,7 @@ export const ATYPES = [
 
 // Add network to tokenList
 // Rinkeby
-// export const TOKEN_LIST = [
+// export const KYBER_TOKEN_LIST = [
 // 	{
 // 		address: '0x732fBA98dca813C3A630b53a8bFc1d6e87B1db65',
 // 		symbol: 'OMG',
@@ -298,7 +298,7 @@ export const ATYPES = [
 // ];
 
 // Ropsten
-// export const TOKEN_LIST = [
+// export const KYBER_TOKEN_LIST = [
 // 	{
 // 		address: '0x4BFBa4a8F28755Cb2061c413459EE562c6B9c51b',
 // 		symbol: 'OMG',
@@ -320,36 +320,18 @@ export const ATYPES = [
 // ];
 
 // Kovan
-export const TOKEN_LIST = [
+
+export const FULCRUM_LEVERAGE_TOKEN_LIST = [
 	{
-		address: '0xdB7ec4E4784118D9733710e46F7C83fE7889596a',
-		symbol: 'OMG',
-		name: 'OmiseGo',
+		address: '0x934b43143e984052961EB46f5bDE633F33bCDB80',
+		symbol: 'dLETH2x',
+		name: '2x Long ETH',
 		decimals: 18
 	},
 	{
-		address: '0xcb78b457c1F79a06091EAe744aA81dc75Ecb1183',
-		symbol: 'MANA',
-		name: 'MANA',
-		decimals: 18
-	},
-	{
-		address: '0xad67cB4d63C9da94AcA37fDF2761AaDF780ff4a2',
-		symbol: 'KNC',
-		name: 'Kyber Network',
-		decimals: 18
-	},
-	{
-		address: '0xC4375B7De8af5a38a93548eb8453a498222C4fF2',
-		symbol: 'DAI',
-		name: 'DAI',
+		address: '0x2EBfbCf2d67867a05BCAC0FbCA54019163253988',
+		symbol: 'dsETH2x',
+		name: '2x Short ETH',
 		decimals: 18
 	}
 ];
-
-export interface Token {
-	address: string;
-	symbol: string;
-	name: string;
-	decimals: number;
-}

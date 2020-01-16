@@ -1,4 +1,7 @@
-import { ATYPES, TTYPES, TOKEN_LIST, Token } from '../constants/whitelist';
+import { ATYPES, TTYPES } from '../constants/whitelist';
+import { Token } from '../constants/interfaces';
+import { KYBER_TOKEN_LIST } from '../constants/tokens';
+
 import {
 	DEFAULT_DATA_ACTION,
 	DEFAULT_DATA_TRIGGER,
@@ -72,9 +75,9 @@ export function findActionByAddress(address: string, networkId: ChainIds) {
 	return returnData;
 }
 // @DEV Potenital bug in returning error string
-export function getTokenSymbol(address: string) {
-	const tokenList = TOKEN_LIST;
-	const token = tokenList.find(token => token.address === address);
+export function getTokenSymbol(address: string, networkId: ChainIds) {
+	const tokenList = KYBER_TOKEN_LIST;
+	const token = tokenList.find(token => token.address[networkId] === address);
 	return token === undefined ? 'ERROR Get Token Symbol' : token.symbol;
 }
 
@@ -87,14 +90,14 @@ export const convertWeiToHumanReadable = (
 };
 
 // @DEV Potenital bug in returning error string
-export function getTokenByAddress(address: string) {
+export function getTokenByAddress(address: string, networkId: ChainIds) {
 	if (isEth(address)) {
 		return ETH;
 	}
-	const tokenList = [...TOKEN_LIST];
+	const tokenList = [...KYBER_TOKEN_LIST];
 	const token = tokenList.find(
 		token =>
-			ethers.utils.getAddress(token.address) ===
+			ethers.utils.getAddress(token.address[networkId]) ===
 			ethers.utils.getAddress(address)
 	);
 	if (token === undefined) {
@@ -252,7 +255,8 @@ export const deepCloneTriggers = () => {
 
 export const isEth = (address: string) => {
 	let isEther: boolean;
-	ethers.utils.getAddress(ETH.address) === ethers.utils.getAddress(address)
+	// @DEV using 1 for ETH as address is same anyways
+	ethers.utils.getAddress(ETH.address[1]) === ethers.utils.getAddress(address)
 		? (isEther = true)
 		: (isEther = false);
 	return isEther;

@@ -29,7 +29,8 @@ import {
 import { useWeb3React } from '@web3-react/core';
 import { injected } from '../constants/connectors';
 import { useGelatoCore } from '../hooks/hooks';
-import { EXECUTOR_ADDRESS, TOKEN_LIST } from '../constants/whitelist';
+import { EXECUTOR_ADDRESS } from '../constants/whitelist';
+import { KYBER_TOKEN_LIST } from '../constants/tokens';
 import { ethers } from 'ethers';
 
 // Smart Contract ABIs
@@ -524,7 +525,8 @@ export default function TransactionCard(props: TxCardProps) {
 					title: `Approve gelato to move ${getTokenSymbol(
 						icedTxState.action.userInputs[
 							icedTxState.action.tokenIndex
-						].toString()
+						].toString(),
+						networkId
 					)} for you`,
 					progress: Progress.awaitingModalConfirm,
 					progressText: ``,

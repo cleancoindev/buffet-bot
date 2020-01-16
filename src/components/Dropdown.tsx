@@ -25,7 +25,6 @@ interface AppDropdownProps {
 
 export default function AppDropdown(props: AppDropdownProps) {
 	const theme = useTheme();
-	console.log(theme);
 	const useStyles = makeStyles({
 		formControl: {
 			margin: theme.spacing(1),
