@@ -5,6 +5,9 @@ import TelegramIcon from '@material-ui/icons/Telegram';
 import '../App.css';
 import { COLOURS } from '../constants/constants';
 
+// use Style
+// '&:hover': {color: COLOURS.salmon}
+
 const Footer = () => {
 	return (
 		<div
@@ -21,13 +24,13 @@ const Footer = () => {
 		>
 			<a href={'https://twitter.com/gelatofinance'} target="_blank">
 				<TwitterIcon
-					style={{ marginRight: '8px', color: COLOURS.salmon }}
+					style={{ marginRight: '8px', color: 'white' }}
 					fontSize="small"
 				></TwitterIcon>
 			</a>
 			<a href={'https://github.com/gelatodigital'} target="_blank">
 				<GitHubIcon
-					style={{ marginRight: '8px', color: COLOURS.salmon }}
+					style={{ marginRight: '8px', color: 'white' }}
 					fontSize="small"
 				></GitHubIcon>
 			</a>
@@ -36,7 +39,7 @@ const Footer = () => {
 				target="_blank"
 			>
 				<TelegramIcon
-					style={{ marginRight: '8px', color: COLOURS.salmon }}
+					style={{ marginRight: '8px', color: 'white' }}
 					fontSize="small"
 				></TelegramIcon>
 			</a>
@@ -44,7 +47,7 @@ const Footer = () => {
 				style={{
 					marginLeft: 'auto',
 					fontSize: '0.75rem',
-					color: COLOURS.salmon
+					color: 'white'
 				}}
 			>
 				{' '}

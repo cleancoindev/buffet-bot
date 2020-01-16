@@ -61,6 +61,7 @@ const useStyles = makeStyles(theme => ({
 		height: 48,
 		padding: '0 30px',
 		margin: 8,
+		marginBottom: '40px',
 		'&:hover': {
 			background: COLOURS.salmon60
 		}

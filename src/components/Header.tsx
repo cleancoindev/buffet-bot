@@ -37,6 +37,7 @@ import {
 } from '../constants/constants';
 import { useIcedTxContext } from '../state/GlobalState';
 import { TxState } from '../constants/interfaces';
+import GelatoLogo from './Logo/Logo';
 
 const drawerWidth = 240;
 
@@ -188,14 +189,15 @@ export default function ButtonAppBar() {
 				<Toolbar style={{ paddingLeft: '0px', paddingRight: '0px' }}>
 					{/* <Link className={classes.menuButton} to="/"> */}
 					<div className={classes.menuButton}>
-						<img
+						{/* <img
 							src={`${process.env.PUBLIC_URL}/images/gelato_logo.png`}
 							alt="logo"
 							style={{
 								width: '40px',
 								marginRight: '8px'
 							}}
-						/>
+						/> */}
+						<GelatoLogo></GelatoLogo>
 
 						<Typography variant="h5">gelato finance</Typography>
 					</div>
