@@ -13,6 +13,7 @@ import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
+import FlashOnOutlinedIcon from '@material-ui/icons/FlashOnOutlined';
 
 import { ATYPES, TTYPES } from '../constants/whitelist';
 
@@ -57,11 +58,11 @@ const useStyles = makeStyles(theme => ({
 		color: 'white',
 		border: 0,
 		borderRadius: 3,
-		boxShadow: '0 2px 2px 2px rgba(255, 255, 255, .3)',
+		boxShadow: '0 1.5px 1.5px 1.5px rgba(255, 255, 255, .3)',
 		height: 48,
-		padding: '0 30px',
+		padding: '0 20px',
 		margin: 8,
-		marginBottom: '40px',
+		// marginBottom: '40px',
 		'&:hover': {
 			background: COLOURS.salmon60
 		}
@@ -167,7 +168,7 @@ export default function AppSelection() {
 				direction="row"
 				justify="space-between"
 				alignItems="center"
-				style={{ padding: '16px' }}
+				// style={{ padding: '16px' }}
 			>
 				<Grid
 					container
@@ -254,13 +255,16 @@ export default function AppSelection() {
 						direction="row"
 						justify="space-evenly"
 						alignItems="stretch"
-						style={
-							{
-								// marginTop: '16px'
-							}
-						}
+						style={{
+							marginTop: '32px'
+						}}
 					>
-						<h2 style={{ textAlign: 'center' }}>
+						<h2
+							style={{
+								textAlign: 'justify',
+								textAlignLast: 'center'
+							}}
+						>
 							Gelato will{' '}
 							<span style={{ color: '#E50078' }}>
 								{icedTxState.action.title}
@@ -292,6 +296,7 @@ export default function AppSelection() {
 								<Button
 									className={classes.createButton}
 									disabled
+									endIcon={<FlashOnOutlinedIcon />}
 								>
 									Create
 								</Button>
@@ -303,7 +308,10 @@ export default function AppSelection() {
 									to={`create/${icedTxState.trigger.id}/${icedTxState.action.id}`}
 									style={{ textDecoration: 'none' }}
 								>
-									<Button className={classes.createButton}>
+									<Button
+										className={classes.createButton}
+										endIcon={<FlashOnOutlinedIcon />}
+									>
 										Create
 									</Button>
 								</Link>
@@ -311,6 +319,7 @@ export default function AppSelection() {
 						{icedTxState.txState !== TxState.displayWrongNetwork &&
 							!web3.active && (
 								<Button
+									endIcon={<FlashOnOutlinedIcon />}
 									onClick={() =>
 										dispatch({ type: OPEN_MODAL })
 									}

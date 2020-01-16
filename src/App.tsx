@@ -47,7 +47,7 @@ function App() {
 								style={{
 									...BOX,
 									margin: '0',
-									padding: '0'
+									padding: '40px'
 								}}
 							>
 								<Switch>

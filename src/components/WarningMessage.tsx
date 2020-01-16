@@ -21,9 +21,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 		fontSize: '0.75rem',
 		lineHeight: '1rem',
 		textAlign: 'center',
-		overflow: 'auto',
+		overflow: 'visible',
 		// textOverflow: 'ellipsis',
-		whiteSpace: 'nowrap',
+		whiteSpace: 'normal',
 		color: 'white',
 
 		'&:after': {
