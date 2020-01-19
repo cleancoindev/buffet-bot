@@ -88,7 +88,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 					alignItems="flex-start"
 					// className={classes.box}
 					style={{
-						paddingLeft: '24px',
+						// paddingLeft: '24px',
 						textAlign: 'left'
 					}}
 				>
@@ -111,7 +111,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 							background: 'white',
 							marginBottom: '8px',
 							marginTop: '16px',
-							width: 'calc(100% - 24px)'
+							width: 'calc(100%)'
 						}}
 					/>
 				</Grid>
@@ -133,7 +133,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 					alignItems="flex-start"
 					// className={classes.box}
 					style={{
-						paddingLeft: '24px',
+						// paddingLeft: '24px',
 						minHeight: '200px',
 						textAlign: 'left'
 					}}
@@ -164,7 +164,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 							background: 'white',
 							marginBottom: '8px',
 							marginTop: '16px',
-							width: 'calc(100% - 24px)'
+							width: 'calc(100%)'
 						}}
 					/>
 				</Grid>
@@ -186,7 +186,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 					alignItems="flex-start"
 					// className={classes.box}
 					style={{
-						paddingLeft: '24px',
+						// paddingLeft: '24px',
 						minHeight: '200px',
 						textAlign: 'left'
 					}}

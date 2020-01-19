@@ -8,7 +8,7 @@ import TransactionTable from '../components/TransactionTable';
 // Types
 
 import { useIcedTxContext } from '../state/GlobalState';
-import { COLOURS } from '../constants/constants';
+import { COLOURS, BOX } from '../constants/constants';
 import { Button } from '@material-ui/core';
 import { useWeb3React } from '@web3-react/core';
 
@@ -17,7 +17,10 @@ import { useWeb3React } from '@web3-react/core';
 export default function Create() {
 	// const { icedTxState, dispatch } = useIcedTxContext();
 	return (
-		<React.Fragment>
+		<div
+			className="content"
+			style={{ ...BOX, margin: '0', padding: '40px' }}
+		>
 			<Grid
 				container
 				direction="row"
@@ -31,6 +34,6 @@ export default function Create() {
 			>
 				<TransactionTable />
 			</Grid>
-		</React.Fragment>
+		</div>
 	);
 }

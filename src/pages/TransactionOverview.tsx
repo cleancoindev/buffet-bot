@@ -18,7 +18,7 @@ import {
 } from '../helpers/helpers';
 import { on } from 'cluster';
 import { render } from '@testing-library/react';
-import { DEFAULT_PAST_TRANSACTIONS } from '../constants/constants';
+import { DEFAULT_PAST_TRANSACTIONS, BOX } from '../constants/constants';
 import { useWeb3React } from '@web3-react/core';
 import { ChainIds } from '../constants/interfaces';
 
@@ -76,7 +76,10 @@ export default function TransactionOverview({
 	);
 
 	return (
-		<React.Fragment>
+		<div
+			className="content"
+			style={{ ...BOX, margin: '0', padding: '40px' }}
+		>
 			<Grid
 				container
 				direction="row"
@@ -90,6 +93,6 @@ export default function TransactionOverview({
 					actionInputs={actionInputs}
 				></TransactionSummary>
 			</Grid>
-		</React.Fragment>
+		</div>
 	);
 }

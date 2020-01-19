@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
 			marginTop: '24px',
 			// display: "flex",
 			width: '100%',
-			paddingRight: theme.spacing(3),
+			// paddingRight: theme.spacing(3),
 			paddingBottom: theme.spacing(2)
 		},
 		// Import TextField CSS

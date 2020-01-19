@@ -271,14 +271,81 @@ export default function ButtonAppBar() {
 				</div>
 				<Divider />
 				<List style={{ color: 'white' }}>
-					{['Connect', 'Overview'].map((text, index) => (
-						<ListItem button key={text}>
+					{active && chainId === SELECTED_CHAIN_ID && (
+						<ListItem
+							button
+							onClick={() => {
+								history.push('/dashboard');
+								handleDrawerToggle();
+							}}
+						>
 							<ListItemIcon>
 								<InboxIcon />
 							</ListItemIcon>
-							<ListItemText primary={text} />
+							<ListItemText
+								primary={
+									account
+										? `${account.substring(
+												0,
+												6
+										  )}...${account.substring(37, 41)}`
+										: 'Connected'
+								}
+							/>
 						</ListItem>
-					))}
+					)}
+					{active && chainId === SELECTED_CHAIN_ID && (
+						<ListItem
+							button
+							onClick={() => {
+								dispatch({ type: RESET_CONDITION });
+								dispatch({ type: RESET_ACTION });
+								history.push('/');
+								handleDrawerToggle();
+							}}
+						>
+							<ListItemIcon>
+								<InboxIcon />
+							</ListItemIcon>
+							<ListItemText primary={'Create New'} />
+						</ListItem>
+					)}
+					{active && chainId !== SELECTED_CHAIN_ID && (
+						<ListItem
+							button
+							onClick={() => {
+								// Update TxState
+								dispatch({
+									type: UPDATE_TX_STATE,
+									txState: TxState.displayWrongNetwork
+								});
+								// Open Modal
+								dispatch({
+									type: OPEN_MODAL
+								});
+								handleDrawerToggle();
+							}}
+						>
+							<ListItemIcon>
+								<InboxIcon />
+							</ListItemIcon>
+							<ListItemText primary={'Wrong Network'} />
+						</ListItem>
+					)}
+					{!active && (
+						<ListItem
+							button
+							onClick={() => {
+								logInLogOutMetamask();
+								handleDrawerToggle();
+							}}
+						>
+							<ListItemIcon>
+								<InboxIcon />
+							</ListItemIcon>
+							<ListItemText primary={'Connect With Metamask'} />
+						</ListItem>
+					)}
 				</List>
 				<Divider />
 			</Drawer>

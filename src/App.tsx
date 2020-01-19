@@ -54,14 +54,7 @@ function App() {
 									padding: '0px'
 								}}
 							>
-								<div
-									className="content"
-									style={{
-										...BOX,
-										margin: '0'
-										// padding: '40px'
-									}}
-								>
+								<div>
 									<Switch>
 										<Route
 											path="/"

@@ -51,7 +51,7 @@ body {
 }
 
 .content {
-	padding: 40px;
+	/* padding: 40px; */
 }
 
 @media (max-width: 600px) {

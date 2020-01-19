@@ -18,7 +18,8 @@ import {
 	UPDATE_TX_STATE,
 	OPEN_MODAL,
 	CLOSE_MODAL,
-	SELECTED_CHAIN_ID
+	SELECTED_CHAIN_ID,
+	BOX
 } from '../constants/constants';
 import TransactionModal from '../components/Modal';
 import { TxState, ChainIds } from '../constants/interfaces';
@@ -320,7 +321,10 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 	// MODAL STUFF END
 
 	return (
-		<React.Fragment>
+		<div
+			className="content"
+			style={{ ...BOX, margin: '0', padding: '40px' }}
+		>
 			<Grid
 				container
 				direction="row"
@@ -370,6 +374,6 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 				modalClose={modalClose}
 				icedTxState={icedTxState}
 			></TransactionModal> */}
-		</React.Fragment>
+		</div>
 	);
 }

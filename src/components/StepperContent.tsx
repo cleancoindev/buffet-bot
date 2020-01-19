@@ -80,7 +80,7 @@ export default function StepperContent(props: StepperContentProps) {
 							alignItems="flex-start"
 							// className={classes.box}
 							style={{
-								paddingLeft: '24px',
+								// paddingLeft: '24px',
 								minHeight: '200px',
 								textAlign: 'left'
 							}}
@@ -106,7 +106,7 @@ export default function StepperContent(props: StepperContentProps) {
 									background: 'white',
 									marginBottom: '8px',
 									marginTop: '16px',
-									width: 'calc(100% - 24px)'
+									width: 'calc(100% )'
 								}}
 							/>
 							{triggerInputTypes.map((input, key) => (
@@ -148,7 +148,7 @@ export default function StepperContent(props: StepperContentProps) {
 							alignItems="flex-start"
 							// className={classes.box}
 							style={{
-								paddingLeft: '24px',
+								// paddingLeft: '24px',
 								minHeight: '200px',
 								textAlign: 'left'
 							}}
@@ -171,7 +171,8 @@ export default function StepperContent(props: StepperContentProps) {
 							<Divider
 								style={{
 									background: 'white',
-									width: 'calc(100% - 24px)',
+									// width: 'calc(100% - 24px)',
+									width: 'calc(100% )',
 									marginTop: '16px',
 									marginBottom: '8px'
 								}}
