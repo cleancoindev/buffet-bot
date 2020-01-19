@@ -18,7 +18,8 @@ import {
 	InputType,
 	TriggerWhitelistData,
 	TriggerOrAction,
-	ChainIds
+	ChainIds,
+	RelevantInputData
 } from '../../constants/interfaces';
 import { ethers } from 'ethers';
 import {
@@ -78,6 +79,7 @@ interface ReactNumberFormatProps {
 	disabled: boolean;
 	tokenIndex: number;
 	triggerOrAction: TriggerOrAction;
+	relevantInputData: RelevantInputData;
 }
 
 export default function ReactNumberFormat(props: ReactNumberFormatProps) {
@@ -91,7 +93,8 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		convertToWei,
 		disabled,
 		tokenIndex,
-		triggerOrAction
+		triggerOrAction,
+		relevantInputData
 	} = props;
 	const classes = useStyles();
 	const { chainId, active } = useWeb3React();
@@ -123,7 +126,11 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 			? initialValueString
 			: convertWeiToHumanReadable(
 					defaultValue,
-					getTokenByAddress(inputs[tokenIndex].toString(), networkId)
+					getTokenByAddress(
+						inputs[tokenIndex].toString(),
+						networkId,
+						relevantInputData
+					)
 			  )
 	});
 
@@ -147,7 +154,11 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				try {
 					const tokenAddress = inputs[tokenIndex] as string;
 
-					let token = getTokenByAddress(tokenAddress, networkId);
+					let token = getTokenByAddress(
+						tokenAddress,
+						networkId,
+						relevantInputData
+					);
 					const humanReadableAmount = convertWeiToHumanReadable(
 						defaultValue,
 						token
@@ -183,7 +194,11 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 			// });
 			const tokenAddress = inputs[tokenIndex].toString();
 			// Find token object by address
-			let token = getTokenByAddress(tokenAddress, chainId as ChainIds);
+			let token = getTokenByAddress(
+				tokenAddress,
+				networkId,
+				relevantInputData
+			);
 
 			// Handle special case if InputType is TokenAmount
 			if (inputType === InputType.TokenAmount) {

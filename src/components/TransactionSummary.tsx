@@ -88,7 +88,8 @@ export default function TransactionSummary(props: TxSummaryParams) {
 					alignItems="flex-start"
 					// className={classes.box}
 					style={{
-						paddingLeft: '24px'
+						paddingLeft: '24px',
+						textAlign: 'left'
 					}}
 				>
 					<h2> Summary</h2>
@@ -133,7 +134,8 @@ export default function TransactionSummary(props: TxSummaryParams) {
 					// className={classes.box}
 					style={{
 						paddingLeft: '24px',
-						minHeight: '200px'
+						minHeight: '200px',
+						textAlign: 'left'
 					}}
 				>
 					<h2>
@@ -154,6 +156,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 							app={triggerApp}
 							disabled={true}
 							tokenIndex={trigger.tokenIndex}
+							relevantInputData={trigger.relevantInputData[key]}
 						></InputField>
 					))}
 					<Divider
@@ -184,7 +187,8 @@ export default function TransactionSummary(props: TxSummaryParams) {
 					// className={classes.box}
 					style={{
 						paddingLeft: '24px',
-						minHeight: '200px'
+						minHeight: '200px',
+						textAlign: 'left'
 					}}
 				>
 					<h2>
@@ -204,6 +208,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 							app={actionApp}
 							disabled={true}
 							tokenIndex={action.tokenIndex}
+							relevantInputData={action.relevantInputData[key]}
 						></InputField>
 					))}
 				</Grid>
@@ -211,144 +216,3 @@ export default function TransactionSummary(props: TxSummaryParams) {
 		</div>
 	);
 }
-
-// return (
-// 	<div style={{ marginBottom: '24px' }}>
-// 		<Grid
-// 			container
-// 			direction="row"
-// 			justify="space-evenly"
-// 			alignItems="center"
-// 			style={{ background: 'brown', padding: '10px' }}
-// 		>
-// 			<Grid
-// 				container
-// 				item
-// 				sm={12}
-// 				xs={12}
-// 				direction="column"
-// 				justify="flex-start"
-// 				alignItems="flex-start"
-// 				style={{
-// 					paddingLeft: '24px',
-// 					background: 'pink'
-// 				}}
-// 			>
-// 				<h1> Summary</h1>
-// 				<h2 style={{ textAlign: 'left' }}>
-// 					Gelato will{' '}
-// 					<span style={{ color: 'red' }}>{action.title}</span>{' '}
-// 					with <span style={{ color: 'red' }}>{action.app}</span>{' '}
-// 					when the trigger{' '}
-// 					<span style={{ color: 'red' }}>{trigger.title} </span>
-// 					on <span style={{ color: 'red' }}>
-// 						{trigger.app}
-// 					</span>{' '}
-// 					is fulfilled
-// 				</h2>
-// 				{/* <Divider
-// 					style={{
-// 						background: 'white',
-// 						width: '100%',
-// 						marginTop: '16px'
-// 					}}
-// 				/> */}
-// 			</Grid>
-// 		</Grid>
-// 		<Grid
-// 			container
-// 			direction="row"
-// 			justify="space-evenly"
-// 			alignItems="center"
-// 			style={{ background: 'brown', padding: '10px' }}
-// 		>
-// 			<Grid
-// 				container
-// 				item
-// 				sm={12}
-// 				xs={12}
-// 				direction="column"
-// 				justify="flex-start"
-// 				alignItems="flex-start"
-// 				style={{
-// 					paddingLeft: '24px',
-// 					background: 'pink',
-// 					minHeight: '200px'
-// 				}}
-// 			>
-// 				<h2>
-// 					{' '}
-// 					Trigger:{' '}
-// 					<span style={{ color: 'red' }}>{trigger.title} </span>
-// 					on <span style={{ color: 'red' }}>
-// 						{trigger.app}
-// 					</span>{' '}
-// 				</h2>
-// 				{triggerInputTypes.map((input, key) => (
-// 					<InputField
-// 						key={`Trigger-${key}`}
-// 						index={key}
-// 						inputType={input}
-// 						label={trigger.inputLabels[key]}
-// 						triggerOrAction={TriggerOrAction.Trigger}
-// 						inputs={triggerInputs}
-// 						app={triggerApp}
-// 						disabled={true}
-// 					></InputField>
-// 				))}
-// 			</Grid>
-// 		</Grid>
-// 		<Grid
-// 			container
-// 			direction="row"
-// 			justify="space-evenly"
-// 			alignItems="center"
-// 			style={{ background: 'brown', padding: '10px' }}
-// 		>
-// 			<Grid
-// 				container
-// 				item
-// 				sm={12}
-// 				xs={12}
-// 				direction="column"
-// 				justify="flex-start"
-// 				alignItems="flex-start"
-// 				style={{
-// 					paddingLeft: '24px',
-// 					background: 'pink',
-// 					minHeight: '200px'
-// 				}}
-// 			>
-// 				<h2>
-// 					{' '}
-// 					Action:{' '}
-// 					<span style={{ color: 'red' }}>
-// 						{action.title}
-// 					</span>{' '}
-// 					with <span style={{ color: 'red' }}>{action.app}</span>{' '}
-// 				</h2>
-// 				{actionInputTypes.map((input, key) => (
-// 					<InputField
-// 						index={key}
-// 						key={`Action-${key}`}
-// 						inputType={input}
-// 						label={action.inputLabels[key]}
-// 						triggerOrAction={TriggerOrAction.Action}
-// 						inputs={actionInputs}
-// 						app={actionApp}
-// 						disabled={true}
-// 					></InputField>
-// 				))}
-// 				{/* <Divider
-// 							style={{
-// 								background: 'white',
-// 								width: '100%',
-// 								marginTop: '16px'
-// 							}}
-// 						/>
-// 						<h1>Required prepayment:</h1>
-// 						<h2>0.06ETH ($1.08)</h2> */}
-// 			</Grid>
-// 		</Grid>
-// 	</div>
-// );

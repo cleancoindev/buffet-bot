@@ -71,6 +71,7 @@ export interface ActionWhitelistData {
 	inputLabels: Array<string>;
 	userInputTypes: Array<InputType>;
 	userInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
+	relevantInputData: Array<RelevantInputData>;
 	tokenIndex: number;
 }
 
@@ -84,6 +85,7 @@ export interface TriggerWhitelistData {
 	inputLabels: Array<string>;
 	tokenIndex: number;
 	userInputTypes: Array<InputType>;
+	relevantInputData: Array<RelevantInputData>;
 	userInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
 	getTriggerValueAbi: string;
 	getTriggerValueInput: ethers.utils.BigNumber;
@@ -128,6 +130,14 @@ export enum InputType {
 	StatelessGetValue,
 	DEFAULT,
 	Disabled // Used for the summary
+}
+
+// Relevant Data for user inputs
+
+export enum RelevantInputData {
+	none = 0,
+	kyberTokenList = 1,
+	fulcrumTokenList = 2
 }
 
 export interface MatchParams {

@@ -1,4 +1,4 @@
-import { InputType, Params } from './interfaces';
+import { InputType, Params, RelevantInputData } from './interfaces';
 import { ethers } from 'ethers';
 import { EXECUTOR_ADDRESS } from './whitelist';
 
@@ -9,9 +9,14 @@ export const EMPTY_USER_INPUT_TYPE_ARRAY: Array<InputType> = [];
 
 export const EMPTY_PARAM_ARRAY: Array<Params> = [];
 export const EMPTY_STRING_ARRAY: Array<string> = [];
+export const EMPTY_RELEVANT_INPUT_DATA_ARRAY: Array<RelevantInputData> = [];
 
 export const BIG_NUM_ZERO = ethers.constants.Zero;
 export const BIG_NUM_ONE = ethers.constants.One;
+
+export const MAX_BIG_NUM = ethers.utils
+	.bigNumberify(10)
+	.pow(ethers.utils.bigNumberify(50));
 
 export const COLOURS = {
 	salmon: '#E91E63',
@@ -50,7 +55,8 @@ export const DEFAULT_DATA_ACTION = {
 	inputLabels: EMPTY_STRING_ARRAY, // [ ]
 	userInputTypes: EMPTY_USER_INPUT_TYPE_ARRAY, // [ ]
 	userInputs: EMPTY_USER_INPUT_ARRAY, // [ ]
-	tokenIndex: 999 // 999 means no approval in action
+	tokenIndex: 999, // 999 means no approval in action
+	relevantInputData: EMPTY_RELEVANT_INPUT_DATA_ARRAY
 };
 
 export const DEFAULT_DATA_TRIGGER = {
@@ -66,7 +72,8 @@ export const DEFAULT_DATA_TRIGGER = {
 	inputLabels: EMPTY_STRING_ARRAY, // [ ]
 	userInputTypes: EMPTY_USER_INPUT_TYPE_ARRAY, // [ ]
 	userInputs: EMPTY_USER_INPUT_ARRAY, // [ ]
-	boolIndex: 999
+	boolIndex: 999,
+	relevantInputData: EMPTY_RELEVANT_INPUT_DATA_ARRAY
 };
 
 // ID that determines which trigger to render by default at initial render of root

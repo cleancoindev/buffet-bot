@@ -55,10 +55,11 @@ function App() {
 								}}
 							>
 								<div
+									className="content"
 									style={{
 										...BOX,
-										margin: '0',
-										padding: '40px'
+										margin: '0'
+										// padding: '40px'
 									}}
 								>
 									<Switch>

@@ -43,8 +43,6 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 	} = match;
 	const { icedTxState, dispatch } = useIcedTxContext();
 
-	console.log(icedTxState.txState);
-
 	// web3React context
 	const web3 = useWeb3React();
 
@@ -53,6 +51,8 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 
 	// Get gelatoCore
 	const gelatoCore = useGelatoCore();
+
+	console.log(icedTxState.txState);
 
 	// When component renders, 1) Check that icedTx state exist, if not 2) check if correct params were inputted in URL, if not, 3) setNotFound = true
 	useEffect(() => {
@@ -98,7 +98,6 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 		// @ DEV INCLUDE VALIDATION, ONLY ALLOW IF ALL INPUT FIELDS HAVE BEEN VALIDATED
 		if (!icedTxState.error.isError) {
 			setActiveStep(prevActiveStep => prevActiveStep + 1);
-			console.log('cotinrue');
 		} else {
 			// Open Modal and show error
 			console.log('openModal');
@@ -256,6 +255,8 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 								.allowance(web3.account, proxyAddress)
 								.then((result: ethers.utils.BigNumber) => {
 									const allowance = result;
+									console.log('Allowance: ');
+									console.log(allowance.toString());
 									// If the Allowance is greater than the selected token amount, move on
 									if (tokenAmount.lte(allowance)) {
 										console.log(

@@ -121,6 +121,9 @@ export default function StepperContent(props: StepperContentProps) {
 									app={triggerApp}
 									disabled={false}
 									tokenIndex={trigger.tokenIndex}
+									relevantInputData={
+										trigger.relevantInputData[key]
+									}
 								></InputField>
 							))}
 						</Grid>
@@ -146,7 +149,8 @@ export default function StepperContent(props: StepperContentProps) {
 							// className={classes.box}
 							style={{
 								paddingLeft: '24px',
-								minHeight: '200px'
+								minHeight: '200px',
+								textAlign: 'left'
 							}}
 						>
 							{/* <h1>
@@ -184,6 +188,9 @@ export default function StepperContent(props: StepperContentProps) {
 									app={actionApp}
 									disabled={false}
 									tokenIndex={action.tokenIndex}
+									relevantInputData={
+										action.relevantInputData[key]
+									}
 								></InputField>
 							))}
 						</Grid>

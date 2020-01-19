@@ -17,7 +17,8 @@ import {
 	COLOURS,
 	UPDATE_PAST_TRANSACTIONS,
 	CLOSE_MODAL,
-	SELECTED_NETWORK_NAME
+	SELECTED_NETWORK_NAME,
+	MAX_BIG_NUM
 } from '../constants/constants';
 import {
 	getTokenSymbol,
@@ -30,7 +31,6 @@ import { useWeb3React } from '@web3-react/core';
 import { injected } from '../constants/connectors';
 import { useGelatoCore } from '../hooks/hooks';
 import { EXECUTOR_ADDRESS } from '../constants/whitelist';
-import { KYBER_TOKEN_LIST } from '../constants/tokens';
 import { ethers } from 'ethers';
 
 // Smart Contract ABIs
@@ -103,8 +103,6 @@ export default function TransactionCard(props: TxCardProps) {
 		modalClickOpen,
 		modalClose
 	} = props;
-
-	console.log('render');
 
 	// Get gelatoCore
 	const gelatoCore = useGelatoCore();
@@ -193,23 +191,31 @@ export default function TransactionCard(props: TxCardProps) {
 
 				// Get Erc20 contract
 				const signer = library.getSigner();
+
 				const tokenAddress =
 					icedTxState.action.userInputs[
 						icedTxState.action.tokenIndex
 					];
+				console.log(tokenAddress);
 				const erc20 = new ethers.Contract(
 					tokenAddress.toString(),
 					JSON.stringify(ERC20_ABI),
 					signer
 				);
-
-				const gasEstimateApprove = await erc20.estimate.approve(
-					proxyAddress,
-					ethers.constants.MaxUint256
-				);
-
-				gasEstimatePlusBuffer = addGasBuffer(gasEstimateApprove);
-				break;
+				console.log(account);
+				console.log(proxyAddress);
+				try {
+					const gasEstimateApprove = await erc20.estimate.approve(
+						proxyAddress,
+						MAX_BIG_NUM
+					);
+					gasEstimatePlusBuffer = addGasBuffer(gasEstimateApprove);
+					break;
+				} catch (error) {
+					console.log('Cant estimate approval');
+					console.log(error);
+					break;
+				}
 
 			case TxState.displayCreate:
 				const userProxy = await gelatoCore.getProxyOfUser(account);
@@ -526,7 +532,10 @@ export default function TransactionCard(props: TxCardProps) {
 						icedTxState.action.userInputs[
 							icedTxState.action.tokenIndex
 						].toString(),
-						networkId
+						networkId,
+						icedTxState.action.relevantInputData[
+							icedTxState.action.tokenIndex
+						]
 					)} for you`,
 					progress: Progress.awaitingModalConfirm,
 					progressText: ``,
@@ -544,13 +553,15 @@ export default function TransactionCard(props: TxCardProps) {
 							account
 						);
 
+						console.log(proxyAddress);
+
 						// Get Erc20 contract
 						const signer = library.getSigner();
 						const tokenAddress =
 							icedTxState.action.userInputs[
 								icedTxState.action.tokenIndex
 							];
-						console.log(ERC20_ABI);
+
 						const erc20 = new ethers.Contract(
 							tokenAddress.toString(),
 							JSON.stringify(ERC20_ABI),
@@ -563,7 +574,7 @@ export default function TransactionCard(props: TxCardProps) {
 
 							const gasEstimate = await erc20.estimate.approve(
 								proxyAddress,
-								ethers.constants.MaxUint256
+								MAX_BIG_NUM
 							);
 
 							const gasEstimatePlusBuffer = addGasBuffer(
@@ -580,7 +591,7 @@ export default function TransactionCard(props: TxCardProps) {
 							try {
 								const tx = await erc20.approve(
 									proxyAddress,
-									ethers.constants.MaxUint256,
+									MAX_BIG_NUM,
 									overrides
 								);
 
@@ -786,8 +797,6 @@ export default function TransactionCard(props: TxCardProps) {
 								pastTransaction?.prepayment
 							);
 
-							console.log(pastTransaction);
-
 							//  Add 50.000 gas to estimate
 							const gasEstimatePlusBuffer = addGasBuffer(
 								estimate
@@ -810,6 +819,7 @@ export default function TransactionCard(props: TxCardProps) {
 							IGelatoAction _action,
 							bytes calldata _actionPayloadWithSelector
 							*/
+
 							try {
 								// Find past executcion Claim with executionClaimId
 
@@ -827,15 +837,25 @@ export default function TransactionCard(props: TxCardProps) {
 									overrides
 								);
 
-								// const tx = await gelatoCore.mintExecutionClaim(
-								// 	EXECUTOR_ADDRESS[networkId],
-								// 	icedTxState.trigger.address,
-								// 	encodedTrigger,
-								// 	icedTxState.action.address,
-								// 	encodedAction,
-								// 	// @DEV make dynamic
-								// 	overrides
+								// ######
+								// ONLY FOR TESTING
+
+								// const tx = await gelatoCore.canExecute(
+								// 	pastTransaction?.executionClaimId,
+								// 	pastTransaction?.proxyAddress,
+								// 	pastTransaction?.trigger,
+								// 	pastTransaction?.triggerPayload,
+								// 	pastTransaction?.action,
+								// 	pastTransaction?.actionPayload,
+								// 	pastTransaction?.triggerGasActionTotalGasMinExecutionGas,
+								// 	1000000,
+								// 	pastTransaction?.expiryDate,
+								// 	pastTransaction?.prepayment
 								// );
+
+								// ###################
+
+								// console.log(tx);
 
 								setTxHash(tx.hash);
 								console.log('Change TxState to waitingCancel');

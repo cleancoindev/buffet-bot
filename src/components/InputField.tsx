@@ -7,7 +7,8 @@ import {
 	ActionWhitelistData,
 	TriggerWhitelistData,
 	Token,
-	ChainIds
+	ChainIds,
+	RelevantInputData
 } from '../constants/interfaces';
 import DateAndTimePicker from './Inputs/DatePicker';
 import TokenSelect from './Inputs/TokenSelect';
@@ -21,7 +22,10 @@ import {
 	SELECTED_CHAIN_ID,
 	SELECTED_NETWORK_NAME
 } from '../constants/constants';
-import { KYBER_TOKEN_LIST } from '../constants/tokens';
+import {
+	KYBER_TOKEN_LIST,
+	FULCRUM_LEVERAGE_TOKEN_LIST
+} from '../constants/tokens';
 import { ethers } from 'ethers';
 import { getTokenByAddress } from '../helpers/helpers';
 
@@ -30,6 +34,7 @@ import ReactNumberFormat from './Inputs/ReactNumberFormat';
 import { useWeb3React } from '@web3-react/core';
 import { isBool, isBigNumber } from '../helpers/typeguards';
 import AddressInput from './Inputs/AddressInput';
+import StatelessGetValueInput from './Inputs/StatelessGetValue';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -56,6 +61,7 @@ interface InputProps {
 	trigger?: TriggerWhitelistData;
 	action?: ActionWhitelistData;
 	tokenIndex: number;
+	relevantInputData: RelevantInputData;
 }
 
 export default function LayoutTextFields(props: InputProps) {
@@ -70,7 +76,8 @@ export default function LayoutTextFields(props: InputProps) {
 		disabled,
 		trigger,
 		action,
-		tokenIndex
+		tokenIndex,
+		relevantInputData
 	} = props;
 	// Context
 
@@ -125,7 +132,11 @@ export default function LayoutTextFields(props: InputProps) {
 			const tokenAddress = inputs[tokenIndex] as string;
 			let token: Token;
 			try {
-				token = getTokenByAddress(tokenAddress, chainId as ChainIds);
+				token = getTokenByAddress(
+					tokenAddress,
+					chainId as ChainIds,
+					relevantInputData
+				);
 			} catch (error) {
 				newValue = BIG_NUM_ZERO;
 				return newValue;
@@ -183,6 +194,7 @@ export default function LayoutTextFields(props: InputProps) {
 
 		if (inputs[0] !== undefined) {
 			const returnValue = await callGetValue();
+			console.log(returnValue);
 			// updateUserInput(index, returnValue);
 			// Only set state if the return value is different
 			if (!returnValue.eq(getValueState)) {
@@ -292,13 +304,18 @@ export default function LayoutTextFields(props: InputProps) {
 	const getDefaultStringValue = () => {
 		switch (inputType) {
 			case InputType.Token:
-				let defaultToken = KYBER_TOKEN_LIST[0];
-				if (index !== 0) defaultToken = KYBER_TOKEN_LIST[1];
-				console.log(defaultToken);
-				console.log(networkId);
-				console.log(defaultToken.address[networkId]);
-				updateUserInput(index, defaultToken.address[networkId]);
-				return defaultToken.address[networkId];
+				if (relevantInputData === RelevantInputData.kyberTokenList) {
+					let defaultToken = KYBER_TOKEN_LIST[0];
+					if (index !== 0) defaultToken = KYBER_TOKEN_LIST[1];
+					updateUserInput(index, defaultToken.address[networkId]);
+					return defaultToken.address[networkId];
+				} else if (
+					relevantInputData === RelevantInputData.fulcrumTokenList
+				) {
+					let defaultToken = FULCRUM_LEVERAGE_TOKEN_LIST[0];
+					updateUserInput(index, defaultToken.address[networkId]);
+					return defaultToken.address[networkId];
+				}
 			case InputType.Date:
 				const date = new Date();
 				const timestamp = date.getTime();
@@ -331,6 +348,7 @@ export default function LayoutTextFields(props: InputProps) {
 							label={label}
 							disabled={disabled}
 							key={`address-input-${disabled}-${triggerOrAction}-${index}`}
+							relevantInputData={relevantInputData}
 						/>
 					</div>
 				);
@@ -350,6 +368,7 @@ export default function LayoutTextFields(props: InputProps) {
 							tokenIndex={tokenIndex}
 							triggerOrAction={triggerOrAction}
 							key={`tokenAmount-input-${disabled}-${triggerOrAction}-${index}`}
+							relevantInputData={relevantInputData}
 						></ReactNumberFormat>
 					</div>
 				);
@@ -368,6 +387,7 @@ export default function LayoutTextFields(props: InputProps) {
 							tokenIndex={tokenIndex}
 							triggerOrAction={triggerOrAction}
 							key={`number-input-${disabled}-${triggerOrAction}-${index}`}
+							relevantInputData={relevantInputData}
 						></ReactNumberFormat>
 					</div>
 				);
@@ -413,12 +433,26 @@ export default function LayoutTextFields(props: InputProps) {
 					</div>
 				);
 			case InputType.StatelessGetValue:
-				callGetValueAndSetState();
+				// callGetValueAndSetState();
 				// Only display in creation, not summary
 				if (!disabled) {
 					return (
 						<div className={classes.form}>
-							<ReactNumberFormat
+							<StatelessGetValueInput
+								updateUserInput={updateUserInput}
+								label={label}
+								index={index}
+								inputType={inputType}
+								inputs={inputs}
+								disabled={disabled}
+								tokenIndex={tokenIndex}
+								triggerOrAction={triggerOrAction}
+								key={`getValue-input-${disabled}-${triggerOrAction}-${index}`}
+								trigger={trigger}
+								action={action}
+								relevantInputData={relevantInputData}
+							></StatelessGetValueInput>
+							{/* <ReactNumberFormat
 								updateUserInput={updateUserInput}
 								label={label}
 								index={index}
@@ -430,7 +464,7 @@ export default function LayoutTextFields(props: InputProps) {
 								tokenIndex={tokenIndex}
 								triggerOrAction={triggerOrAction}
 								key={`getValue-input-${disabled}-${triggerOrAction}-${index}`}
-							></ReactNumberFormat>
+							></ReactNumberFormat> */}
 						</div>
 					);
 				} else {

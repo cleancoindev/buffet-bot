@@ -1,3 +1,4 @@
+import { RelevantInputData } from './interfaces';
 // 'KYBER_TOKEN_LIST', 'NONE', 'FULCRUM_LEVERAGE_TOKEN_LIST']
 
 // export enum TokenList {
@@ -51,6 +52,93 @@ export const KYBER_TOKEN_LIST = [
 	}
 ];
 
-export const TOKEN_LIST = {
-	KYBER_TOKEN_LIST: [...KYBER_TOKEN_LIST]
-};
+export const FULCRUM_LEVERAGE_TOKEN_LIST = [
+	{
+		address: {
+			1: '0x0',
+			3: '0x0',
+			4: '0x0',
+			42: '0x934b43143e984052961EB46f5bDE633F33bCDB80'
+		},
+		symbol: 'dLETH2x',
+		name: '2x Long ETH',
+		decimals: 18
+	},
+	{
+		address: {
+			1: '0x0',
+			3: '0x0',
+			4: '0x0',
+			42: '0x0015Cfd9722B43ac277f37887df14a00109fc689'
+		},
+		symbol: 'dLETH3x',
+		name: '3x Long ETH',
+		decimals: 18
+	},
+	{
+		address: {
+			1: '0x0',
+			3: '0x0',
+			4: '0x0',
+			42: '0x0E5f87BDcD6285F930b6bbcC3E21CA9d985e12fE'
+		},
+		symbol: 'dLETH4x',
+		name: '4x Long ETH',
+		decimals: 18
+	},
+	{
+		address: {
+			1: '0x0',
+			3: '0x0',
+			4: '0x0',
+			42: '0xD4Fd1467c867808dc7B393dBc863f34783F37d3E'
+		},
+		symbol: 'dsETH',
+		name: 'Short ETH',
+		decimals: 18
+	},
+	{
+		address: {
+			1: '0x0',
+			3: '0x0',
+			4: '0x0',
+			42: '0x2EBfbCf2d67867a05BCAC0FbCA54019163253988'
+		},
+		symbol: 'dsETH2x',
+		name: '2x Short ETH',
+		decimals: 18
+	},
+	{
+		address: {
+			1: '0x0',
+			3: '0x0',
+			4: '0x0',
+			42: '0xB56EA362eA9B1D030213A47eAA452dFfd84CB5a2'
+		},
+		symbol: 'dsETH3x',
+		name: '3x Short ETH',
+		decimals: 18
+	},
+	{
+		address: {
+			1: '0x0',
+			3: '0x0',
+			4: '0x0',
+			42: '0x9486ac55ed81758787fcdda98e6Ce35b01CDBE72'
+		},
+		symbol: 'dsETH4x',
+		name: '4x Short ETH',
+		decimals: 18
+	}
+];
+
+export const TOKEN_LIST = [
+	{
+		name: RelevantInputData.kyberTokenList,
+		data: [...KYBER_TOKEN_LIST]
+	},
+	{
+		name: RelevantInputData.fulcrumTokenList,
+		data: [...FULCRUM_LEVERAGE_TOKEN_LIST]
+	}
+];

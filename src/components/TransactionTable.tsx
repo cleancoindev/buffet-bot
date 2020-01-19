@@ -342,7 +342,7 @@ export default function EnhancedTable() {
 
 			break;
 		default:
-			graphName = 'gelato-mainet';
+			graphName = 'gelato-kovan';
 			break;
 	}
 
@@ -413,7 +413,7 @@ export default function EnhancedTable() {
 						statusString = 'succesfully executed';
 						break;
 					case 'executedFailure':
-						statusString = 'failed to execute - please contract us';
+						statusString = 'failed to execute - please contact us';
 						break;
 					case 'cancelled':
 						statusString = 'cancelled';
@@ -628,7 +628,9 @@ export default function EnhancedTable() {
 												{row.status !== 'cancelled' &&
 													row.status !== 'expired' &&
 													row.status !==
-														'succesfully executed' && (
+														'succesfully executed' &&
+													row.status !==
+														'failed to execute - please contact us' && (
 														<div
 															onClick={() =>
 																cancelExecutionClaim(

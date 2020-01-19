@@ -11,7 +11,12 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 import { useIcedTxContext } from '../../state/GlobalState';
-import { TriggerOrAction, Token, ChainIds } from '../../constants/interfaces';
+import {
+	TriggerOrAction,
+	Token,
+	ChainIds,
+	RelevantInputData
+} from '../../constants/interfaces';
 import {
 	UPDATE_CONDITION_INPUTS,
 	UPDATE_ACTION_INPUTS,
@@ -20,9 +25,7 @@ import {
 	ETH,
 	SELECTED_CHAIN_ID
 } from '../../constants/constants';
-import { KYBER_TOKEN_LIST } from '../../constants/tokens';
-import { ethers } from 'ethers';
-import { getTokenByAddress } from '../../helpers/helpers';
+import { getTokenByAddress, getTokenList } from '../../helpers/helpers';
 import { useWeb3React } from '@web3-react/core';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -74,6 +77,7 @@ interface TokenSelectProps
 	// @DEV CHANGE later when implented better DEFAULT VALUE system, this should only be string
 	defaultTokenAddress: string;
 	disabled: boolean;
+	relevantInputData: RelevantInputData;
 }
 
 export default function TokenSelect(props: TokenSelectProps) {
@@ -82,7 +86,8 @@ export default function TokenSelect(props: TokenSelectProps) {
 		label,
 		index,
 		triggerOrAction,
-		disabled
+		disabled,
+		relevantInputData
 	} = props;
 	const { dispatch, icedTxState } = useIcedTxContext();
 	const { chainId } = useWeb3React();
@@ -93,22 +98,16 @@ export default function TokenSelect(props: TokenSelectProps) {
 		networkId = chainId as ChainIds;
 	}
 
-	// @DEV Add a trigger that always two different tokens will be shown by default
-
 	// If action, dont display ETH
-	let tokenList = [...KYBER_TOKEN_LIST];
+	let tokenList = getTokenList(relevantInputData);
 	if (triggerOrAction === TriggerOrAction.Trigger) {
 		tokenList.push(ETH);
 	}
 
 	// Pref
-	console.log(defaultTokenAddress);
 	const [token, setToken] = React.useState<Token>(
-		getTokenByAddress(defaultTokenAddress, networkId)
+		getTokenByAddress(defaultTokenAddress, networkId, relevantInputData)
 	);
-	// console.log(token)
-	// console.log(icedTxState)
-	// console.log(triggerOrAction)
 
 	// updateUser Input
 	const updateTriggerInputs = (index: number, value: any) => {
@@ -143,7 +142,11 @@ export default function TokenSelect(props: TokenSelectProps) {
 
 	const handleChange = (event: React.ChangeEvent<{ value: any }>) => {
 		const tokenAddress = event.target.value as string;
-		const tokenObject = getTokenByAddress(tokenAddress, networkId);
+		const tokenObject = getTokenByAddress(
+			tokenAddress,
+			networkId,
+			relevantInputData
+		);
 		if (tokenObject === undefined) {
 			console.log('ERROR in fetching Token');
 			return 'ERROR in finding Token';
@@ -151,9 +154,7 @@ export default function TokenSelect(props: TokenSelectProps) {
 		// Update local state
 		setToken(tokenObject);
 		// Update global state
-		console.log('change TokenAddress to');
-		console.log(tokenAddress);
-		updateUserInput(index, tokenObject.address);
+		updateUserInput(index, tokenObject.address[networkId]);
 	};
 
 	const handleClose = () => {

@@ -161,7 +161,6 @@ export default function DateAndTimePicker(props: InputProps) {
 
 	// @DEV DO we need that useEffect?
 	React.useEffect(() => {
-		console.log('Changing the condition State');
 		// Set state wih default token
 		dispatch({
 			type: UPDATE_CONDITION_INPUTS,

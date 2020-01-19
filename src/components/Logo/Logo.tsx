@@ -3,7 +3,7 @@ import { ReactComponent as Logo } from './gelato_logo.svg';
 const GelatoLogo = () => (
 	<div
 		style={{
-			width: '40px',
+			width: '35px',
 			marginRight: '8px'
 		}}
 	>

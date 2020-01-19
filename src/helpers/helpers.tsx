@@ -1,6 +1,6 @@
 import { ATYPES, TTYPES } from '../constants/whitelist';
-import { Token } from '../constants/interfaces';
-import { KYBER_TOKEN_LIST } from '../constants/tokens';
+import { Token, RelevantInputData } from '../constants/interfaces';
+import { KYBER_TOKEN_LIST, TOKEN_LIST } from '../constants/tokens';
 
 import {
 	DEFAULT_DATA_ACTION,
@@ -75,8 +75,12 @@ export function findActionByAddress(address: string, networkId: ChainIds) {
 	return returnData;
 }
 // @DEV Potenital bug in returning error string
-export function getTokenSymbol(address: string, networkId: ChainIds) {
-	const tokenList = KYBER_TOKEN_LIST;
+export function getTokenSymbol(
+	address: string,
+	networkId: ChainIds,
+	relevantInputData: RelevantInputData
+) {
+	const tokenList = getTokenList(relevantInputData);
 	const token = tokenList.find(token => token.address[networkId] === address);
 	return token === undefined ? 'ERROR Get Token Symbol' : token.symbol;
 }
@@ -90,22 +94,62 @@ export const convertWeiToHumanReadable = (
 };
 
 // @DEV Potenital bug in returning error string
-export function getTokenByAddress(address: string, networkId: ChainIds) {
+export function getTokenByAddress(
+	address: string,
+	networkId: ChainIds,
+	relevantInputData: RelevantInputData
+) {
 	if (isEth(address)) {
 		return ETH;
 	}
-	const tokenList = [...KYBER_TOKEN_LIST];
+	const tokenList = getTokenList(relevantInputData);
+	// console.log(tokenList);
+	// console.log(relevantInputData);
 	const token = tokenList.find(
 		token =>
 			ethers.utils.getAddress(token.address[networkId]) ===
 			ethers.utils.getAddress(address)
 	);
+
 	if (token === undefined) {
 		throw Error(`Could not find Token with address ${address}`);
 	} else {
 		return token;
 	}
 }
+
+export const deepCloneTokenList = (tokenList: Array<Token>) => {
+	const tokenListCopy: Array<Token> = [];
+	tokenList.forEach(token => {
+		let copyAddress = { ...token.address };
+		let copySymbol = token.symbol;
+		let copyName = token.name;
+		let copyDecimals = token.decimals;
+
+		tokenListCopy.push({
+			address: copyAddress,
+			symbol: copySymbol,
+			name: copyName,
+			decimals: copyDecimals
+		});
+	});
+	return tokenListCopy;
+};
+
+export const getTokenList = (
+	relevantInputData: RelevantInputData
+): Array<Token> => {
+	let tokenListCopy: Array<Token> = [...KYBER_TOKEN_LIST];
+	TOKEN_LIST.forEach(list => {
+		if (list.name === relevantInputData) {
+			tokenListCopy = list.data;
+		}
+
+		// throw Error(`Could not find tokenList with relevantInputData: ${relevantInputData}`);
+	});
+	// console.log(tokenListCopy);
+	return deepCloneTokenList(tokenListCopy);
+};
 
 export function encodeActionPayload(
 	userInput: Array<string | number | ethers.utils.BigNumber | boolean>,
@@ -231,6 +275,8 @@ export const deepCloneTriggers = () => {
 			clonedInputLabels.push(clonedInputLabel);
 		});
 
+		const clonedRelevantInputData = [...data.relevantInputData];
+
 		// empty user Input
 		const emptyUserInput: Array<string> = [];
 
@@ -245,6 +291,7 @@ export const deepCloneTriggers = () => {
 			userInputTypes: clonedUserInputTypes,
 			inputLabels: clonedInputLabels,
 			userInputs: emptyUserInput,
+			relevantInputData: clonedRelevantInputData,
 			getTriggerValueAbi: clonedGetTriggerValueAbi,
 			getTriggerValueInput: clonedGetTriggerValueInput,
 			boolIndex: clonedBoolIndex
@@ -261,8 +308,6 @@ export const isEth = (address: string) => {
 		: (isEther = false);
 	return isEther;
 };
-
-export const getToken = () => {};
 
 export const deepCloneActions = () => {
 	const dataCopy: Array<ActionWhitelistData> = [];
@@ -296,6 +341,8 @@ export const deepCloneActions = () => {
 			clonedUserInputTypes.push(clonedUserInputType);
 		});
 
+		const clonedRelevantInputData = [...data.relevantInputData];
+
 		// clone inputLabels
 		const clonedInputLabels: Array<string> = [];
 		data.inputLabels.forEach(inputLabel => {
@@ -319,7 +366,8 @@ export const deepCloneActions = () => {
 			userInputTypes: clonedUserInputTypes,
 			inputLabels: clonedInputLabels,
 			userInputs: emptyUserInput,
-			tokenIndex: clonedTokenIndex
+			tokenIndex: clonedTokenIndex,
+			relevantInputData: clonedRelevantInputData
 		});
 	});
 	return dataCopy;

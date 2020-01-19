@@ -50,10 +50,16 @@ body {
 	flex: 1 0 auto;
 }
 
-@media (min-width: 576px) {
+.content {
+	padding: 40px;
+}
+
+@media (max-width: 600px) {
 	.container {
 		width: auto;
-		/* background: blue; */
+	}
+	.content {
+		padding: 20px !important;
 	}
 }
 @media (min-width: 768px) {

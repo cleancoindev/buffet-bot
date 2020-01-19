@@ -1,4 +1,4 @@
-import { InputType } from './interfaces';
+import { InputType, RelevantInputData } from './interfaces';
 import { ethers } from 'ethers';
 
 const BIG_NUM_ZERO = ethers.constants.Zero;
@@ -68,13 +68,19 @@ export const TTYPES = [
 		inputLabels: [
 			'Address which balance to monitor',
 			'Token',
-			'Future balance which should activate the trigger',
+			'Future balance activating the trigger',
 			'',
 			'Current Balance'
 		],
+		relevantInputData: [
+			RelevantInputData.none,
+			RelevantInputData.kyberTokenList,
+			RelevantInputData.kyberTokenList,
+			RelevantInputData.none,
+			RelevantInputData.kyberTokenList
+		],
 		userInputs: EMPTY_STRING_ARRAY
 	},
-
 	// Use isGreater as bool
 	{
 		id: 2,
@@ -113,11 +119,19 @@ export const TTYPES = [
 			'Sell Token',
 			'Sell Volume',
 			'Buy Token',
-			'Price which activates trigger',
+			'Price activating trigger',
 			'',
 			'Current Price'
 		],
-		userInputs: EMPTY_STRING_ARRAY
+		userInputs: EMPTY_STRING_ARRAY,
+		relevantInputData: [
+			RelevantInputData.kyberTokenList,
+			RelevantInputData.kyberTokenList,
+			RelevantInputData.kyberTokenList,
+			RelevantInputData.kyberTokenList,
+			RelevantInputData.none,
+			RelevantInputData.kyberTokenList
+		]
 	},
 
 	{
@@ -139,7 +153,8 @@ export const TTYPES = [
 		boolIndex: 999,
 		userInputTypes: [InputType.Date],
 		inputLabels: ['Pick a Date and Time'],
-		userInputs: EMPTY_STRING_ARRAY
+		userInputs: EMPTY_STRING_ARRAY,
+		relevantInputData: [RelevantInputData.none]
 	}
 ];
 
@@ -174,11 +189,12 @@ export const ATYPES = [
 			InputType.TokenAmount,
 			InputType.Address
 		],
-		inputLabels: [
-			'Token you want to send',
-			'Amount',
-			'Address that will receive the tokens'
+		relevantInputData: [
+			RelevantInputData.kyberTokenList,
+			RelevantInputData.kyberTokenList,
+			RelevantInputData.none
 		],
+		inputLabels: ['Token to send', 'Amount', 'Address to receive tokens'],
 		userInputs: EMPTY_STRING_ARRAY,
 		// For Actions, token Index is 0 as the first two parameters are added only before encoding
 		tokenIndex: 0
@@ -220,10 +236,11 @@ export const ATYPES = [
 			InputType.TokenAmount,
 			InputType.Token
 		],
-		inputLabels: [
-			'Token you want to sell',
-			'Sell Amount',
-			'Token you want to buy'
+		inputLabels: ['Sell Token', 'Sell Amount', 'Buy Token'],
+		relevantInputData: [
+			RelevantInputData.kyberTokenList,
+			RelevantInputData.kyberTokenList,
+			RelevantInputData.kyberTokenList
 		],
 		userInputs: EMPTY_STRING_ARRAY,
 		tokenIndex: 0
@@ -236,7 +253,7 @@ export const ATYPES = [
 			1: '',
 			3: '0x0',
 			4: '',
-			42: '0xF1531B0B71aa97EaF46876EF73dc4218F0e02DFC'
+			42: '0xECD9a96B4D4Ec5Bbc1bb8839424e04bd79347054'
 		},
 		/*
 		 // Standard Action Params
@@ -263,14 +280,53 @@ export const ATYPES = [
 			InputType.TokenAmount,
 			InputType.Token
 		],
-		inputLabels: [
-			'Deposit Token Address',
-			'Deposit Amount',
-			'Leverage Token you want to buy'
+		inputLabels: ['Token to sell', 'Sell Amount', 'Leverage Token to buy'],
+		relevantInputData: [
+			RelevantInputData.kyberTokenList,
+			RelevantInputData.kyberTokenList,
+			RelevantInputData.fulcrumTokenList
 		],
 
 		userInputs: EMPTY_STRING_ARRAY,
 		tokenIndex: 0
+	},
+	{
+		id: 4,
+		app: 'Fulcrum',
+		title: 'Sell Leverage Tokens on Fulcrum',
+		address: {
+			1: '',
+			3: '0x0',
+			4: '',
+			42: '0x986F7247Be7768B6fB4DA3D35f8e77234E040F34'
+		},
+		params: [
+			{ type: 'address', name: '_user' },
+			{ type: 'address', name: '_userProxy' },
+			{ type: 'address', name: '_burnTokenAddress' },
+			{ type: 'uint256', name: '_burnAmount' },
+			{ type: 'address', name: '_pTokenAddress' }
+		],
+		abi:
+			'function action(address _user, address _userProxy, address _burnTokenAddress, uint256 _burnAmount, address _pTokenAddress)',
+		userInputTypes: [
+			InputType.Token,
+			InputType.TokenAmount,
+			InputType.Token
+		],
+		inputLabels: [
+			'Token to receive back',
+			'Amount of leverage token to be sold',
+			'Leverage Token to sell'
+		],
+		relevantInputData: [
+			RelevantInputData.kyberTokenList,
+			RelevantInputData.fulcrumTokenList,
+			RelevantInputData.fulcrumTokenList
+		],
+
+		userInputs: EMPTY_STRING_ARRAY,
+		tokenIndex: 2
 	}
 ];
 
@@ -320,18 +376,3 @@ export const ATYPES = [
 // ];
 
 // Kovan
-
-export const FULCRUM_LEVERAGE_TOKEN_LIST = [
-	{
-		address: '0x934b43143e984052961EB46f5bDE633F33bCDB80',
-		symbol: 'dLETH2x',
-		name: '2x Long ETH',
-		decimals: 18
-	},
-	{
-		address: '0x2EBfbCf2d67867a05BCAC0FbCA54019163253988',
-		symbol: 'dsETH2x',
-		name: '2x Short ETH',
-		decimals: 18
-	}
-];

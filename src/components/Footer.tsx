@@ -47,7 +47,8 @@ const Footer = () => {
 				style={{
 					marginLeft: 'auto',
 					fontSize: '0.75rem',
-					color: 'white'
+					color: 'white',
+					textAlign: 'center'
 				}}
 			>
 				{' '}

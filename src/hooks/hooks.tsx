@@ -4,7 +4,6 @@ import { useWeb3React } from '@web3-react/core';
 import { injected } from '../constants/connectors';
 import { ChainIds } from '../constants/interfaces';
 import { GELATO_CORE_ADDRESS } from '../constants/whitelist';
-import { KYBER_TOKEN_LIST } from '../constants/tokens';
 
 import { ethers } from 'ethers';
 
@@ -104,7 +103,7 @@ export function useGelatoCore() {
 		const gelatoCoreAddress = GELATO_CORE_ADDRESS[chainId];
 		return new ethers.Contract(gelatoCoreAddress, GELATO_CORE_ABI, signer);
 	} else {
-		console.log('Cannot find gelatoCore');
+		// console.log('Cannot find gelatoCore');
 		// throw Error('Cannot find gelatoCore');
 	}
 }
