@@ -33,6 +33,12 @@ import { ThemeProvider } from '@material-ui/styles';
 const theme = createMuiTheme({
 	typography: {
 		fontFamily: ['PT Mono'].join(',')
+	},
+	palette: {
+		primary: {
+			main: COLOURS.salmon,
+			contrastText: 'white'
+		}
 	}
 });
 

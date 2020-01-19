@@ -247,7 +247,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
 	return (
 		<Toolbar>
 			<Typography className={classes.title} variant="h6" id="tableTitle">
-				Your Iced Transactions
+				Your Conditional Transactions
 			</Typography>
 		</Toolbar>
 	);

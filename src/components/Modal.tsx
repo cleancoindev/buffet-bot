@@ -5,7 +5,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import TransactionCard from './TransactionCard';
 import { TxState, IcedTx } from '../constants/interfaces';
 import { useIcedTxContext } from '../state/GlobalState';
-import { OPEN_MODAL, CLOSE_MODAL } from '../constants/constants';
+import { OPEN_MODAL, CLOSE_MODAL, BOX } from '../constants/constants';
 
 // interface TransactioModalProps {
 // 	modalOpen: boolean;
@@ -49,7 +49,13 @@ export default function TransactionModal() {
 				aria-describedby="alert-dialog-description"
 			>
 				{/* <DialogTitle id="alert-dialog-title">{title}</DialogTitle> */}
-				<DialogContent>
+				<DialogContent
+					style={{
+						...BOX,
+						backgroundColor: 'black',
+						minWidth: '33vw'
+					}}
+				>
 					<TransactionCard
 						modalOpen={modalOpen}
 						modalClose={modalClose}

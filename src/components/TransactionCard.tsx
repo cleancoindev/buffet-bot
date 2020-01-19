@@ -18,7 +18,8 @@ import {
 	UPDATE_PAST_TRANSACTIONS,
 	CLOSE_MODAL,
 	SELECTED_NETWORK_NAME,
-	MAX_BIG_NUM
+	MAX_BIG_NUM,
+	BOX
 } from '../constants/constants';
 import {
 	getTokenSymbol,
@@ -35,6 +36,9 @@ import { ethers } from 'ethers';
 
 // Smart Contract ABIs
 import ERC20_ABI from '../constants/abis/erc20.json';
+
+// CSS
+import '../index.css';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -635,7 +639,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.displayCreate:
 				return {
-					title: `Create your Frozen Transaction`,
+					title: `Create your Conditional Transaction`,
 					progress: Progress.awaitingModalConfirm,
 					progressText: ``,
 					prepayment: true,
@@ -740,7 +744,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.waitingCreate:
 				return {
-					title: `Creating Frozen Transaction ...`,
+					title: `Creating Conditional Transaction ...`,
 					progress: Progress.awaitingeMining,
 					progressText: `Transaction in progress...`,
 					prepayment: true,
@@ -749,7 +753,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.postCreate:
 				return {
-					title: `Success: Frozen Transaction created!`,
+					title: `Success: Conditional Transaction created!`,
 					progress: Progress.finished,
 					progressText: `Transaction mined`,
 					prepayment: true,
@@ -885,7 +889,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.preCancel:
 				return {
-					title: `Cancel your Frozen Transaction`,
+					title: `Cancel your Conditional Transaction`,
 					progress: Progress.awaitingMetamaskConfirm,
 					progressText: `Waiting for confirmation`,
 					prepayment: true,
@@ -894,7 +898,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.waitingCancel:
 				return {
-					title: `Cancelling Frozen Transaction ...`,
+					title: `Cancelling Conditional Transaction ...`,
 					progress: Progress.awaitingeMining,
 					progressText: `Transaction in progress...`,
 					prepayment: true,
@@ -903,7 +907,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.postCancel:
 				return {
-					title: `Success: Frozen Transaction cancelled!`,
+					title: `Success: Conditional Transaction cancelled!`,
 					progress: Progress.finished,
 					progressText: `Transaction mined`,
 					prepayment: true,
@@ -998,14 +1002,14 @@ export default function TransactionCard(props: TxCardProps) {
 	}, [txState]);
 
 	return (
-		<div>
+		<div className="modal">
 			<Grid
 				container
 				direction="column"
 				justify="center"
 				alignItems="center"
 				style={{
-					width: '300px',
+					// width: '300px',
 					borderStyle: 'solid',
 					borderWidth: '2px'
 				}}
@@ -1027,27 +1031,6 @@ export default function TransactionCard(props: TxCardProps) {
 				>
 					<h3>{modalContent.title}</h3>
 				</Grid>
-				{/* {modalContent.progress === Progress.awaitingeMining && (
-					<Grid
-						className={classes.gridItem}
-						container
-						item
-						sm={12}
-						xs={12}
-						direction="row"
-						justify="flex-start"
-						alignItems="center"
-						style={{
-							background: '#FFFFFF',
-							paddingTop: '8px',
-							paddingBottom: '8px'
-							// borderStyle: 'solid',
-							// borderWidth: '2px'
-						}}
-					>
-						<ProgressBar />
-					</Grid>
-				)} */}
 
 				{modalContent.progress !== Progress.awaitingModalConfirm && (
 					<Grid
@@ -1060,7 +1043,9 @@ export default function TransactionCard(props: TxCardProps) {
 						justify="flex-start"
 						alignItems="center"
 						style={{
-							background: '#FFFFFF',
+							border: '0.5px solid',
+							borderColor: COLOURS.salmon,
+							color: 'white',
 							paddingTop: '8px',
 							paddingBottom: '8px'
 							// borderStyle: 'solid',
@@ -1072,6 +1057,7 @@ export default function TransactionCard(props: TxCardProps) {
 							<CircularProgress
 								size={24}
 								style={{ marginRight: '8px' }}
+								color={'primary'}
 							/>
 						)}
 						{modalContent.progress === Progress.finished && (
@@ -1115,7 +1101,9 @@ export default function TransactionCard(props: TxCardProps) {
 							justify="space-evenly"
 							alignItems="flex-start"
 							style={{
-								background: '#E8E8E8'
+								border: '0.5px solid',
+								borderColor: COLOURS.salmon,
+								color: 'white'
 							}}
 						>
 							<h4>Your Account</h4>
@@ -1141,7 +1129,9 @@ export default function TransactionCard(props: TxCardProps) {
 							justify="space-evenly"
 							alignItems="center"
 							style={{
-								background: '#EEEEEE'
+								border: '0.5px solid',
+								borderColor: COLOURS.salmon,
+								color: 'white'
 							}}
 						>
 							<h4>Transaction Confirmation</h4>
@@ -1155,7 +1145,8 @@ export default function TransactionCard(props: TxCardProps) {
 								target="_blank"
 							>
 								<LinkIcon
-									color={'primary'}
+									// color={'primary'}
+									style={{ color: 'white' }}
 									fontSize={'large'}
 									// style={{ marginRight: '8px' }}
 								/>
@@ -1177,7 +1168,9 @@ export default function TransactionCard(props: TxCardProps) {
 							justify="space-evenly"
 							alignItems="center"
 							style={{
-								background: '#EEEEEE'
+								border: '0.5px solid',
+								borderColor: COLOURS.salmon,
+								color: 'white'
 							}}
 						>
 							<h4>Gelato Prepayment</h4>
@@ -1207,11 +1200,9 @@ export default function TransactionCard(props: TxCardProps) {
 								justify="space-evenly"
 								alignItems="center"
 								style={{
-									background: `${
-										modalContent.prepayment
-											? '#E8E8E8'
-											: '#EEEEEE'
-									}`
+									border: '0.5px solid',
+									borderColor: COLOURS.salmon,
+									color: 'white'
 								}}
 							>
 								<h4>Transaction Fee</h4>
@@ -1234,11 +1225,9 @@ export default function TransactionCard(props: TxCardProps) {
 								justify="space-evenly"
 								alignItems="flex-start"
 								style={{
-									background: `${
-										modalContent.prepayment
-											? '#EEEEEE'
-											: '#E8E8E8'
-									}`
+									border: '0.5px solid',
+									borderColor: COLOURS.salmon,
+									color: 'white'
 								}}
 							>
 								<h4>Estimated Wait</h4>
@@ -1257,7 +1246,7 @@ export default function TransactionCard(props: TxCardProps) {
 				alignItems="center"
 				style={{
 					marginTop: '24px',
-					width: '300px',
+					// width: '300px',
 					marginBottom: '16px'
 					// borderStyle: 'solid',
 					// borderWidth: '2px'
@@ -1294,11 +1283,12 @@ export default function TransactionCard(props: TxCardProps) {
 							justify="center"
 							alignItems="center"
 							style={{
-								background: 'FFFFFF',
 								textAlign: 'center',
 								padding: '16px',
-								borderStyle: 'solid',
-								borderWidth: '2px'
+								border: '0.5px solid',
+								borderColor: COLOURS.salmon,
+								// borderRadius: '1px 1px 1px 1px',
+								color: 'white'
 							}}
 						>
 							<h4 style={{ margin: '0px' }}>
@@ -1370,6 +1360,7 @@ export default function TransactionCard(props: TxCardProps) {
 							}}
 						>
 							<Button
+								color="primary"
 								onClick={() => {
 									// Reset txState
 									dispatch({
@@ -1383,8 +1374,11 @@ export default function TransactionCard(props: TxCardProps) {
 								}}
 								style={{
 									width: '100%',
-									borderStyle: 'solid',
-									borderWidth: '2px'
+									border: '0.5px solid',
+									borderColor: COLOURS.salmon,
+									// borderRadius: '1px 1px 1px 1px',
+									color: 'white'
+									// color: COLOURS.salmon
 								}}
 							>
 								Dashboard
@@ -1407,10 +1401,14 @@ export default function TransactionCard(props: TxCardProps) {
 						}}
 					>
 						<Button
+							color="primary"
 							style={{
 								width: '100%',
-								borderStyle: 'solid',
-								borderWidth: '2px'
+								border: '0.5px solid',
+								borderColor: COLOURS.salmon,
+								// borderRadius: '1px 1px 1px 1px',
+								color: 'white'
+								// color: COLOURS.salmon
 							}}
 							onClick={handleClick}
 						>
@@ -1434,11 +1432,15 @@ export default function TransactionCard(props: TxCardProps) {
 						}}
 					>
 						<Button
+							color="primary"
 							onClick={modalClose}
 							style={{
 								width: '100%',
-								borderStyle: 'solid',
-								borderWidth: '2px'
+								border: '0.5px solid',
+								borderColor: COLOURS.salmon,
+								// borderRadius: '1px 1px 1px 1px',
+								color: 'white'
+								// color: COLOURS.salmon
 							}}
 						>
 							{txState === TxState.preCancel ||
