@@ -1173,7 +1173,7 @@ export default function TransactionCard(props: TxCardProps) {
 								color: 'white'
 							}}
 						>
-							<h4>Gelato Prepayment</h4>
+							<h4>Gelato Fee</h4>
 							<div className={classes.dollar}>
 								<h4
 									style={{ margin: '0px' }}
