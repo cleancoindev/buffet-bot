@@ -20,17 +20,19 @@ import { ethers } from 'ethers';
 import { icedTxReducer } from './Reducers';
 import {
 	DEFAULT_DATA_ACTION,
-	DEFAULT_DATA_CONDITION,
+	DEFAULT_DATA_TRIGGER,
 	DEFAULT_PAST_TRANSACTIONS
 } from '../constants/constants';
 
+// @DEV Make Deep Copies
 export const DEFAULT_ICED_TX = {
-	trigger: DEFAULT_DATA_CONDITION,
-	action: DEFAULT_DATA_ACTION,
+	trigger: { ...DEFAULT_DATA_TRIGGER },
+	action: { ...DEFAULT_DATA_ACTION },
 	txState: TxState.displayInstallMetamask,
-	pastTransactions: DEFAULT_PAST_TRANSACTIONS,
+	pastTransactions: { ...DEFAULT_PAST_TRANSACTIONS },
 	pastTransactionId: '0',
-	modalOpen: false
+	modalOpen: false,
+	error: { isError: false, msg: '' }
 };
 
 // interface InitContextProps {

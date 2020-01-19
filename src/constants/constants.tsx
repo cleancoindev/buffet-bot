@@ -1,12 +1,22 @@
-import { InputType, Params } from './interfaces';
+import { InputType, Params, RelevantInputData } from './interfaces';
 import { ethers } from 'ethers';
 import { EXECUTOR_ADDRESS } from './whitelist';
 
-const emptyUserInputArray: Array<string | number | ethers.utils.BigNumber> = [];
-const emptyUserInputTypeArray: Array<InputType> = [];
+export const EMPTY_USER_INPUT_ARRAY: Array<
+	string | number | ethers.utils.BigNumber | boolean
+> = [];
+export const EMPTY_USER_INPUT_TYPE_ARRAY: Array<InputType> = [];
 
-const emptyParamArray: Array<Params> = [];
-const emptyStringArray: Array<string> = [];
+export const EMPTY_PARAM_ARRAY: Array<Params> = [];
+export const EMPTY_STRING_ARRAY: Array<string> = [];
+export const EMPTY_RELEVANT_INPUT_DATA_ARRAY: Array<RelevantInputData> = [];
+
+export const BIG_NUM_ZERO = ethers.constants.Zero;
+export const BIG_NUM_ONE = ethers.constants.One;
+
+export const MAX_BIG_NUM = ethers.utils
+	.bigNumberify(10)
+	.pow(ethers.utils.bigNumberify(50));
 
 export const COLOURS = {
 	salmon: '#E91E63',
@@ -15,33 +25,59 @@ export const COLOURS = {
 	pink: '#E50078'
 };
 
-export const SELECTED_CHAIN_ID = 3;
-export const SELECTED_NETWORK_NAME = 'Ropsten';
+export const BOX = {
+	border: `1.5px solid ${COLOURS.salmon}`,
+	borderRadius: '1px 1px 1px 1px'
+};
+
+export const ETH = {
+	address: {
+		1: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+		3: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+		4: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+		42: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
+	},
+	symbol: 'ETH',
+	name: 'Ether',
+	decimals: 18
+};
+
+export const SELECTED_CHAIN_ID = 42;
+export const SELECTED_NETWORK_NAME = 'Kovan';
 
 export const DEFAULT_DATA_ACTION = {
 	id: 0,
 	app: '',
 	title: '',
-	address: '',
-	params: emptyParamArray, // [ ]
-	abi: emptyStringArray,
-	inputLabels: emptyStringArray, // [ ]
-	userInputTypes: emptyUserInputTypeArray, // [ ]
-	userInputs: emptyUserInputArray, // [ ]
-	approvalIndex: 999 // 999 means no approval in action
+	address: { 1: '', 3: '', 4: '', 42: '' },
+	params: EMPTY_PARAM_ARRAY, // [ ]
+	abi: '',
+	inputLabels: EMPTY_STRING_ARRAY, // [ ]
+	userInputTypes: EMPTY_USER_INPUT_TYPE_ARRAY, // [ ]
+	userInputs: EMPTY_USER_INPUT_ARRAY, // [ ]
+	tokenIndex: 999, // 999 means no approval in action
+	relevantInputData: EMPTY_RELEVANT_INPUT_DATA_ARRAY
 };
 
-export const DEFAULT_DATA_CONDITION = {
+export const DEFAULT_DATA_TRIGGER = {
 	id: 0,
 	app: '',
 	title: '',
-	address: '',
-	params: emptyParamArray, // [ ]
-	abi: emptyStringArray,
-	inputLabels: emptyStringArray, // [ ]
-	userInputTypes: emptyUserInputTypeArray, // [ ]
-	userInputs: emptyUserInputArray // [ ]
+	address: { 1: '', 3: '', 4: '', 42: '' },
+	params: EMPTY_PARAM_ARRAY, // [ ]
+	abi: '',
+	getTriggerValueAbi: '',
+	getTriggerValueInput: BIG_NUM_ZERO,
+	tokenIndex: 999,
+	inputLabels: EMPTY_STRING_ARRAY, // [ ]
+	userInputTypes: EMPTY_USER_INPUT_TYPE_ARRAY, // [ ]
+	userInputs: EMPTY_USER_INPUT_ARRAY, // [ ]
+	boolIndex: 999,
+	relevantInputData: EMPTY_RELEVANT_INPUT_DATA_ARRAY
 };
+
+// ID that determines which trigger to render by default at initial render of root
+export const DEFAULT_TRIGGER_ID = '2';
 
 /*
 Interface
@@ -74,7 +110,7 @@ export const DEFAULT_PAST_TRANSACTIONS = [
 		triggerPayload: '0x030949304934009413094309320493049039049204',
 		action: '0x5',
 		actionPayload: '0x030949304934009413094309320493049039049204',
-		expiryDate: '12353434312',
+		expiryDate: '1',
 		prepayment: '1009032030020',
 		mintingDate: '1576759372',
 		status: 'open',
@@ -105,13 +141,16 @@ export const UPDATE_PAST_TRANSACTIONS = 'UPDATE_PAST_TRANSACTIONS';
 export const OPEN_MODAL = 'OPEN_MODAL';
 export const CLOSE_MODAL = 'CLOSE_MODAL';
 export const CANCEL_EXECUTION_CLAIM = 'CANCEL_EXECUTION_CLAIM';
+export const INPUT_ERROR = 'INPUT_ERROR';
+export const INPUT_OK = 'INPUT_OK';
+export const UPDATE_GET_VALUE_INPUT = 'UPDATE_GET_VALUE_INPUT';
 
 export const INPUT_CSS = {
 	root: {
 		width: '100%',
 		'& input:valid + fieldset': {
 			borderColor: COLOURS.salmon,
-			borderWidth: 2
+			borderWidth: 1
 		},
 		// '& input:invalid + fieldset': {
 		// 	borderColor: 'red',
@@ -137,11 +176,18 @@ export const INPUT_CSS = {
 		'& .MuiOutlinedInput-root.Mui-disabled': {
 			'& fieldset': {
 				borderColor: COLOURS.salmon,
-				borderWidth: 2
+				borderWidth: 1
 			}
 		},
 		'& .MuiFormLabel-root': {
-			color: 'white'
+			color: 'white !important'
 		}
+
+		// '& .MuiInputBase-input-405': {
+		// 	color: 'white'
+		// },
+		// '& .MuiFormLabel-root-371': {
+		// 	color: 'white'
+		// }
 	}
 };

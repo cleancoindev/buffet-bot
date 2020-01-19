@@ -14,6 +14,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import CancelIcon from '@material-ui/icons/Cancel';
+import TablePagination from '@material-ui/core/TablePagination';
 
 import TableRow from '@material-ui/core/TableRow';
 
@@ -31,60 +32,12 @@ import {
 import {
 	UPDATE_PAST_TRANSACTIONS,
 	COLOURS,
-	CANCEL_EXECUTION_CLAIM
+	CANCEL_EXECUTION_CLAIM,
+	BOX
 } from '../constants/constants';
 import { useWeb3React } from '@web3-react/core';
 import { useGelatoCore } from '../hooks/hooks';
-
-/*
-Event from SC
-
- // =============
-	emit LogExecutionClaimMinted(
-		_selectedExecutor,
-		executionClaimId,
-		userProxy,
-		_trigger,
-		_triggerPayloadWithSelector,
-		_action,
-		_actionPayloadWithSelector,
-		triggerGasActionTotalGasMinExecutionGas,
-		executionClaimExpiryDate,
-		msg.value
-);
-
-What is needed:
-- executionClaimId
-- userProxy (used to filter, should be done by GraphQL)
-- trigger address => identifier for trigger
-- action address => idendifier for action
-- trigger payload, value to decode
-- action payload, same
-- Block number => to get creation date
-- Expiry Date - maybe
-- Prepayment - maybe
-*/
-
-// const rows = [
-// 	createData(
-// 		'1',
-// 		'Price on Kyber',
-// 		'Sell on Kyber',
-// 		'11.12.2019 - 12:00',
-// 		'waiting',
-// 		'VIEW',
-// 		'CANCEL'
-// 	),
-// 	createData(
-// 		'2',
-// 		'Increase in Tokens on your Wallet',
-// 		'Sell on Kyber',
-// 		'11.12.2019 - 12:00',
-// 		'waiting',
-// 		'VIEW',
-// 		'CANCEL'
-// 	)
-// ];
+import { ChainIds } from '../constants/interfaces';
 
 function desc<T>(a: T, b: T, orderBy: keyof T) {
 	if (b[orderBy] < a[orderBy]) {
@@ -159,7 +112,7 @@ const headCells: HeadCell[] = [
 		id: 'id',
 		numeric: true,
 		disablePadding: false,
-		label: 'id'
+		label: '#'
 	},
 	{
 		id: 'trigger',
@@ -212,14 +165,16 @@ const StyledTableCell = withStyles((theme: Theme) =>
 			// backgroundColor: theme.palette.common.white,
 			background: 'none',
 			color: 'white',
-			border: `2px outset ${COLOURS.salmon}`,
-			borderRadius: '2px 2px 2px 2px'
+			fontWeight: 'bold',
+			borderBottom: `1.5px solid ${COLOURS.salmon}`
+			// borderRight: `1.5px solid ${COLOURS.salmon}`
+			// ...BOX
 		},
 		body: {
 			fontSize: 14,
 			color: 'white',
-			border: `2px outset ${COLOURS.salmon}`,
-			borderRadius: '2px 2px 2px 2px'
+			borderBottom: `1.5px solid ${COLOURS.salmon}`
+			// borderRadius: '1px 1px 1px 1px'
 		}
 	})
 )(TableCell);
@@ -229,8 +184,7 @@ const StyledTableRow = withStyles((theme: Theme) =>
 		root: {
 			'&:nth-of-type(odd)': {
 				// backgroundColor: theme.palette.background.default,
-				border: `3px outset ${COLOURS.salmon}`,
-				borderRadius: '2px 2px 2px 2px'
+				// ...BOX
 			}
 		}
 	})
@@ -307,15 +261,19 @@ const useStyles = makeStyles((theme: Theme) =>
 		},
 		paper: {
 			width: '100%',
-			marginBottom: theme.spacing(2),
+			marginBottom: theme.spacing(1),
 			overflowX: 'auto',
 			// minWidth: 750,
-			background: 'transparent',
-			border: `3px outset ${COLOURS.salmon}`,
-			borderRadius: '2px 2px 2px 2px'
+			background: 'transparent'
+			// border: `3px outset ${COLOURS.salmon}`,
+			// borderRadius: '2px 2px 2px 2px'
 		},
 		table: {
 			// color: 'white'
+		},
+		tablePagination: {
+			color: 'white',
+			marginTop: theme.spacing(1)
 		},
 		visuallyHidden: {
 			border: 0,
@@ -348,9 +306,9 @@ export default function EnhancedTable() {
 	// @ DEV CHANGED TO ID FROM CALORIES
 	const [orderBy, setOrderBy] = React.useState<keyof Data>('date');
 	const [selected, setSelected] = React.useState<string[]>([]);
-	const [page /*setPage*/] = React.useState(0);
+	const [page, setPage] = React.useState(0);
 	const [dense /*setDense*/] = React.useState(false);
-	const [rowsPerPage /*setRowsPerPage*/] = React.useState(5);
+	const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
 	// THE GRAPH API Fetching
 
@@ -365,18 +323,40 @@ export default function EnhancedTable() {
 
 	const [displayedRows, setDisplayedRows] = React.useState(rows);
 	const [renderCounter, setRenderCounter] = React.useState(0);
+	let graphName: string = '';
+	switch (web3.chainId) {
+		case 1:
+			graphName = 'gelato-mainet';
+
+			break;
+		case 3:
+			graphName = 'gelato-ropsten';
+
+			break;
+		case 4:
+			graphName = 'gelato-rinkeby';
+
+			break;
+		case 42:
+			graphName = 'gelato-kovan';
+
+			break;
+		default:
+			graphName = 'gelato-kovan';
+			break;
+	}
 
 	async function fetchPastExecutionClaims() {
 		try {
 			const response = await fetch(
-				'https://api.thegraph.com/subgraphs/name/gelatodigital/gelato-ropsten',
+				`https://api.thegraph.com/subgraphs/name/gelatodigital/${graphName}`,
 				{
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
 						query: `{
 							users (where: {address:"${account}"}) {
-							  executionClaims {
+								executionClaims (orderBy:mintingDate) {
 								id
 								executionClaimId
 								selectedExecutor
@@ -409,11 +389,18 @@ export default function EnhancedTable() {
 				pastTransactions: executionClaims
 			});
 
+			let counter = 0;
 			executionClaims.forEach((executionClaim: any, index: any) => {
 				// With address, find trigger and action
-				const trigger = findTriggerByAddress(executionClaim.trigger);
+				const trigger = findTriggerByAddress(
+					executionClaim.trigger,
+					web3.chainId as ChainIds
+				);
 
-				const action = findActionByAddress(executionClaim.action);
+				const action = findActionByAddress(
+					executionClaim.action,
+					web3.chainId as ChainIds
+				);
 
 				// Set default status string
 				let statusString: string = 'open';
@@ -426,7 +413,7 @@ export default function EnhancedTable() {
 						statusString = 'succesfully executed';
 						break;
 					case 'executedFailure':
-						statusString = 'failed to execute - please contract us';
+						statusString = 'failed to execute - please contact us';
 						break;
 					case 'cancelled':
 						statusString = 'cancelled';
@@ -440,15 +427,16 @@ export default function EnhancedTable() {
 				// console.log(trigger);
 				// console.log(action);
 				const newData = createData(
-					executionClaim.executionClaimId.toString(),
-					`${trigger.title} on ${trigger.app}`,
-					`${action.title} on ${action.app}`,
+					counter.toString(),
+					trigger.title,
+					action.title,
 					stringifyTimestamp(executionClaim.mintingDate),
 					statusString,
 					index,
 					'CANCEL'
 				);
 				newRows.push(newData);
+				counter = counter + 1;
 
 				// Date when the claim was created
 			});
@@ -484,9 +472,7 @@ export default function EnhancedTable() {
 	};
 
 	const showDetails = (event: React.MouseEvent<unknown>, row: Data) => {
-
 		history.push(`/dashboard/${row.view}`);
-
 	};
 
 	const handleRequestSort = (
@@ -528,6 +514,17 @@ export default function EnhancedTable() {
 		}
 
 		setSelected(newSelected);
+	};
+
+	const handleChangePage = (event: unknown, newPage: number) => {
+		setPage(newPage);
+	};
+
+	const handleChangeRowsPerPage = (
+		event: React.ChangeEvent<HTMLInputElement>
+	) => {
+		setRowsPerPage(parseInt(event.target.value, 10));
+		setPage(0);
 	};
 
 	const isSelected = (name: string) => selected.indexOf(name) !== -1;
@@ -586,7 +583,7 @@ export default function EnhancedTable() {
 											selected={isItemSelected}
 										>
 											<StyledTableCell align="left">
-												{row.id}
+												{parseInt(row.id) + 1}
 											</StyledTableCell>
 											<StyledTableCell align="left">
 												{row.trigger}
@@ -631,7 +628,9 @@ export default function EnhancedTable() {
 												{row.status !== 'cancelled' &&
 													row.status !== 'expired' &&
 													row.status !==
-														'succesfully executed' && (
+														'succesfully executed' &&
+													row.status !==
+														'failed to execute - please contact us' && (
 														<div
 															onClick={() =>
 																cancelExecutionClaim(
@@ -674,6 +673,16 @@ export default function EnhancedTable() {
 							)}
 						</TableBody>
 					</Table>
+					<TablePagination
+						className={classes.tablePagination}
+						rowsPerPageOptions={[5, 10, 25]}
+						component="div"
+						count={displayedRows.length}
+						rowsPerPage={rowsPerPage}
+						page={page}
+						onChangePage={handleChangePage}
+						onChangeRowsPerPage={handleChangeRowsPerPage}
+					/>
 				</Paper>
 			</div>
 		</React.Fragment>

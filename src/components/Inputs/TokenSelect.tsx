@@ -11,16 +11,22 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 import { useIcedTxContext } from '../../state/GlobalState';
-import { TriggerOrAction, Token } from '../../constants/interfaces';
+import {
+	TriggerOrAction,
+	Token,
+	ChainIds,
+	RelevantInputData
+} from '../../constants/interfaces';
 import {
 	UPDATE_CONDITION_INPUTS,
 	UPDATE_ACTION_INPUTS,
 	INPUT_CSS,
-	COLOURS
+	COLOURS,
+	ETH,
+	SELECTED_CHAIN_ID
 } from '../../constants/constants';
-import { TOKEN_LIST } from '../../constants/whitelist';
-import { ethers } from 'ethers';
-import { getTokenByAddress } from '../../helpers/helpers';
+import { getTokenByAddress, getTokenList } from '../../helpers/helpers';
+import { useWeb3React } from '@web3-react/core';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -38,14 +44,14 @@ const useStyles = makeStyles((theme: Theme) =>
 			'& .MuiOutlinedInput-root.Mui-disabled': {
 				'& fieldset': {
 					borderColor: COLOURS.salmon,
-					borderWidth: 2
+					borderWidth: 1
 				}
 			}
 		},
 		select: {
 			'& fieldset': {
 				borderColor: COLOURS.salmon,
-				borderWidth: 2,
+				borderWidth: 1,
 				color: 'white',
 				'& .MuiOutlinedInput:hover': {
 					borderColor: 'white'
@@ -69,34 +75,39 @@ interface TokenSelectProps
 	index: number;
 	triggerOrAction: TriggerOrAction;
 	// @DEV CHANGE later when implented better DEFAULT VALUE system, this should only be string
-	defaultToken: string;
+	defaultTokenAddress: string;
 	disabled: boolean;
+	relevantInputData: RelevantInputData;
 }
 
-const findToken = (address: string) => {
-	const foundToken = TOKEN_LIST.find(
-		singleToken => singleToken.address === address
-	);
-	if (foundToken === undefined) {
-		// ERROR
-		console.log('Failed to find Token!');
-		return TOKEN_LIST[0];
-	} else {
-		return foundToken;
-	}
-};
-
 export default function TokenSelect(props: TokenSelectProps) {
-	const { defaultToken, label, index, triggerOrAction, disabled } = props;
+	const {
+		defaultTokenAddress,
+		label,
+		index,
+		triggerOrAction,
+		disabled,
+		relevantInputData
+	} = props;
 	const { dispatch, icedTxState } = useIcedTxContext();
+	const { chainId } = useWeb3React();
 
-	// @DEV Add a trigger that always two different tokens will be shown by default
+	// In case network Id is not defined yet, use default
+	let networkId: ChainIds = SELECTED_CHAIN_ID;
+	if (chainId !== undefined) {
+		networkId = chainId as ChainIds;
+	}
+
+	// If action, dont display ETH
+	let tokenList = getTokenList(relevantInputData);
+	if (triggerOrAction === TriggerOrAction.Trigger) {
+		tokenList.push(ETH);
+	}
 
 	// Pref
-	const [token, setToken] = React.useState<Token>(findToken(defaultToken));
-	// console.log(token)
-	// console.log(icedTxState)
-	// console.log(triggerOrAction)
+	const [token, setToken] = React.useState<Token>(
+		getTokenByAddress(defaultTokenAddress, networkId, relevantInputData)
+	);
 
 	// updateUser Input
 	const updateTriggerInputs = (index: number, value: any) => {
@@ -126,12 +137,16 @@ export default function TokenSelect(props: TokenSelectProps) {
 	React.useEffect(() => {
 		setLabelWidth(inputLabel.current!.offsetWidth);
 		// Set state wih default token
-		updateUserInput(index, token.address);
+		updateUserInput(index, token.address[networkId]);
 	}, []);
 
 	const handleChange = (event: React.ChangeEvent<{ value: any }>) => {
 		const tokenAddress = event.target.value as string;
-		const tokenObject = findToken(tokenAddress);
+		const tokenObject = getTokenByAddress(
+			tokenAddress,
+			networkId,
+			relevantInputData
+		);
 		if (tokenObject === undefined) {
 			console.log('ERROR in fetching Token');
 			return 'ERROR in finding Token';
@@ -139,7 +154,7 @@ export default function TokenSelect(props: TokenSelectProps) {
 		// Update local state
 		setToken(tokenObject);
 		// Update global state
-		updateUserInput(index, tokenObject.address);
+		updateUserInput(index, tokenObject.address[networkId]);
 	};
 
 	const handleClose = () => {
@@ -172,14 +187,17 @@ export default function TokenSelect(props: TokenSelectProps) {
 				open={open}
 				onClose={handleClose}
 				onOpen={handleOpen}
-				value={token.address}
+				value={token.address[networkId]}
 				onChange={handleChange}
 				labelWidth={labelWidth}
 				disabled={disabled}
 				// input={<SalmonSelect />}
 			>
-				{TOKEN_LIST.map((possibleToken, key) => (
-					<MenuItem key={key} value={possibleToken.address}>
+				{tokenList.map((possibleToken, key) => (
+					<MenuItem
+						key={`${key}-${index}-${disabled}-${triggerOrAction}`}
+						value={possibleToken.address[networkId]}
+					>
 						{possibleToken.symbol}
 					</MenuItem>
 				))}

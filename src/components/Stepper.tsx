@@ -8,7 +8,9 @@ import Button from '@material-ui/core/Button';
 // Local Components
 import StepperContent from './StepperContent';
 import { StepperProps, TxState } from '../constants/interfaces';
-import { COLOURS } from '../constants/constants';
+import { COLOURS, UPDATE_TX_STATE, OPEN_MODAL } from '../constants/constants';
+import { useIcedTxContext } from '../state/GlobalState';
+import { useWeb3React } from '@web3-react/core';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -49,8 +51,14 @@ const useStyles = makeStyles((theme: Theme) =>
 		},
 		stepper: {
 			background: 'none',
+			'& .MuiStepIcon-root.MuiStepIcon-root': {
+				color: COLOURS.salmon50
+			},
 			'& .MuiStepIcon-root.MuiStepIcon-active': {
 				color: COLOURS.salmon
+			},
+			'& .MuiStepIcon-root.MuiStepIcon-completed': {
+				color: 'white'
 			}
 		},
 		title: {
@@ -64,6 +72,11 @@ const useStyles = makeStyles((theme: Theme) =>
 			// completed: {
 			// 	color: 'white'
 			// }
+		},
+		active: {
+			'& $line': {
+				borderColor: '#784af4'
+			}
 		}
 	})
 );
@@ -77,8 +90,13 @@ export default function StepperParent(props: StepperProps) {
 		handleNext,
 		handleBack,
 		// modalOpen,
-		modalClickOpen
+		modalClickOpen,
+		preTxCheck
 	} = props;
+
+	const { dispatch } = useIcedTxContext();
+
+	const { active } = useWeb3React();
 
 	return (
 		<div className={classes.root}>
@@ -115,8 +133,6 @@ export default function StepperParent(props: StepperProps) {
 							icedTxState={icedTxState}
 							classes={classes}
 							activeStep={activeStep}
-							// {"@DEV WHAT DOES INPUTS DO?"}
-							inputs={['uint256', 'uint256']}
 						></StepperContent>
 						{/* </Typography> */}
 						<div style={{ marginBottom: '24px' }}>
@@ -131,7 +147,15 @@ export default function StepperParent(props: StepperProps) {
 								<Button
 									variant="contained"
 									color="primary"
-									onClick={modalClickOpen}
+									onClick={() => {
+										// @ DEV should need that, but in order to display create right away, we dont do it
+										// dispatch({
+										// 	type: UPDATE_TX_STATE,
+										// 	txState:
+										// 		TxState.displayInstallMetamask
+										// });
+										dispatch({ type: OPEN_MODAL });
+									}}
 									className={classes.nextButton}
 								>
 									{'Confirm'}

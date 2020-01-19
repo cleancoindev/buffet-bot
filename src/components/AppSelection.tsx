@@ -1,4 +1,4 @@
-import React, { Props } from 'react';
+import React, { Props, useEffect } from 'react';
 
 // Routing
 import { Link } from 'react-router-dom';
@@ -13,8 +13,9 @@ import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
+import FlashOnOutlinedIcon from '@material-ui/icons/FlashOnOutlined';
 
-import { ATYPES, CTYPES } from '../constants/whitelist';
+import { ATYPES, TTYPES } from '../constants/whitelist';
 
 // Local components
 import Dropdown from './Dropdown';
@@ -30,16 +31,20 @@ import {
 	TriggerWhitelistData,
 	TxState
 } from '../constants/interfaces';
-import { RESET_CONDITION, RESET_ACTION, COLOURS } from '../constants/constants';
+import {
+	RESET_CONDITION,
+	RESET_ACTION,
+	COLOURS,
+	BOX,
+	UPDATE_TX_STATE,
+	SELECTED_CHAIN_ID,
+	OPEN_MODAL
+} from '../constants/constants';
 import { useWeb3React } from '@web3-react/core';
 
 const useStyles = makeStyles(theme => ({
 	box: {
-		background: 'black',
-		// border: '3px outset #E50078',
-		border: `3px outset ${COLOURS.salmon}`,
-
-		borderRadius: '2px 2px 2px 2px'
+		...BOX
 	},
 	boxTitle: {
 		fontSize: '16px',
@@ -53,10 +58,11 @@ const useStyles = makeStyles(theme => ({
 		color: 'white',
 		border: 0,
 		borderRadius: 3,
-		boxShadow: '0 2px 2px 2px rgba(255, 255, 255, .3)',
+		boxShadow: '0 1.5px 1.5px 1.5px rgba(255, 255, 255, .3)',
 		height: 48,
-		padding: '0 30px',
+		padding: '0 20px',
 		margin: 8,
+		// marginBottom: '40px',
 		'&:hover': {
 			background: COLOURS.salmon60
 		}
@@ -67,80 +73,111 @@ export default function AppSelection() {
 	const classes = useStyles();
 	// Import global state
 	//const { updateIcedTx, icedTxState, resetIcedTxInput } = useIcedTxContext();
-	const { dispatch, icedTxState } = useIcedTxContext();
+	const { icedTxState, dispatch } = useIcedTxContext();
+
+	const web3 = useWeb3React();
 
 	// Import Web3react Context
-	const web3 = useWeb3React();
-	// console.log(web3);
+	// useEffect(() => {}, []);
 
-	// Local State
-	const [userSelection, setUserSelection] = React.useState<UserSelection>({
-		triggerApp: '',
-		actionApp: '',
-		triggerAppFunctions: [],
-		actionAppFunctions: []
-	});
+	const availableTriggers = [...TTYPES];
+	const availableActions = [...ATYPES];
 
-	// console.log(userSelection);
+	useEffect(() => {
+		preTxCheck();
+	}, [icedTxState.txState, web3.active, web3.chainId]);
 
-	function updateTriggerOrAction(
-		selectedTriggerOrAction: TriggerOrAction,
-		app: string
-	) {
-		// console.log(app);
-		const result: Array<ActionWhitelistData | TriggerWhitelistData> = [];
-		const triggerOrAction = { app: '', type: '' };
-		if (selectedTriggerOrAction === TriggerOrAction.Trigger) {
-			CTYPES.forEach(type => {
-				if (type.app === app) {
-					result.push(type);
-				}
+	const preTxCheck = () => {
+		const { ethereum } = window as any;
+		if (!web3.active) {
+			dispatch({
+				type: UPDATE_TX_STATE,
+				txState: TxState.displayLogIntoMetamask
 			});
-			triggerOrAction.app = 'triggerApp';
-			triggerOrAction.type = 'triggerAppFunctions';
-			// resetIcedTxInput(TriggerOrAction.Trigger);
-			// RESET THE CONDITION to SELECT...
-			dispatch({ type: RESET_CONDITION });
-		} else {
-			ATYPES.forEach(type => {
-				if (type.app === app) {
-					result.push(type);
-				}
-			});
-			triggerOrAction.app = 'actionApp';
-			triggerOrAction.type = 'actionAppFunctions';
-			// resetIcedTxInput(TriggerOrAction.Action);
-			// RESET THE CONDITION to SELECT...
-			dispatch({ type: RESET_ACTION });
+			return 0;
 		}
-		setUserSelection({
-			...userSelection,
-			[triggerOrAction.app]: app,
-			[triggerOrAction.type]: result
-		});
-	}
+		switch (icedTxState.txState) {
+			case TxState.displayInstallMetamask:
+				// Web3 object is injected
+				if (typeof ethereum !== 'undefined') {
+					// Check if the object is injected by metamask
+					if (ethereum.isMetaMask) {
+						// Yes it is metamask
+						// console.log('Metamask is installed');
+						// Change txState to "Login with metamask"
+						// console.log('Change TxState to displayLogIntoMetamask');
+						dispatch({
+							type: UPDATE_TX_STATE,
+							txState: TxState.displayLogIntoMetamask
+						});
+					} else {
+						// No Metamask installed => Show install Metamask Modal
+						console.log(
+							'No Metamask is installed - Render Install metamask modal'
+							// No need to change icedTx.txState
+						);
+					}
+				} else {
+					// No ethereum provider => Still install metamask
+				}
+				break;
+
+			// 2. Check if user is logged into metamask and has approved gelato
+			case TxState.displayLogIntoMetamask:
+				// User is already logged in => Change to insufficientBalance
+				if (web3.active) {
+					// Check if the object is injected by metamask
+					// console.log('Change TxState to displayWrongNetwork');
+					dispatch({
+						type: UPDATE_TX_STATE,
+						txState: TxState.displayWrongNetwork
+					});
+				} else {
+					// No Metamask installed => Show install Metamask Modal
+					// console.log('User has to log into metamask');
+				}
+
+				break;
+
+			// 3. Check if user is connected to the correct network
+			case TxState.displayWrongNetwork:
+				// User is already logged in => Change to insufficientBalance
+				if (web3.chainId === SELECTED_CHAIN_ID) {
+					// Check if the object is injected by metamask
+					// console.log('Change TxState to insufficientBalance');
+					dispatch({
+						type: UPDATE_TX_STATE,
+						txState: TxState.insufficientBalance
+					});
+				} else {
+					// No Metamask installed => Show install Metamask Modal
+					console.log('User has to switch networks');
+				}
+
+				break;
+		}
+	};
 
 	return (
-		<div className={classes.box}>
-			<h1>{`Automate sending transactions to ethereum dapps with gelato`}</h1>
+		<div /*className={classes.box}*/>
+			{/* <h1>{`Create a conditional transaction by defining a trigger and action`}</h1> */}
 			<Grid
 				container
 				direction="row"
-				justify="space-evenly"
+				justify="space-between"
 				alignItems="center"
-				style={{ padding: '16px' }}
+				// style={{ padding: '16px' }}
 			>
 				<Grid
 					container
 					item
-					sm={4}
+					md={5}
+					sm={5}
 					xs={12}
 					direction="column"
 					justify="space-evenly"
 					alignItems="stretch"
-					style={{
-						height: '200px'
-					}}
+					style={{}}
 				>
 					<Grid
 						container
@@ -148,13 +185,13 @@ export default function AppSelection() {
 						justify="flex-start"
 						className={classes.box}
 					>
-						<p className={classes.boxTitle}>Listen to this dApp</p>
+						<p className={classes.boxTitle}>Trigger</p>
 						<Dropdown
-							app
+							app={false}
 							// userSelection={userSelection}
 							triggerOrAction={TriggerOrAction.Trigger}
-							data={CTYPES}
-							updateTriggerOrAction={updateTriggerOrAction}
+							data={availableTriggers}
+							// updateTriggerOrAction={updateTriggerOrAction}
 						/>
 					</Grid>
 					{/* <Grid container item justify="flex-start" style={{background: "yellow"}}>
@@ -164,6 +201,7 @@ export default function AppSelection() {
 				<Grid
 					container
 					item
+					md={2}
 					sm={2}
 					xs={12}
 					direction="column"
@@ -175,18 +213,22 @@ export default function AppSelection() {
 						<ArrowForwardIcon fontSize="large" />
 					</Hidden>
 					<Hidden smUp>
-						<ArrowDownwardIcon fontSize="large" />
+						<ArrowDownwardIcon
+							style={{ marginTop: '8px', marginBottom: '8px' }}
+							fontSize="large"
+						/>
 					</Hidden>
 				</Grid>
 				<Grid
 					container
 					item
-					sm={4}
+					md={5}
+					sm={5}
 					xs={12}
 					direction="column"
 					justify="space-evenly"
 					alignItems="stretch"
-					style={{ height: '200px' }}
+					style={{}}
 				>
 					<Grid
 						container
@@ -194,171 +236,103 @@ export default function AppSelection() {
 						justify="flex-start"
 						className={classes.box}
 					>
-						<p className={classes.boxTitle}>
-							Send Transaction to this dApp
-						</p>
+						<p className={classes.boxTitle}>Action</p>
 						<Dropdown
-							app
+							app={false}
 							// userSelection={userSelection}
 							triggerOrAction={TriggerOrAction.Action}
-							data={ATYPES}
-							updateTriggerOrAction={updateTriggerOrAction}
+							data={availableActions}
+							// updateTriggerOrAction={updateTriggerOrAction}
 						/>
 					</Grid>
 				</Grid>
 			</Grid>
 			<Divider variant="middle" />
-			{userSelection.triggerApp !== '' && userSelection.actionApp !== '' && (
-				<Grid
-					container
-					direction="row"
-					justify="space-evenly"
-					alignItems="center"
-					style={{ padding: '10px' }}
-				>
+
+			{icedTxState.trigger.id !== 0 && icedTxState.action.id !== 0 && (
+				<React.Fragment>
 					<Grid
 						container
 						item
-						sm={4}
 						xs={12}
-						direction="column"
+						direction="row"
 						justify="space-evenly"
 						alignItems="stretch"
-						style={{ height: '200px' }}
+						style={{
+							marginTop: '32px'
+						}}
 					>
-						<Grid
-							container
-							item
-							justify="flex-start"
-							className={classes.box}
+						<h2
+							style={{
+								textAlign: 'justify',
+								textAlignLast: 'center'
+							}}
 						>
-							<p className={classes.boxTitle}>Select Trigger</p>
-							<Dropdown
-								app={false}
-								// userSelection={userSelection}
-								triggerOrAction={TriggerOrAction.Trigger}
-								data={userSelection.triggerAppFunctions}
-								updateTriggerOrAction={updateTriggerOrAction}
-							/>
-						</Grid>
+							Gelato will{' '}
+							<span style={{ color: '#E50078' }}>
+								{icedTxState.action.title}
+							</span>{' '}
+							on your behalf, when the trigger{' '}
+							<span style={{ color: '#E50078' }}>
+								{icedTxState.trigger.title}{' '}
+							</span>
+							is activated
+						</h2>
 					</Grid>
 					<Grid
 						container
 						item
-						sm={2}
 						xs={12}
-						direction="column"
-						justify="center"
-						alignItems="center"
-						style={{}}
-					>
-						<Hidden xsDown>
-							<ArrowForwardIcon fontSize="large" />
-						</Hidden>
-						<Hidden smUp>
-							<ArrowDownwardIcon fontSize="large" />
-						</Hidden>
-					</Grid>
-					<Grid
-						container
-						item
-						sm={4}
-						xs={12}
-						direction="column"
+						direction="row"
 						justify="space-evenly"
 						alignItems="stretch"
-						style={{ height: '200px' }}
+						style={{
+							marginTop: '16px'
+						}}
 					>
-						<Grid
-							container
-							item
-							justify="flex-start"
-							className={classes.box}
-						>
-							<p className={classes.boxTitle}>Select Action</p>
-							<Dropdown
-								app={false}
-								// userSelection={userSelection}
-								triggerOrAction={TriggerOrAction.Action}
-								data={userSelection.actionAppFunctions}
-								updateTriggerOrAction={updateTriggerOrAction}
-							/>
-						</Grid>
-					</Grid>
-					{userSelection.triggerApp !== '' &&
-						userSelection.actionApp !== '' &&
-						icedTxState.trigger.id !== 0 &&
-						icedTxState.action.id !== 0 && (
-							<React.Fragment>
-								<Grid
-									container
-									item
-									xs={12}
-									direction="row"
-									justify="space-evenly"
-									alignItems="stretch"
-									style={{
-										marginTop: '16px'
-									}}
-								>
-									<h2 style={{ textAlign: 'center' }}>
-										Gelato will{' '}
-										<span style={{ color: '#E50078' }}>
-											{icedTxState.action.title}
-										</span>{' '}
-										with{' '}
-										<span style={{ color: '#E50078' }}>
-											{icedTxState.action.app}
-										</span>{' '}
-										on your behalf, when the trigger{' '}
-										<span style={{ color: '#E50078' }}>
-											{icedTxState.trigger.title}{' '}
-										</span>
-										on{' '}
-										<span style={{ color: '#E50078' }}>
-											{icedTxState.trigger.app}
-										</span>{' '}
-										is fulfilled
-									</h2>
-								</Grid>
-								<Grid
-									container
-									item
-									xs={12}
-									direction="row"
-									justify="space-evenly"
-									alignItems="stretch"
-									style={{
-										marginTop: '16px'
-									}}
-								>
-									{icedTxState.txState ===
-										TxState.displayWrongNetwork && (
-										<Link
-											to={`create/${icedTxState.trigger.id}/${icedTxState.action.id}`}
-											style={{ textDecoration: 'none' }}
-										>
-											<Button
-												className={classes.createButton}
-												disabled
-											>
-												Create
-											</Button>
-										</Link>
-									)}
-									{icedTxState.txState !==
-										TxState.displayWrongNetwork && (
-										<Button
-											className={classes.createButton}
-											disabled
-										>
-											Create
-										</Button>
-									)}
-								</Grid>
-							</React.Fragment>
+						{icedTxState.txState ===
+							TxState.displayWrongNetwork && (
+							<Button
+								className={classes.createButton}
+								endIcon={<FlashOnOutlinedIcon />}
+								onClick={() =>
+									// Open Modal
+									dispatch({
+										type: OPEN_MODAL
+									})
+								}
+							>
+								Create
+							</Button>
 						)}
-				</Grid>
+						{icedTxState.txState !== TxState.displayWrongNetwork &&
+							web3.active && (
+								<Link
+									to={`create/${icedTxState.trigger.id}/${icedTxState.action.id}`}
+									style={{ textDecoration: 'none' }}
+								>
+									<Button
+										className={classes.createButton}
+										endIcon={<FlashOnOutlinedIcon />}
+									>
+										Create
+									</Button>
+								</Link>
+							)}
+						{icedTxState.txState !== TxState.displayWrongNetwork &&
+							!web3.active && (
+								<Button
+									endIcon={<FlashOnOutlinedIcon />}
+									onClick={() =>
+										dispatch({ type: OPEN_MODAL })
+									}
+									className={classes.createButton}
+								>
+									Create
+								</Button>
+							)}
+					</Grid>
+				</React.Fragment>
 			)}
 		</div>
 	);

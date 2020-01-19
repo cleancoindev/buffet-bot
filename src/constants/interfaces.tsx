@@ -9,7 +9,10 @@ import {
 	UPDATE_PAST_TRANSACTIONS,
 	OPEN_MODAL,
 	CLOSE_MODAL,
-	CANCEL_EXECUTION_CLAIM
+	CANCEL_EXECUTION_CLAIM,
+	INPUT_ERROR,
+	INPUT_OK,
+	UPDATE_GET_VALUE_INPUT
 } from './constants';
 import { ethers } from 'ethers';
 
@@ -51,29 +54,42 @@ export interface Params {
 	name: string;
 }
 
+export interface Addresses {
+	1: string;
+	3: string;
+	4: string;
+	42: string;
+}
+
 export interface ActionWhitelistData {
 	id: number;
 	app: string;
 	title: string;
-	address: string;
-	abi: Array<string>;
+	address: Addresses;
+	abi: string;
 	params: Array<Params>;
 	inputLabels: Array<string>;
 	userInputTypes: Array<InputType>;
-	userInputs: Array<string | number | ethers.utils.BigNumber>;
-	approvalIndex: number;
+	userInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
+	relevantInputData: Array<RelevantInputData>;
+	tokenIndex: number;
 }
 
 export interface TriggerWhitelistData {
 	id: number;
 	app: string;
 	title: string;
-	address: string;
-	abi: Array<string>;
+	address: Addresses;
+	abi: string;
 	params: Array<Params>;
 	inputLabels: Array<string>;
+	tokenIndex: number;
 	userInputTypes: Array<InputType>;
-	userInputs: Array<string | number | ethers.utils.BigNumber>;
+	relevantInputData: Array<RelevantInputData>;
+	userInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
+	getTriggerValueAbi: string;
+	getTriggerValueInput: ethers.utils.BigNumber;
+	boolIndex: number;
 }
 
 export interface UserSelection {
@@ -90,6 +106,12 @@ export interface IcedTx {
 	pastTransactions: Array<PastTransaction>;
 	modalOpen: boolean;
 	pastTransactionId: string;
+	error: Error;
+}
+
+export interface Error {
+	isError: boolean;
+	msg: string;
 }
 
 export enum TriggerOrAction {
@@ -110,6 +132,14 @@ export enum InputType {
 	Disabled // Used for the summary
 }
 
+// Relevant Data for user inputs
+
+export enum RelevantInputData {
+	none = 0,
+	kyberTokenList = 1,
+	fulcrumTokenList = 2
+}
+
 export interface MatchParams {
 	name: string;
 }
@@ -117,7 +147,6 @@ export interface MatchParams {
 export interface StepperContentProps {
 	activeStep: number;
 	classes: Record<string, string>;
-	inputs: Array<string>;
 	icedTxState: IcedTx;
 }
 
@@ -132,10 +161,11 @@ export interface StepperProps {
 	modalClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
 	steps: Array<string>;
 	icedTxState: IcedTx;
+	preTxCheck: Function;
 }
 
 export interface Token {
-	address: string;
+	address: Addresses;
 	symbol: string;
 	name: string;
 	decimals: number;
@@ -145,27 +175,26 @@ export type KyberToken = Array<Token>;
 
 // Transaction Statea
 export enum TxState {
-	displayInstallMetamask,
-	displayLogIntoMetamask,
-	displayWrongNetwork,
-	displayGelatoWallet,
-	preGelatoWallet,
-	waitingGelatoWallet,
-	postGelatoWallet,
-	displayApprove,
-	preApprove,
-	displayCreate,
-	preCreate,
-	waitingCreate,
-	postCreate,
-	displayCancel,
-	preCancel,
-	waitingCancel,
-	postCancel,
-	cancelled,
-	insufficientBalance
-	// waitingApprove,
-	// postApprove,
+	displayInstallMetamask = 0,
+	displayLogIntoMetamask = 1,
+	displayWrongNetwork = 2,
+	displayGelatoWallet = 3,
+	preGelatoWallet = 4,
+	waitingGelatoWallet = 5,
+	postGelatoWallet = 6,
+	displayApprove = 7,
+	preApprove = 8,
+	displayCreate = 9,
+	preCreate = 10,
+	waitingCreate = 11,
+	postCreate = 12,
+	displayCancel = 13,
+	preCancel = 14,
+	waitingCancel = 15,
+	postCancel = 16,
+	cancelled = 17,
+	insufficientBalance = 18,
+	inputError = 19
 }
 
 export type ChainIds = 1 | 3 | 4 | 42;
@@ -235,6 +264,22 @@ interface UpdateSelectedTx {
 	pastTransactionId: string;
 }
 
+interface InputError {
+	type: typeof INPUT_ERROR;
+	msg: string;
+	txState: TxState;
+}
+
+interface InputOk {
+	type: typeof INPUT_OK;
+	txState: TxState;
+}
+
+interface UpdateGetValueInput {
+	type: typeof UPDATE_GET_VALUE_INPUT;
+	newGetValueInput: ethers.utils.BigNumber;
+}
+
 // export interface Action {
 // 	type: string;
 // 	triggerOrAction: TriggerOrAction;
@@ -254,4 +299,7 @@ export type Action =
 	| UpdatePastTransactions
 	| OpenModal
 	| CloseModal
-	| UpdateSelectedTx;
+	| UpdateSelectedTx
+	| InputError
+	| InputOk
+	| UpdateGetValueInput;

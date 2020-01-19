@@ -1,51 +1,100 @@
+html {
+	background-color: #000000;
+	background-image: url('./images/slash-it.png');
+	/* background-image: url('./images/stardust.png'); */
+	/* background-image: url('./images/stardust.png') bottom center; */
+}
+
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+	height: 100%;
+	margin: 0;
+	font-family: 'PT Mono', monospace;
 
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
+/* code {
+	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+		monospace;
+} */
 
 .App {
-  height: 100vh;
-  background: #000000;
-  font: 11px menlo;
-  color: #fff;
-  /* new */
-  position: relative;
+	/* height: 100vh; */
+	/* background: #000000; */
+	background-color: #000000;
+	background-image: url('./images/slash-it.png');
+	/* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
+	font-family: 'PT Mono', monospace;
+	font-size: 11px;
+	color: #fff;
+	/* new */
+	position: relative;
 }
 
 .container {
-  background: inherit;
-  padding-right: 15px;
-  padding-left: 15px;
-  margin-right: auto;
-  margin-left: auto;
-  min-height: 100%;
-  width: 100%;
-  @media (min-width: 576px) {
-    max-width: 540px;
-  };
-  @media (min-width: 768px) {
-    max-width: 720px;
-  };
-  @media (min-width: 992px) {
-    max-width: 960px;
-  };
-  @media (min-width: 1200px) {
-    max-width: 1140px;
-  };
+	background: inherit;
+	padding-right: 15px;
+	padding-left: 15px;
+	margin-right: auto;
+	margin-left: auto;
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	/* width: 100%; */
+	/* background pink; */
+}
+
+.sub-container {
+	/* min-height: 50%; */
+	flex: 1 0 auto;
+}
+
+.content {
+	padding: 40px;
+}
+
+@media (max-width: 600px) {
+	.container {
+		width: auto;
+	}
+	.content {
+		padding: 20px !important;
+	}
+}
+@media (min-width: 768px) {
+	.container {
+		width: auto;
+		/* background: yellow; */
+	}
+}
+@media (min-width: 960px) {
+	.container {
+		max-width: 960px;
+		/* background: red; */
+	}
+}
+@media (min-width: 1200px) {
+	.container {
+		/* max-width: 1140px; */
+		max-width: 960px;
+		/* background: pink; */
+	}
+}
+
+.datepickerWrapper * {
+	border-color: #e91e63 !important;
+	border-width: 1px !important;
+	font-family: 'PT Mono', monospace !important;
+}
+.datepicker > * {
+	color: white !important;
+	/* border-color: #e91e63;
+	border-width: 1; */
 }
 
 /*
 
-Heder
+Header
 
 */

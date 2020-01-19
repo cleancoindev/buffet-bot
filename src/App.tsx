@@ -22,47 +22,80 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import GlobalStateProvider from './state/GlobalState';
 import TransactionOverview from './pages/TransactionOverview';
 import TransactionModal from './components/Modal';
+import { COLOURS, BOX } from './constants/constants';
+import { WarningMessage } from './components/WarningMessage';
+import Footer from './components/Footer';
+
+// APP Materiak THeme
+import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
+
+const theme = createMuiTheme({
+	typography: {
+		fontFamily: ['PT Mono'].join(',')
+	}
+});
 
 function App() {
 	return (
 		<GlobalStateProvider>
-			<CssBaseline />
-			<Router>
-				<div className="App">
-					<Header></Header>
-					<div className="container">
-						<Container
-							// style={{ background: 'white' }}
-							maxWidth="lg"
-						>
-							<Switch>
-								<Route
-									path="/"
-									exact
-									component={Configurator}
-								/>
-								<Route
-									path="/dashboard"
-									exact
-									component={Dashboard}
-								/>
-								<Route
-									path="/dashboard/:transactionId"
-									component={TransactionOverview}
-								/>
-								<Route
-									path="/create/:triggerId/:actionId"
-									component={Create}
-								/>
+			<ThemeProvider theme={theme}>
+				<CssBaseline />
+				<Router>
+					<div className="App">
+						<div className="container">
+							<Header></Header>
+							<WarningMessage></WarningMessage>
+							<Container
+								className={'sub-container'}
+								style={{
+									// marginTop: '48px',
+									marginTop: '32px',
+									padding: '0px'
+								}}
+							>
+								<div
+									className="content"
+									style={{
+										...BOX,
+										margin: '0'
+										// padding: '40px'
+									}}
+								>
+									<Switch>
+										<Route
+											path="/"
+											exact
+											component={Configurator}
+										/>
+										<Route
+											path="/dashboard"
+											exact
+											component={Dashboard}
+										/>
+										<Route
+											path="/dashboard/:transactionId"
+											component={TransactionOverview}
+										/>
+										<Route
+											path="/create/:triggerId/:actionId"
+											component={Create}
+										/>
 
-								{/*Last route acts as an try catch*/}
-								<Route path="/" component={Configurator} />
-							</Switch>
-						</Container>
+										{/*Last route acts as an try catch*/}
+										<Route
+											path="/"
+											component={Configurator}
+										/>
+									</Switch>
+								</div>
+							</Container>
+							<Footer></Footer>
+						</div>
+						<TransactionModal></TransactionModal>
 					</div>
-					<TransactionModal></TransactionModal>
-				</div>
-			</Router>
+				</Router>
+			</ThemeProvider>
 		</GlobalStateProvider>
 	);
 }

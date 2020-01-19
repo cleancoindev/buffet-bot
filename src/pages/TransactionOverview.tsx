@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // Types
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
 
 // Material UI
 import Grid from '@material-ui/core/Grid';
@@ -18,6 +18,9 @@ import {
 } from '../helpers/helpers';
 import { on } from 'cluster';
 import { render } from '@testing-library/react';
+import { DEFAULT_PAST_TRANSACTIONS } from '../constants/constants';
+import { useWeb3React } from '@web3-react/core';
+import { ChainIds } from '../constants/interfaces';
 
 interface TxOverviewParams {
 	transactionId: string;
@@ -32,6 +35,19 @@ export default function TransactionOverview({
 		params: { transactionId }
 	} = match;
 	const { icedTxState } = useIcedTxContext();
+	const web3 = useWeb3React();
+	const history = useHistory();
+
+	// Route to dashboard if no state is avaiable
+	useEffect(() => {
+		console.log('no state found');
+		if (
+			icedTxState.pastTransactions[0].expiryDate ===
+			DEFAULT_PAST_TRANSACTIONS[0].expiryDate
+		) {
+			history.push('/dashboard');
+		}
+	}, []);
 
 	// Get the identified past transaction from state
 	const pastTransaction =
@@ -40,8 +56,14 @@ export default function TransactionOverview({
 	// Get respective triggers and action
 	// console.log(pastTransaction.trigger);
 	// console.log(pastTransaction.action);
-	const trigger = findTriggerByAddress(pastTransaction.trigger);
-	const action = findActionByAddress(pastTransaction.action);
+	const trigger = findTriggerByAddress(
+		pastTransaction.trigger,
+		web3.chainId as ChainIds
+	);
+	const action = findActionByAddress(
+		pastTransaction.action,
+		web3.chainId as ChainIds
+	);
 	// Get user inputs by decoding payloads
 	const triggerInputs = decodeTriggerPayload(
 		pastTransaction.triggerPayload,

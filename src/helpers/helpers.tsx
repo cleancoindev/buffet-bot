@@ -1,10 +1,20 @@
-import { ATYPES, CTYPES, TOKEN_LIST } from '../constants/whitelist';
+import { ATYPES, TTYPES } from '../constants/whitelist';
+import { Token, RelevantInputData } from '../constants/interfaces';
+import { KYBER_TOKEN_LIST, TOKEN_LIST } from '../constants/tokens';
+
 import {
 	DEFAULT_DATA_ACTION,
-	DEFAULT_DATA_CONDITION
+	DEFAULT_DATA_TRIGGER,
+	ETH
 } from '../constants/constants';
 import { utils, ethers } from 'ethers';
-import { Params } from '../constants/interfaces';
+import {
+	Params,
+	ActionWhitelistData,
+	TriggerWhitelistData,
+	InputType,
+	ChainIds
+} from '../constants/interfaces';
 
 export function stringifyTimestamp(timestamp: string) {
 	let date = new Date(parseInt(timestamp) * 1000);
@@ -12,22 +22,26 @@ export function stringifyTimestamp(timestamp: string) {
 }
 
 export function findTriggerById(id: string) {
-	let returnData = DEFAULT_DATA_CONDITION;
+	let returnData = { ...DEFAULT_DATA_TRIGGER };
+	const clonedTriggers = deepCloneTriggers();
 
-	CTYPES.forEach(type => {
+	clonedTriggers.forEach(type => {
 		if (type.id === parseInt(id)) {
 			returnData = type;
 		}
 	});
+
 	return returnData;
 }
 
-export function findTriggerByAddress(address: string) {
-	let returnData = DEFAULT_DATA_CONDITION;
+export function findTriggerByAddress(address: string, networkId: ChainIds) {
+	let returnData = { ...DEFAULT_DATA_TRIGGER };
 
-	CTYPES.forEach(type => {
+	const clonedTriggers = deepCloneTriggers();
+
+	clonedTriggers.forEach(type => {
 		if (
-			ethers.utils.getAddress(type.address) ===
+			ethers.utils.getAddress(type.address[networkId]) ===
 			ethers.utils.getAddress(address)
 		) {
 			returnData = type;
@@ -37,8 +51,9 @@ export function findTriggerByAddress(address: string) {
 }
 
 export function findActionById(id: string) {
-	let returnData = DEFAULT_DATA_ACTION;
-	ATYPES.forEach(type => {
+	let returnData = { ...DEFAULT_DATA_ACTION };
+	const clonedActions = deepCloneActions();
+	clonedActions.forEach(type => {
 		if (type.id === parseInt(id)) {
 			returnData = type;
 		}
@@ -46,11 +61,12 @@ export function findActionById(id: string) {
 	return returnData;
 }
 
-export function findActionByAddress(address: string) {
-	let returnData = DEFAULT_DATA_ACTION;
-	ATYPES.forEach(type => {
+export function findActionByAddress(address: string, networkId: ChainIds) {
+	let returnData = { ...DEFAULT_DATA_ACTION };
+	const clonedActions = deepCloneActions();
+	clonedActions.forEach(type => {
 		if (
-			ethers.utils.getAddress(type.address) ===
+			ethers.utils.getAddress(type.address[networkId]) ===
 			ethers.utils.getAddress(address)
 		) {
 			returnData = type;
@@ -59,18 +75,42 @@ export function findActionByAddress(address: string) {
 	return returnData;
 }
 // @DEV Potenital bug in returning error string
-export function getTokenSymbol(address: string) {
-	const token = TOKEN_LIST.find(token => token.address === address);
+export function getTokenSymbol(
+	address: string,
+	networkId: ChainIds,
+	relevantInputData: RelevantInputData
+) {
+	const tokenList = getTokenList(relevantInputData);
+	const token = tokenList.find(token => token.address[networkId] === address);
 	return token === undefined ? 'ERROR Get Token Symbol' : token.symbol;
 }
 
+// Returns String
+export const convertWeiToHumanReadable = (
+	weiAmount: ethers.utils.BigNumber,
+	token: Token
+): string => {
+	return ethers.utils.formatUnits(weiAmount, token.decimals);
+};
+
 // @DEV Potenital bug in returning error string
-export function getTokenByAddress(address: string) {
-	const token = TOKEN_LIST.find(
+export function getTokenByAddress(
+	address: string,
+	networkId: ChainIds,
+	relevantInputData: RelevantInputData
+) {
+	if (isEth(address)) {
+		return ETH;
+	}
+	const tokenList = getTokenList(relevantInputData);
+	// console.log(tokenList);
+	// console.log(relevantInputData);
+	const token = tokenList.find(
 		token =>
-			ethers.utils.getAddress(token.address) ===
+			ethers.utils.getAddress(token.address[networkId]) ===
 			ethers.utils.getAddress(address)
 	);
+
 	if (token === undefined) {
 		throw Error(`Could not find Token with address ${address}`);
 	} else {
@@ -78,13 +118,46 @@ export function getTokenByAddress(address: string) {
 	}
 }
 
+export const deepCloneTokenList = (tokenList: Array<Token>) => {
+	const tokenListCopy: Array<Token> = [];
+	tokenList.forEach(token => {
+		let copyAddress = { ...token.address };
+		let copySymbol = token.symbol;
+		let copyName = token.name;
+		let copyDecimals = token.decimals;
+
+		tokenListCopy.push({
+			address: copyAddress,
+			symbol: copySymbol,
+			name: copyName,
+			decimals: copyDecimals
+		});
+	});
+	return tokenListCopy;
+};
+
+export const getTokenList = (
+	relevantInputData: RelevantInputData
+): Array<Token> => {
+	let tokenListCopy: Array<Token> = [...KYBER_TOKEN_LIST];
+	TOKEN_LIST.forEach(list => {
+		if (list.name === relevantInputData) {
+			tokenListCopy = list.data;
+		}
+
+		// throw Error(`Could not find tokenList with relevantInputData: ${relevantInputData}`);
+	});
+	// console.log(tokenListCopy);
+	return deepCloneTokenList(tokenListCopy);
+};
+
 export function encodeActionPayload(
-	userInput: Array<string | number | ethers.utils.BigNumber>,
-	abi: Array<string>,
+	userInput: Array<string | number | ethers.utils.BigNumber | boolean>,
+	abi: string,
 	user: string,
 	userProxy: string
 ) {
-	const iFace = new utils.Interface(abi);
+	const iFace = new utils.Interface([abi]);
 	//@DEV CHANGE UINT inputs into BigNumbers
 
 	// Insert user address into userInput Array at index 0
@@ -92,7 +165,6 @@ export function encodeActionPayload(
 	const copyUserInput = [...userInput];
 	copyUserInput.splice(0, 0, user);
 	copyUserInput.splice(1, 0, userProxy);
-	console.log(copyUserInput);
 
 	const actionPayloadWithSelector = iFace.functions.action.encode(
 		copyUserInput
@@ -102,10 +174,10 @@ export function encodeActionPayload(
 }
 
 export function encodeTriggerPayload(
-	userInput: Array<string | number | ethers.utils.BigNumber>,
-	abi: Array<string>
+	userInput: Array<string | number | ethers.utils.BigNumber | boolean>,
+	abi: string
 ) {
-	const iFace = new utils.Interface(abi);
+	const iFace = new utils.Interface([abi]);
 
 	const triggerPayloadWithSelector = iFace.functions.fired.encode(userInput);
 
@@ -135,7 +207,6 @@ export function decodeTriggerPayload(
 		paramsToSimpleParams(inputParameter),
 		ethers.utils.hexDataSlice(payload, 4)
 	);
-	console.log(decodedPayload);
 
 	return decodedPayload;
 }
@@ -147,3 +218,157 @@ export function paramsToSimpleParams(inputParameter: Array<Params>) {
 	});
 	return simpleParams;
 }
+
+export const deeepCloneActions = () => {
+	const dataCopy: Array<ActionWhitelistData> = [];
+};
+
+export const deepCloneTriggers = () => {
+	const dataCopy: Array<TriggerWhitelistData> = [];
+	TTYPES.forEach(data => {
+		// clone Id
+		const clonedId = data.id;
+
+		// clone app
+		const clonedApp = data.app;
+
+		// clone title
+		const clonedTitle = data.title;
+
+		// clone address
+		const clonedAddress = { ...data.address };
+
+		// clone params
+		const clonedParams: Array<Params> = [];
+		data.params.map(param => {
+			const clonedParam = { ...param };
+			clonedParams.push(clonedParam);
+		});
+
+		// clone abi
+		const clonedAbi = data.abi;
+
+		// clone getTriggerValueAbi
+		let clonedGetTriggerValueAbi = '';
+		clonedGetTriggerValueAbi = data.getTriggerValueAbi;
+
+		// clone boolIndex:
+		const clonedBoolIndex = data.boolIndex;
+
+		// clone getTriggerValueAbi
+		let clonedGetTriggerValueInput = data.getTriggerValueInput;
+
+		// clone userInputTypes
+		const clonedUserInputTypes: Array<InputType> = [];
+		data.userInputTypes.forEach(userInputType => {
+			const clonedUserInputType = userInputType;
+			clonedUserInputTypes.push(clonedUserInputType);
+		});
+
+		// empty user Input
+		const clonedTokenIndex = data.tokenIndex;
+
+		// clone inputLabels
+		const clonedInputLabels: Array<string> = [];
+		data.inputLabels.forEach(inputLabel => {
+			const clonedInputLabel = inputLabel;
+			clonedInputLabels.push(clonedInputLabel);
+		});
+
+		const clonedRelevantInputData = [...data.relevantInputData];
+
+		// empty user Input
+		const emptyUserInput: Array<string> = [];
+
+		dataCopy.push({
+			id: clonedId,
+			app: clonedApp,
+			title: clonedTitle,
+			address: clonedAddress,
+			params: clonedParams,
+			abi: clonedAbi,
+			tokenIndex: clonedTokenIndex,
+			userInputTypes: clonedUserInputTypes,
+			inputLabels: clonedInputLabels,
+			userInputs: emptyUserInput,
+			relevantInputData: clonedRelevantInputData,
+			getTriggerValueAbi: clonedGetTriggerValueAbi,
+			getTriggerValueInput: clonedGetTriggerValueInput,
+			boolIndex: clonedBoolIndex
+		});
+	});
+	return dataCopy;
+};
+
+export const isEth = (address: string) => {
+	let isEther: boolean;
+	// @DEV using 1 for ETH as address is same anyways
+	ethers.utils.getAddress(ETH.address[1]) === ethers.utils.getAddress(address)
+		? (isEther = true)
+		: (isEther = false);
+	return isEther;
+};
+
+export const deepCloneActions = () => {
+	const dataCopy: Array<ActionWhitelistData> = [];
+	ATYPES.forEach(data => {
+		// clone Id
+		const clonedId = data.id;
+
+		// clone app
+		const clonedApp = data.app;
+
+		// clone title
+		const clonedTitle = data.title;
+
+		// clone address
+		const clonedAddress = { ...data.address };
+
+		// clone params
+		const clonedParams: Array<Params> = [];
+		data.params.map(param => {
+			const clonedParam = { ...param };
+			clonedParams.push(clonedParam);
+		});
+
+		// clone abi
+		const clonedAbi = data.abi;
+
+		// clone userInputTypes
+		const clonedUserInputTypes: Array<InputType> = [];
+		data.userInputTypes.forEach(userInputType => {
+			const clonedUserInputType = userInputType;
+			clonedUserInputTypes.push(clonedUserInputType);
+		});
+
+		const clonedRelevantInputData = [...data.relevantInputData];
+
+		// clone inputLabels
+		const clonedInputLabels: Array<string> = [];
+		data.inputLabels.forEach(inputLabel => {
+			const clonedInputLabel = inputLabel;
+			clonedInputLabels.push(clonedInputLabel);
+		});
+
+		// empty user Input
+		const emptyUserInput: Array<string> = [];
+
+		// empty user Input
+		const clonedTokenIndex = data.tokenIndex;
+
+		dataCopy.push({
+			id: clonedId,
+			app: clonedApp,
+			title: clonedTitle,
+			address: clonedAddress,
+			params: clonedParams,
+			abi: clonedAbi,
+			userInputTypes: clonedUserInputTypes,
+			inputLabels: clonedInputLabels,
+			userInputs: emptyUserInput,
+			tokenIndex: clonedTokenIndex,
+			relevantInputData: clonedRelevantInputData
+		});
+	});
+	return dataCopy;
+};

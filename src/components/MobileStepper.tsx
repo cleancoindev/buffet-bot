@@ -6,18 +6,70 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import StepperContent from './StepperContent';
 import { StepperProps } from '../constants/interfaces';
+import { useIcedTxContext } from '../state/GlobalState';
+import { OPEN_MODAL, COLOURS } from '../constants/constants';
 
 const useStyles = makeStyles({
 	root: {
 		maxWidth: 400,
-		flexGrow: 1
+		flexGrow: 1,
+		backgroundColor: 'transparent',
+		color: 'white',
+		'& .MuiMobileStepper-dot': {
+			backgroundColor: 'white'
+		},
+		'& .MuiMobileStepper-dotActive': {
+			backgroundColor: COLOURS.salmon
+		}
 	}
 });
 
 export default function DotsMobileStepper(props: StepperProps) {
 	const classes = useStyles();
 	const theme = useTheme();
-	const { icedTxState, activeStep, handleNext, handleBack } = props;
+	const { activeStep, handleNext, handleBack, steps } = props;
+	const { dispatch, icedTxState } = useIcedTxContext();
+
+	const NextButton = () => {
+		if (activeStep === steps.length - 1) {
+			return (
+				<Button
+					variant="contained"
+					color="primary"
+					size="small"
+					style={{ backgroundColor: COLOURS.salmon, color: 'white' }}
+					onClick={() => {
+						// @ DEV should need that, but in order to display create right away, we dont do it
+						// dispatch({
+						// 	type: UPDATE_TX_STATE,
+						// 	txState:
+						// 		TxState.displayInstallMetamask
+						// });
+						dispatch({ type: OPEN_MODAL });
+					}}
+				>
+					{'Confirm'}
+				</Button>
+			);
+		} else {
+			return (
+				<Button
+					variant="contained"
+					// color="primary"
+					style={{ backgroundColor: COLOURS.salmon, color: 'white' }}
+					onClick={handleNext}
+					size="small"
+				>
+					Next
+					{theme.direction === 'rtl' ? (
+						<KeyboardArrowLeft />
+					) : (
+						<KeyboardArrowRight />
+					)}
+				</Button>
+			);
+		}
+	};
 
 	return (
 		<React.Fragment>
@@ -28,24 +80,29 @@ export default function DotsMobileStepper(props: StepperProps) {
 				activeStep={activeStep}
 				className={classes.root}
 				nextButton={
-					<Button
-						size="small"
-						onClick={handleNext}
-						disabled={activeStep === 3}
-					>
-						Next
-						{theme.direction === 'rtl' ? (
-							<KeyboardArrowLeft />
-						) : (
-							<KeyboardArrowRight />
-						)}
-					</Button>
+					<NextButton></NextButton>
+					// <Button
+					// 	size="small"
+					// 	onClick={handleNext}
+					// 	disabled={activeStep === 3}
+					// >
+					// 	Next
+					// 	{theme.direction === 'rtl' ? (
+					// 		<KeyboardArrowLeft />
+					// 	) : (
+					// 		<KeyboardArrowRight />
+					// 	)}
+					// </Button>
 				}
 				backButton={
 					<Button
 						size="small"
 						onClick={handleBack}
 						disabled={activeStep === 0}
+						style={{
+							backgroundColor: 'transparent',
+							color: 'white'
+						}}
 					>
 						{theme.direction === 'rtl' ? (
 							<KeyboardArrowRight />
@@ -56,12 +113,11 @@ export default function DotsMobileStepper(props: StepperProps) {
 					</Button>
 				}
 			/>
-			<div>
+			<div style={{ width: '100%' }}>
 				<StepperContent
 					icedTxState={icedTxState}
 					classes={classes}
 					activeStep={activeStep}
-					inputs={['uint256', 'uint256']}
 				></StepperContent>
 			</div>
 		</React.Fragment>

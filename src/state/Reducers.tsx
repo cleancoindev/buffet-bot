@@ -16,13 +16,17 @@ import {
 	UPDATE_CONDITION_INPUTS,
 	RESET_ACTION,
 	UPDATE_TX_STATE,
-	DEFAULT_DATA_CONDITION,
+	DEFAULT_DATA_TRIGGER,
 	DEFAULT_DATA_ACTION,
 	UPDATE_PAST_TRANSACTIONS,
 	OPEN_MODAL,
 	CLOSE_MODAL,
-	CANCEL_EXECUTION_CLAIM
+	CANCEL_EXECUTION_CLAIM,
+	INPUT_ERROR,
+	INPUT_OK,
+	UPDATE_GET_VALUE_INPUT
 } from '../constants/constants';
+import { ethers } from 'ethers';
 
 function updateIcedTx(
 	state: IcedTx,
@@ -49,7 +53,7 @@ function updateUserInput(
 	triggerOrAction: TriggerOrAction
 ) {
 	// Update userInputArray
-	const stateCopy = state;
+	const stateCopy = { ...state };
 	if (triggerOrAction === TriggerOrAction.Trigger) {
 		stateCopy.trigger.userInputs[index] = value;
 	} else {
@@ -58,12 +62,20 @@ function updateUserInput(
 	return stateCopy;
 }
 
+function setTriggerGetValue(state: IcedTx, newValue: ethers.utils.BigNumber) {
+	const stateCopy = { ...state };
+
+	stateCopy.trigger.getTriggerValueInput = newValue;
+
+	return stateCopy;
+}
+
 function resetIcedTx(state: IcedTx, triggerOrAction: TriggerOrAction) {
-	const stateCopy = state;
+	const stateCopy = { ...state };
 	if (triggerOrAction === TriggerOrAction.Trigger) {
-		stateCopy.trigger = DEFAULT_DATA_CONDITION;
+		stateCopy.trigger = { ...DEFAULT_DATA_TRIGGER };
 	} else if (triggerOrAction === TriggerOrAction.Action) {
-		stateCopy.action = DEFAULT_DATA_ACTION;
+		stateCopy.action = { ...DEFAULT_DATA_ACTION };
 	}
 	// console.log("reset")
 	return stateCopy;
@@ -119,5 +131,19 @@ export const icedTxReducer = (state: IcedTx, action: Action) => {
 				modalOpen: true,
 				txState: TxState.displayCancel
 			};
+		case INPUT_ERROR:
+			return {
+				...state,
+				error: { isError: true, msg: action.msg },
+				txState: action.txState
+			};
+		case INPUT_OK:
+			return {
+				...state,
+				error: { isError: false, msg: '' },
+				txState: action.txState
+			};
+		case UPDATE_GET_VALUE_INPUT:
+			return setTriggerGetValue(state, action.newGetValueInput);
 	}
 };

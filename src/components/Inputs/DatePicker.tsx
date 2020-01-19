@@ -10,18 +10,13 @@ import {
 	INPUT_CSS
 } from '../../constants/constants';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-	createMuiTheme,
-	createStyles,
-	Theme,
-	TextField,
-	FormControl
-} from '@material-ui/core';
-import { ThemeProvider } from '@material-ui/styles';
+import { createMuiTheme, TextField, FormControl } from '@material-ui/core';
+import { ThemeProvider, useTheme } from '@material-ui/styles';
 
-import { Overrides } from '@material-ui/core/styles/overrides';
 import { MuiPickersOverrides } from '@material-ui/pickers/typings/overrides';
 import { ethers } from 'ethers';
+
+import '../../index.css';
 
 type overridesNameToClassKey = {
 	[P in keyof MuiPickersOverrides]: keyof MuiPickersOverrides[P];
@@ -36,7 +31,8 @@ interface InputProps {
 	index: number;
 	label: string;
 	disabled: boolean;
-	defaultValue: string | number;
+	// boolean missing
+	defaultValue: string | number | ethers.utils.BigNumber;
 }
 
 const materialTheme = createMuiTheme({
@@ -46,6 +42,11 @@ const materialTheme = createMuiTheme({
 				backgroundColor: COLOURS.salmon
 			}
 		},
+		// MuiTypography: {
+		// 	h3: {
+		// 		fontSize: '2.3rem'
+		// 	}
+		// },
 		MuiTabs: {
 			root: {
 				background: `${COLOURS.salmon} !important`
@@ -80,9 +81,6 @@ const materialTheme = createMuiTheme({
 });
 
 // #################################################
-const useInputStyles = makeStyles({
-	...INPUT_CSS
-});
 
 interface TextFieldWrapProps {
 	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -92,15 +90,28 @@ interface TextFieldWrapProps {
 }
 
 const TextFieldWrap = (props: TextFieldWrapProps) => {
+	const theme = useTheme();
+
+	const useInputStyles = makeStyles({
+		...INPUT_CSS,
+		typography: {
+			fontFamily: 'PT Mono'
+		},
+		'&.test *': {
+			backgroundColor: 'red',
+			color: 'white !important'
+		}
+	});
 	const labelClasses = useInputStyles();
 	const { setOpen, value, label, disabled } = props;
 
 	return (
-		<FormControl style={{ width: '100%' }}>
+		<FormControl className="datepickerWrapper" style={{ width: '100%' }}>
 			{!disabled && (
 				<TextField
+					style={{}}
 					placeholder={'placeholder'}
-					className={labelClasses.root}
+					className={'datepicker'}
 					fullWidth
 					margin="normal"
 					InputLabelProps={{
@@ -116,8 +127,9 @@ const TextFieldWrap = (props: TextFieldWrapProps) => {
 			)}
 			{disabled && (
 				<TextField
+					style={{ color: 'white !important' }}
 					placeholder={'placeholder'}
-					className={labelClasses.root}
+					className={'datepicker'}
 					fullWidth
 					margin="normal"
 					InputLabelProps={{
@@ -125,7 +137,7 @@ const TextFieldWrap = (props: TextFieldWrapProps) => {
 					}}
 					variant="outlined"
 					defaultValue={value}
-					id="outlined-full-width"
+					id="outlined-full-width-1"
 					label={label}
 					disabled={disabled}
 				/>
@@ -143,7 +155,7 @@ export default function DateAndTimePicker(props: InputProps) {
 
 	const { dispatch, icedTxState } = useIcedTxContext();
 	// Set state with either NOW or global state
-	const defaultDate = timestampToDate(defaultValue);
+	const defaultDate = timestampToDate(defaultValue.toString());
 
 	const [selectedDate, handleDateChange] = useState(defaultDate);
 

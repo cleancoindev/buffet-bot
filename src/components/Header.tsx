@@ -1,16 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 // Routing
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 // Material UI
-import {
-	createStyles,
-	makeStyles,
-	withStyles,
-	useTheme,
-	Theme
-} from '@material-ui/core/styles';
+import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -26,7 +20,6 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import Divider from '@material-ui/core/Divider';
 import WarningIcon from '@material-ui/icons/Warning';
 
@@ -38,10 +31,15 @@ import {
 	COLOURS,
 	SELECTED_CHAIN_ID,
 	UPDATE_TX_STATE,
-	OPEN_MODAL
+	OPEN_MODAL,
+	RESET_CONDITION,
+	RESET_ACTION,
+	SELECT_CONDITION,
+	DEFAULT_TRIGGER_ID
 } from '../constants/constants';
 import { useIcedTxContext } from '../state/GlobalState';
 import { TxState } from '../constants/interfaces';
+import GelatoLogo from './Logo/Logo';
 
 const drawerWidth = 240;
 
@@ -57,18 +55,7 @@ const BootstrapButtonDanger = withStyles({
 		borderColor: 'red',
 		backgroundColor: 'red',
 		color: 'white',
-		fontFamily: [
-			'-apple-system',
-			'BlinkMacSystemFont',
-			'"Segoe UI"',
-			'Roboto',
-			'"Helvetica Neue"',
-			'Arial',
-			'sans-serif',
-			'"Apple Color Emoji"',
-			'"Segoe UI Emoji"',
-			'"Segoe UI Symbol"'
-		].join(','),
+
 		'&:hover': {
 			backgroundColor: 'red',
 			borderColor: 'red',
@@ -86,23 +73,13 @@ const BootstrapButton = withStyles({
 		textTransform: 'none',
 		fontSize: 16,
 		padding: '6px 12px',
-		border: '1px solid',
 		marginLeft: '16px',
 		lineHeight: 1.5,
+		border: '0.5px solid',
 		borderColor: COLOURS.salmon,
+		// borderRadius: '1px 1px 1px 1px',
 		color: 'white',
-		fontFamily: [
-			'-apple-system',
-			'BlinkMacSystemFont',
-			'"Segoe UI"',
-			'Roboto',
-			'"Helvetica Neue"',
-			'Arial',
-			'sans-serif',
-			'"Apple Color Emoji"',
-			'"Segoe UI Emoji"',
-			'"Segoe UI Symbol"'
-		].join(','),
+
 		'&:hover': {
 			backgroundColor: COLOURS.salmon50,
 			borderColor: 'white',
@@ -121,14 +98,19 @@ const BootstrapButton = withStyles({
 
 const useStyles = makeStyles(theme => ({
 	appBar: {
-		background: 'transparent'
+		background: 'transparent',
+		paddingTop: '16px'
 	},
 	menuButton: {
 		marginRight: 'auto',
 		textDecoration: 'none',
 		color: 'white',
 		cursor: 'pointer',
-		'&:hover': { color: COLOURS.salmon }
+		'&:hover': { color: COLOURS.salmon },
+		display: 'flex',
+		flexDirection: 'row',
+		justify: 'center',
+		alignItems: 'center'
 	},
 	title: {
 		flexGrow: 1
@@ -164,9 +146,15 @@ export default function ButtonAppBar() {
 
 	const { account, active, activate, chainId } = useWeb3React();
 	const { dispatch } = useIcedTxContext();
-	console.log(chainId);
 
 	// Web3 Logic
+
+	// Set default selected Trigger, as header only gets mounted once
+	useEffect(() => {
+		console.log('Mount header');
+		const functionId = DEFAULT_TRIGGER_ID;
+		dispatch({ type: SELECT_CONDITION, id: functionId });
+	}, []);
 
 	// handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
 	const triedEager = useEagerConnect();
@@ -176,7 +164,6 @@ export default function ButtonAppBar() {
 
 	const logInLogOutMetamask = async () => {
 		if (!active) {
-			console.log('log into metamask');
 			await activate(injected);
 		}
 	};
@@ -186,13 +173,32 @@ export default function ButtonAppBar() {
 	return (
 		<React.Fragment>
 			<AppBar className={classes.appBar} position="static">
-				<Toolbar>
-					<Link className={classes.menuButton} to="/">
-						<Typography variant="h6">gelato finance</Typography>
-					</Link>
+				<Toolbar style={{ paddingLeft: '0px', paddingRight: '0px' }}>
+					{/* <Link className={classes.menuButton} to="/"> */}
+					<div className={classes.menuButton}>
+						{/* <img
+							src={`${process.env.PUBLIC_URL}/images/gelato_logo.png`}
+							alt="logo"
+							style={{
+								width: '40px',
+								marginRight: '8px'
+							}}
+						/> */}
+						<GelatoLogo></GelatoLogo>
+
+						<Typography variant="h5">gelato finance</Typography>
+					</div>
+					{/* </Link> */}
 					<Hidden xsDown>
-						{active && (
-							<BootstrapButton onClick={() => history.push('/')}>
+						{active && chainId === SELECTED_CHAIN_ID && (
+							<BootstrapButton
+								onClick={() => {
+									// First refresh state of Create Page to start from the beginning
+									dispatch({ type: RESET_CONDITION });
+									dispatch({ type: RESET_ACTION });
+									history.push('/');
+								}}
+							>
 								Create New
 							</BootstrapButton>
 						)}

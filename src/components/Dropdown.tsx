@@ -1,5 +1,5 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useEffect } from 'react';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
@@ -12,71 +12,80 @@ import { useIcedTxContext } from '../state/GlobalState';
 import {
 	SELECT_CONDITION,
 	SELECT_ACTION,
-	COLOURS
+	COLOURS,
+	DEFAULT_TRIGGER_ID
 } from '../constants/constants';
-
-const useStyles = makeStyles(theme => ({
-	formControl: {
-		margin: theme.spacing(1),
-		minWidth: 120
-	},
-	selectEmpty: {
-		marginTop: theme.spacing(2),
-		color: 'white',
-		background: COLOURS.salmon,
-		'& :hover': {
-			background: COLOURS.salmon50
-		},
-		'& .MuiSelect-icon': {
-			color: 'white'
-		}
-	}
-}));
 
 interface AppDropdownProps {
 	data: Array<TriggerWhitelistData | ActionWhitelistData>;
 	triggerOrAction: number;
 	app: boolean;
-	updateTriggerOrAction: Function;
+	// updateTriggerOrAction: Function;
 }
 
 export default function AppDropdown(props: AppDropdownProps) {
-	const { app, data, triggerOrAction, updateTriggerOrAction } = props;
-	const { dispatch } = useIcedTxContext();
+	const theme = useTheme();
+	const useStyles = makeStyles({
+		formControl: {
+			margin: theme.spacing(1),
+			minWidth: 120
+		},
+		selectEmpty: {
+			marginTop: theme.spacing(2),
+			color: 'white',
+			background: COLOURS.salmon,
+			'& :hover': {
+				background: COLOURS.salmon50
+			},
+			'& .MuiSelect-icon': {
+				color: 'white'
+			}
+		}
+	});
+	const { app, data, triggerOrAction /*updateTriggerOrAction*/ } = props;
+	const { dispatch, icedTxState } = useIcedTxContext();
 	const classes = useStyles();
 	const [state, setState] = React.useState('');
 
 	// Dispatch Reducer
-	const selectTrigger = (id: string) => {
-		updateTriggerOrAction(TriggerOrAction.Trigger, id);
-	};
-	const selectAction = (id: string) => {
-		updateTriggerOrAction(TriggerOrAction.Action, id);
-	};
+	// const selectTrigger = (id: string) => {
+	// 	updateTriggerOrAction(TriggerOrAction.Trigger, id);
+	// };
+	// const selectAction = (id: string) => {
+	// 	updateTriggerOrAction(TriggerOrAction.Action, id);
+	// };
 
-	const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-		// @DEV potential BUG
-		if (app) {
-			setState(`${event.target.value}`);
-			// IF trigger, update trigger, else update action
-			triggerOrAction === TriggerOrAction.Trigger
-				? selectTrigger(`${event.target.value}`)
-				: selectAction(`${event.target.value}`);
-		} else {
-			const functionId = `${event.target.value}`;
-			if (triggerOrAction === TriggerOrAction.Trigger) {
-				dispatch({ type: SELECT_CONDITION, id: functionId });
-			} else {
-				dispatch({ type: SELECT_ACTION, id: functionId });
-			}
-			setState(`${functionId}`);
+	// SET DEFAULT TRIGGER VALUE AT PAGE RENGERING
+	// Only change state if: a) we render a trigger, b) the id in global state matches default trigger id and 3) if state is currently empty (select is displayed)
+	useEffect(() => {
+		if (
+			triggerOrAction === TriggerOrAction.Trigger &&
+			icedTxState.trigger.id === parseInt(DEFAULT_TRIGGER_ID) &&
+			state === ''
+		) {
+			setState(DEFAULT_TRIGGER_ID);
 		}
+	}, [icedTxState.trigger.id]);
+
+	const handleChange = (event: React.ChangeEvent<{ value: any }>) => {
+		const functionId = event.target.value as string;
+		setConditionOrAction(functionId);
+		//}
 	};
 
-	function getApps(
+	const setConditionOrAction = (functionId: string) => {
+		if (triggerOrAction === TriggerOrAction.Trigger) {
+			dispatch({ type: SELECT_CONDITION, id: functionId });
+		} else {
+			dispatch({ type: SELECT_ACTION, id: functionId });
+		}
+		setState(functionId);
+	};
+
+	function getTitles(
 		appList: Array<TriggerWhitelistData | ActionWhitelistData>
 	) {
-		const appTitles = appList.map(item => item.app);
+		const appTitles = appList.map(item => item.title);
 		return appTitles.filter(
 			(item, index) => appTitles.indexOf(item) === index
 		);
@@ -102,7 +111,7 @@ export default function AppDropdown(props: AppDropdownProps) {
 			>
 				<option value={app ? '' : 0}>Select...</option>
 				{app &&
-					getApps(data).map((value, key) => (
+					getTitles(data).map((value, key) => (
 						<option key={key} value={value}>
 							{value}
 						</option>

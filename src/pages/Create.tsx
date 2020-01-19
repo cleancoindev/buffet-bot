@@ -52,6 +52,8 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 	// Get gelatoCore
 	const gelatoCore = useGelatoCore();
 
+	console.log(icedTxState.txState);
+
 	// When component renders, 1) Check that icedTx state exist, if not 2) check if correct params were inputted in URL, if not, 3) setNotFound = true
 	useEffect(() => {
 		if (icedTxState.trigger.id === 0 || icedTxState.action.id === 0) {
@@ -94,7 +96,13 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 	// Stepper Functions
 	function handleNext() {
 		// @ DEV INCLUDE VALIDATION, ONLY ALLOW IF ALL INPUT FIELDS HAVE BEEN VALIDATED
-		setActiveStep(prevActiveStep => prevActiveStep + 1);
+		if (!icedTxState.error.isError) {
+			setActiveStep(prevActiveStep => prevActiveStep + 1);
+		} else {
+			// Open Modal and show error
+			console.log('openModal');
+			dispatch({ type: OPEN_MODAL });
+		}
 	}
 
 	const handleBack = () => {
@@ -121,9 +129,9 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 					// Check if the object is injected by metamask
 					if (ethereum.isMetaMask) {
 						// Yes it is metamask
-						console.log('Metamask is installed');
+						// console.log('Metamask is installed');
 						// Change txState to "Login with metamask"
-						console.log('Change TxState to displayLogIntoMetamask');
+						// console.log('Change TxState to displayLogIntoMetamask');
 						dispatch({
 							type: UPDATE_TX_STATE,
 							txState: TxState.displayLogIntoMetamask
@@ -145,14 +153,14 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 				// User is already logged in => Change to insufficientBalance
 				if (web3.active) {
 					// Check if the object is injected by metamask
-					console.log('Change TxState to displayWrongNetwork');
+					// console.log('Change TxState to displayWrongNetwork');
 					dispatch({
 						type: UPDATE_TX_STATE,
 						txState: TxState.displayWrongNetwork
 					});
 				} else {
 					// No Metamask installed => Show install Metamask Modal
-					console.log('User has to log into metamask');
+					// console.log('User has to log into metamask');
 				}
 
 				break;
@@ -162,7 +170,7 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 				// User is already logged in => Change to insufficientBalance
 				if (web3.chainId === SELECTED_CHAIN_ID) {
 					// Check if the object is injected by metamask
-					console.log('Change TxState to insufficientBalance');
+					// console.log('Change TxState to insufficientBalance');
 					dispatch({
 						type: UPDATE_TX_STATE,
 						txState: TxState.insufficientBalance
@@ -181,15 +189,16 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 					.getBalance(web3.account)
 					.then((result: ethers.utils.BigNumber) => {
 						const userBalance = result;
+						// $0.2
 						const hypotheticalMintingCosts = ethers.utils.bigNumberify(
-							'10000000000000000'
+							'1200000000000000'
 						);
 						// We make initial check that user has sufficient ETH, e.g. more than 0.01ETH => Balance greater than cost of minting
 						if (hypotheticalMintingCosts.lte(userBalance)) {
 							// Change txState to displayGelatoWallet
-							console.log(
-								'Change TxState to displayGelatoWallet'
-							);
+							// console.log(
+							// 	'Change TxState to displayGelatoWallet'
+							// );
 							dispatch({
 								type: UPDATE_TX_STATE,
 								txState: TxState.displayGelatoWallet
@@ -203,12 +212,12 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 			// 5. Check if user has gelato proxy
 			case TxState.displayGelatoWallet:
 				// User is already logged in => Change to insufficientBalance
-				console.log('Checking if user is registered');
+				// console.log('Checking if user is registered');
 				gelatoCore.isUser(web3.account).then((result: boolean) => {
 					const isUser = result;
 					// User has Proxy
 					if (isUser) {
-						console.log('Change TxState to displayApprove');
+						// console.log('Change TxState to displayApprove');
 						dispatch({
 							type: UPDATE_TX_STATE,
 							txState: TxState.displayApprove
@@ -235,9 +244,8 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 							const signer = web3.library.getSigner();
 							const tokenAddress =
 								icedTxState.action.userInputs[
-									icedTxState.action.approvalIndex
+									icedTxState.action.tokenIndex
 								];
-							console.log(tokenAddress);
 							const erc20 = new ethers.Contract(
 								tokenAddress.toString(),
 								JSON.stringify(ERC20_ABI),
@@ -247,6 +255,8 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 								.allowance(web3.account, proxyAddress)
 								.then((result: ethers.utils.BigNumber) => {
 									const allowance = result;
+									console.log('Allowance: ');
+									console.log(allowance.toString());
 									// If the Allowance is greater than the selected token amount, move on
 									if (tokenAmount.lte(allowance)) {
 										console.log(
@@ -265,7 +275,7 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 				}
 				break;
 			default:
-				console.log('default');
+				// console.log('default');
 				if (
 					icedTxState.txState === TxState.displayCancel ||
 					icedTxState.txState === TxState.preCancel ||
@@ -277,25 +287,34 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 						txState: TxState.displayInstallMetamask
 					});
 				}
+				break;
 		}
-
-		// 5. Check if user has sufficient token approval
-
-		// 6. READY to mint
 	};
 
 	const modalOpen = icedTxState.modalOpen;
 	const modalClickOpen = () => {
-		console.log('setting modal to true');
+		// console.log('setting modal to true');
 		dispatch({ type: OPEN_MODAL });
-		console.log(modalOpen);
 	};
 	const modalClose = () => {
 		dispatch({ type: CLOSE_MODAL });
 	};
 
 	useEffect(() => {
-		preTxCheck();
+		if (icedTxState.error.isError) {
+			dispatch({
+				type: UPDATE_TX_STATE,
+				txState: TxState.inputError
+			});
+		} else {
+			preTxCheck();
+			if (!web3.active) {
+				dispatch({
+					type: UPDATE_TX_STATE,
+					txState: TxState.displayLogIntoMetamask
+				});
+			}
+		}
 	}, [icedTxState.txState, web3.active, activeStep]);
 
 	// MODAL STUFF END
@@ -312,6 +331,7 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 					<React.Fragment>
 						<Hidden xsDown>
 							<Stepper
+								preTxCheck={preTxCheck}
 								icedTxState={icedTxState}
 								steps={getSteps()}
 								activeStep={activeStep}
@@ -325,6 +345,7 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 						</Hidden>
 						<Hidden smUp>
 							<MobileStepper
+								preTxCheck={preTxCheck}
 								icedTxState={icedTxState}
 								steps={getSteps()}
 								activeStep={activeStep}
