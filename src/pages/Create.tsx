@@ -245,7 +245,7 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 							const signer = web3.library.getSigner();
 							const tokenAddress =
 								icedTxState.action.userInputs[
-									icedTxState.action.tokenIndex
+									icedTxState.action.approveIndex
 								];
 							const erc20 = new ethers.Contract(
 								tokenAddress.toString(),

@@ -32,6 +32,10 @@ export const EXECUTOR_ADDRESS = {
 	42: '0x203AdbbA2402a36C202F207caA8ce81f1A4c7a72'
 };
 
+// NOTES
+
+// Input Type Numbers and StatelessGetValue both might use arbitrary decimals as conversions when reading data from Blockchain as BNs and converting them to human readble form, as triggers such as Kyber Price dont return vlaues based on buyToken decimals, but simply always with 18 decimals
+
 // Triggers
 export const TTYPES = [
 	{
@@ -62,7 +66,7 @@ export const TTYPES = [
 			InputType.Bool,
 			InputType.StatelessGetValue
 		],
-		tokenIndex: 1,
+		approveIndex: 1,
 		// Which is the independent variable for the bool is greater than defintion
 		boolIndex: 2,
 		inputLabels: [
@@ -103,7 +107,7 @@ export const TTYPES = [
 			InputType.Token,
 			InputType.TokenAmount,
 			InputType.Token,
-			InputType.TokenAmount,
+			InputType.Number,
 			InputType.Bool,
 			InputType.StatelessGetValue
 		],
@@ -112,7 +116,7 @@ export const TTYPES = [
 		getTriggerValueAbi:
 			'function getTriggerValue(address _src, uint256 _srcAmount, address _dest, uint256, bool) view returns (uint256)',
 		// Always 0
-		tokenIndex: 0,
+		approveIndex: 0,
 		boolIndex: 3,
 		getTriggerValueInput: BIG_NUM_ZERO,
 		inputLabels: [
@@ -149,7 +153,7 @@ export const TTYPES = [
 		getTriggerValueAbi: '',
 		getTriggerValueInput: BIG_NUM_ZERO,
 		// 99 means nothing
-		tokenIndex: 999,
+		approveIndex: 999,
 		boolIndex: 999,
 		userInputTypes: [InputType.Date],
 		inputLabels: ['Pick a Date and Time'],
@@ -197,7 +201,7 @@ export const ATYPES = [
 		inputLabels: ['Token to send', 'Amount', 'Address to receive tokens'],
 		userInputs: EMPTY_STRING_ARRAY,
 		// For Actions, token Index is 0 as the first two parameters are added only before encoding
-		tokenIndex: 0
+		approveIndex: 0
 	},
 
 	{
@@ -243,7 +247,7 @@ export const ATYPES = [
 			RelevantInputData.kyberTokenList
 		],
 		userInputs: EMPTY_STRING_ARRAY,
-		tokenIndex: 0
+		approveIndex: 0
 	},
 	{
 		id: 3,
@@ -288,7 +292,7 @@ export const ATYPES = [
 		],
 
 		userInputs: EMPTY_STRING_ARRAY,
-		tokenIndex: 0
+		approveIndex: 0
 	},
 	{
 		id: 4,
@@ -326,7 +330,7 @@ export const ATYPES = [
 		],
 
 		userInputs: EMPTY_STRING_ARRAY,
-		tokenIndex: 2
+		approveIndex: 2
 	}
 ];
 

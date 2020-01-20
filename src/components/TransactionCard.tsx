@@ -198,7 +198,7 @@ export default function TransactionCard(props: TxCardProps) {
 
 				const tokenAddress =
 					icedTxState.action.userInputs[
-						icedTxState.action.tokenIndex
+						icedTxState.action.approveIndex
 					];
 				console.log(tokenAddress);
 				const erc20 = new ethers.Contract(
@@ -534,11 +534,11 @@ export default function TransactionCard(props: TxCardProps) {
 				return {
 					title: `Approve gelato to move ${getTokenSymbol(
 						icedTxState.action.userInputs[
-							icedTxState.action.tokenIndex
+							icedTxState.action.approveIndex
 						].toString(),
 						networkId,
 						icedTxState.action.relevantInputData[
-							icedTxState.action.tokenIndex
+							icedTxState.action.approveIndex
 						]
 					)} for you`,
 					progress: Progress.awaitingModalConfirm,
@@ -563,7 +563,7 @@ export default function TransactionCard(props: TxCardProps) {
 						const signer = library.getSigner();
 						const tokenAddress =
 							icedTxState.action.userInputs[
-								icedTxState.action.tokenIndex
+								icedTxState.action.approveIndex
 							];
 
 						const erc20 = new ethers.Contract(
@@ -655,6 +655,7 @@ export default function TransactionCard(props: TxCardProps) {
 						const proxyAddress = await gelatoCore.getProxyOfUser(
 							account
 						);
+						console.log(icedTxState);
 						// User has Proxy
 						if (account !== undefined && account !== null) {
 							const {

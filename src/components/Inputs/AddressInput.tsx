@@ -24,7 +24,7 @@ interface AddressInputProps {
 	disabled: boolean;
 	trigger?: TriggerWhitelistData;
 	action?: ActionWhitelistData;
-	tokenIndex: number;
+	approveIndex: number;
 	updateUserInput: Function;
 	classes: Record<'form' | 'root', string>;
 }
@@ -41,7 +41,7 @@ export default function AddressInput(props: AddressInputProps) {
 		disabled,
 		trigger,
 		action,
-		tokenIndex,
+		approveIndex,
 		updateUserInput,
 		classes
 	} = props;

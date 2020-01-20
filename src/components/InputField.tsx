@@ -60,7 +60,7 @@ interface InputProps {
 	disabled: boolean;
 	trigger?: TriggerWhitelistData;
 	action?: ActionWhitelistData;
-	tokenIndex: number;
+	approveIndex: number;
 	relevantInputData: RelevantInputData;
 }
 
@@ -76,7 +76,7 @@ export default function LayoutTextFields(props: InputProps) {
 		disabled,
 		trigger,
 		action,
-		tokenIndex,
+		approveIndex,
 		relevantInputData
 	} = props;
 	// Context
@@ -115,93 +115,6 @@ export default function LayoutTextFields(props: InputProps) {
 
 	// CSS Classes
 	const classes = useStyles();
-
-	// Func should call getValue() in smart contract and return the respective value in a disabled Text field
-	// Params: Contract address | Contract Parameters
-	const callGetValue = async () => {
-		// Get abi
-		let newValue = icedTxState.trigger.getTriggerValueInput;
-		// WHen on summary page, return global state
-
-		if (disabled) return newValue;
-
-		if (trigger && active && account) {
-			const abi = trigger.getTriggerValueAbi;
-			const triggerAddress = trigger.address[chainId as ChainIds];
-
-			const tokenAddress = inputs[tokenIndex] as string;
-			let token: Token;
-			try {
-				token = getTokenByAddress(
-					tokenAddress,
-					chainId as ChainIds,
-					relevantInputData
-				);
-			} catch (error) {
-				newValue = BIG_NUM_ZERO;
-				return newValue;
-			}
-
-			try {
-				// Find token object by address
-				const signer = library.getSigner();
-
-				const triggerContract = new ethers.Contract(
-					triggerAddress,
-					[abi],
-					signer
-				);
-
-				// get value
-				try {
-					newValue = await triggerContract.getTriggerValue(...inputs);
-					// Convert fetched wei amount to human reable amount
-
-					// convert Value into human readable form
-					return newValue;
-				} catch (error) {
-					// console.log(error);
-					newValue = BIG_NUM_ZERO;
-					// console.log(2);
-					return newValue;
-				}
-				//Instantiate contract
-
-				// try {
-				// 	newValue = await library.getBalance(account);
-				// 	// convert Value into human readable form
-				// 	return newValue;
-				// } catch (error) {
-				// 	newValue = BIG_NUM_ZERO;
-				// 	// console.log(1);
-				// 	return newValue;
-				// }
-			} catch (error) {
-				// console.log('token not in state yet');
-				newValue = BIG_NUM_ZERO;
-				// console.log(3);
-				return newValue;
-			}
-		} else {
-			newValue = BIG_NUM_ZERO;
-			// console.log(4);
-			return newValue;
-		}
-	};
-
-	async function callGetValueAndSetState() {
-		// Only at first render set state, otherwise infinite loop
-
-		if (inputs[0] !== undefined) {
-			const returnValue = await callGetValue();
-			console.log(returnValue);
-			// updateUserInput(index, returnValue);
-			// Only set state if the return value is different
-			if (!returnValue.eq(getValueState)) {
-				setGetValueState(returnValue);
-			}
-		}
-	}
 
 	// call at every new render
 	const deriveBool = () => {
@@ -265,24 +178,40 @@ export default function LayoutTextFields(props: InputProps) {
 	// If user already inputted values, prefill inputs from state, otherwise display the default values
 	// œDEV make default values specific for each trigger and action, not global
 	function returnDefaultBigInt(): ethers.utils.BigNumber {
-		const ZERO = ethers.constants.Zero;
 		// If user has inputted something, go in here
 		if (inputs[0] !== undefined) {
 			if (inputs[index] !== undefined) {
-				// @DEV isBugNUmber typeguard does not work
-				if (isBigNumber(inputs[index])) {
-					console.log('is big number');
-				}
+				// // @DEV isBugNUmber typeguard does not work
+				// if (isBigNumber(inputs[index])) {
+				// 	console.log('is big number');
+				// }
 				return inputs[index] as ethers.utils.BigNumber;
 			} else {
-				updateUserInput(index, BIG_NUM_ONE);
-				return BIG_NUM_ONE;
+				// Check if the input of the token address is filled, if yes calculate the specific wei amount
+				if (inputs[approveIndex] !== undefined) {
+					const token = getTokenByAddress(
+						inputs[approveIndex] as string,
+						networkId,
+						relevantInputData
+					);
+					const defaultWeiAmountPerToken = ethers.utils.parseUnits(
+						'1',
+						token.decimals
+					);
+					console.log('Default wei amount calculated');
+					console.log(defaultWeiAmountPerToken);
+					updateUserInput(index, defaultWeiAmountPerToken);
+					return defaultWeiAmountPerToken;
+				} else {
+					updateUserInput(index, BIG_NUM_ZERO);
+					return BIG_NUM_ZERO;
+				}
 			}
 		}
 		// If new render, go in here
 		else {
-			updateUserInput(index, BIG_NUM_ONE);
-			return BIG_NUM_ONE;
+			updateUserInput(index, BIG_NUM_ZERO);
+			return BIG_NUM_ZERO;
 		}
 	}
 
@@ -365,7 +294,7 @@ export default function LayoutTextFields(props: InputProps) {
 							defaultValue={returnDefaultBigInt()}
 							convertToWei
 							disabled={disabled}
-							tokenIndex={tokenIndex}
+							approveIndex={approveIndex}
 							triggerOrAction={triggerOrAction}
 							key={`tokenAmount-input-${disabled}-${triggerOrAction}-${index}`}
 							relevantInputData={relevantInputData}
@@ -384,7 +313,7 @@ export default function LayoutTextFields(props: InputProps) {
 							defaultValue={returnDefaultBigInt()}
 							convertToWei={false}
 							disabled={disabled}
-							tokenIndex={tokenIndex}
+							approveIndex={approveIndex}
 							triggerOrAction={triggerOrAction}
 							key={`number-input-${disabled}-${triggerOrAction}-${index}`}
 							relevantInputData={relevantInputData}
@@ -426,7 +355,7 @@ export default function LayoutTextFields(props: InputProps) {
 							inputs={inputs}
 							app={app}
 							disabled={disabled}
-							tokenIndex={index}
+							approveIndex={index}
 							classes={classes}
 							updateUserInput={updateUserInput}
 						></AddressInput>
@@ -445,7 +374,7 @@ export default function LayoutTextFields(props: InputProps) {
 								inputType={inputType}
 								inputs={inputs}
 								disabled={disabled}
-								tokenIndex={tokenIndex}
+								approveIndex={approveIndex}
 								triggerOrAction={triggerOrAction}
 								key={`getValue-input-${disabled}-${triggerOrAction}-${index}`}
 								trigger={trigger}
@@ -461,7 +390,7 @@ export default function LayoutTextFields(props: InputProps) {
 								defaultValue={getValueState}
 								convertToWei
 								disabled={true}
-								tokenIndex={tokenIndex}
+								approveIndex={approveIndex}
 								triggerOrAction={triggerOrAction}
 								key={`getValue-input-${disabled}-${triggerOrAction}-${index}`}
 							></ReactNumberFormat> */}

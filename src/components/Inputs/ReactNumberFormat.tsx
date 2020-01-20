@@ -24,7 +24,8 @@ import {
 import { ethers } from 'ethers';
 import {
 	getTokenByAddress,
-	convertWeiToHumanReadable
+	convertWeiToHumanReadableForNumbersAndGetValue,
+	convertHumanReadableToWeiForNumbers
 } from '../../helpers/helpers';
 import { useIcedTxContext } from '../../state/GlobalState';
 import { useWeb3React } from '@web3-react/core';
@@ -77,7 +78,7 @@ interface ReactNumberFormatProps {
 	defaultValue: ethers.utils.BigNumber;
 	convertToWei: boolean;
 	disabled: boolean;
-	tokenIndex: number;
+	approveIndex: number;
 	triggerOrAction: TriggerOrAction;
 	relevantInputData: RelevantInputData;
 }
@@ -92,7 +93,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		defaultValue,
 		convertToWei,
 		disabled,
-		tokenIndex,
+		approveIndex,
 		triggerOrAction,
 		relevantInputData
 	} = props;
@@ -105,6 +106,19 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		networkId = chainId as ChainIds;
 	}
 
+	// Error Bool, default false
+	// Applied to:
+	// // Number
+	const [error, setError] = React.useState(false);
+
+	const { dispatch, icedTxState } = useIcedTxContext();
+
+	// Fetch Trigger or Action ID
+	let id = 0;
+	triggerOrAction === TriggerOrAction.Trigger
+		? (id = icedTxState.trigger.id)
+		: (id = icedTxState.action.id);
+
 	// Convert defaultValue into human readable version
 
 	// @DEV Check if that works with eth
@@ -115,31 +129,37 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 	// );
 	let initialValueBigInt: ethers.utils.BigNumber = BIG_NUM_ZERO;
 	let initialValueString = '0';
-	if (inputType === InputType.Number || inputType === InputType.TokenAmount) {
-		initialValueBigInt = BIG_NUM_ONE;
-		initialValueString = '1';
+	// If token address is alraedy inputted, convert number using the tokens decimal field
+	// @DEV Only works if we set an approve Index
+	if (inputs[approveIndex] !== undefined) {
+		initialValueBigInt = defaultValue;
+		const tokenAddress = inputs[approveIndex] as string;
+		let token = getTokenByAddress(
+			tokenAddress,
+			networkId,
+			relevantInputData
+		);
+
+		if (inputType === InputType.TokenAmount) {
+			initialValueString = ethers.utils.formatUnits(
+				initialValueBigInt,
+				token.decimals
+			);
+		} else if (inputType === InputType.Number) {
+			// Convert Big NUmber fechted from the graph, to human readble using e.g. Kyher Price demimals
+			initialValueString = convertWeiToHumanReadableForNumbersAndGetValue(
+				initialValueBigInt,
+				token,
+				triggerOrAction,
+				id
+			);
+		}
 	}
 
 	const [values, setValues] = React.useState<State>({
 		textmask: '(1  )    -    ',
-		numberformat: defaultValue.eq(initialValueBigInt)
-			? initialValueString
-			: convertWeiToHumanReadable(
-					defaultValue,
-					getTokenByAddress(
-						inputs[tokenIndex].toString(),
-						networkId,
-						relevantInputData
-					)
-			  )
+		numberformat: initialValueString
 	});
-
-	// Error Bool, default false
-	// Applied to:
-	// // Number
-	const [error, setError] = React.useState(false);
-
-	const { dispatch, icedTxState } = useIcedTxContext();
 
 	// ONLY FOR StatelessGetValue
 	useEffect(() => {
@@ -152,16 +172,23 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 
 				// Find token object by address
 				try {
-					const tokenAddress = inputs[tokenIndex] as string;
+					//@DEV MAYBE CHANGE THAT WE USE APPROVE INDEX BY DEFAULT, NOT TRUE FOR KYBER PRICE TRIGGER FOR EXAMPLE
+					const tokenAddress = inputs[approveIndex] as string;
 
 					let token = getTokenByAddress(
 						tokenAddress,
 						networkId,
 						relevantInputData
 					);
-					const humanReadableAmount = convertWeiToHumanReadable(
+
+					// Find ID of trigger or ACtion
+
+					// Includes expections e.g. for Kyber Price Trigger
+					const humanReadableAmount = convertWeiToHumanReadableForNumbersAndGetValue(
 						defaultValue,
-						token
+						token,
+						triggerOrAction,
+						id
 					);
 
 					// Set state for all
@@ -192,7 +219,8 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 			// 	...values,
 			// 	numberformat: newValue
 			// });
-			const tokenAddress = inputs[tokenIndex].toString();
+			// NO need for getValue index beaucse it doesnt change manually
+			const tokenAddress = inputs[approveIndex].toString();
 			// Find token object by address
 			let token = getTokenByAddress(
 				tokenAddress,
@@ -210,14 +238,23 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 					newValue,
 					token.decimals
 				);
+
 				// console.log(weiAmount.toString());
 				// Update global state
 				// If we need to convert the input from userfriendly amount to WEi amount, take the converted amount, else take the original
 				convertToWei
 					? updateUserInput(index, weiAmount)
 					: updateUserInput(index, newValue);
-			} else if (inputType === InputType.Number) {
-				updateUserInput(index, newValue);
+			}
+			// Trigger: 2 => Kyber Price
+			else if (inputType === InputType.Number) {
+				const weiAmount = convertHumanReadableToWeiForNumbers(
+					newValue,
+					triggerOrAction,
+					id
+				);
+
+				updateUserInput(index, weiAmount);
 			}
 			// Set state for all
 			setValues({

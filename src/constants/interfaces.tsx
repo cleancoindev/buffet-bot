@@ -61,6 +61,23 @@ export interface Addresses {
 	42: string;
 }
 
+export interface TriggerWhitelistData {
+	id: number;
+	app: string;
+	title: string;
+	address: Addresses;
+	abi: string;
+	params: Array<Params>;
+	inputLabels: Array<string>;
+	userInputTypes: Array<InputType>;
+	relevantInputData: Array<RelevantInputData>;
+	userInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
+	getTriggerValueAbi: string;
+	getTriggerValueInput: ethers.utils.BigNumber;
+	approveIndex: number;
+	boolIndex: number;
+}
+
 export interface ActionWhitelistData {
 	id: number;
 	app: string;
@@ -72,24 +89,7 @@ export interface ActionWhitelistData {
 	userInputTypes: Array<InputType>;
 	userInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
 	relevantInputData: Array<RelevantInputData>;
-	tokenIndex: number;
-}
-
-export interface TriggerWhitelistData {
-	id: number;
-	app: string;
-	title: string;
-	address: Addresses;
-	abi: string;
-	params: Array<Params>;
-	inputLabels: Array<string>;
-	tokenIndex: number;
-	userInputTypes: Array<InputType>;
-	relevantInputData: Array<RelevantInputData>;
-	userInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
-	getTriggerValueAbi: string;
-	getTriggerValueInput: ethers.utils.BigNumber;
-	boolIndex: number;
+	approveIndex: number;
 }
 
 export interface UserSelection {

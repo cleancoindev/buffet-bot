@@ -22,6 +22,28 @@ export const KYBER_TOKEN_LIST = [
 			1: '0x0',
 			3: '0x0',
 			4: '0x0',
+			42: '0x6fEE5727EE4CdCBD91f3A873ef2966dF31713A04'
+		},
+		symbol: 'SALT',
+		name: 'Salt',
+		decimals: 8
+	},
+	{
+		address: {
+			1: '0x0',
+			3: '0x0',
+			4: '0x0',
+			42: '0xAb74653cac23301066ABa8eba62b9Abd8a8c51d6'
+		},
+		symbol: 'ZIL',
+		name: 'Zilliqa',
+		decimals: 8
+	},
+	{
+		address: {
+			1: '0x0',
+			3: '0x0',
+			4: '0x0',
 			42: '0xcb78b457c1F79a06091EAe744aA81dc75Ecb1183'
 		},
 		symbol: 'MANA',

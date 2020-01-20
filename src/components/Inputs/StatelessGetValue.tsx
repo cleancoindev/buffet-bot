@@ -23,7 +23,7 @@ interface ReactNumberFormatProps {
 	inputType: InputType;
 	inputs: Array<string | number | ethers.utils.BigNumber | boolean>;
 	disabled: boolean;
-	tokenIndex: number;
+	approveIndex: number;
 	triggerOrAction: TriggerOrAction;
 	trigger?: TriggerWhitelistData;
 	action?: ActionWhitelistData;
@@ -38,7 +38,7 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 		inputType,
 		inputs,
 		disabled,
-		tokenIndex,
+		approveIndex,
 		triggerOrAction,
 		trigger,
 		action,
@@ -82,19 +82,6 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 		if (trigger && active && account) {
 			const abi = trigger.getTriggerValueAbi;
 			const triggerAddress = trigger.address[chainId as ChainIds];
-
-			const tokenAddress = inputs[tokenIndex] as string;
-			let token: Token;
-			try {
-				token = getTokenByAddress(
-					tokenAddress,
-					chainId as ChainIds,
-					relevantInputData
-				);
-			} catch (error) {
-				newValue = BIG_NUM_ZERO;
-				return newValue;
-			}
 
 			try {
 				// Find token object by address
@@ -166,7 +153,7 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 				defaultValue={getValueState}
 				convertToWei
 				disabled={true}
-				tokenIndex={tokenIndex}
+				approveIndex={approveIndex}
 				triggerOrAction={triggerOrAction}
 				relevantInputData={relevantInputData}
 				key={`getValue-input-${disabled}-${triggerOrAction}-${index}`}

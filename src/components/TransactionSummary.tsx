@@ -155,7 +155,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 							inputs={triggerInputs}
 							app={triggerApp}
 							disabled={true}
-							tokenIndex={trigger.tokenIndex}
+							approveIndex={trigger.approveIndex}
 							relevantInputData={trigger.relevantInputData[key]}
 						></InputField>
 					))}
@@ -207,7 +207,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 							inputs={actionInputs}
 							app={actionApp}
 							disabled={true}
-							tokenIndex={action.tokenIndex}
+							approveIndex={action.approveIndex}
 							relevantInputData={action.relevantInputData[key]}
 						></InputField>
 					))}

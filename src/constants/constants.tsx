@@ -45,6 +45,23 @@ export const ETH = {
 export const SELECTED_CHAIN_ID = 42;
 export const SELECTED_NETWORK_NAME = 'Kovan';
 
+export const DEFAULT_DATA_TRIGGER = {
+	id: 0,
+	app: '',
+	title: '',
+	address: { 1: '', 3: '', 4: '', 42: '' },
+	params: EMPTY_PARAM_ARRAY, // [ ]
+	abi: '',
+	getTriggerValueAbi: '',
+	getTriggerValueInput: BIG_NUM_ZERO,
+	approveIndex: 999,
+	inputLabels: EMPTY_STRING_ARRAY, // [ ]
+	userInputTypes: EMPTY_USER_INPUT_TYPE_ARRAY, // [ ]
+	userInputs: EMPTY_USER_INPUT_ARRAY, // [ ]
+	boolIndex: 999,
+	relevantInputData: EMPTY_RELEVANT_INPUT_DATA_ARRAY
+};
+
 export const DEFAULT_DATA_ACTION = {
 	id: 0,
 	app: '',
@@ -55,24 +72,7 @@ export const DEFAULT_DATA_ACTION = {
 	inputLabels: EMPTY_STRING_ARRAY, // [ ]
 	userInputTypes: EMPTY_USER_INPUT_TYPE_ARRAY, // [ ]
 	userInputs: EMPTY_USER_INPUT_ARRAY, // [ ]
-	tokenIndex: 999, // 999 means no approval in action
-	relevantInputData: EMPTY_RELEVANT_INPUT_DATA_ARRAY
-};
-
-export const DEFAULT_DATA_TRIGGER = {
-	id: 0,
-	app: '',
-	title: '',
-	address: { 1: '', 3: '', 4: '', 42: '' },
-	params: EMPTY_PARAM_ARRAY, // [ ]
-	abi: '',
-	getTriggerValueAbi: '',
-	getTriggerValueInput: BIG_NUM_ZERO,
-	tokenIndex: 999,
-	inputLabels: EMPTY_STRING_ARRAY, // [ ]
-	userInputTypes: EMPTY_USER_INPUT_TYPE_ARRAY, // [ ]
-	userInputs: EMPTY_USER_INPUT_ARRAY, // [ ]
-	boolIndex: 999,
+	approveIndex: 999, // 999 means no approval in action
 	relevantInputData: EMPTY_RELEVANT_INPUT_DATA_ARRAY
 };
 

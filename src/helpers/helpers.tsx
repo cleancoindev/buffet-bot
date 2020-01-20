@@ -1,5 +1,9 @@
 import { ATYPES, TTYPES } from '../constants/whitelist';
-import { Token, RelevantInputData } from '../constants/interfaces';
+import {
+	Token,
+	RelevantInputData,
+	TriggerOrAction
+} from '../constants/interfaces';
 import { KYBER_TOKEN_LIST, TOKEN_LIST } from '../constants/tokens';
 
 import {
@@ -86,11 +90,32 @@ export function getTokenSymbol(
 }
 
 // Returns String
-export const convertWeiToHumanReadable = (
+export const convertWeiToHumanReadableForNumbersAndGetValue = (
 	weiAmount: ethers.utils.BigNumber,
-	token: Token
+	token: Token,
+	triggerOrAction: TriggerOrAction,
+	id: number
 ): string => {
+	// If kyber price trigger
+	if (triggerOrAction === TriggerOrAction.Trigger && id === 2) {
+		return ethers.utils.formatUnits(weiAmount, 18);
+	}
 	return ethers.utils.formatUnits(weiAmount, token.decimals);
+};
+
+// Returns String
+export const convertHumanReadableToWeiForNumbers = (
+	humanReadableAmount: string,
+	triggerOrAction: TriggerOrAction,
+	id: number
+): ethers.utils.BigNumber => {
+	// If kyber price trigger
+	if (triggerOrAction === TriggerOrAction.Trigger && id === 2) {
+		return ethers.utils.parseUnits(humanReadableAmount, 18);
+	} else {
+		throw Error('Number used for something other than Kyber Price');
+		// return ethers.utils.parseUnits(humanReadableAmount, token.decimals);
+	}
 };
 
 // @DEV Potenital bug in returning error string
@@ -266,7 +291,7 @@ export const deepCloneTriggers = () => {
 		});
 
 		// empty user Input
-		const clonedTokenIndex = data.tokenIndex;
+		const clonedTokenIndex = data.approveIndex;
 
 		// clone inputLabels
 		const clonedInputLabels: Array<string> = [];
@@ -287,7 +312,7 @@ export const deepCloneTriggers = () => {
 			address: clonedAddress,
 			params: clonedParams,
 			abi: clonedAbi,
-			tokenIndex: clonedTokenIndex,
+			approveIndex: clonedTokenIndex,
 			userInputTypes: clonedUserInputTypes,
 			inputLabels: clonedInputLabels,
 			userInputs: emptyUserInput,
@@ -354,7 +379,7 @@ export const deepCloneActions = () => {
 		const emptyUserInput: Array<string> = [];
 
 		// empty user Input
-		const clonedTokenIndex = data.tokenIndex;
+		const clonedTokenIndex = data.approveIndex;
 
 		dataCopy.push({
 			id: clonedId,
@@ -366,7 +391,7 @@ export const deepCloneActions = () => {
 			userInputTypes: clonedUserInputTypes,
 			inputLabels: clonedInputLabels,
 			userInputs: emptyUserInput,
-			tokenIndex: clonedTokenIndex,
+			approveIndex: clonedTokenIndex,
 			relevantInputData: clonedRelevantInputData
 		});
 	});

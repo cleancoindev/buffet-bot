@@ -120,7 +120,7 @@ export default function StepperContent(props: StepperContentProps) {
 									inputs={triggerInputs}
 									app={triggerApp}
 									disabled={false}
-									tokenIndex={trigger.tokenIndex}
+									approveIndex={trigger.approveIndex}
 									relevantInputData={
 										trigger.relevantInputData[key]
 									}
@@ -188,7 +188,7 @@ export default function StepperContent(props: StepperContentProps) {
 									inputs={actionInputs}
 									app={actionApp}
 									disabled={false}
-									tokenIndex={action.tokenIndex}
+									approveIndex={action.approveIndex}
 									relevantInputData={
 										action.relevantInputData[key]
 									}
