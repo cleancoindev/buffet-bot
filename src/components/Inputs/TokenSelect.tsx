@@ -25,8 +25,10 @@ import {
 	ETH,
 	SELECTED_CHAIN_ID
 } from '../../constants/constants';
-import { getTokenByAddress, getTokenList } from '../../helpers/helpers';
+import { getTokenByAddress, getTokenList, isEth } from '../../helpers/helpers';
 import { useWeb3React } from '@web3-react/core';
+
+import { ethers } from 'ethers';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -198,7 +200,40 @@ export default function TokenSelect(props: TokenSelectProps) {
 						key={`${key}-${index}-${disabled}-${triggerOrAction}`}
 						value={possibleToken.address[networkId]}
 					>
-						{possibleToken.symbol}
+						<div
+							style={{
+								display: 'flex',
+								justifyContent: 'start',
+								alignItems: 'center',
+								flexDirection: 'row'
+							}}
+						>
+							{isEth(possibleToken.address[1]) && (
+								<img
+									style={{
+										width: '35px',
+										marginRight: '8px'
+									}}
+									src={
+										'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png'
+									}
+									alt=""
+								></img>
+							)}
+							{!isEth(possibleToken.address[1]) && (
+								<img
+									style={{
+										width: '35px',
+										marginRight: '8px'
+									}}
+									src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${ethers.utils.getAddress(
+										possibleToken.address[1]
+									)}/logo.png`}
+									alt={``}
+								></img>
+							)}
+							<p>{`${possibleToken.symbol} (${possibleToken.name}) `}</p>
+						</div>
 					</MenuItem>
 				))}
 			</Select>

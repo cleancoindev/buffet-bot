@@ -344,10 +344,15 @@ export const deepCloneTriggers = () => {
 export const isEth = (address: string) => {
 	let isEther: boolean;
 	// @DEV using 1 for ETH as address is same anyways
-	ethers.utils.getAddress(ETH.address[1]) === ethers.utils.getAddress(address)
-		? (isEther = true)
-		: (isEther = false);
-	return isEther;
+	if (address !== '0x0') {
+		ethers.utils.getAddress(ETH.address[1]) ===
+		ethers.utils.getAddress(address)
+			? (isEther = true)
+			: (isEther = false);
+		return isEther;
+	} else {
+		return false;
+	}
 };
 
 export const deepCloneActions = () => {

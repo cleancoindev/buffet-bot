@@ -1304,49 +1304,6 @@ export default function TransactionCard(props: TxCardProps) {
 								on your behalf
 							</h4>
 						</Grid>
-						{/* <Grid
-							container
-							item
-							sm={12}
-							xs={12}
-							direction="row"
-							justify="center"
-							alignItems="center"
-							style={{
-								background: 'FFFFFF',
-							}}
-						>
-							<Button
-								style={{
-									width: '100%',
-									borderStyle: 'solid',
-									borderWidth: '2px'
-								}}
-							>
-								Share your Configuration
-							</Button>
-						</Grid> */}
-						{/* <Grid
-							container
-							item
-							sm={12}
-							xs={12}
-							direction="row"
-							justify="center"
-							alignItems="center"
-							style={{
-								background: 'FFFFFF',
-								margin: '0px'
-							}}
-						>
-							<h3
-								style={{
-									margin: '8px'
-								}}
-							>
-								or
-							</h3>
-						</Grid> */}
 						<Grid
 							container
 							item
@@ -1356,8 +1313,62 @@ export default function TransactionCard(props: TxCardProps) {
 							justify="center"
 							alignItems="center"
 							style={{
-								background: 'FFFFFF',
-								marginTop: '24px'
+								marginTop: '40px',
+								background: 'FFFFFF'
+							}}
+							color="primary"
+							onClick={() => {
+								const queryString = `I%20just%20crafted%20a%20conditional%20ethereum%20transaction%%20that%20will%20${icedTxState.action.title}%20on%20my%20behalf%20when%20a%20predefined%20${icedTxState.trigger.title}%20occurs.%20Try%20it%20out%20yourself:%20https://gelato.finance`;
+								const url = `https://twitter.com/intent/tweet?text=${queryString}`;
+								window.open(url, '_blank');
+							}}
+						>
+							<Button
+								style={{
+									width: '100%',
+									border: '0.5px solid',
+									borderColor: COLOURS.salmon,
+									// borderRadius: '1px 1px 1px 1px',
+									color: 'white'
+								}}
+							>
+								Share your Configuration
+							</Button>
+						</Grid>
+						<Grid
+							container
+							item
+							sm={12}
+							xs={12}
+							direction="row"
+							justify="center"
+							alignItems="center"
+							style={{
+								// background: 'FFFFFF',
+								margin: '0px',
+								color: 'white'
+							}}
+						>
+							<h5
+								style={{
+									margin: '16px',
+									fontFamily: 'PT Mono, monospace !important'
+								}}
+							>
+								or
+							</h5>
+						</Grid>
+						<Grid
+							container
+							item
+							sm={12}
+							xs={12}
+							direction="row"
+							justify="center"
+							alignItems="center"
+							style={{
+								background: 'FFFFFF'
+								// marginTop: '40px'
 							}}
 						>
 							<Button
