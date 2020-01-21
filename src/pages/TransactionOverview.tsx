@@ -18,9 +18,13 @@ import {
 } from '../helpers/helpers';
 import { on } from 'cluster';
 import { render } from '@testing-library/react';
-import { DEFAULT_PAST_TRANSACTIONS, BOX } from '../constants/constants';
+import {
+	DEFAULT_PAST_TRANSACTIONS,
+	BOX,
+	DEFAULT_DATA_TRIGGER
+} from '../constants/constants';
 import { useWeb3React } from '@web3-react/core';
-import { ChainIds } from '../constants/interfaces';
+import { ChainIds, TriggerWhitelistData } from '../constants/interfaces';
 
 interface TxOverviewParams {
 	transactionId: string;
@@ -39,60 +43,67 @@ export default function TransactionOverview({
 	const history = useHistory();
 
 	// Route to dashboard if no state is avaiable
-	useEffect(() => {
-		console.log('no state found');
-		if (
-			icedTxState.pastTransactions[0].expiryDate ===
-			DEFAULT_PAST_TRANSACTIONS[0].expiryDate
-		) {
-			history.push('/dashboard');
-		}
-	}, []);
+	// useEffect(() => {
+	// 	console.log('no state found');
+	// 	if (
+	// 		icedTxState.pastTransactions[0].expiryDate ===
+	// 		DEFAULT_PAST_TRANSACTIONS[0].expiryDate
+	// 	) {
+	// 		history.push('/dashboard');
+	// 	}
+	// }, []);
 
 	// Get the identified past transaction from state
 	const pastTransaction =
 		icedTxState.pastTransactions[parseInt(transactionId.toString())];
 
-	// Get respective triggers and action
-	// console.log(pastTransaction.trigger);
-	// console.log(pastTransaction.action);
-	const trigger = findTriggerByAddress(
-		pastTransaction.trigger,
-		web3.chainId as ChainIds
-	);
-	const action = findActionByAddress(
-		pastTransaction.action,
-		web3.chainId as ChainIds
-	);
-	// Get user inputs by decoding payloads
-	const triggerInputs = decodeTriggerPayload(
-		pastTransaction.triggerPayload,
-		trigger.params
-	);
+	if (pastTransaction === undefined) {
+		history.push('/dashboard');
+		return <React.Fragment />;
+	} else {
+		// Get respective triggers and action
+		// console.log(pastTransaction.trigger);
+		// console.log(pastTransaction.action);
 
-	const actionInputs = decodeActionPayload(
-		pastTransaction.actionPayload,
-		action.params
-	);
+		const trigger = findTriggerByAddress(
+			pastTransaction.trigger,
+			web3.chainId as ChainIds
+		);
 
-	return (
-		<div
-			className="content"
-			style={{ ...BOX, margin: '0', padding: '40px' }}
-		>
-			<Grid
-				container
-				direction="row"
-				justify="center"
-				alignItems="center"
+		const action = findActionByAddress(
+			pastTransaction.action,
+			web3.chainId as ChainIds
+		);
+		// Get user inputs by decoding payloads
+		const triggerInputs = decodeTriggerPayload(
+			pastTransaction.triggerPayload,
+			trigger.params
+		);
+
+		const actionInputs = decodeActionPayload(
+			pastTransaction.actionPayload,
+			action.params
+		);
+
+		return (
+			<div
+				className="content"
+				style={{ ...BOX, margin: '0', padding: '40px' }}
 			>
-				<TransactionSummary
-					trigger={trigger}
-					action={action}
-					triggerInputs={triggerInputs}
-					actionInputs={actionInputs}
-				></TransactionSummary>
-			</Grid>
-		</div>
-	);
+				<Grid
+					container
+					direction="row"
+					justify="center"
+					alignItems="center"
+				>
+					<TransactionSummary
+						trigger={trigger}
+						action={action}
+						triggerInputs={triggerInputs}
+						actionInputs={actionInputs}
+					></TransactionSummary>
+				</Grid>
+			</div>
+		);
+	}
 }
