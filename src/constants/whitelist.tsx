@@ -334,6 +334,8 @@ export const ATYPES = [
 	}
 ];
 
+export const USER_WHITELIST = ['0x99e69499973484a96639f4fb17893bc96000b3b8'];
+
 // Add network to tokenList
 // Rinkeby
 // export const KYBER_TOKEN_LIST = [

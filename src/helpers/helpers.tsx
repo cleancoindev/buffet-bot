@@ -1,4 +1,4 @@
-import { ATYPES, TTYPES } from '../constants/whitelist';
+import { ATYPES, TTYPES, USER_WHITELIST } from '../constants/whitelist';
 import {
 	Token,
 	RelevantInputData,
@@ -116,6 +116,20 @@ export const convertHumanReadableToWeiForNumbers = (
 		throw Error('Number used for something other than Kyber Price');
 		// return ethers.utils.parseUnits(humanReadableAmount, token.decimals);
 	}
+};
+
+export const userIsWhitelisted = (user: string) => {
+	const whitelist = [...USER_WHITELIST];
+	let result = false;
+	whitelist.forEach(whitelistedUser => {
+		if (
+			ethers.utils.getAddress(whitelistedUser) ===
+			ethers.utils.getAddress(user)
+		) {
+			result = true;
+		}
+	});
+	return result;
 };
 
 // @DEV Potenital bug in returning error string

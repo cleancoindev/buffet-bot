@@ -28,7 +28,8 @@ import {
 	getTokenByAddress,
 	convertWeiToHumanReadableForNumbersAndGetValue,
 	convertHumanReadableToWeiForNumbers,
-	getTokenSymbol
+	getTokenSymbol,
+	userIsWhitelisted
 } from '../../helpers/helpers';
 import { useIcedTxContext } from '../../state/GlobalState';
 import { useWeb3React } from '@web3-react/core';
@@ -100,10 +101,15 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		relevantInputData
 	} = props;
 	const classes = useStyles();
-	const { chainId, library } = useWeb3React();
+	const { chainId, library, account } = useWeb3React();
 	// Error Bool, default false
 	// Applied to:
 	// // Number
+	let whitelisted = false;
+	if (account !== undefined) {
+		whitelisted = userIsWhitelisted(account as string);
+	}
+	console.log(whitelisted);
 	const [error, setError] = React.useState(false);
 
 	const { dispatch, icedTxState } = useIcedTxContext();
@@ -328,7 +334,8 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		console.log(newValue);
 		if (
 			inputType === InputType.TokenAmount &&
-			triggerOrAction === TriggerOrAction.Action
+			triggerOrAction === TriggerOrAction.Action &&
+			!whitelisted
 		) {
 			try {
 				validateLimitAmount(ethers.utils.parseUnits(newValue, 18));
@@ -420,7 +427,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 								sellToken,
 								networkId,
 								relevantInputData
-							)}. To gain a higher allowance, please contact us!`
+							)} max. To gain a higher allowance, please contact us!`
 						);
 					} else {
 						console.log('Not in Err err');
