@@ -37,7 +37,7 @@ export const KYBER_TOKEN_LIST = [
 		},
 		symbol: 'ZIL',
 		name: 'Zilliqa',
-		decimals: 8
+		decimals: 12
 	},
 	{
 		address: {
@@ -70,6 +70,94 @@ export const KYBER_TOKEN_LIST = [
 		},
 		symbol: 'DAI',
 		name: 'DAI',
+		decimals: 18
+	},
+	{
+		address: {
+			1: '0x0',
+			3: '0x0',
+			4: '0x0',
+			42: '0x0'
+		},
+		symbol: 'SAI',
+		name: 'SAI',
+		decimals: 18
+	},
+	{
+		address: {
+			1: '0x0',
+			3: '0x0',
+			4: '0x0',
+			42: '0x0'
+		},
+		symbol: 'LINK',
+		name: 'ChainLink',
+		decimals: 18
+	},
+	{
+		address: {
+			1: '0x0',
+			3: '0x0',
+			4: '0x0',
+			42: '0x0'
+		},
+		symbol: 'MKR',
+		name: 'MakerDAO',
+		decimals: 18
+	},
+	{
+		address: {
+			1: '0x0',
+			3: '0x0',
+			4: '0x0',
+			42: '0x0'
+		},
+		symbol: 'GNO',
+		name: 'Gnosis',
+		decimals: 18
+	},
+	{
+		address: {
+			1: '0x0',
+			3: '0x0',
+			4: '0x0',
+			42: '0x0'
+		},
+		symbol: 'USDT',
+		name: 'Tether',
+		decimals: 6
+	},
+	{
+		address: {
+			1: '0x0',
+			3: '0x0',
+			4: '0x0',
+			42: '0x0'
+		},
+		symbol: 'USDC',
+		name: 'USD Coin',
+		decimals: 6
+	},
+	{
+		address: {
+			1: '0x0',
+			3: '0x0',
+			4: '0x0',
+			42: '0x0'
+		},
+		symbol: 'SNX',
+		name: 'Synthetix',
+		decimals: 18
+	},
+	{
+		address: {
+			1: '0x0',
+			3: '0x0',
+			4: '0x0',
+			42: '0x0'
+		},
+		symbol: 'WETH',
+		name: 'Wrapped Ether',
 		decimals: 18
 	}
 ];

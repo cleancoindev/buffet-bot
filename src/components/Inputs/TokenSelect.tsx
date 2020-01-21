@@ -99,7 +99,7 @@ export default function TokenSelect(props: TokenSelectProps) {
 	}
 
 	// If action, dont display ETH
-	let tokenList = getTokenList(relevantInputData);
+	let tokenList = getTokenList(relevantInputData, networkId);
 	if (triggerOrAction === TriggerOrAction.Trigger) {
 		tokenList.push(ETH);
 	}

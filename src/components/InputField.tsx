@@ -199,7 +199,7 @@ export default function LayoutTextFields(props: InputProps) {
 						token.decimals
 					);
 					console.log('Default wei amount calculated');
-					console.log(defaultWeiAmountPerToken);
+					console.log(defaultWeiAmountPerToken.toString());
 					updateUserInput(index, defaultWeiAmountPerToken);
 					return defaultWeiAmountPerToken;
 				} else {
@@ -292,7 +292,6 @@ export default function LayoutTextFields(props: InputProps) {
 							inputType={inputType}
 							inputs={inputs}
 							defaultValue={returnDefaultBigInt()}
-							convertToWei
 							disabled={disabled}
 							approveIndex={approveIndex}
 							triggerOrAction={triggerOrAction}
@@ -311,7 +310,6 @@ export default function LayoutTextFields(props: InputProps) {
 							inputType={inputType}
 							inputs={inputs}
 							defaultValue={returnDefaultBigInt()}
-							convertToWei={false}
 							disabled={disabled}
 							approveIndex={approveIndex}
 							triggerOrAction={triggerOrAction}

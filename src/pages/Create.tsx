@@ -53,7 +53,7 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 	// Get gelatoCore
 	const gelatoCore = useGelatoCore();
 
-	console.log(icedTxState.txState);
+	// console.log(icedTxState.txState);
 
 	// When component renders, 1) Check that icedTx state exist, if not 2) check if correct params were inputted in URL, if not, 3) setNotFound = true
 	useEffect(() => {

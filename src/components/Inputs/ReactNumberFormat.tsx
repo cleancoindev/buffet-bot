@@ -12,23 +12,27 @@ import {
 	BIG_NUM_ONE,
 	INPUT_ERROR,
 	INPUT_OK,
-	SELECTED_CHAIN_ID
+	SELECTED_CHAIN_ID,
+	TOKEN_TRANSFER_CEILING
 } from '../../constants/constants';
 import {
 	InputType,
 	TriggerWhitelistData,
 	TriggerOrAction,
 	ChainIds,
-	RelevantInputData
+	RelevantInputData,
+	TxState
 } from '../../constants/interfaces';
 import { ethers } from 'ethers';
 import {
 	getTokenByAddress,
 	convertWeiToHumanReadableForNumbersAndGetValue,
-	convertHumanReadableToWeiForNumbers
+	convertHumanReadableToWeiForNumbers,
+	getTokenSymbol
 } from '../../helpers/helpers';
 import { useIcedTxContext } from '../../state/GlobalState';
 import { useWeb3React } from '@web3-react/core';
+import { TTYPES } from '../../constants/whitelist';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -76,7 +80,6 @@ interface ReactNumberFormatProps {
 	inputType: InputType;
 	inputs: Array<string | number | ethers.utils.BigNumber | boolean>;
 	defaultValue: ethers.utils.BigNumber;
-	convertToWei: boolean;
 	disabled: boolean;
 	approveIndex: number;
 	triggerOrAction: TriggerOrAction;
@@ -91,27 +94,25 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		inputType,
 		inputs,
 		defaultValue,
-		convertToWei,
 		disabled,
 		approveIndex,
 		triggerOrAction,
 		relevantInputData
 	} = props;
 	const classes = useStyles();
-	const { chainId, active } = useWeb3React();
-
-	// In case network Id is not defined yet, use default
-	let networkId: ChainIds = SELECTED_CHAIN_ID;
-	if (chainId !== undefined) {
-		networkId = chainId as ChainIds;
-	}
-
+	const { chainId, library } = useWeb3React();
 	// Error Bool, default false
 	// Applied to:
 	// // Number
 	const [error, setError] = React.useState(false);
 
 	const { dispatch, icedTxState } = useIcedTxContext();
+
+	// In case network Id is not defined yet, use default
+	let networkId: ChainIds = SELECTED_CHAIN_ID;
+	if (chainId !== undefined) {
+		networkId = chainId as ChainIds;
+	}
 
 	// Fetch Trigger or Action ID
 	let id = 0;
@@ -207,12 +208,35 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		}
 	}, [defaultValue]);
 
+	// When user selects different token, check wheather decimal number is different
+	useEffect(() => {
+		if (inputs[0] !== undefined) {
+			if (inputType === InputType.TokenAmount) {
+				try {
+					const tokenAddress = inputs[approveIndex].toString();
+					// Find token object by address
+					let token = getTokenByAddress(
+						tokenAddress,
+						networkId,
+						relevantInputData
+					);
+					const weiAmount = ethers.utils.parseUnits(
+						values.numberformat,
+						token.decimals
+					);
+					// We get here if user changed token, but the tokenAmount input remained the same, but the tokens decimals are different
+					if (!weiAmount.eq(defaultValue)) {
+						updateUserInput(index, weiAmount);
+					}
+				} catch (error) {
+					console.log(error);
+				}
+			}
+		}
+	}, [inputs[approveIndex]]);
+
 	// We always store the WEI amount in global state, but in local state we store the userFriendly version
 	const handleNewValue = (newValue: string) => {
-		// Validate defaultValue
-		// We need value 0
-		// validateUserInput();
-
 		// Set local and global state
 		if (newValue !== '' && newValue !== '.') {
 			// setValues({
@@ -231,30 +255,41 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 			// Handle special case if InputType is TokenAmount
 			if (inputType === InputType.TokenAmount) {
 				// get index of token in question
-				// @DEV Assuming that token in question always comes one index before tokenAmount
-				// @DEV change to approval amount
 
-				const weiAmount = ethers.utils.parseUnits(
-					newValue,
-					token.decimals
-				);
+				// Try Catch to detect under - and overflows in TokenAmounts
+				try {
+					const weiAmount = ethers.utils.parseUnits(
+						newValue,
+						token.decimals
+					);
 
-				// console.log(weiAmount.toString());
-				// Update global state
-				// If we need to convert the input from userfriendly amount to WEi amount, take the converted amount, else take the original
-				convertToWei
-					? updateUserInput(index, weiAmount)
-					: updateUserInput(index, newValue);
+					setErrorFalse();
+
+					// If we need to convert the input from userfriendly amount to WEi amount, take the converted amount, else take the original
+					updateUserInput(index, weiAmount);
+				} catch (error) {
+					setErrorTrue(
+						`Input field '${label}' can only have ${token.decimals} decimals`
+					);
+				}
 			}
 			// Trigger: 2 => Kyber Price
 			else if (inputType === InputType.Number) {
-				const weiAmount = convertHumanReadableToWeiForNumbers(
-					newValue,
-					triggerOrAction,
-					id
-				);
+				try {
+					const weiAmount = convertHumanReadableToWeiForNumbers(
+						newValue,
+						triggerOrAction,
+						id
+					);
 
-				updateUserInput(index, weiAmount);
+					// If local state is error, reset
+					setErrorFalse();
+					updateUserInput(index, weiAmount);
+				} catch (err) {
+					setErrorTrue(
+						`Input field '${label}' can only have ${token.decimals} decimals`
+					);
+				}
 			}
 			// Set state for all
 			setValues({
@@ -290,41 +325,117 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		// updateUser Input
 		const newValue = event.target.value as string;
 		handleNewValue(newValue);
+		console.log(newValue);
+		if (
+			inputType === InputType.TokenAmount &&
+			triggerOrAction === TriggerOrAction.Action
+		) {
+			try {
+				validateLimitAmount(ethers.utils.parseUnits(newValue, 18));
+			} catch (error) {
+				console.log('bug');
+			}
+		}
+	};
+
+	const setErrorTrue = (text: string) => {
+		setError(true);
+
+		console.log('Error');
+		console.log(icedTxState.txState);
+		dispatch({
+			type: INPUT_ERROR,
+			msg: text,
+			txState: TxState.inputError
+		});
+	};
+
+	const setErrorFalse = () => {
+		// If local state is error, reset
+		if (error) {
+			setError(false);
+		}
+		if (icedTxState.error.isError) {
+			console.log('Token Amount within limit');
+			dispatch({
+				type: INPUT_OK,
+				txState: TxState.displayInstallMetamask
+			});
+		}
 	};
 
 	// @DEV we do indirect validation through default values. Value 0 is imporant e.g. when wanting balance to go to zero
 	// If default value is equal to ZERO => show error
-	/*
-	const validateUserInput = () => {
+
+	const validateLimitAmount = (srcAmount: ethers.utils.BigNumber) => {
 		console.log('validating');
-		// Dont do for statelessGetValue
-		if (inputType !== InputType.StatelessGetValue) {
-			// If default value is equal to ZERO => Set error
-			if (defaultValue.eq(BIG_NUM_ZERO)) {
-				console.log(' Error');
-				setError(true);
-				if (!icedTxState.error.isError) {
-					console.log('set Error');
-					dispatch({
-						type: INPUT_ERROR,
-						msg: `Input for '${label}' can't be 0`
-					});
-				}
-			}
-			// IF input is greater than zero => Set Input = OK
-			else {
-				setError(false);
-				console.log('no error');
-				if (icedTxState.error.isError) {
-					console.log('set NO Error');
-					dispatch({
-						type: INPUT_OK
-					});
-				}
-			}
+		// IF user is whitelisted, skip
+		// Get Kyber Price Trigger
+		const signer = library.getSigner();
+
+		const triggerContract = new ethers.Contract(
+			TTYPES[1].address[networkId],
+			[TTYPES[1].getTriggerValueAbi],
+			signer
+		);
+
+		const sellToken = inputs[approveIndex] as string;
+		const daiAddress = '0xC4375B7De8af5a38a93548eb8453a498222C4fF2';
+		const inputsForPrice = [
+			sellToken,
+			BIG_NUM_ONE,
+			daiAddress,
+			BIG_NUM_ZERO,
+			false
+		];
+		// get value
+
+		try {
+			triggerContract
+				.getTriggerValue(...inputsForPrice)
+				.then((kyberPrice: ethers.utils.BigNumber) => {
+					const totalTransferVolume = kyberPrice
+						.mul(srcAmount)
+						.div(ethers.constants.WeiPerEther);
+
+					// If the total Transfer volume is greater than the Token Transfer Ceiling, spit out error for unwhitelisted users and no error for whitelisted users
+					if (TOKEN_TRANSFER_CEILING.lt(totalTransferVolume)) {
+						console.log('in err');
+						// console.log(TOKEN_TRANSFER_CEILING.toString());
+						// console.log('Is smaller than');
+						// console.log(totalTransferVolume.toString());
+						const ceilingBN = TOKEN_TRANSFER_CEILING.mul(
+							ethers.utils.bigNumberify('100')
+						).div(kyberPrice);
+						// console.log(ceilingBN);
+						// console.log(ceilingBN.toString());
+						const ceilingFloat =
+							parseFloat(ceilingBN.toString()) / 100;
+						// .mul(ethers.utils.bigNumberify('100'))
+						// const ceilingFloat = (
+						// 	parseFloat(ceilingBN.toString()) / 100
+						// ).toFixed(3);
+						setErrorTrue(
+							`This alpha is restricted to move ${ceilingFloat} ${getTokenSymbol(
+								sellToken,
+								networkId,
+								relevantInputData
+							)}. To gain a higher allowance, please contact us!`
+						);
+					} else {
+						console.log('Not in Err err');
+						console.log('Ceiling');
+						console.log(TOKEN_TRANSFER_CEILING.toString());
+						console.log('Total Amount');
+						console.log(totalTransferVolume.toString());
+						setErrorFalse();
+					}
+					// convert Value into human readable form
+				});
+		} catch (error) {
+			console.log('Did not fetch price');
 		}
 	};
-	*/
 
 	return (
 		<TextField

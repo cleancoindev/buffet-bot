@@ -18,6 +18,9 @@ export const MAX_BIG_NUM = ethers.utils
 	.bigNumberify(10)
 	.pow(ethers.utils.bigNumberify(50));
 
+// Currently: $275
+export const TOKEN_TRANSFER_CEILING = ethers.utils.parseUnits('275', 18);
+
 export const COLOURS = {
 	salmon: '#E91E63',
 	salmon60: '#E91E6399',

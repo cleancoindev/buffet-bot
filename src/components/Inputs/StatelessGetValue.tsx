@@ -61,10 +61,8 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 	const [getValueState, setGetValueState] = React.useState(
 		icedTxState.trigger.getTriggerValueInput
 	);
-	console.log('Render');
 	// If globalState changes, call once
 	useEffect(() => {
-		console.log('useEFF');
 		if (!disabled && inputs[0] !== undefined) {
 			callGetValueAndSetState();
 		}
@@ -133,11 +131,10 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 	async function callGetValueAndSetState() {
 		// Only at first render set state, otherwise infinite loop
 		const returnValue = await callGetValue();
-		console.log(returnValue);
 		// updateUserInput(index, returnValue);
 		// Only set state if the return value is different
 		if (!returnValue.eq(getValueState)) {
-			console.log('setting local state');
+			// console.log('setting local state');
 			setGetValueState(returnValue);
 		}
 	}
@@ -151,7 +148,6 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 				inputType={inputType}
 				inputs={inputs}
 				defaultValue={getValueState}
-				convertToWei
 				disabled={true}
 				approveIndex={approveIndex}
 				triggerOrAction={triggerOrAction}

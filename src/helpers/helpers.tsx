@@ -84,7 +84,7 @@ export function getTokenSymbol(
 	networkId: ChainIds,
 	relevantInputData: RelevantInputData
 ) {
-	const tokenList = getTokenList(relevantInputData);
+	const tokenList = getTokenList(relevantInputData, networkId);
 	const token = tokenList.find(token => token.address[networkId] === address);
 	return token === undefined ? 'ERROR Get Token Symbol' : token.symbol;
 }
@@ -127,7 +127,7 @@ export function getTokenByAddress(
 	if (isEth(address)) {
 		return ETH;
 	}
-	const tokenList = getTokenList(relevantInputData);
+	const tokenList = getTokenList(relevantInputData, networkId);
 	// console.log(tokenList);
 	// console.log(relevantInputData);
 	const token = tokenList.find(
@@ -143,26 +143,32 @@ export function getTokenByAddress(
 	}
 }
 
-export const deepCloneTokenList = (tokenList: Array<Token>) => {
+export const deepCloneTokenList = (
+	tokenList: Array<Token>,
+	networkId: ChainIds
+) => {
 	const tokenListCopy: Array<Token> = [];
 	tokenList.forEach(token => {
-		let copyAddress = { ...token.address };
-		let copySymbol = token.symbol;
-		let copyName = token.name;
-		let copyDecimals = token.decimals;
+		if (token.address[networkId] !== '0x0') {
+			let copyAddress = { ...token.address };
+			let copySymbol = token.symbol;
+			let copyName = token.name;
+			let copyDecimals = token.decimals;
 
-		tokenListCopy.push({
-			address: copyAddress,
-			symbol: copySymbol,
-			name: copyName,
-			decimals: copyDecimals
-		});
+			tokenListCopy.push({
+				address: copyAddress,
+				symbol: copySymbol,
+				name: copyName,
+				decimals: copyDecimals
+			});
+		}
 	});
 	return tokenListCopy;
 };
 
 export const getTokenList = (
-	relevantInputData: RelevantInputData
+	relevantInputData: RelevantInputData,
+	networkId: ChainIds
 ): Array<Token> => {
 	let tokenListCopy: Array<Token> = [...KYBER_TOKEN_LIST];
 	TOKEN_LIST.forEach(list => {
@@ -173,7 +179,7 @@ export const getTokenList = (
 		// throw Error(`Could not find tokenList with relevantInputData: ${relevantInputData}`);
 	});
 	// console.log(tokenListCopy);
-	return deepCloneTokenList(tokenListCopy);
+	return deepCloneTokenList(tokenListCopy, networkId);
 };
 
 export function encodeActionPayload(
@@ -243,10 +249,6 @@ export function paramsToSimpleParams(inputParameter: Array<Params>) {
 	});
 	return simpleParams;
 }
-
-export const deeepCloneActions = () => {
-	const dataCopy: Array<ActionWhitelistData> = [];
-};
 
 export const deepCloneTriggers = () => {
 	const dataCopy: Array<TriggerWhitelistData> = [];
