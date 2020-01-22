@@ -83,7 +83,32 @@ export const TTYPES = [
 			RelevantInputData.none,
 			RelevantInputData.kyberTokenList
 		],
-		userInputs: EMPTY_STRING_ARRAY
+		userInputs: EMPTY_STRING_ARRAY,
+		logo: '/images/ethereum_logo.png'
+	},
+
+	{
+		id: 3,
+		app: 'Calendar',
+		title: 'Time',
+		address: {
+			1: '',
+			3: '0x525EB0c1279f1CC690D01a2Fcb78A0D5d156D1Ee',
+			4: '',
+			42: '0x591DB4982dD2E184b8F4b8DA9599295Dd379F732'
+		},
+		params: [{ type: 'uint256', name: '_timestamp' }],
+		abi: 'function fired(uint256 _timestamp)',
+		getTriggerValueAbi: '',
+		getTriggerValueInput: BIG_NUM_ZERO,
+		// 99 means nothing
+		approveIndex: 999,
+		boolIndex: 999,
+		userInputTypes: [InputType.Date],
+		inputLabels: ['Pick a Date and Time'],
+		userInputs: EMPTY_STRING_ARRAY,
+		relevantInputData: [RelevantInputData.none],
+		logo: '/images/ethereum_logo.png'
 	},
 	// Use isGreater as bool
 	{
@@ -135,30 +160,8 @@ export const TTYPES = [
 			RelevantInputData.kyberTokenList,
 			RelevantInputData.none,
 			RelevantInputData.kyberTokenList
-		]
-	},
-
-	{
-		id: 3,
-		app: 'Calendar',
-		title: 'Time',
-		address: {
-			1: '',
-			3: '0x525EB0c1279f1CC690D01a2Fcb78A0D5d156D1Ee',
-			4: '',
-			42: '0x591DB4982dD2E184b8F4b8DA9599295Dd379F732'
-		},
-		params: [{ type: 'uint256', name: '_timestamp' }],
-		abi: 'function fired(uint256 _timestamp)',
-		getTriggerValueAbi: '',
-		getTriggerValueInput: BIG_NUM_ZERO,
-		// 99 means nothing
-		approveIndex: 999,
-		boolIndex: 999,
-		userInputTypes: [InputType.Date],
-		inputLabels: ['Pick a Date and Time'],
-		userInputs: EMPTY_STRING_ARRAY,
-		relevantInputData: [RelevantInputData.none]
+		],
+		logo: '/images/kyber_logo.png'
 	}
 ];
 
@@ -201,7 +204,8 @@ export const ATYPES = [
 		inputLabels: ['Token to send', 'Amount', 'Address to receive tokens'],
 		userInputs: EMPTY_STRING_ARRAY,
 		// For Actions, token Index is 0 as the first two parameters are added only before encoding
-		approveIndex: 0
+		approveIndex: 0,
+		logo: '/images/ethereum_logo.png'
 	},
 
 	{
@@ -247,7 +251,8 @@ export const ATYPES = [
 			RelevantInputData.kyberTokenList
 		],
 		userInputs: EMPTY_STRING_ARRAY,
-		approveIndex: 0
+		approveIndex: 0,
+		logo: '/images/kyber_logo.png'
 	},
 	{
 		id: 3,
@@ -292,7 +297,8 @@ export const ATYPES = [
 		],
 
 		userInputs: EMPTY_STRING_ARRAY,
-		approveIndex: 0
+		approveIndex: 0,
+		logo: '/images/fulcrum_logo.png'
 	},
 	{
 		id: 4,
@@ -330,7 +336,8 @@ export const ATYPES = [
 		],
 
 		userInputs: EMPTY_STRING_ARRAY,
-		approveIndex: 2
+		approveIndex: 2,
+		logo: '/images/fulcrum_logo.png'
 	}
 ];
 

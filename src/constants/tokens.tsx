@@ -154,7 +154,7 @@ export const KYBER_TOKEN_LIST = [
 export const FULCRUM_LEVERAGE_TOKEN_LIST = [
 	{
 		address: {
-			1: '0x0',
+			1: '0xd80e558027ee753a0b95757dc3521d0326f13da2',
 			3: '0x0',
 			4: '0x0',
 			42: '0x934b43143e984052961EB46f5bDE633F33bCDB80'
@@ -165,7 +165,7 @@ export const FULCRUM_LEVERAGE_TOKEN_LIST = [
 	},
 	{
 		address: {
-			1: '0x0',
+			1: '0x1370b716575bd7d5aee14128e231a779198e5397',
 			3: '0x0',
 			4: '0x0',
 			42: '0x0015Cfd9722B43ac277f37887df14a00109fc689'
@@ -176,7 +176,7 @@ export const FULCRUM_LEVERAGE_TOKEN_LIST = [
 	},
 	{
 		address: {
-			1: '0x0',
+			1: '0xf2ad1ee9671f63df7c8f8daa822da1e6fc08b80d',
 			3: '0x0',
 			4: '0x0',
 			42: '0x0E5f87BDcD6285F930b6bbcC3E21CA9d985e12fE'
@@ -187,7 +187,7 @@ export const FULCRUM_LEVERAGE_TOKEN_LIST = [
 	},
 	{
 		address: {
-			1: '0x0',
+			1: '0xd2a1d068baac0b06a8e2b1dc924a43d81a6da325',
 			3: '0x0',
 			4: '0x0',
 			42: '0xD4Fd1467c867808dc7B393dBc863f34783F37d3E'
@@ -198,7 +198,7 @@ export const FULCRUM_LEVERAGE_TOKEN_LIST = [
 	},
 	{
 		address: {
-			1: '0x0',
+			1: '0x8fa1a491f55d93bd40ff023956261f2fb5047297',
 			3: '0x0',
 			4: '0x0',
 			42: '0x2EBfbCf2d67867a05BCAC0FbCA54019163253988'
@@ -209,7 +209,7 @@ export const FULCRUM_LEVERAGE_TOKEN_LIST = [
 	},
 	{
 		address: {
-			1: '0x0',
+			1: '0x0428488582472a47d7a20be969fdfdfb3ba1f7cb',
 			3: '0x0',
 			4: '0x0',
 			42: '0xB56EA362eA9B1D030213A47eAA452dFfd84CB5a2'
@@ -220,7 +220,7 @@ export const FULCRUM_LEVERAGE_TOKEN_LIST = [
 	},
 	{
 		address: {
-			1: '0x0',
+			1: '0x46bb4576993f50302bb0d5f7440aeffbabfdbb78',
 			3: '0x0',
 			4: '0x0',
 			42: '0x9486ac55ed81758787fcdda98e6Ce35b01CDBE72'

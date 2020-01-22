@@ -76,6 +76,7 @@ export interface TriggerWhitelistData {
 	getTriggerValueInput: ethers.utils.BigNumber;
 	approveIndex: number;
 	boolIndex: number;
+	logo: string;
 }
 
 export interface ActionWhitelistData {
@@ -90,6 +91,7 @@ export interface ActionWhitelistData {
 	userInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
 	relevantInputData: Array<RelevantInputData>;
 	approveIndex: number;
+	logo: string;
 }
 
 export interface UserSelection {

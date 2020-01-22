@@ -187,7 +187,6 @@ export default function AppSelection() {
 					>
 						<p className={classes.boxTitle}>Trigger</p>
 						<Dropdown
-							app={false}
 							// userSelection={userSelection}
 							triggerOrAction={TriggerOrAction.Trigger}
 							data={availableTriggers}
@@ -238,7 +237,6 @@ export default function AppSelection() {
 					>
 						<p className={classes.boxTitle}>Action</p>
 						<Dropdown
-							app={false}
 							// userSelection={userSelection}
 							triggerOrAction={TriggerOrAction.Action}
 							data={availableActions}

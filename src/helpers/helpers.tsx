@@ -321,6 +321,9 @@ export const deepCloneTriggers = () => {
 		// empty user Input
 		const emptyUserInput: Array<string> = [];
 
+		// clone Logo
+		let clonedLogo = data.logo;
+
 		dataCopy.push({
 			id: clonedId,
 			app: clonedApp,
@@ -335,7 +338,8 @@ export const deepCloneTriggers = () => {
 			relevantInputData: clonedRelevantInputData,
 			getTriggerValueAbi: clonedGetTriggerValueAbi,
 			getTriggerValueInput: clonedGetTriggerValueInput,
-			boolIndex: clonedBoolIndex
+			boolIndex: clonedBoolIndex,
+			logo: clonedLogo
 		});
 	});
 	return dataCopy;
@@ -402,6 +406,9 @@ export const deepCloneActions = () => {
 		// empty user Input
 		const clonedTokenIndex = data.approveIndex;
 
+		// clone Logo
+		let clonedLogo = data.logo;
+
 		dataCopy.push({
 			id: clonedId,
 			app: clonedApp,
@@ -413,7 +420,8 @@ export const deepCloneActions = () => {
 			inputLabels: clonedInputLabels,
 			userInputs: emptyUserInput,
 			approveIndex: clonedTokenIndex,
-			relevantInputData: clonedRelevantInputData
+			relevantInputData: clonedRelevantInputData,
+			logo: clonedLogo
 		});
 	});
 	return dataCopy;

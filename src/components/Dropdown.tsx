@@ -15,11 +15,11 @@ import {
 	COLOURS,
 	DEFAULT_TRIGGER_ID
 } from '../constants/constants';
+import { MenuItem } from '@material-ui/core';
 
 interface AppDropdownProps {
 	data: Array<TriggerWhitelistData | ActionWhitelistData>;
 	triggerOrAction: number;
-	app: boolean;
 	// updateTriggerOrAction: Function;
 }
 
@@ -42,10 +42,10 @@ export default function AppDropdown(props: AppDropdownProps) {
 			}
 		}
 	});
-	const { app, data, triggerOrAction /*updateTriggerOrAction*/ } = props;
+	const { data, triggerOrAction /*updateTriggerOrAction*/ } = props;
 	const { dispatch, icedTxState } = useIcedTxContext();
 	const classes = useStyles();
-	const [state, setState] = React.useState('');
+	const [state, setState] = React.useState('0');
 
 	// Dispatch Reducer
 	// const selectTrigger = (id: string) => {
@@ -61,7 +61,7 @@ export default function AppDropdown(props: AppDropdownProps) {
 		if (
 			triggerOrAction === TriggerOrAction.Trigger &&
 			icedTxState.trigger.id === parseInt(DEFAULT_TRIGGER_ID) &&
-			state === ''
+			state === '0'
 		) {
 			setState(DEFAULT_TRIGGER_ID);
 		}
@@ -82,14 +82,24 @@ export default function AppDropdown(props: AppDropdownProps) {
 		setState(functionId);
 	};
 
-	function getTitles(
-		appList: Array<TriggerWhitelistData | ActionWhitelistData>
-	) {
-		const appTitles = appList.map(item => item.title);
-		return appTitles.filter(
-			(item, index) => appTitles.indexOf(item) === index
-		);
-	}
+	// function getTitles(
+	// 	appList: Array<TriggerWhitelistData | ActionWhitelistData>
+	// ) {
+	// 	const appTitles = appList.map(item => item.title);
+	// 	return appTitles.filter(
+	// 		(item, index) => appTitles.indexOf(item) === index
+	// 	);
+	// }
+
+	const [open, setOpen] = React.useState(false);
+
+	const handleClose = () => {
+		setOpen(false);
+	};
+
+	const handleOpen = () => {
+		setOpen(true);
+	};
 
 	return (
 		<FormControl
@@ -100,7 +110,7 @@ export default function AppDropdown(props: AppDropdownProps) {
 			className={classes.formControl}
 		>
 			<Select
-				native
+				// native
 				value={state}
 				onChange={handleChange}
 				inputProps={{
@@ -108,22 +118,74 @@ export default function AppDropdown(props: AppDropdownProps) {
 					id: 'outlined-age-native-simple'
 				}}
 				className={classes.selectEmpty}
+				// Tests
+				open={open}
+				onClose={handleClose}
+				onOpen={handleOpen}
+				// value={triggerOrAction === TriggerOrAction.Trigger ? icedTxState.trigger.id : icedTxState.action.id}
 			>
-				<option value={app ? '' : 0}>Select...</option>
-				{app &&
-					getTitles(data).map((value, key) => (
-						<option key={key} value={value}>
-							{value}
-						</option>
-					))}
-				{!app &&
-					data.map((value, key) => (
-						<option key={key} value={value.id}>
-							{value.title}
-						</option>
-					))}
-				}
+				<MenuItem key={0} value={'0'}>
+					<div
+						style={{
+							display: 'flex',
+							justifyContent: 'start',
+							alignItems: 'center',
+							flexDirection: 'row'
+						}}
+					>
+						<div
+							style={{
+								width: '35px',
+								marginRight: '8px'
+							}}
+							// src={'/images/gelato_logo.png'}
+							// alt="Kaka"
+						></div>
+						<p>Select...</p>
+					</div>
+				</MenuItem>
+
+				{data.map((value, key) => (
+					<MenuItem key={key} value={value.id}>
+						<div
+							style={{
+								display: 'flex',
+								justifyContent: 'start',
+								alignItems: 'center',
+								flexDirection: 'row'
+							}}
+						>
+							<img
+								style={{
+									width: '35px',
+									marginRight: '8px'
+								}}
+								src={value.logo}
+								alt=""
+							></img>
+							<p
+								style={{
+									textOverflow: 'ellipsis',
+									whiteSpace: 'nowrap',
+									overflow: 'hidden'
+								}}
+							>
+								{value.title}
+							</p>
+						</div>
+					</MenuItem>
+				))}
 			</Select>
 		</FormControl>
 	);
+}
+
+{
+	/* <option value={0}>Select...</option>
+
+				{data.map((value, key) => (
+					<option key={key} value={value.id}>
+						{value.title}
+					</option>
+				))} */
 }

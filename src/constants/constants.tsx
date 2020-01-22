@@ -62,7 +62,9 @@ export const DEFAULT_DATA_TRIGGER = {
 	userInputTypes: EMPTY_USER_INPUT_TYPE_ARRAY, // [ ]
 	userInputs: EMPTY_USER_INPUT_ARRAY, // [ ]
 	boolIndex: 999,
-	relevantInputData: EMPTY_RELEVANT_INPUT_DATA_ARRAY
+	relevantInputData: EMPTY_RELEVANT_INPUT_DATA_ARRAY,
+	logo:
+		'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png'
 };
 
 export const DEFAULT_DATA_ACTION = {
@@ -76,7 +78,9 @@ export const DEFAULT_DATA_ACTION = {
 	userInputTypes: EMPTY_USER_INPUT_TYPE_ARRAY, // [ ]
 	userInputs: EMPTY_USER_INPUT_ARRAY, // [ ]
 	approveIndex: 999, // 999 means no approval in action
-	relevantInputData: EMPTY_RELEVANT_INPUT_DATA_ARRAY
+	relevantInputData: EMPTY_RELEVANT_INPUT_DATA_ARRAY,
+	logo:
+		'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png'
 };
 
 // ID that determines which trigger to render by default at initial render of root
