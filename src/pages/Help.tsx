@@ -1,11 +1,14 @@
 import React from 'react';
-import { Grid, Typography } from '@material-ui/core';
+import { Grid, Typography, Divider } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { BOX } from '../constants/constants';
 
 const useStyles = makeStyles(theme => ({
 	body: {
 		marginBottom: '24px',
+		textAlign: 'left'
+	},
+	header: {
 		textAlign: 'left'
 	}
 }));
@@ -39,11 +42,17 @@ export default function Help() {
 						variant="h4"
 						component="h4"
 						gutterBottom
-						// style={{ marginBottom: '24px' }}
+						className={classes.header}
+						style={{ marginBottom: '24px' }}
 					>
 						How it works
 					</Typography>
-					<Typography variant="h5" component="h5" gutterBottom>
+					<Typography
+						className={classes.header}
+						variant="h5"
+						component="h5"
+						gutterBottom
+					>
 						What is gelato?
 					</Typography>
 					<Typography
@@ -57,7 +66,22 @@ export default function Help() {
 						executes a certain action (e.g. buy a short ETH position
 						on Fulcrum),
 					</Typography>
-					<Typography variant="h5" component="h5" gutterBottom>
+					<Divider
+						variant="inset"
+						style={{
+							width: '100%',
+							background: 'white',
+							marginBottom: '24px',
+							marginLeft: '0px',
+							marginRight: '0px'
+						}}
+					/>
+					<Typography
+						className={classes.header}
+						variant="h5"
+						component="h5"
+						gutterBottom
+					>
 						An example what you can do with it:
 					</Typography>
 					<Typography
@@ -73,7 +97,22 @@ export default function Help() {
 						DAI from your wallet when the trigger activates in 2
 						weeks.
 					</Typography>
-					<Typography variant="h5" component="h5" gutterBottom>
+					<Divider
+						variant="inset"
+						style={{
+							width: '100%',
+							background: 'white',
+							marginBottom: '24px',
+							marginLeft: '0px',
+							marginRight: '0px'
+						}}
+					/>
+					<Typography
+						className={classes.header}
+						variant="h5"
+						component="h5"
+						gutterBottom
+					>
 						Why gelato?
 					</Typography>
 					<Typography
@@ -92,7 +131,22 @@ export default function Help() {
 						conditions and transacts on your behalf so you don't
 						have to.
 					</Typography>
-					<Typography variant="h5" component="h5" gutterBottom>
+					<Divider
+						variant="inset"
+						style={{
+							width: '100%',
+							background: 'white',
+							marginBottom: '24px',
+							marginLeft: '0px',
+							marginRight: '0px'
+						}}
+					/>
+					<Typography
+						className={classes.header}
+						variant="h5"
+						component="h5"
+						gutterBottom
+					>
 						How long are the conditional transactions that I created
 						valid?
 					</Typography>
@@ -105,7 +159,22 @@ export default function Help() {
 						a transaction beforehand, you can always to that on your
 						dashboard
 					</Typography>
-					<Typography variant="h5" component="h5" gutterBottom>
+					<Divider
+						variant="inset"
+						style={{
+							width: '100%',
+							background: 'white',
+							marginBottom: '24px',
+							marginLeft: '0px',
+							marginRight: '0px'
+						}}
+					/>
+					<Typography
+						className={classes.header}
+						variant="h5"
+						component="h5"
+						gutterBottom
+					>
 						Do I keep custody of my funds?
 					</Typography>
 					<Typography
@@ -124,7 +193,22 @@ export default function Help() {
 						immediately send back to your wallet, all in one
 						transaction.
 					</Typography>
-					<Typography variant="h5" component="h5" gutterBottom>
+					<Divider
+						variant="inset"
+						style={{
+							width: '100%',
+							background: 'white',
+							marginBottom: '24px',
+							marginLeft: '0px',
+							marginRight: '0px'
+						}}
+					/>
+					<Typography
+						className={classes.header}
+						variant="h5"
+						component="h5"
+						gutterBottom
+					>
 						What is a gelato smart contract wallet and why do I need
 						one?
 					</Typography>
@@ -145,7 +229,22 @@ export default function Help() {
 						gelato wallet, being a smart contract, is always online
 						and ready to transact on your behalf.
 					</Typography>
-					<Typography variant="h5" component="h5" gutterBottom>
+					<Divider
+						variant="inset"
+						style={{
+							width: '100%',
+							background: 'white',
+							marginBottom: '24px',
+							marginLeft: '0px',
+							marginRight: '0px'
+						}}
+					/>
+					<Typography
+						className={classes.header}
+						variant="h5"
+						component="h5"
+						gutterBottom
+					>
 						Has it been audited?
 					</Typography>
 					<Typography
@@ -159,7 +258,22 @@ export default function Help() {
 						transfer large amounts. We are working on getting an
 						audit done soon.
 					</Typography>
-					<Typography variant="h5" component="h5" gutterBottom>
+					<Divider
+						variant="inset"
+						style={{
+							width: '100%',
+							background: 'white',
+							marginBottom: '24px',
+							marginLeft: '0px',
+							marginRight: '0px'
+						}}
+					/>
+					<Typography
+						className={classes.header}
+						variant="h5"
+						component="h5"
+						gutterBottom
+					>
 						Can I add my own trigger and actions to gelato?
 					</Typography>
 					<Typography

@@ -190,7 +190,7 @@ export default function ButtonAppBar() {
 						<Typography variant="h5">gelato finance</Typography>
 					</div>
 					{/* </Link> */}
-					<Hidden xsDown>
+					<Hidden smDown>
 						{active && chainId === SELECTED_CHAIN_ID && (
 							<BootstrapButton
 								style={{ border: 'none' }}
@@ -256,7 +256,7 @@ export default function ButtonAppBar() {
 						)}
 						{/* ################################ Connect Button END*/}
 					</Hidden>
-					<Hidden smUp>
+					<Hidden mdUp>
 						<IconButton
 							edge="end"
 							onClick={handleDrawerToggle}
@@ -312,6 +312,19 @@ export default function ButtonAppBar() {
 							/>
 						</ListItem>
 					)}
+					<ListItem
+						button
+						onClick={() => {
+							// First refresh state of Create Page to start from the beginning
+							history.push('/how-it-works');
+							handleDrawerToggle();
+						}}
+					>
+						<ListItemIcon>
+							<InboxIcon />
+						</ListItemIcon>
+						<ListItemText primary={'How it works'} />
+					</ListItem>
 					{active && chainId === SELECTED_CHAIN_ID && (
 						<ListItem
 							button

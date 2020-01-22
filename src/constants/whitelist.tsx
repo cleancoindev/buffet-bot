@@ -119,7 +119,7 @@ export const TTYPES = [
 			1: '',
 			3: '0x61Bd89De0912c5E07d03f2c533D29A8eB78dc925',
 			4: '',
-			42: '0x91BdF21dE574451fdc0c2a5859D6E91FD984f3cc'
+			42: '0xfEe2C4Fd7Be69AC4353230e56EAe6a156c9d4dC4'
 		},
 		params: [
 			{ type: 'address', name: '_src' },
@@ -282,7 +282,7 @@ export const ATYPES = [
 			1: '',
 			3: '0x0',
 			4: '',
-			42: '0xECD9a96B4D4Ec5Bbc1bb8839424e04bd79347054'
+			42: '0x10C06Ab7F13E9Ae1e3c8cD82370C2Fc01002a9EF'
 		},
 		/*
 		 // Standard Action Params
@@ -327,7 +327,7 @@ export const ATYPES = [
 		approveIndex: 0,
 		logo: '/images/fulcrum_logo.png',
 		getActionValueAbi:
-			'function getUsersSourceTokenBalance(address _user, address _userProxy, address _src, uint256, address) view returns (uint256)'
+			'function getUsersSourceTokenBalance(address _user, address _userProxy, address _depositTokenAddress, uint256, address) view returns (uint256)'
 	},
 	{
 		id: 4,
@@ -337,17 +337,17 @@ export const ATYPES = [
 			1: '',
 			3: '0x0',
 			4: '',
-			42: '0x986F7247Be7768B6fB4DA3D35f8e77234E040F34'
+			42: '0xA5d7aFfBe3049efa9BC5DC23A16946cd7CE70061'
 		},
 		params: [
 			{ type: 'address', name: '_user' },
 			{ type: 'address', name: '_userProxy' },
-			{ type: 'address', name: '_burnTokenAddress' },
+			{ type: 'address', name: '_pTokenAddress' },
 			{ type: 'uint256', name: '_burnAmount' },
-			{ type: 'address', name: '_pTokenAddress' }
+			{ type: 'address', name: '_burnTokenAddress' }
 		],
 		abi:
-			'function action(address _user, address _userProxy, address _burnTokenAddress, uint256 _burnAmount, address _pTokenAddress)',
+			'function action(address _user, address _userProxy, address _pTokenAddress, uint256 _burnAmount, address _burnTokenAddress)',
 		userInputTypes: [
 			InputType.Token,
 			InputType.TokenAmount,
@@ -355,23 +355,23 @@ export const ATYPES = [
 			InputType.StatelessGetValue
 		],
 		inputLabels: [
-			'Token to receive back',
-			'Amount of leverage token to be sold',
 			'Leverage Token to sell',
+			'Sell amount of leverage Token',
+			'Token to receive back',
 			'Current Leverage Token Balance'
 		],
 		relevantInputData: [
+			RelevantInputData.fulcrumTokenList,
+			RelevantInputData.fulcrumTokenList,
 			RelevantInputData.kyberTokenList,
-			RelevantInputData.fulcrumTokenList,
-			RelevantInputData.fulcrumTokenList,
 			RelevantInputData.fulcrumTokenList
 		],
 
 		userInputs: EMPTY_STRING_ARRAY,
-		approveIndex: 2,
+		approveIndex: 0,
 		logo: '/images/fulcrum_logo.png',
 		getActionValueAbi:
-			'function getUsersSourceTokenBalance(address _user, address _userProxy, address _src, uint256, address) view returns (uint256)'
+			'function getUsersSourceTokenBalance(address _user, address _userProxy, address _pTokenAddress, uint256, address) view returns (uint256)'
 	}
 ];
 
