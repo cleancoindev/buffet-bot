@@ -211,7 +211,8 @@ export default function TokenSelect(props: TokenSelectProps) {
 							{isEth(possibleToken.address[1]) && (
 								<img
 									style={{
-										width: '35px',
+										maxHeight: '35px',
+										// width: '35px',
 										marginRight: '8px'
 									}}
 									src={
@@ -223,7 +224,8 @@ export default function TokenSelect(props: TokenSelectProps) {
 							{!isEth(possibleToken.address[1]) && (
 								<img
 									style={{
-										width: '35px',
+										maxHeight: '35px',
+										// width: '35px',
 										marginRight: '8px'
 									}}
 									src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${ethers.utils.getAddress(

@@ -22,7 +22,7 @@ export const GELATO_CORE_ADDRESS = {
 	1: '0x0',
 	3: '0x563700A8A6740C8a474DF8F289716afDc30ED07a',
 	4: '0x501aF774Eb578203CC34E7171273124A93706C06',
-	42: '0xaD944A44Bd6d2BEAa15c49BF300AeDde5d2936B9'
+	42: '0x8456FEcB4F2FbcB5992b3533428F82f98C40f55C'
 };
 
 export const EXECUTOR_ADDRESS = {
@@ -46,7 +46,7 @@ export const TTYPES = [
 			1: '',
 			3: '0xaf4c11A90e98D0C5ecFb403C62Cc8Dfe8DF11030',
 			4: '',
-			42: '0xe4bD22dfdfcD88df04944be0c745e9961e8dc22b'
+			42: '0xc0993255E46FD2E911d92fa63477e061b917aA14'
 		},
 		params: [
 			{ type: 'address', name: '_account' },
@@ -95,7 +95,7 @@ export const TTYPES = [
 			1: '',
 			3: '0x525EB0c1279f1CC690D01a2Fcb78A0D5d156D1Ee',
 			4: '',
-			42: '0x591DB4982dD2E184b8F4b8DA9599295Dd379F732'
+			42: '0x328eAA9C817383e0A2fc815F810BCA7FF3ea6288'
 		},
 		params: [{ type: 'uint256', name: '_timestamp' }],
 		abi: 'function fired(uint256 _timestamp)',
@@ -119,7 +119,7 @@ export const TTYPES = [
 			1: '',
 			3: '0x61Bd89De0912c5E07d03f2c533D29A8eB78dc925',
 			4: '',
-			42: '0x49A791153dbEe3fBc081Ce159d51C70A89323e73'
+			42: '0x91BdF21dE574451fdc0c2a5859D6E91FD984f3cc'
 		},
 		params: [
 			{ type: 'address', name: '_src' },
@@ -175,7 +175,7 @@ export const ATYPES = [
 			1: '',
 			3: '0x8FdAf109e391C304939CF64C9B9912b320AdfE56',
 			4: '',
-			42: '0x83D85e7b95eAe643Dc58c6C397701Bf3dd3Dff91'
+			42: '0x3E9665BB5C3bBa2A89a14c289fE503D50fE44319'
 		},
 		/*
 		IERC20 _src,
@@ -194,18 +194,29 @@ export const ATYPES = [
 		userInputTypes: [
 			InputType.Token,
 			InputType.TokenAmount,
-			InputType.Address
+			InputType.Address,
+			// Get value
+			InputType.StatelessGetValue
 		],
 		relevantInputData: [
 			RelevantInputData.kyberTokenList,
 			RelevantInputData.kyberTokenList,
-			RelevantInputData.none
+			RelevantInputData.none,
+			//@DEV Send tokens will only work for Kyber Tokens
+			RelevantInputData.kyberTokenList
 		],
-		inputLabels: ['Token to send', 'Amount', 'Address to receive tokens'],
+		inputLabels: [
+			'Token to send',
+			'Amount',
+			'Address to receive tokens',
+			'Current Token Balance'
+		],
 		userInputs: EMPTY_STRING_ARRAY,
 		// For Actions, token Index is 0 as the first two parameters are added only before encoding
 		approveIndex: 0,
-		logo: '/images/ethereum_logo.png'
+		logo: '/images/ethereum_logo.png',
+		getActionValueAbi:
+			'function getUsersSourceTokenBalance(address _user, address _userProxy, address _src, uint256, address) view returns (uint256)'
 	},
 
 	{
@@ -216,7 +227,7 @@ export const ATYPES = [
 			1: '',
 			3: '0x67f647bDF012A718d5F9bD9C7bEd6e5a2023ccC6',
 			4: '',
-			42: '0xf0FBC8a0C751399984950569C246c4BA866107dE'
+			42: '0x48c8BCD7aB7ACf9A485643262D1b0e447C156BA1'
 		},
 		/*
 		 // Standard Action Params
@@ -242,17 +253,26 @@ export const ATYPES = [
 		userInputTypes: [
 			InputType.Token,
 			InputType.TokenAmount,
-			InputType.Token
+			InputType.Token,
+			InputType.StatelessGetValue
 		],
-		inputLabels: ['Sell Token', 'Sell Amount', 'Buy Token'],
+		inputLabels: [
+			'Sell Token',
+			'Sell Amount',
+			'Buy Token',
+			'Current Sell Token Balance'
+		],
 		relevantInputData: [
+			RelevantInputData.kyberTokenList,
 			RelevantInputData.kyberTokenList,
 			RelevantInputData.kyberTokenList,
 			RelevantInputData.kyberTokenList
 		],
 		userInputs: EMPTY_STRING_ARRAY,
 		approveIndex: 0,
-		logo: '/images/kyber_logo.png'
+		logo: '/images/kyber_logo.png',
+		getActionValueAbi:
+			'function getUsersSourceTokenBalance(address _user, address _userProxy, address _src, uint256, address) view returns (uint256)'
 	},
 	{
 		id: 3,
@@ -287,18 +307,27 @@ export const ATYPES = [
 		userInputTypes: [
 			InputType.Token,
 			InputType.TokenAmount,
-			InputType.Token
+			InputType.Token,
+			InputType.StatelessGetValue
 		],
-		inputLabels: ['Token to sell', 'Sell Amount', 'Leverage Token to buy'],
+		inputLabels: [
+			'Token to sell',
+			'Sell Amount',
+			'Leverage Token to buy',
+			'Current Sell Token Balance'
+		],
 		relevantInputData: [
 			RelevantInputData.kyberTokenList,
 			RelevantInputData.kyberTokenList,
-			RelevantInputData.fulcrumTokenList
+			RelevantInputData.fulcrumTokenList,
+			RelevantInputData.kyberTokenList
 		],
 
 		userInputs: EMPTY_STRING_ARRAY,
 		approveIndex: 0,
-		logo: '/images/fulcrum_logo.png'
+		logo: '/images/fulcrum_logo.png',
+		getActionValueAbi:
+			'function getUsersSourceTokenBalance(address _user, address _userProxy, address _src, uint256, address) view returns (uint256)'
 	},
 	{
 		id: 4,
@@ -322,22 +351,27 @@ export const ATYPES = [
 		userInputTypes: [
 			InputType.Token,
 			InputType.TokenAmount,
-			InputType.Token
+			InputType.Token,
+			InputType.StatelessGetValue
 		],
 		inputLabels: [
 			'Token to receive back',
 			'Amount of leverage token to be sold',
-			'Leverage Token to sell'
+			'Leverage Token to sell',
+			'Current Leverage Token Balance'
 		],
 		relevantInputData: [
 			RelevantInputData.kyberTokenList,
+			RelevantInputData.fulcrumTokenList,
 			RelevantInputData.fulcrumTokenList,
 			RelevantInputData.fulcrumTokenList
 		],
 
 		userInputs: EMPTY_STRING_ARRAY,
 		approveIndex: 2,
-		logo: '/images/fulcrum_logo.png'
+		logo: '/images/fulcrum_logo.png',
+		getActionValueAbi:
+			'function getUsersSourceTokenBalance(address _user, address _userProxy, address _src, uint256, address) view returns (uint256)'
 	}
 ];
 

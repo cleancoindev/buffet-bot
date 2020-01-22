@@ -11,10 +11,14 @@ import {
 } from '../../constants/interfaces';
 import { useStyles } from '@material-ui/pickers/views/Calendar/SlideTransition';
 import { useWeb3React } from '@web3-react/core';
-import { SELECTED_CHAIN_ID, BIG_NUM_ZERO } from '../../constants/constants';
+import {
+	SELECTED_CHAIN_ID,
+	BIG_NUM_ZERO,
+	ACTION_GET_VALUE_ABI
+} from '../../constants/constants';
 import ReactNumberFormat from './ReactNumberFormat';
 import { useIcedTxContext } from '../../state/GlobalState';
-import { getTokenByAddress } from '../../helpers/helpers';
+import { getTokenByAddress, encodeActionPayload } from '../../helpers/helpers';
 
 interface ReactNumberFormatProps {
 	label: string;
@@ -46,7 +50,7 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 	} = props;
 	// console.log(inputs);
 
-	const classes = useStyles();
+	// const classes = useStyles();
 	const { chainId, active } = useWeb3React();
 
 	// In case network Id is not defined yet, use default
@@ -56,7 +60,7 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 	}
 
 	const { account, library } = useWeb3React();
-	const { dispatch, icedTxState } = useIcedTxContext();
+	const { icedTxState } = useIcedTxContext();
 
 	const [getValueState, setGetValueState] = React.useState(
 		icedTxState.trigger.getTriggerValueInput
@@ -77,32 +81,70 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 
 		if (disabled) return newValue;
 
-		if (trigger && active && account) {
-			const abi = trigger.getTriggerValueAbi;
-			const triggerAddress = trigger.address[chainId as ChainIds];
+		if (active && account) {
+			let abi = '';
+			triggerOrAction === TriggerOrAction.Trigger
+				? (abi = icedTxState.trigger.getTriggerValueAbi)
+				: (abi = icedTxState.action.getActionValueAbi);
 
 			try {
 				// Find token object by address
 				const signer = library.getSigner();
 
-				const triggerContract = new ethers.Contract(
-					triggerAddress,
-					[abi],
-					signer
-				);
+				if (triggerOrAction === TriggerOrAction.Trigger) {
+					const triggerAddress =
+						icedTxState.trigger.address[networkId];
+					const triggerContract = new ethers.Contract(
+						triggerAddress,
+						[abi],
+						signer
+					);
 
-				// get value
-				try {
-					newValue = await triggerContract.getTriggerValue(...inputs);
-					// Convert fetched wei amount to human reable amount
+					// get value
+					try {
+						newValue = await triggerContract.getTriggerValue(
+							...inputs
+						);
+						console.log(inputs);
+						console.log(newValue.toString());
+						// Convert fetched wei amount to human reable amount
 
-					// convert Value into human readable form
-					return newValue;
-				} catch (error) {
-					// console.log(error);
-					newValue = BIG_NUM_ZERO;
-					// console.log(2);
-					return newValue;
+						// convert Value into human readable form
+						return newValue;
+					} catch (error) {
+						console.log(error);
+						newValue = BIG_NUM_ZERO;
+						// console.log(2);
+						return newValue;
+					}
+				}
+				// IF it is an action
+				else {
+					const actionAddress = icedTxState.action.address[networkId];
+					const actionContract = new ethers.Contract(
+						actionAddress,
+						[abi],
+						signer
+					);
+
+					try {
+						const copyUserInput = [...inputs];
+						copyUserInput.splice(0, 0, account);
+						// œDEV simply using account here, as proxy doesnt make a difference
+						copyUserInput.splice(1, 0, account);
+						newValue = await actionContract.getUsersSourceTokenBalance(
+							...copyUserInput
+						);
+						// Convert fetched wei amount to human reable amount
+
+						// convert Value into human readable form
+						return newValue;
+					} catch (error) {
+						console.log(error);
+						newValue = BIG_NUM_ZERO;
+						// console.log(2);
+						return newValue;
+					}
 				}
 				//Instantiate contract
 
@@ -117,11 +159,13 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 				// }
 			} catch (error) {
 				// console.log('token not in state yet');
+				console.log(error);
 				newValue = BIG_NUM_ZERO;
 				// console.log(3);
 				return newValue;
 			}
 		} else {
+			console.log('catch2');
 			newValue = BIG_NUM_ZERO;
 			// console.log(4);
 			return newValue;

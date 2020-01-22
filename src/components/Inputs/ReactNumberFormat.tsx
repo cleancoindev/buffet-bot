@@ -109,7 +109,6 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 	if (account !== undefined) {
 		whitelisted = userIsWhitelisted(account as string);
 	}
-	console.log(whitelisted);
 	const [error, setError] = React.useState(false);
 
 	const { dispatch, icedTxState } = useIcedTxContext();
@@ -134,6 +133,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 	// 	defaultValue,
 	// 	token.decimals
 	// );
+
 	let initialValueBigInt: ethers.utils.BigNumber = BIG_NUM_ZERO;
 	let initialValueString = '0';
 	// If token address is alraedy inputted, convert number using the tokens decimal field
@@ -330,17 +330,20 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 	) => {
 		// updateUser Input
 		const newValue = event.target.value as string;
-		handleNewValue(newValue);
-		console.log(newValue);
-		if (
-			inputType === InputType.TokenAmount &&
-			triggerOrAction === TriggerOrAction.Action &&
-			!whitelisted
-		) {
-			try {
-				validateLimitAmount(ethers.utils.parseUnits(newValue, 18));
-			} catch (error) {
-				console.log('bug');
+
+		// Only update State when number input actually changed from last input!
+		if (newValue !== values.numberformat) {
+			handleNewValue(newValue);
+			if (
+				inputType === InputType.TokenAmount &&
+				triggerOrAction === TriggerOrAction.Action &&
+				!whitelisted
+			) {
+				try {
+					validateLimitAmount(ethers.utils.parseUnits(newValue, 18));
+				} catch (error) {
+					console.log('bug');
+				}
 			}
 		}
 	};
@@ -348,8 +351,8 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 	const setErrorTrue = (text: string) => {
 		setError(true);
 
-		console.log('Error');
-		console.log(icedTxState.txState);
+		// console.log('Error');
+		// console.log(icedTxState.txState);
 		dispatch({
 			type: INPUT_ERROR,
 			msg: text,
@@ -363,7 +366,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 			setError(false);
 		}
 		if (icedTxState.error.isError) {
-			console.log('Token Amount within limit');
+			// console.log('Token Amount within limit');
 			dispatch({
 				type: INPUT_OK,
 				txState: TxState.displayInstallMetamask
@@ -375,7 +378,6 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 	// If default value is equal to ZERO => show error
 
 	const validateLimitAmount = (srcAmount: ethers.utils.BigNumber) => {
-		console.log('validating');
 		// IF user is whitelisted, skip
 		// Get Kyber Price Trigger
 		const signer = library.getSigner();
@@ -407,7 +409,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 
 					// If the total Transfer volume is greater than the Token Transfer Ceiling, spit out error for unwhitelisted users and no error for whitelisted users
 					if (TOKEN_TRANSFER_CEILING.lt(totalTransferVolume)) {
-						console.log('in err');
+						// console.log('in err');
 						// console.log(TOKEN_TRANSFER_CEILING.toString());
 						// console.log('Is smaller than');
 						// console.log(totalTransferVolume.toString());
@@ -430,17 +432,17 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 							)} max. To gain a higher allowance, please contact us!`
 						);
 					} else {
-						console.log('Not in Err err');
-						console.log('Ceiling');
-						console.log(TOKEN_TRANSFER_CEILING.toString());
-						console.log('Total Amount');
-						console.log(totalTransferVolume.toString());
+						// console.log('Not in Err err');
+						// console.log('Ceiling');
+						// console.log(TOKEN_TRANSFER_CEILING.toString());
+						// console.log('Total Amount');
+						// console.log(totalTransferVolume.toString());
 						setErrorFalse();
 					}
 					// convert Value into human readable form
 				});
 		} catch (error) {
-			console.log('Did not fetch price');
+			// console.log('Did not fetch price');
 		}
 	};
 

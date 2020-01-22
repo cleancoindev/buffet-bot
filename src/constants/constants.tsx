@@ -45,6 +45,9 @@ export const ETH = {
 	decimals: 18
 };
 
+export const ACTION_GET_VALUE_ABI =
+	'getUsersSourceTokenBalance(bytes _actionPayloadWithSelector) view returns (uint256)';
+
 export const SELECTED_CHAIN_ID = 42;
 export const SELECTED_NETWORK_NAME = 'Kovan';
 
@@ -74,6 +77,7 @@ export const DEFAULT_DATA_ACTION = {
 	address: { 1: '', 3: '', 4: '', 42: '' },
 	params: EMPTY_PARAM_ARRAY, // [ ]
 	abi: '',
+	getActionValueAbi: '',
 	inputLabels: EMPTY_STRING_ARRAY, // [ ]
 	userInputTypes: EMPTY_USER_INPUT_TYPE_ARRAY, // [ ]
 	userInputs: EMPTY_USER_INPUT_ARRAY, // [ ]

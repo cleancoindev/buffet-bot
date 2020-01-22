@@ -457,6 +457,8 @@ export default function EnhancedTable() {
 	useEffect(() => {
 		fetchPastExecutionClaims();
 		// this will clear Timeout when component unmont like in willComponentUnmount
+
+		// Clean up function
 	}, [renderCounter]);
 
 	// Cancel ExecutionClaim

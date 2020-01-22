@@ -93,6 +93,19 @@ export default function Help() {
 						have to.
 					</Typography>
 					<Typography variant="h5" component="h5" gutterBottom>
+						How long are the conditional transactions that I created
+						valid?
+					</Typography>
+					<Typography
+						variant="body1"
+						gutterBottom
+						className={classes.body}
+					>
+						4 months. After that, they expire. If you wish to cancel
+						a transaction beforehand, you can always to that on your
+						dashboard
+					</Typography>
+					<Typography variant="h5" component="h5" gutterBottom>
 						Do I keep custody of my funds?
 					</Typography>
 					<Typography

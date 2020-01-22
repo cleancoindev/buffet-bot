@@ -384,6 +384,9 @@ export const deepCloneActions = () => {
 		// clone abi
 		const clonedAbi = data.abi;
 
+		// clone abi
+		const clonedGetActionValueAbi = data.getActionValueAbi;
+
 		// clone userInputTypes
 		const clonedUserInputTypes: Array<InputType> = [];
 		data.userInputTypes.forEach(userInputType => {
@@ -421,7 +424,8 @@ export const deepCloneActions = () => {
 			userInputs: emptyUserInput,
 			approveIndex: clonedTokenIndex,
 			relevantInputData: clonedRelevantInputData,
-			logo: clonedLogo
+			logo: clonedLogo,
+			getActionValueAbi: clonedGetActionValueAbi
 		});
 	});
 	return dataCopy;

@@ -88,6 +88,7 @@ export interface ActionWhitelistData {
 	params: Array<Params>;
 	inputLabels: Array<string>;
 	userInputTypes: Array<InputType>;
+	getActionValueAbi: string;
 	userInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
 	relevantInputData: Array<RelevantInputData>;
 	approveIndex: number;
