@@ -69,6 +69,7 @@ const BootstrapButtonDanger = withStyles({
 
 const BootstrapButton = withStyles({
 	root: {
+		// minWidth: '150px',
 		boxShadow: 'none',
 		textTransform: 'none',
 		fontSize: 16,
@@ -192,6 +193,7 @@ export default function ButtonAppBar() {
 					<Hidden xsDown>
 						{active && chainId === SELECTED_CHAIN_ID && (
 							<BootstrapButton
+								style={{ border: 'none' }}
 								onClick={() => {
 									// First refresh state of Create Page to start from the beginning
 									dispatch({ type: RESET_CONDITION });
@@ -199,9 +201,24 @@ export default function ButtonAppBar() {
 									history.push('/');
 								}}
 							>
-								Create New
+								Create new
 							</BootstrapButton>
 						)}
+
+						{/* ################################ How it works Button*/}
+						<BootstrapButton
+							style={{ border: 'none' }}
+							onClick={() => {
+								// First refresh state of Create Page to start from the beginning
+								history.push('/how-it-works');
+							}}
+						>
+							How it works
+						</BootstrapButton>
+
+						{/* ################################ How it Works Button END */}
+
+						{/* ################################ Connect Button*/}
 						{active && chainId === SELECTED_CHAIN_ID && (
 							<BootstrapButton
 								onClick={() => history.push('/dashboard')}
@@ -237,6 +254,7 @@ export default function ButtonAppBar() {
 								{'Connect With Metamask'}
 							</BootstrapButton>
 						)}
+						{/* ################################ Connect Button END*/}
 					</Hidden>
 					<Hidden smUp>
 						<IconButton

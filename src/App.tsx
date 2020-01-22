@@ -29,6 +29,7 @@ import Footer from './components/Footer';
 // APP Materiak THeme
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
+import Help from './pages/Help';
 
 const theme = createMuiTheme({
 	typography: {
@@ -71,6 +72,11 @@ function App() {
 											path="/dashboard"
 											exact
 											component={Dashboard}
+										/>
+										<Route
+											path="/how-it-works"
+											exact
+											component={Help}
 										/>
 										<Route
 											path="/dashboard/:transactionId"

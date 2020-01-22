@@ -135,6 +135,7 @@ export default function AppDropdown(props: AppDropdownProps) {
 					>
 						<div
 							style={{
+								maxHeight: '50px',
 								width: '35px',
 								marginRight: '8px'
 							}}
@@ -157,6 +158,7 @@ export default function AppDropdown(props: AppDropdownProps) {
 						>
 							<img
 								style={{
+									maxHeight: '50px',
 									width: '35px',
 									marginRight: '8px'
 								}}
