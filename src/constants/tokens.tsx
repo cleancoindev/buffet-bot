@@ -8,50 +8,6 @@ import { RelevantInputData } from './interfaces';
 export const KYBER_TOKEN_LIST = [
 	{
 		address: {
-			1: '0x4156D3342D5c385a87D264F90653733592000581',
-			3: '0x0',
-			4: '0x0',
-			42: '0x6fEE5727EE4CdCBD91f3A873ef2966dF31713A04'
-		},
-		symbol: 'SALT',
-		name: 'Salt',
-		decimals: 8
-	},
-	{
-		address: {
-			1: '0x05f4a42e251f2d52b8ed15e9fedaacfcef1fad27',
-			3: '0x0',
-			4: '0x0',
-			42: '0xAb74653cac23301066ABa8eba62b9Abd8a8c51d6'
-		},
-		symbol: 'ZIL',
-		name: 'Zilliqa',
-		decimals: 12
-	},
-	{
-		address: {
-			1: '0x0f5d2fb29fb7d3cfee444a200298f468908cc942',
-			3: '0x0',
-			4: '0x0',
-			42: '0xcb78b457c1F79a06091EAe744aA81dc75Ecb1183'
-		},
-		symbol: 'MANA',
-		name: 'Decentraland',
-		decimals: 18
-	},
-	{
-		address: {
-			1: '0xdd974d5c2e2928dea5f71b9825b8b646686bd200',
-			3: '0x0',
-			4: '0x0',
-			42: '0xad67cB4d63C9da94AcA37fDF2761AaDF780ff4a2'
-		},
-		symbol: 'KNC',
-		name: 'Kyber Network',
-		decimals: 18
-	},
-	{
-		address: {
 			1: '0x6b175474e89094c44da98b954eedeac495271d0f',
 			3: '0x0',
 			4: '0x0',
@@ -63,15 +19,38 @@ export const KYBER_TOKEN_LIST = [
 	},
 	{
 		address: {
-			1: '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359',
+			1: '0x6810e776880c02933d47db1b9fc05908e5386b96',
 			3: '0x0',
 			4: '0x0',
 			42: '0x0'
 		},
-		symbol: 'SAI Stablecoin',
-		name: 'SAI',
+		symbol: 'GNO',
+		name: 'Gnosis',
 		decimals: 18
 	},
+	// {
+	// 	address: {
+	// 		1: '0x0f5d2fb29fb7d3cfee444a200298f468908cc942',
+	// 		3: '0x0',
+	// 		4: '0x0',
+	// 		42: '0xcb78b457c1F79a06091EAe744aA81dc75Ecb1183'
+	// 	},
+	// 	symbol: 'MANA',
+	// 	name: 'Decentraland',
+	// 	decimals: 18
+	// },
+	{
+		address: {
+			1: '0xdd974d5c2e2928dea5f71b9825b8b646686bd200',
+			3: '0x0',
+			4: '0x0',
+			42: '0xad67cB4d63C9da94AcA37fDF2761AaDF780ff4a2'
+		},
+		symbol: 'KNC',
+		name: 'Kyber Network',
+		decimals: 18
+	},
+
 	{
 		address: {
 			1: '0x514910771af9ca656af840dff83e8264ecf986ca',
@@ -88,7 +67,7 @@ export const KYBER_TOKEN_LIST = [
 			1: '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2',
 			3: '0x0',
 			4: '0x0',
-			42: '0x0'
+			42: '0xAaF64BFCC32d0F15873a02163e7E500671a4ffcD'
 		},
 		symbol: 'MKR',
 		name: 'Maker',
@@ -96,15 +75,39 @@ export const KYBER_TOKEN_LIST = [
 	},
 	{
 		address: {
-			1: '0x6810e776880c02933d47db1b9fc05908e5386b96',
+			1: '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359',
 			3: '0x0',
 			4: '0x0',
 			42: '0x0'
 		},
-		symbol: 'GNO',
-		name: 'Gnosis',
+		symbol: 'SAI Stablecoin',
+		name: 'SAI',
 		decimals: 18
 	},
+
+	{
+		address: {
+			1: '0x4156D3342D5c385a87D264F90653733592000581',
+			3: '0x0',
+			4: '0x0',
+			42: '0x6fEE5727EE4CdCBD91f3A873ef2966dF31713A04'
+		},
+		symbol: 'SALT',
+		name: 'Salt',
+		decimals: 8
+	},
+	{
+		address: {
+			1: '0xc011a72400e58ecd99ee497cf89e3775d4bd732f',
+			3: '0x0',
+			4: '0x0',
+			42: '0x0'
+		},
+		symbol: 'SNX',
+		name: 'Synthetix Network Token',
+		decimals: 18
+	},
+
 	{
 		address: {
 			1: '0xdac17f958d2ee523a2206206994597c13d831ec7',
@@ -129,25 +132,25 @@ export const KYBER_TOKEN_LIST = [
 	},
 	{
 		address: {
-			1: '0xc011a72400e58ecd99ee497cf89e3775d4bd732f',
-			3: '0x0',
-			4: '0x0',
-			42: '0x0'
-		},
-		symbol: 'SNX',
-		name: 'Synthetix Network Token',
-		decimals: 18
-	},
-	{
-		address: {
 			1: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
 			3: '0x0',
 			4: '0x0',
-			42: '0x0'
+			42: '0xd0A1E359811322d97991E03f863a0C30C2cF029C'
 		},
 		symbol: 'WETH',
 		name: 'Wrapped Ether',
 		decimals: 18
+	},
+	{
+		address: {
+			1: '0x05f4a42e251f2d52b8ed15e9fedaacfcef1fad27',
+			3: '0x0',
+			4: '0x0',
+			42: '0xAb74653cac23301066ABa8eba62b9Abd8a8c51d6'
+		},
+		symbol: 'ZIL',
+		name: 'Zilliqa',
+		decimals: 12
 	}
 ];
 

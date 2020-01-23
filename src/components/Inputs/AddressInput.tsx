@@ -129,7 +129,6 @@ export default function AddressInput(props: AddressInputProps) {
 	return (
 		<TextField
 			className={classes.root}
-			required
 			style={{ marginTop: '0px', marginBottom: '0px' }}
 			id={`address-input-${disabled}-${triggerOrAction}-${index}`}
 			label={label}

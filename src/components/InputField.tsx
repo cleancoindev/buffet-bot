@@ -323,7 +323,6 @@ export default function LayoutTextFields(props: InputProps) {
 					<div className={classes.form}>
 						<TextField
 							className={classes.root}
-							required
 							style={{ marginTop: '0px', marginBottom: '0px' }}
 							id="outlined-full-width"
 							label={label}

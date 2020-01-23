@@ -183,7 +183,6 @@ export default function TokenSelect(props: TokenSelectProps) {
 			<Select
 				className={classes.select}
 				style={{ textAlign: 'left' }}
-				required
 				labelId="demo-simple-select-outlined-label"
 				id="demo-simple-select-outlined-label"
 				open={open}

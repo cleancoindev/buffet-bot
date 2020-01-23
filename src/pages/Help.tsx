@@ -156,7 +156,7 @@ export default function Help() {
 						className={classes.body}
 					>
 						4 months. After that, they expire. If you wish to cancel
-						a transaction beforehand, you can always to that on your
+						a transaction beforehand, you can always do that on your
 						dashboard
 					</Typography>
 					<Divider

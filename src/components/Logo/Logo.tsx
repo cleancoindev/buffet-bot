@@ -4,7 +4,7 @@ const GelatoLogo = () => (
 	<div
 		style={{
 			width: '35px',
-			marginRight: '8px'
+			marginRight: '16px'
 		}}
 	>
 		{/* Logo is an actual React component */}

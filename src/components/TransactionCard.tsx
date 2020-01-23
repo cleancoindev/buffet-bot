@@ -191,7 +191,7 @@ export default function TransactionCard(props: TxCardProps) {
 				gasEstimatePlusBuffer = addGasBuffer(gasEstimate);
 				break;
 			case TxState.displayApprove:
-				console.log("in here")
+				console.log('in here');
 				const proxyAddress = await gelatoCore.proxyByUser(account);
 
 				// Get Erc20 contract
@@ -1128,8 +1128,8 @@ export default function TransactionCard(props: TxCardProps) {
 								{account
 									? `${account.substring(
 											0,
-											5
-									  )}...${account.substring(36, 41)}`
+											6
+									  )}...${account.substring(37, 41)}`
 									: 'No acount found'}
 							</h4>
 						</Grid>
@@ -1334,7 +1334,8 @@ export default function TransactionCard(props: TxCardProps) {
 							}}
 							color="primary"
 							onClick={() => {
-								const queryString = `I%20just%20crafted%20a%20conditional%20ethereum%20transaction%%20that%20will%20${icedTxState.action.title}%20on%20my%20behalf%20when%20a%20predefined%20${icedTxState.trigger.title}%20occurs.%20Try%20it%20out%20yourself:%20https://gelato.finance`;
+								const queryString = `I%20just%20crafted%20a%20conditional%20ethereum%20transaction%20that%20will%20${icedTxState.action.title}%20on%20my%20behalf%20when%20a%20predefined%20${icedTxState.trigger.title}%20occurs - via @gelatofinance`;
+								console.log(queryString);
 								const url = `https://twitter.com/intent/tweet?text=${queryString}`;
 								window.open(url, '_blank');
 							}}
@@ -1348,7 +1349,7 @@ export default function TransactionCard(props: TxCardProps) {
 									color: 'white'
 								}}
 							>
-								Share your Configuration
+								Share on Twitter
 							</Button>
 						</Grid>
 						<Grid

@@ -35,7 +35,8 @@ import {
 	RESET_CONDITION,
 	RESET_ACTION,
 	SELECT_CONDITION,
-	DEFAULT_TRIGGER_ID
+	DEFAULT_TRIGGER_ID,
+	INPUT_OK
 } from '../constants/constants';
 import { useIcedTxContext } from '../state/GlobalState';
 import { TxState } from '../constants/interfaces';
@@ -140,6 +141,7 @@ export default function ButtonAppBar() {
 	const classes = useStyles();
 	const theme = useTheme();
 	const history = useHistory();
+	console.log(history.location.pathname);
 	const [mobileOpen, setMobileOpen] = React.useState(false);
 	const handleDrawerToggle = () => {
 		setMobileOpen(!mobileOpen);
@@ -187,7 +189,12 @@ export default function ButtonAppBar() {
 						/> */}
 						<GelatoLogo></GelatoLogo>
 
-						<Typography variant="h5">gelato finance</Typography>
+						<Typography
+							style={{ paddingBottom: '6px' }}
+							variant="h5"
+						>
+							gelato finance
+						</Typography>
 					</div>
 					{/* </Link> */}
 					<Hidden smDown>
@@ -198,6 +205,10 @@ export default function ButtonAppBar() {
 									// First refresh state of Create Page to start from the beginning
 									dispatch({ type: RESET_CONDITION });
 									dispatch({ type: RESET_ACTION });
+									dispatch({
+										type: INPUT_OK,
+										txState: TxState.displayInstallMetamask
+									});
 									history.push('/');
 								}}
 							>
@@ -221,7 +232,17 @@ export default function ButtonAppBar() {
 						{/* ################################ Connect Button*/}
 						{active && chainId === SELECTED_CHAIN_ID && (
 							<BootstrapButton
-								onClick={() => history.push('/dashboard')}
+								onClick={() => {
+									// IF we are already on dashboard, reload the page on click, otherwise change route
+									if (
+										history.location.pathname ===
+										'/dashboard'
+									) {
+										window.location.reload();
+									} else {
+										history.push('/dashboard');
+									}
+								}}
 							>
 								{account
 									? `${account.substring(
