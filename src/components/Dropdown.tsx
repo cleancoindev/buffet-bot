@@ -13,7 +13,8 @@ import {
 	SELECT_CONDITION,
 	SELECT_ACTION,
 	COLOURS,
-	DEFAULT_TRIGGER_ID
+	DEFAULT_TRIGGER_ID,
+	BOX
 } from '../constants/constants';
 import { MenuItem } from '@material-ui/core';
 
@@ -33,7 +34,8 @@ export default function AppDropdown(props: AppDropdownProps) {
 		selectEmpty: {
 			marginTop: theme.spacing(2),
 			color: 'white',
-			background: COLOURS.salmon,
+			background: COLOURS.salmon60,
+
 			'& :hover': {
 				background: COLOURS.salmon50
 			},
@@ -130,7 +132,8 @@ export default function AppDropdown(props: AppDropdownProps) {
 							display: 'flex',
 							justifyContent: 'start',
 							alignItems: 'center',
-							flexDirection: 'row'
+							flexDirection: 'row',
+							background: 'transparent'
 						}}
 					>
 						<div
@@ -142,7 +145,16 @@ export default function AppDropdown(props: AppDropdownProps) {
 							// src={'/images/gelato_logo.png'}
 							// alt="Kaka"
 						></div>
-						<p>Select...</p>
+						<p
+							style={{
+								textOverflow: 'ellipsis',
+								whiteSpace: 'nowrap',
+								overflow: 'hidden',
+								background: 'transparent'
+							}}
+						>
+							Select...
+						</p>
 					</div>
 				</MenuItem>
 
@@ -153,7 +165,8 @@ export default function AppDropdown(props: AppDropdownProps) {
 								display: 'flex',
 								justifyContent: 'start',
 								alignItems: 'center',
-								flexDirection: 'row'
+								flexDirection: 'row',
+								background: 'transparent'
 							}}
 						>
 							<img
@@ -169,7 +182,8 @@ export default function AppDropdown(props: AppDropdownProps) {
 								style={{
 									textOverflow: 'ellipsis',
 									whiteSpace: 'nowrap',
-									overflow: 'hidden'
+									overflow: 'hidden',
+									background: 'transparent'
 								}}
 							>
 								{value.title}

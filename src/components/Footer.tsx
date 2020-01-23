@@ -54,7 +54,7 @@ const Footer = () => {
 				{' '}
 				Supported by:{' '}
 				{/* <span style={{ fontSize: '0.9rem', color: COLOURS.salmon }}> */}
-				GECO
+				Gnosis GECO
 				{/* </span> */}
 				{' & '}
 				{/* <span style={{ fontSize: '0.9rem', color: COLOURS.salmon }}> */}
