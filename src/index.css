@@ -93,6 +93,10 @@ body {
 	border-width: 1; */
 }
 
+.disabledGetValue {
+	background: pink;
+}
+
 /*
 
 Header

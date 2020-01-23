@@ -93,7 +93,7 @@ export const TTYPES = [
 		// Which is the independent variable for the bool is greater than defintion
 		boolIndex: 2,
 		inputLabels: [
-			'Address which balance to monitor',
+			'Address whose balance to monitor',
 			'Token',
 			'Future balance activating the trigger',
 			'',

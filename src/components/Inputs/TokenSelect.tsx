@@ -45,8 +45,13 @@ const useStyles = makeStyles((theme: Theme) =>
 			},
 			'& .MuiOutlinedInput-root.Mui-disabled': {
 				'& fieldset': {
-					borderColor: COLOURS.salmon,
+					borderColor: '#72627b',
 					borderWidth: 1
+				}
+			},
+			'& .MuiOutlinedInput-root.Mui-disabled:hover': {
+				'& fieldset': {
+					borderColor: '#72627b'
 				}
 			}
 		},
@@ -102,8 +107,9 @@ export default function TokenSelect(props: TokenSelectProps) {
 
 	// If action, dont display ETH
 	let tokenList = getTokenList(relevantInputData, networkId);
+
 	if (triggerOrAction === TriggerOrAction.Trigger) {
-		tokenList.push(ETH);
+		tokenList.splice(0, 0, ETH);
 	}
 
 	// Pref

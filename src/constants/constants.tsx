@@ -186,19 +186,15 @@ export const INPUT_CSS = {
 		},
 		'& .MuiOutlinedInput-root.Mui-disabled': {
 			'& fieldset': {
-				borderColor: COLOURS.salmon,
+				borderColor: '#72627b',
 				borderWidth: 1
+			},
+			'&:hover fieldset': {
+				borderColor: '#72627b'
 			}
 		},
 		'& .MuiFormLabel-root': {
 			color: 'white !important'
 		}
-
-		// '& .MuiInputBase-input-405': {
-		// 	color: 'white'
-		// },
-		// '& .MuiFormLabel-root-371': {
-		// 	color: 'white'
-		// }
 	}
 };

@@ -141,7 +141,6 @@ export default function ButtonAppBar() {
 	const classes = useStyles();
 	const theme = useTheme();
 	const history = useHistory();
-	console.log(history.location.pathname);
 	const [mobileOpen, setMobileOpen] = React.useState(false);
 	const handleDrawerToggle = () => {
 		setMobileOpen(!mobileOpen);

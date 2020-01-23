@@ -13,7 +13,8 @@ import {
 	INPUT_ERROR,
 	INPUT_OK,
 	SELECTED_CHAIN_ID,
-	TOKEN_TRANSFER_CEILING
+	TOKEN_TRANSFER_CEILING,
+	COLOURS
 } from '../../constants/constants';
 import {
 	InputType,
@@ -34,6 +35,8 @@ import {
 import { useIcedTxContext } from '../../state/GlobalState';
 import { useWeb3React } from '@web3-react/core';
 import { TTYPES } from '../../constants/whitelist';
+
+import '../../index.css';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({

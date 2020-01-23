@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 		borderRadius: '1px 1px 1px 1px',
 		// backgroundColor: COLOURS.salmon,
 		// borderRadius: '1rem',
-		fontSize: '0.75rem',
+		fontSize: '0.85rem',
 		lineHeight: '1rem',
 		textAlign: 'center',
 		overflow: 'visible',
@@ -43,7 +43,7 @@ export function WarningMessage() {
 			<span role="img" aria-label="warning">
 				🚨
 			</span>{' '}
-			Careful! Alpha Version! Smart contracts are NOT audited. Use at own
+			Caution! Alpha Version! Smart contracts are NOT audited. Use at own
 			risk!{' '}
 		</div>
 	);

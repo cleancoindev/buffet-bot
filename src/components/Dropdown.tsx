@@ -17,6 +17,7 @@ import {
 	BOX
 } from '../constants/constants';
 import { MenuItem } from '@material-ui/core';
+import SearchIcon from '@material-ui/icons/Search';
 
 interface AppDropdownProps {
 	data: Array<TriggerWhitelistData | ActionWhitelistData>;
@@ -124,27 +125,28 @@ export default function AppDropdown(props: AppDropdownProps) {
 				open={open}
 				onClose={handleClose}
 				onOpen={handleOpen}
+				style={{}}
 				// value={triggerOrAction === TriggerOrAction.Trigger ? icedTxState.trigger.id : icedTxState.action.id}
 			>
 				<MenuItem key={0} value={'0'}>
 					<div
 						style={{
 							display: 'flex',
-							justifyContent: 'start',
+							justifyContent: 'center',
 							alignItems: 'center',
 							flexDirection: 'row',
 							background: 'transparent'
 						}}
 					>
-						<div
+						<SearchIcon
+							fontSize={'default'}
 							style={{
-								maxHeight: '45px',
-								width: '25px',
-								marginRight: '8px'
+								marginRight: '8px',
+								background: 'transparent'
 							}}
 							// src={'/images/gelato_logo.png'}
 							// alt="Kaka"
-						></div>
+						></SearchIcon>
 						<p
 							style={{
 								textOverflow: 'ellipsis',
@@ -163,7 +165,7 @@ export default function AppDropdown(props: AppDropdownProps) {
 						<div
 							style={{
 								display: 'flex',
-								justifyContent: 'start',
+								justifyContent: 'center',
 								alignItems: 'center',
 								flexDirection: 'row',
 								background: 'transparent'
@@ -173,7 +175,8 @@ export default function AppDropdown(props: AppDropdownProps) {
 								style={{
 									maxHeight: '45px',
 									width: '25px',
-									marginRight: '8px'
+									marginRight: '8px',
+									background: 'transparent'
 								}}
 								src={value.logo}
 								alt=""
