@@ -2,9 +2,16 @@ import React, { useEffect } from 'react';
 
 // Routing
 import { useHistory } from 'react-router-dom';
+import { useWeb3React } from '@web3-react/core';
 
 // Material UI
-import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
+import {
+	makeStyles,
+	withStyles,
+	useTheme,
+	createStyles,
+	Theme
+} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -24,7 +31,6 @@ import Divider from '@material-ui/core/Divider';
 import WarningIcon from '@material-ui/icons/Warning';
 
 // Web3 React
-import { useWeb3React } from '@web3-react/core';
 import { useEagerConnect, useInactiveListener } from '../hooks/hooks';
 import { injected } from '../constants/connectors';
 import {
@@ -41,6 +47,7 @@ import {
 import { useIcedTxContext } from '../state/GlobalState';
 import { TxState } from '../constants/interfaces';
 import GelatoLogo from './Logo/Logo';
+import LoginButton from './LogInButton';
 
 const drawerWidth = 240;
 
@@ -75,7 +82,7 @@ const BootstrapButton = withStyles({
 		textTransform: 'none',
 		fontSize: 16,
 		padding: '6px 12px',
-		marginLeft: '16px',
+		// marginLeft: '16px',
 		lineHeight: 1.5,
 		border: '0.5px solid',
 		borderColor: COLOURS.salmon,
@@ -146,7 +153,7 @@ export default function ButtonAppBar() {
 		setMobileOpen(!mobileOpen);
 	};
 
-	const { account, active, activate, chainId } = useWeb3React();
+	const { account, active, activate, deactivate, chainId } = useWeb3React();
 	const { dispatch } = useIcedTxContext();
 
 	// Web3 Logic
@@ -167,6 +174,7 @@ export default function ButtonAppBar() {
 	const logInLogOutMetamask = async () => {
 		if (!active) {
 			await activate(injected);
+		} else {
 		}
 	};
 
@@ -196,7 +204,7 @@ export default function ButtonAppBar() {
 						</Typography>
 					</div>
 					{/* </Link> */}
-					<Hidden smDown>
+					<Hidden xsDown>
 						<BootstrapButton
 							style={{ border: 'none' }}
 							onClick={() => {
@@ -221,34 +229,15 @@ export default function ButtonAppBar() {
 								history.push('/how-it-works');
 							}}
 						>
-							How it works
+							FAQ
 						</BootstrapButton>
 
 						{/* ################################ How it Works Button END */}
 
 						{/* ################################ Connect Button*/}
+
 						{active && chainId === SELECTED_CHAIN_ID && (
-							<BootstrapButton
-								onClick={() => {
-									// IF we are already on dashboard, reload the page on click, otherwise change route
-									if (
-										history.location.pathname ===
-										'/dashboard'
-									) {
-										window.location.reload();
-									} else {
-										history.push('/dashboard');
-									}
-								}}
-							>
-								{'Your Instructions'}
-								{/* {account
-									? `${account.substring(
-											0,
-											6
-									  )}...${account.substring(37, 41)}`
-									: 'Connected'} */}
-							</BootstrapButton>
+							<LoginButton></LoginButton>
 						)}
 						{active && chainId !== SELECTED_CHAIN_ID && (
 							<BootstrapButtonDanger
@@ -269,13 +258,16 @@ export default function ButtonAppBar() {
 							</BootstrapButtonDanger>
 						)}
 						{!active && (
-							<BootstrapButton onClick={logInLogOutMetamask}>
-								{'Connect With Metamask'}
+							<BootstrapButton
+								style={{ marginLeft: '16px' }}
+								onClick={logInLogOutMetamask}
+							>
+								{'Connect Metamask'}
 							</BootstrapButton>
 						)}
 						{/* ################################ Connect Button END*/}
 					</Hidden>
-					<Hidden mdUp>
+					<Hidden smUp>
 						<IconButton
 							edge="end"
 							onClick={handleDrawerToggle}
@@ -309,17 +301,12 @@ export default function ButtonAppBar() {
 				<Divider />
 				<List style={{ color: 'white' }}>
 					{active && chainId === SELECTED_CHAIN_ID && (
-						<ListItem
-							button
-							onClick={() => {
-								history.push('/dashboard');
-								handleDrawerToggle();
-							}}
-						>
+						<ListItem>
 							<ListItemIcon>
 								<InboxIcon />
 							</ListItemIcon>
 							<ListItemText
+								style={{ color: COLOURS.salmon }}
 								primary={
 									account
 										? `${account.substring(
@@ -329,35 +316,6 @@ export default function ButtonAppBar() {
 										: 'Connected'
 								}
 							/>
-						</ListItem>
-					)}
-					<ListItem
-						button
-						onClick={() => {
-							// First refresh state of Create Page to start from the beginning
-							history.push('/how-it-works');
-							handleDrawerToggle();
-						}}
-					>
-						<ListItemIcon>
-							<InboxIcon />
-						</ListItemIcon>
-						<ListItemText primary={'How it works'} />
-					</ListItem>
-					{active && chainId === SELECTED_CHAIN_ID && (
-						<ListItem
-							button
-							onClick={() => {
-								dispatch({ type: RESET_CONDITION });
-								dispatch({ type: RESET_ACTION });
-								history.push('/');
-								handleDrawerToggle();
-							}}
-						>
-							<ListItemIcon>
-								<InboxIcon />
-							</ListItemIcon>
-							<ListItemText primary={'New Instruction'} />
 						</ListItem>
 					)}
 					{active && chainId !== SELECTED_CHAIN_ID && (
@@ -394,6 +352,62 @@ export default function ButtonAppBar() {
 								<InboxIcon />
 							</ListItemIcon>
 							<ListItemText primary={'Connect With Metamask'} />
+						</ListItem>
+					)}
+					{active && chainId === SELECTED_CHAIN_ID && (
+						<ListItem
+							button
+							onClick={() => {
+								dispatch({ type: RESET_CONDITION });
+								dispatch({ type: RESET_ACTION });
+								history.push('/');
+								handleDrawerToggle();
+							}}
+						>
+							<ListItemIcon>
+								<InboxIcon />
+							</ListItemIcon>
+							<ListItemText primary={'New Instruction'} />
+						</ListItem>
+					)}
+					<ListItem
+						button
+						onClick={() => {
+							history.push('/dashboard');
+							handleDrawerToggle();
+						}}
+					>
+						<ListItemIcon>
+							<InboxIcon />
+						</ListItemIcon>
+						<ListItemText primary={'My Bot Activity'} />
+					</ListItem>
+					<ListItem
+						button
+						onClick={() => {
+							// First refresh state of Create Page to start from the beginning
+							history.push('/how-it-works');
+							handleDrawerToggle();
+						}}
+					>
+						<ListItemIcon>
+							<InboxIcon />
+						</ListItemIcon>
+						<ListItemText primary={'How it works'} />
+					</ListItem>
+
+					{active && chainId === SELECTED_CHAIN_ID && (
+						<ListItem
+							button
+							onClick={() => {
+								deactivate();
+								handleDrawerToggle();
+							}}
+						>
+							<ListItemIcon>
+								<InboxIcon />
+							</ListItemIcon>
+							<ListItemText primary={'Log Out'} />
 						</ListItem>
 					)}
 				</List>

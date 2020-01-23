@@ -441,7 +441,7 @@ export default function TransactionCard(props: TxCardProps) {
 					progressText: ``,
 					prepayment: false,
 					closeBtn: true,
-					btn: 'Create Wallet',
+					btn: 'Deploy bot',
 					btnFunc: async () => {
 						// Change Modal to illustrate that user has to confirm Tx
 						console.log('Change TxState to preGelatoWallet');
@@ -909,7 +909,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.preCancel:
 				return {
-					title: `Cancel this instruction`,
+					title: `Please confirm the cancellation in Metamask`,
 					progress: Progress.awaitingMetamaskConfirm,
 					progressText: `Waiting for confirmation`,
 					prepayment: true,

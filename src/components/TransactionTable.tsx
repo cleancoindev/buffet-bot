@@ -247,7 +247,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
 	return (
 		<Toolbar style={{ alignItems: 'flex-start' }}>
 			<Typography className={classes.title} variant="h6" id="tableTitle">
-				Your Instructions
+				My Bot Activity
 			</Typography>
 		</Toolbar>
 	);
