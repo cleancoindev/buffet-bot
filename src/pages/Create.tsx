@@ -115,7 +115,7 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 	};
 
 	function getSteps() {
-		return ['Set Trigger', 'Set Action', 'Create IcedTx'];
+		return ['Set Trigger', 'Set Action', 'Submit Instruction'];
 	}
 
 	// ########################### Checks before minting

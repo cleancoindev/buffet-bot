@@ -192,28 +192,26 @@ export default function ButtonAppBar() {
 							style={{ paddingBottom: '6px' }}
 							variant="h5"
 						>
-							gelato finance
+							gelato
 						</Typography>
 					</div>
 					{/* </Link> */}
 					<Hidden smDown>
-						{active && chainId === SELECTED_CHAIN_ID && (
-							<BootstrapButton
-								style={{ border: 'none' }}
-								onClick={() => {
-									// First refresh state of Create Page to start from the beginning
-									dispatch({ type: RESET_CONDITION });
-									dispatch({ type: RESET_ACTION });
-									dispatch({
-										type: INPUT_OK,
-										txState: TxState.displayInstallMetamask
-									});
-									history.push('/');
-								}}
-							>
-								Create new
-							</BootstrapButton>
-						)}
+						<BootstrapButton
+							style={{ border: 'none' }}
+							onClick={() => {
+								// First refresh state of Create Page to start from the beginning
+								dispatch({ type: RESET_CONDITION });
+								dispatch({ type: RESET_ACTION });
+								dispatch({
+									type: INPUT_OK,
+									txState: TxState.displayInstallMetamask
+								});
+								history.push('/');
+							}}
+						>
+							New Instruction
+						</BootstrapButton>
 
 						{/* ################################ How it works Button*/}
 						<BootstrapButton
@@ -243,12 +241,13 @@ export default function ButtonAppBar() {
 									}
 								}}
 							>
-								{account
+								{'Your Instructions'}
+								{/* {account
 									? `${account.substring(
 											0,
 											6
 									  )}...${account.substring(37, 41)}`
-									: 'Connected'}
+									: 'Connected'} */}
 							</BootstrapButton>
 						)}
 						{active && chainId !== SELECTED_CHAIN_ID && (
@@ -358,7 +357,7 @@ export default function ButtonAppBar() {
 							<ListItemIcon>
 								<InboxIcon />
 							</ListItemIcon>
-							<ListItemText primary={'Create New'} />
+							<ListItemText primary={'New Instruction'} />
 						</ListItem>
 					)}
 					{active && chainId !== SELECTED_CHAIN_ID && (

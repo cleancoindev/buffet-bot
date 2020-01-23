@@ -251,6 +251,7 @@ export default function TransactionCard(props: TxCardProps) {
 				const estimate = await gelatoCore.estimate.cancelExecutionClaim(
 					pastTransaction?.selectedExecutor,
 					pastTransaction?.executionClaimId,
+					account,
 					pastTransaction?.proxyAddress,
 					pastTransaction?.trigger,
 					pastTransaction?.triggerPayload,
@@ -435,7 +436,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.displayGelatoWallet:
 				return {
-					title: `First, let's create a gelato wallet for you!`,
+					title: `First, let's deploy your personal gelato bot!`,
 					progress: Progress.awaitingModalConfirm,
 					progressText: ``,
 					prepayment: false,
@@ -512,7 +513,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.waitingGelatoWallet:
 				return {
-					title: `Creating your gelato wallet ...`,
+					title: `Deploying your gelato bot ...`,
 					progress: Progress.awaitingeMining,
 					progressText: `Transaction in progress...`,
 					prepayment: false,
@@ -521,7 +522,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.postGelatoWallet:
 				return {
-					title: `Success: Gelato wallet created!`,
+					title: `Success: Your gelato bot is live!`,
 					progress: Progress.finished,
 					progressText: `Transaction complete`,
 					prepayment: false,
@@ -533,7 +534,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.displayApprove:
 				return {
-					title: `Approve gelato to move ${getTokenSymbol(
+					title: `Approve your gelato bot to move ${getTokenSymbol(
 						icedTxState.action.userInputs[
 							icedTxState.action.approveIndex
 						].toString(),
@@ -648,12 +649,12 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.displayCreate:
 				return {
-					title: `Create your Conditional Transaction`,
+					title: `Instruct your gelato bot`,
 					progress: Progress.awaitingModalConfirm,
 					progressText: ``,
 					prepayment: true,
 					closeBtn: true,
-					btn: 'Create',
+					btn: 'Submit Instruction',
 					btnFunc: async () => {
 						// Change Modal to illustrate that user has to confirm Tx
 						console.log('Change TxState to preCreate');
@@ -761,7 +762,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.waitingCreate:
 				return {
-					title: `Creating Conditional Transaction ...`,
+					title: `Instructing your gelato bot ...`,
 					progress: Progress.awaitingeMining,
 					progressText: `Transaction in progress...`,
 					prepayment: true,
@@ -770,7 +771,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.postCreate:
 				return {
-					title: `Success: Conditional Transaction created!`,
+					title: `Success: Instruction submitted!`,
 					progress: Progress.finished,
 					progressText: `Transaction mined`,
 					prepayment: true,
@@ -779,12 +780,12 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.displayCancel:
 				return {
-					title: `Cancel this frozen Transaction`,
+					title: `Cancel this instruction`,
 					progress: Progress.awaitingModalConfirm,
 					progressText: ``,
 					prepayment: true,
 					closeBtn: true,
-					btn: 'Cancel frozen Transaction',
+					btn: 'Cancel instruction',
 					btnFunc: async () => {
 						// Change Modal to illustrate that user has to confirm Tx
 						console.log('Change TxState to preCancel');
@@ -808,6 +809,7 @@ export default function TransactionCard(props: TxCardProps) {
 							const estimate = await gelatoCore.estimate.cancelExecutionClaim(
 								pastTransaction?.selectedExecutor,
 								pastTransaction?.executionClaimId,
+								account,
 								pastTransaction?.proxyAddress,
 								pastTransaction?.trigger,
 								pastTransaction?.triggerPayload,
@@ -847,6 +849,7 @@ export default function TransactionCard(props: TxCardProps) {
 								const tx = await gelatoCore.cancelExecutionClaim(
 									pastTransaction?.selectedExecutor,
 									pastTransaction?.executionClaimId,
+									account,
 									pastTransaction?.proxyAddress,
 									pastTransaction?.trigger,
 									pastTransaction?.triggerPayload,
@@ -906,7 +909,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.preCancel:
 				return {
-					title: `Cancel your Conditional Transaction`,
+					title: `Cancel this instruction`,
 					progress: Progress.awaitingMetamaskConfirm,
 					progressText: `Waiting for confirmation`,
 					prepayment: true,
@@ -915,7 +918,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.waitingCancel:
 				return {
-					title: `Cancelling Conditional Transaction ...`,
+					title: `Cancelling instruction ...`,
 					progress: Progress.awaitingeMining,
 					progressText: `Transaction in progress...`,
 					prepayment: true,
@@ -924,7 +927,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.postCancel:
 				return {
-					title: `Success: Conditional Transaction cancelled!`,
+					title: `Success: Instruction cancelled!`,
 					progress: Progress.finished,
 					progressText: `Transaction mined`,
 					prepayment: true,
@@ -938,7 +941,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.cancelled:
 				return {
-					title: `Transaction Cancelled`,
+					title: `Instruction cancelled`,
 					progress: Progress.cancelled,
 					progressText: `Tx cancelled`,
 					prepayment: false,
@@ -1313,7 +1316,7 @@ export default function TransactionCard(props: TxCardProps) {
 								<span style={{ color: COLOURS.salmon }}>
 									{icedTxState.trigger.title}
 								</span>{' '}
-								is activated, gelato will{' '}
+								is activated, your gelato bot will{' '}
 								<span style={{ color: COLOURS.salmon }}>
 									{icedTxState.action.title}
 								</span>{' '}
@@ -1334,7 +1337,7 @@ export default function TransactionCard(props: TxCardProps) {
 							}}
 							color="primary"
 							onClick={() => {
-								const queryString = `I%20just%20crafted%20a%20conditional%20ethereum%20transaction%20that%20will%20${icedTxState.action.title}%20on%20my%20behalf%20when%20a%20predefined%20${icedTxState.trigger.title}%20occurs - via @gelatofinance`;
+								const queryString = `I%20just%20tasked%20my%20gelato%20bot%20to%20${icedTxState.action.title}%20on%20my%20behalf%20when%20my%20predefined%20${icedTxState.trigger.title}%20trigger%20gets%20activated - via @gelatofinance`;
 								console.log(queryString);
 								const url = `https://twitter.com/intent/tweet?text=${queryString}`;
 								window.open(url, '_blank');

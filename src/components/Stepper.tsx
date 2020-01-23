@@ -158,7 +158,7 @@ export default function StepperParent(props: StepperProps) {
 									}}
 									className={classes.nextButton}
 								>
-									{'Confirm'}
+									{'Submit Instruction'}
 								</Button>
 							) : (
 								<Button

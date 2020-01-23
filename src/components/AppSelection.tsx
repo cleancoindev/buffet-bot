@@ -47,8 +47,10 @@ const useStyles = makeStyles(theme => ({
 		...BOX
 	},
 	boxTitle: {
-		fontSize: '16px',
+		fontSize: '18px',
+		// fontWeight: 'bold',
 		marginLeft: '10px',
+		marginBottom: '0px',
 		color: 'white',
 		textAlign: 'left'
 	},
@@ -266,7 +268,7 @@ export default function AppSelection() {
 								textAlignLast: 'center'
 							}}
 						>
-							Gelato will{' '}
+							Your gelato bot will{' '}
 							<span style={{ color: '#E50078' }}>
 								{icedTxState.action.title}
 							</span>{' '}
@@ -300,7 +302,7 @@ export default function AppSelection() {
 									})
 								}
 							>
-								Create
+								Instruct Bot
 							</Button>
 						)}
 						{icedTxState.txState !== TxState.displayWrongNetwork &&
@@ -313,7 +315,7 @@ export default function AppSelection() {
 										className={classes.createButton}
 										endIcon={<FlashOnOutlinedIcon />}
 									>
-										Create
+										Instruct Bot
 									</Button>
 								</Link>
 							)}
@@ -326,7 +328,7 @@ export default function AppSelection() {
 									}
 									className={classes.createButton}
 								>
-									Create
+									Instruct Bot
 								</Button>
 							)}
 					</Grid>

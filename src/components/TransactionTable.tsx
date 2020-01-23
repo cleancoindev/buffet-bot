@@ -245,9 +245,9 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
 	// const { numSelected } = props;
 
 	return (
-		<Toolbar>
+		<Toolbar style={{ alignItems: 'flex-start' }}>
 			<Typography className={classes.title} variant="h6" id="tableTitle">
-				Your Conditional Transactions
+				Your Instructions
 			</Typography>
 		</Toolbar>
 	);
