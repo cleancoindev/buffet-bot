@@ -105,9 +105,12 @@ const TextFieldWrap = (props: TextFieldWrapProps) => {
 	const labelClasses = useInputStyles();
 	const { setOpen, value, label, disabled } = props;
 
-	return (
-		<FormControl className="datepickerWrapper" style={{ width: '100%' }}>
-			{!disabled && (
+	if (!disabled) {
+		return (
+			<FormControl
+				className="datepickerWrapper"
+				style={{ width: '100%' }}
+			>
 				<TextField
 					style={{}}
 					placeholder={'placeholder'}
@@ -124,24 +127,29 @@ const TextFieldWrap = (props: TextFieldWrapProps) => {
 					label={label}
 					disabled={disabled}
 				/>
-			)}
-			{disabled && (
-				<TextField
-					style={{ color: 'white !important' }}
-					placeholder={'placeholder'}
-					className={'datepicker'}
-					fullWidth
-					margin="normal"
-					InputLabelProps={{
-						shrink: true
-					}}
-					variant="outlined"
-					defaultValue={value}
-					id="outlined-full-width-1"
-					label={label}
-					disabled={disabled}
-				/>
-			)}
+			</FormControl>
+		);
+	} else {
+	}
+	return (
+		<FormControl
+			className="datepickerWrapperDisabled"
+			style={{ width: '100%' }}
+		>
+			<TextField
+				placeholder={'placeholder'}
+				className={'datepicker'}
+				fullWidth
+				margin="normal"
+				InputLabelProps={{
+					shrink: true
+				}}
+				variant="outlined"
+				defaultValue={value}
+				id="outlined-full-width-1"
+				label={label}
+				disabled={disabled}
+			/>
 		</FormControl>
 	);
 };

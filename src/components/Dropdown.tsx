@@ -104,6 +104,15 @@ export default function AppDropdown(props: AppDropdownProps) {
 		setOpen(true);
 	};
 
+	/*
+	style={{
+					textOverflow: 'ellipsis',
+					whiteSpace: 'nowrap',
+					overflow: 'hidden'
+				}}
+
+	*/
+
 	return (
 		<FormControl
 			color="primary"
@@ -125,10 +134,10 @@ export default function AppDropdown(props: AppDropdownProps) {
 				open={open}
 				onClose={handleClose}
 				onOpen={handleOpen}
-				style={{}}
+
 				// value={triggerOrAction === TriggerOrAction.Trigger ? icedTxState.trigger.id : icedTxState.action.id}
 			>
-				<MenuItem key={0} value={'0'}>
+				<MenuItem key={0} value={'0'} style={{ overflowX: 'auto' }}>
 					<div
 						style={{
 							display: 'flex',
@@ -161,7 +170,11 @@ export default function AppDropdown(props: AppDropdownProps) {
 				</MenuItem>
 
 				{data.map((value, key) => (
-					<MenuItem key={key} value={value.id}>
+					<MenuItem
+						key={key}
+						value={value.id}
+						style={{ overflowX: 'auto' }}
+					>
 						<div
 							style={{
 								display: 'flex',
