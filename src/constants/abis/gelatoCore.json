@@ -1066,7 +1066,7 @@
         "type": "address"
       }
     ],
-    "name": "getProxyOfUser",
+    "name": "proxyByUser",
     "outputs": [
       {
         "internalType": "contract IGelatoUserProxy",

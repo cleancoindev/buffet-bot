@@ -39,6 +39,29 @@ export const EXECUTOR_ADDRESS = {
 // Triggers
 export const TTYPES = [
 	{
+		id: 3,
+		app: 'Calendar',
+		title: 'Time',
+		address: {
+			1: '',
+			3: '0x525EB0c1279f1CC690D01a2Fcb78A0D5d156D1Ee',
+			4: '',
+			42: '0x328eAA9C817383e0A2fc815F810BCA7FF3ea6288'
+		},
+		params: [{ type: 'uint256', name: '_timestamp' }],
+		abi: 'function fired(uint256 _timestamp)',
+		getTriggerValueAbi: '',
+		getTriggerValueInput: BIG_NUM_ZERO,
+		// 99 means nothing
+		approveIndex: 999,
+		boolIndex: 999,
+		userInputTypes: [InputType.Date],
+		inputLabels: ['Pick a Date and Time'],
+		userInputs: EMPTY_STRING_ARRAY,
+		relevantInputData: [RelevantInputData.none],
+		logo: '/images/ethereum_logo.png'
+	},
+	{
 		id: 1,
 		app: 'Your Wallet',
 		title: 'Token balance',
@@ -87,29 +110,6 @@ export const TTYPES = [
 		logo: '/images/ethereum_logo.png'
 	},
 
-	{
-		id: 3,
-		app: 'Calendar',
-		title: 'Time',
-		address: {
-			1: '',
-			3: '0x525EB0c1279f1CC690D01a2Fcb78A0D5d156D1Ee',
-			4: '',
-			42: '0x328eAA9C817383e0A2fc815F810BCA7FF3ea6288'
-		},
-		params: [{ type: 'uint256', name: '_timestamp' }],
-		abi: 'function fired(uint256 _timestamp)',
-		getTriggerValueAbi: '',
-		getTriggerValueInput: BIG_NUM_ZERO,
-		// 99 means nothing
-		approveIndex: 999,
-		boolIndex: 999,
-		userInputTypes: [InputType.Date],
-		inputLabels: ['Pick a Date and Time'],
-		userInputs: EMPTY_STRING_ARRAY,
-		relevantInputData: [RelevantInputData.none],
-		logo: '/images/ethereum_logo.png'
-	},
 	// Use isGreater as bool
 	{
 		id: 2,

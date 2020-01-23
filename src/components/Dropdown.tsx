@@ -135,8 +135,8 @@ export default function AppDropdown(props: AppDropdownProps) {
 					>
 						<div
 							style={{
-								maxHeight: '50px',
-								width: '35px',
+								maxHeight: '45px',
+								width: '25px',
 								marginRight: '8px'
 							}}
 							// src={'/images/gelato_logo.png'}
@@ -158,8 +158,8 @@ export default function AppDropdown(props: AppDropdownProps) {
 						>
 							<img
 								style={{
-									maxHeight: '50px',
-									width: '35px',
+									maxHeight: '45px',
+									width: '25px',
 									marginRight: '8px'
 								}}
 								src={value.logo}

@@ -233,7 +233,7 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 				if (activeStep === 2) {
 					// User is already logged in => Change to insufficientBalance
 					gelatoCore
-						.getProxyOfUser(web3.account)
+						.proxyByUser(web3.account)
 						.then((result: string) => {
 							const proxyAddress = result;
 							// User has Proxy

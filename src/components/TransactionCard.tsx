@@ -191,7 +191,8 @@ export default function TransactionCard(props: TxCardProps) {
 				gasEstimatePlusBuffer = addGasBuffer(gasEstimate);
 				break;
 			case TxState.displayApprove:
-				const proxyAddress = await gelatoCore.getProxyOfUser(account);
+				console.log("in here")
+				const proxyAddress = await gelatoCore.proxyByUser(account);
 
 				// Get Erc20 contract
 				const signer = library.getSigner();
@@ -222,7 +223,7 @@ export default function TransactionCard(props: TxCardProps) {
 				}
 
 			case TxState.displayCreate:
-				const userProxy = await gelatoCore.getProxyOfUser(account);
+				const userProxy = await gelatoCore.proxyByUser(account);
 				const {
 					encodedTrigger,
 					encodedAction
@@ -553,7 +554,7 @@ export default function TransactionCard(props: TxCardProps) {
 							type: UPDATE_TX_STATE,
 							txState: TxState.preApprove
 						});
-						const proxyAddress = await gelatoCore.getProxyOfUser(
+						const proxyAddress = await gelatoCore.proxyByUser(
 							account
 						);
 
@@ -634,8 +635,16 @@ export default function TransactionCard(props: TxCardProps) {
 					progress: Progress.awaitingMetamaskConfirm,
 					progressText: `Waiting for confirmation`,
 					prepayment: false,
-					closeBtn: true,
-					btn: ''
+					closeBtn: false,
+					btn: 'Cancel',
+					btnFunc: () => {
+						// Change state back to display approve:
+						console.log('Change TxState to displayApprove');
+						dispatch({
+							type: UPDATE_TX_STATE,
+							txState: TxState.displayApprove
+						});
+					}
 				};
 			case TxState.displayCreate:
 				return {
@@ -652,7 +661,7 @@ export default function TransactionCard(props: TxCardProps) {
 							type: UPDATE_TX_STATE,
 							txState: TxState.preCreate
 						});
-						const proxyAddress = await gelatoCore.getProxyOfUser(
+						const proxyAddress = await gelatoCore.proxyByUser(
 							account
 						);
 						console.log(icedTxState);
@@ -741,7 +750,14 @@ export default function TransactionCard(props: TxCardProps) {
 					progressText: `Waiting for confirmation`,
 					prepayment: true,
 					closeBtn: false,
-					btn: ''
+					btn: 'Cancel',
+					btnFunc: () => {
+						console.log('Change TxState to displayCreate');
+						dispatch({
+							type: UPDATE_TX_STATE,
+							txState: TxState.displayCreate
+						});
+					}
 				};
 			case TxState.waitingCreate:
 				return {
