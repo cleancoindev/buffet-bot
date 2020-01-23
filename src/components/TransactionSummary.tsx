@@ -92,7 +92,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 						textAlign: 'left'
 					}}
 				>
-					<h2> Summary</h2>
+					<h2>Instruction Summary</h2>
 					<h2 style={{ textAlign: 'left' }}>
 						IF{' '}
 						<span style={{ color: COLOURS.salmon }}>
@@ -140,7 +140,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 				>
 					<h2>
 						{' '}
-						Trigger Summary:{' '}
+						Trigger Settings:{' '}
 						<span style={{ color: COLOURS.salmon }}>
 							{trigger.title}{' '}
 						</span>
@@ -192,7 +192,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 					}}
 				>
 					<h2>
-						Action Summary:{' '}
+						Action Settings:{' '}
 						<span style={{ color: COLOURS.salmon }}>
 							{action.title}
 						</span>{' '}

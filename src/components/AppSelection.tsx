@@ -91,10 +91,10 @@ export default function AppSelection() {
 
 	const preTxCheck = () => {
 		const { ethereum } = window as any;
-		if (!web3.active) {
+		if (!web3.active && !ethereum.isMetaMask) {
 			dispatch({
 				type: UPDATE_TX_STATE,
-				txState: TxState.displayLogIntoMetamask
+				txState: TxState.displayInstallMetamask
 			});
 			return 0;
 		}
@@ -105,7 +105,8 @@ export default function AppSelection() {
 					// Check if the object is injected by metamask
 					if (ethereum.isMetaMask) {
 						// Yes it is metamask
-						// console.log('Metamask is installed');
+						console.log(ethereum);
+						console.log('Metamask is installed');
 						// Change txState to "Login with metamask"
 						// console.log('Change TxState to displayLogIntoMetamask');
 						dispatch({

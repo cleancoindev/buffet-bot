@@ -49,6 +49,10 @@ export default function AppDropdown(props: AppDropdownProps) {
 	const { dispatch, icedTxState } = useIcedTxContext();
 	const classes = useStyles();
 	const [state, setState] = React.useState('0');
+	// useEffect(() => {
+	// 	console.log('in here');
+	// 	setState('0');
+	// }, []);
 
 	// Dispatch Reducer
 	// const selectTrigger = (id: string) => {

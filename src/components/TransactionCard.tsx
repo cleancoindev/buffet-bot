@@ -30,6 +30,7 @@ import {
 // Web3 React
 import { useWeb3React } from '@web3-react/core';
 import { injected } from '../constants/connectors';
+
 import { useGelatoCore } from '../hooks/hooks';
 import { EXECUTOR_ADDRESS } from '../constants/whitelist';
 import { ethers } from 'ethers';
@@ -416,9 +417,9 @@ export default function TransactionCard(props: TxCardProps) {
 					progressText: ``,
 					prepayment: false,
 					closeBtn: true,
-					btn: 'Open Metamask',
-					btnFunc: () => {
-						activate(injected);
+					btn: 'Connect Metamask',
+					btnFunc: async () => {
+						await activate(injected);
 						console.log('modal close');
 						modalClose();
 					}
@@ -649,7 +650,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.displayCreate:
 				return {
-					title: `Instruct your gelato bot`,
+					title: `Submit instruction to your bot`,
 					progress: Progress.awaitingModalConfirm,
 					progressText: ``,
 					prepayment: true,

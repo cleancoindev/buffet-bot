@@ -18,17 +18,17 @@ const useStyles = makeStyles((theme: Theme) =>
 			width: '100%'
 		},
 		backButton: {
-			background: 'grey',
+			background: '#444140',
 			color: 'white',
 			minWidth: '100px',
-			border: 0,
+			border: 1,
 			borderRadius: 3,
-			boxShadow: '0 2px 2px 2px rgba(255, 255, 255, .3)',
+			boxShadow: '0 1px 1px 1px rgba(255, 255, 255, .3)',
 			height: 48,
 			padding: '0 30px',
 			margin: 8,
 			'&:hover': {
-				background: '#4aedc4'
+				background: '#222120'
 			}
 		},
 		nextButton: {
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
 			color: 'white',
 			border: 0,
 			borderRadius: 3,
-			boxShadow: '0 2px 2px 2px rgba(255, 255, 255, .3)',
+			boxShadow: '0 1px 1px 1px rgba(255, 255, 255, .3)',
 			height: 48,
 			padding: '0 30px',
 			margin: 8,

@@ -120,6 +120,7 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 
 	// ########################### Checks before minting
 	const preTxCheck = () => {
+		console.log('in here');
 		// 1. Check if user has metamask installed, if not display install metamask link
 		const { ethereum } = window as any;
 
@@ -309,10 +310,13 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 			});
 		} else {
 			preTxCheck();
-			if (!web3.active) {
+			if (
+				!web3.active &&
+				icedTxState.txState !== TxState.displayInstallMetamask
+			) {
 				dispatch({
 					type: UPDATE_TX_STATE,
-					txState: TxState.displayLogIntoMetamask
+					txState: TxState.displayInstallMetamask
 				});
 			}
 		}

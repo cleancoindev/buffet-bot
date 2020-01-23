@@ -182,7 +182,12 @@ export default function LoginButton() {
 				<StyledMenuItem
 					onClick={() => {
 						deactivate();
+						dispatch({
+							type: UPDATE_TX_STATE,
+							txState: TxState.displayInstallMetamask
+						});
 						handleClose();
+						history.push('/');
 					}}
 				>
 					<span style={{ minWidth: '56px' }}>👋</span>
