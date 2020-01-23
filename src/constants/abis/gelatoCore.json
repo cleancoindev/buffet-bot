@@ -3,7 +3,7 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "executor",
         "type": "address"
@@ -16,19 +16,19 @@
       },
       {
         "indexed": true,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "contract IGelatoTrigger",
         "name": "trigger",
         "type": "address"
       },
       {
-        "indexed": true,
-        "internalType": "contract IGelatoAction",
-        "name": "action",
-        "type": "address"
-      },
-      {
         "indexed": false,
-        "internalType": "enum GelatoCoreEnums.CanExecuteResult",
+        "internalType": "enum GelatoCoreEnums.CanExecuteResults",
         "name": "canExecuteResult",
         "type": "uint8"
       },
@@ -40,6 +40,49 @@
       }
     ],
     "name": "LogCanExecuteFailed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "executor",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "executionClaimId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "contract IGelatoTrigger",
+        "name": "trigger",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum GelatoCoreEnums.CanExecuteResults",
+        "name": "canExecuteResult",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "reason",
+        "type": "uint8"
+      }
+    ],
+    "name": "LogCanExecuteSuccess",
     "type": "event"
   },
   {
@@ -85,8 +128,8 @@
       },
       {
         "indexed": true,
-        "internalType": "contract IGelatoUserProxy",
-        "name": "userProxy",
+        "internalType": "address",
+        "name": "user",
         "type": "address"
       },
       {
@@ -122,6 +165,12 @@
       },
       {
         "indexed": true,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "contract IGelatoUserProxy",
         "name": "userProxy",
         "type": "address"
@@ -176,7 +225,7 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "executor",
         "type": "address"
@@ -188,28 +237,28 @@
         "type": "uint256"
       },
       {
+        "indexed": true,
+        "internalType": "address payable",
+        "name": "user",
+        "type": "address"
+      },
+      {
         "indexed": false,
         "internalType": "contract IGelatoTrigger",
         "name": "trigger",
         "type": "address"
       },
       {
-        "indexed": true,
+        "indexed": false,
         "internalType": "contract IGelatoAction",
         "name": "action",
         "type": "address"
       },
       {
-        "indexed": true,
-        "internalType": "enum GelatoCoreEnums.ExecutionResult",
-        "name": "executionResult",
-        "type": "uint8"
-      },
-      {
         "indexed": false,
-        "internalType": "uint8",
-        "name": "reason",
-        "type": "uint8"
+        "internalType": "string",
+        "name": "executionFailureReason",
+        "type": "string"
       }
     ],
     "name": "LogExecutionFailure",
@@ -351,13 +400,19 @@
         "type": "uint256"
       },
       {
+        "indexed": true,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
         "indexed": false,
         "internalType": "contract IGelatoTrigger",
         "name": "trigger",
         "type": "address"
       },
       {
-        "indexed": true,
+        "indexed": false,
         "internalType": "contract IGelatoAction",
         "name": "action",
         "type": "address"
@@ -411,6 +466,11 @@
         "type": "uint256"
       },
       {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      },
+      {
         "internalType": "contract IGelatoUserProxy",
         "name": "_userProxy",
         "type": "address"
@@ -437,13 +497,8 @@
       },
       {
         "internalType": "uint256[3]",
-        "name": "_triggerGasActionTotalGasMinExecutionGas",
+        "name": "_triggerGasActionGasMinExecutionGas",
         "type": "uint256[3]"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_actionConditionsCheckGas",
-        "type": "uint256"
       },
       {
         "internalType": "uint256",
@@ -459,13 +514,13 @@
     "name": "canExecute",
     "outputs": [
       {
-        "internalType": "enum GelatoCoreEnums.CanExecuteResult",
+        "internalType": "enum GelatoCoreEnums.CanExecuteResults",
         "name": "",
         "type": "uint8"
       },
       {
         "internalType": "uint8",
-        "name": "errorCode",
+        "name": "reason",
         "type": "uint8"
       }
     ],
@@ -485,6 +540,11 @@
         "type": "uint256"
       },
       {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      },
+      {
         "internalType": "contract IGelatoUserProxy",
         "name": "_userProxy",
         "type": "address"
@@ -511,7 +571,7 @@
       },
       {
         "internalType": "uint256[3]",
-        "name": "_triggerGasActionTotalGasMinExecutionGas",
+        "name": "_triggerGasActionGasMinExecutionGas",
         "type": "uint256[3]"
       },
       {
@@ -571,6 +631,11 @@
         "type": "uint256"
       },
       {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      },
+      {
         "internalType": "contract IGelatoUserProxy",
         "name": "_userProxy",
         "type": "address"
@@ -597,7 +662,7 @@
       },
       {
         "internalType": "uint256[3]",
-        "name": "_triggerGasActionTotalGasMinExecutionGas",
+        "name": "_triggerGasActionGasMinExecutionGas",
         "type": "uint256[3]"
       },
       {
@@ -695,40 +760,6 @@
   {
     "inputs": [
       {
-        "internalType": "contract IGelatoAction",
-        "name": "_action",
-        "type": "address"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_actionPayloadWithSelector",
-        "type": "bytes"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_actionConditionsCheckGas",
-        "type": "uint256"
-      }
-    ],
-    "name": "gasTestActionConditionsCheck",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "executable",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint8",
-        "name": "reason",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "contract IGelatoUserProxy",
         "name": "_gasTestUserProxy",
         "type": "address"
@@ -750,18 +781,7 @@
       }
     ],
     "name": "gasTestActionViaGasTestUserProxy",
-    "outputs": [
-      {
-        "internalType": "enum GelatoCoreEnums.ExecutionResult",
-        "name": "executionResult",
-        "type": "uint8"
-      },
-      {
-        "internalType": "uint8",
-        "name": "reason",
-        "type": "uint8"
-      }
-    ],
+    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -771,6 +791,11 @@
         "internalType": "uint256",
         "name": "_executionClaimId",
         "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
       },
       {
         "internalType": "contract IGelatoUserProxy",
@@ -799,13 +824,8 @@
       },
       {
         "internalType": "uint256[3]",
-        "name": "_triggerGasActionTotalGasMinExecutionGas",
+        "name": "_triggerGasActionGasMinExecutionGas",
         "type": "uint256[3]"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_actionConditionsCheckGas",
-        "type": "uint256"
       },
       {
         "internalType": "uint256",
@@ -821,7 +841,7 @@
     "name": "gasTestCanExecute",
     "outputs": [
       {
-        "internalType": "enum GelatoCoreEnums.CanExecuteResult",
+        "internalType": "enum GelatoCoreEnums.CanExecuteResults",
         "name": "canExecuteResult",
         "type": "uint8"
       },
@@ -842,6 +862,11 @@
         "type": "uint256"
       },
       {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      },
+      {
         "internalType": "contract IGelatoUserProxy",
         "name": "_userProxy",
         "type": "address"
@@ -868,7 +893,7 @@
       },
       {
         "internalType": "uint256[3]",
-        "name": "_triggerGasActionTotalGasMinExecutionGas",
+        "name": "_triggerGasActionGasMinExecutionGas",
         "type": "uint256[3]"
       },
       {
@@ -910,20 +935,28 @@
         "type": "uint256"
       }
     ],
-    "name": "gasTestTestUserProxyExecute",
-    "outputs": [
+    "name": "gasTestGasTestUserProxyExecute",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {
-        "internalType": "enum GelatoCoreEnums.ExecutionResult",
-        "name": "executionResult",
-        "type": "uint8"
-      },
-      {
-        "internalType": "uint8",
-        "name": "reason",
-        "type": "uint8"
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
-    "stateMutability": "nonpayable",
+    "name": "gasTestProxyByUser",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -948,7 +981,7 @@
     "outputs": [
       {
         "internalType": "bool",
-        "name": "executable",
+        "name": "triggerFired",
         "type": "bool"
       },
       {
@@ -989,32 +1022,13 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-      }
-    ],
-    "name": "getGasTestProxyOfUser",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "uint256",
         "name": "_triggerGas",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_actionTotalGas",
+        "name": "_actionGas",
         "type": "uint256"
       }
     ],
@@ -1061,89 +1075,6 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-      }
-    ],
-    "name": "proxyByUser",
-    "outputs": [
-      {
-        "internalType": "contract IGelatoUserProxy",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getUserCount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_gasTestProxy",
-        "type": "address"
-      }
-    ],
-    "name": "getUserOfGasTestProxy",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract IGelatoUserProxy",
-        "name": "_proxy",
-        "type": "address"
-      }
-    ],
-    "name": "getUserOfProxy",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getUserProxies",
-    "outputs": [
-      {
-        "internalType": "contract IGelatoUserProxy[]",
-        "name": "",
-        "type": "address[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "uint256",
         "name": "_executionClaimId",
         "type": "uint256"
@@ -1155,19 +1086,6 @@
         "internalType": "address",
         "name": "",
         "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getUsers",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "",
-        "type": "address[]"
       }
     ],
     "stateMutability": "view",
@@ -1195,7 +1113,7 @@
   {
     "inputs": [
       {
-        "internalType": "contract IGelatoUserProxy",
+        "internalType": "address",
         "name": "_userProxy",
         "type": "address"
       }
@@ -1260,6 +1178,25 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "proxyByUser",
+    "outputs": [
+      {
+        "internalType": "contract IGelatoUserProxy",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "_executorPrice",
         "type": "uint256"
@@ -1315,6 +1252,76 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "userByGasTestProxy",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "userByProxy",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "userCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "userProxies",
+    "outputs": [
+      {
+        "internalType": "contract IGelatoUserProxy",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "userProxyExecGasOverhead",
     "outputs": [
@@ -1339,6 +1346,25 @@
     "outputs": [
       {
         "internalType": "contract IGelatoUserProxy",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "users",
+    "outputs": [
+      {
+        "internalType": "address",
         "name": "",
         "type": "address"
       }

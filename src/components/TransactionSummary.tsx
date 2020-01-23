@@ -70,7 +70,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 	const actionApp = action.app;
 
 	return (
-		<div style={{ marginBottom: '24px' }}>
+		<div style={{ marginBottom: '24px', width: '100%' }}>
 			<Grid
 				container
 				direction="row"
