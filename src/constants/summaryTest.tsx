@@ -36,7 +36,13 @@ export const getTriggerText = (
 					networkId,
 					relevantInputData
 				).decimals
-			)}, then `;
+			)} ${
+				getTokenByAddress(
+					inputs[1] as string,
+					networkId,
+					relevantInputData
+				).symbol
+			}`;
 		// Price on Kyber
 		/*
             'Sell Token',
@@ -81,9 +87,9 @@ export const getTriggerText = (
 					networkId,
 					relevantInputData
 				).symbol
-			}, then `;
+			}`;
 		case 3:
-			return `On the following date: ${timestampToDate(
+			return `When the following date has been reached: ${timestampToDate(
 				inputs[0] as number
 			)}, `;
 		default:
@@ -98,9 +104,9 @@ export const getActionText = (
 	relevantInputData: RelevantInputData
 ): string => {
 	switch (id) {
-		// Token balance
+		// Send Tokens
 		case 1:
-			return `your gelato bot will send ${convertWeiToHumanReadableForTokenAmount(
+			return `Then your gelato bot will send ${convertWeiToHumanReadableForTokenAmount(
 				inputs[1] as ethers.utils.BigNumber,
 				getTokenByAddress(
 					inputs[0] as string,
@@ -114,6 +120,85 @@ export const getActionText = (
 					relevantInputData
 				).symbol
 			} to address ${inputs[2]}`;
+		// Trade Tokens on Kyber
+		case 2:
+			return `Then your gelato bot will sell ${convertWeiToHumanReadableForTokenAmount(
+				inputs[1] as ethers.utils.BigNumber,
+				getTokenByAddress(
+					inputs[0] as string,
+					networkId,
+					relevantInputData
+				).decimals
+			)} ${
+				getTokenByAddress(
+					inputs[0] as string,
+					networkId,
+					relevantInputData
+				).symbol
+			} for ${
+				getTokenByAddress(
+					inputs[2] as string,
+					networkId,
+					relevantInputData
+				).symbol
+			} on Kyber`;
+		// Buy Leverage Tokens on Fulcrum
+		case 3:
+			return `Then your gelato bot will sell ${convertWeiToHumanReadableForTokenAmount(
+				inputs[1] as ethers.utils.BigNumber,
+				getTokenByAddress(
+					inputs[0] as string,
+					networkId,
+					relevantInputData
+				).decimals
+			)} ${
+				getTokenByAddress(
+					inputs[0] as string,
+					networkId,
+					relevantInputData
+				).symbol
+			} for ${
+				getTokenByAddress(
+					inputs[2] as string,
+					networkId,
+					relevantInputData
+				).symbol
+			} (${
+				getTokenByAddress(
+					inputs[2] as string,
+					networkId,
+					relevantInputData
+				).name
+			}) tokens on Fulcrum`;
+		// Sell Leverage Tokens on Fulcrum
+		case 4:
+			return `Then your gelato bot will sell ${convertWeiToHumanReadableForTokenAmount(
+				inputs[1] as ethers.utils.BigNumber,
+				getTokenByAddress(
+					inputs[0] as string,
+					networkId,
+					relevantInputData
+				).decimals
+			)} ${
+				getTokenByAddress(
+					inputs[0] as string,
+					networkId,
+					relevantInputData
+				).symbol
+			} (${
+				getTokenByAddress(
+					inputs[0] as string,
+					networkId,
+					relevantInputData
+				).name
+			}) tokens for ${
+				getTokenByAddress(
+					inputs[2] as string,
+					networkId,
+					relevantInputData
+				).symbol
+			} on Fulcrum`;
+
 		default:
 			return '';
 	}

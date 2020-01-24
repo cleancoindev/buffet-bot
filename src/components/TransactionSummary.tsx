@@ -222,19 +222,34 @@ export default function TransactionSummary(props: TxSummaryParams) {
 							// <h2 style={{ textAlign: 'left' }}>
 							// 	In 2 days, 40 minutes and 10 seconds, your gelato bot will withdraw 10 DAI from your wallet and send it to the following address: 0x99E69499973484a96639f4Fb17893BC96000b3b8
 							// </h2>
-							<h2 style={{ textAlign: 'left' }}>
-								{`${getTriggerText(
-									condition.userInputs,
-									condition.id,
-									networkId,
-									RelevantInputData.all
-								)} ${getActionText(
-									action.userInputs,
-									action.id,
-									networkId,
-									RelevantInputData.all
-								)}`}
-							</h2>
+							<div>
+								<p
+									style={{
+										textAlign: 'left',
+										fontSize: '1rem'
+									}}
+								>
+									{getTriggerText(
+										condition.userInputs,
+										condition.id,
+										networkId,
+										RelevantInputData.all
+									)}
+								</p>
+								<p
+									style={{
+										textAlign: 'left',
+										fontSize: '1rem'
+									}}
+								>
+									{getActionText(
+										action.userInputs,
+										action.id,
+										networkId,
+										RelevantInputData.all
+									)}
+								</p>
+							</div>
 						)}
 					</div>
 					<div>

@@ -418,8 +418,8 @@ export default function TransactionCard(props: TxCardProps) {
 					prepayment: false,
 					closeBtn: true,
 					btn: 'Connect Metamask',
-					btnFunc: async () => {
-						await activate(injected);
+					btnFunc: () => {
+						activate(injected);
 						console.log('modal close');
 						modalClose();
 					}
