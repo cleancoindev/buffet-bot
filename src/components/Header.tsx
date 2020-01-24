@@ -160,11 +160,11 @@ export default function ButtonAppBar() {
 
 	// Web3 Logic
 
-	// Set default selected Trigger, as header only gets mounted once
+	// Set default selected Condition, as header only gets mounted once
 	useEffect(() => {
 		console.log('Mount header');
-		const functionIdTrigger = DEFAULT_TRIGGER_ID;
-		dispatch({ type: SELECT_CONDITION, id: functionIdTrigger });
+		const functionIdCondition = DEFAULT_TRIGGER_ID;
+		dispatch({ type: SELECT_CONDITION, id: functionIdCondition });
 		const functionIdAction = DEFAULT_ACTION_ID;
 		dispatch({ type: SELECT_ACTION, id: functionIdAction });
 	}, []);

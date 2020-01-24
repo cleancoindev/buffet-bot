@@ -61,7 +61,7 @@ export default function Help() {
 						className={classes.body}
 					>
 						Gelato is a tool to create conditional transactions on
-						Ethereum. It enables you to select a trigger (e.g. price
+						Ethereum. It enables you to select a condition (e.g. price
 						of ETH/DAI on Kyber), which when being activated
 						executes a certain action (e.g. buy a short ETH position
 						on Fulcrum),
@@ -90,11 +90,11 @@ export default function Help() {
 						className={classes.body}
 					>
 						Let's say you would like to send 100 DAI tokens to a
-						friend in 2 weeks. Simply select the trigger 'Time',
+						friend in 2 weeks. Simply select the condition 'Time',
 						choose a date 2 weeks from now, then select the action
 						'Send Tokens' and choose to transfer 100 DAI. Gelato
 						will monitor the time on your behalf and send the 100
-						DAI from your wallet when the trigger activates in 2
+						DAI from your wallet when the condition activates in 2
 						weeks.
 					</Typography>
 					<Divider
@@ -183,8 +183,8 @@ export default function Help() {
 						className={classes.body}
 					>
 						Yes, always. Your tokens will remain in your wallet as
-						long as the trigger is not activated. Upon activation of
-						your selected trigger, these tokens will be moved out of
+						long as the condition is not activated. Upon activation of
+						your selected condition, these tokens will be moved out of
 						your wallet by your smart contract based gelato wallet
 						(that only you control) to conduct the action you
 						specified. If you for example defined that you want to
@@ -274,7 +274,7 @@ export default function Help() {
 						component="h5"
 						gutterBottom
 					>
-						Can I add my own trigger and actions to gelato?
+						Can I add my own condition and actions to gelato?
 					</Typography>
 					<Typography
 						variant="body1"
@@ -282,7 +282,7 @@ export default function Help() {
 						className={classes.body}
 					>
 						Yes you can! The gelato protocol is open and
-						permissionless, everyone can simply write trigger and
+						permissionless, everyone can simply write condition and
 						action smart contracts and offer cool new combinations
 						to their users. If you have questions related to that,
 						feel free to reach out via our{' '}

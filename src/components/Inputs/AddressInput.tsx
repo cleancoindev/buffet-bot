@@ -2,9 +2,9 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import {
 	InputType,
-	TriggerOrAction,
+	ConditionOrAction,
 	ActionWhitelistData,
-	TriggerWhitelistData,
+	ConditionWhitelistData,
 	TxState
 } from '../../constants/interfaces';
 
@@ -18,11 +18,11 @@ interface AddressInputProps {
 	inputType: InputType;
 	label: string;
 	index: number;
-	triggerOrAction: TriggerOrAction;
+	conditionOrAction: ConditionOrAction;
 	inputs: Array<string | number | ethers.utils.BigNumber | boolean>;
 	app: string;
 	disabled: boolean;
-	trigger?: TriggerWhitelistData;
+	condition?: ConditionWhitelistData;
 	action?: ActionWhitelistData;
 	approveIndex: number;
 	updateUserInput: Function;
@@ -36,10 +36,10 @@ export default function AddressInput(props: AddressInputProps) {
 		inputType,
 		label,
 		index,
-		triggerOrAction,
+		conditionOrAction,
 		inputs,
 		disabled,
-		trigger,
+		condition,
 		action,
 		approveIndex,
 		updateUserInput,
@@ -130,12 +130,12 @@ export default function AddressInput(props: AddressInputProps) {
 		<TextField
 			className={classes.root}
 			style={{ marginTop: '0px', marginBottom: '0px' }}
-			id={`address-input-${disabled}-${triggerOrAction}-${index}`}
+			id={`address-input-${disabled}-${conditionOrAction}-${index}`}
 			label={label}
 			defaultValue={returnDefaultString()}
 			onChange={handleAddressChange}
 			error={error}
-			key={`address-input-${disabled}-${triggerOrAction}-${index}`}
+			key={`address-input-${disabled}-${conditionOrAction}-${index}`}
 			// helperText="Full width!"
 			// Import TextField CSS
 			margin="normal"

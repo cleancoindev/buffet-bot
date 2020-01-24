@@ -179,7 +179,7 @@ export default function DateAndTimePicker(props: InputProps) {
 		// updateUserInput(
 		// 	index,
 		// 	dateToTimestamp(selectedDate),
-		// 	TriggerOrAction.Trigger
+		// 	ConditionOrAction.Condition
 		// );
 	}, []);
 
@@ -189,11 +189,11 @@ export default function DateAndTimePicker(props: InputProps) {
 			const stringDate: string = date.toString();
 			const newDate = new Date(stringDate);
 
-			// index: number, value: number, triggerOrAction
+			// index: number, value: number, conditionOrAction
 			// updateUserInput(
 			// 	index,
 			// 	dateToTimestamp(newDate),
-			// 	TriggerOrAction.Trigger
+			// 	ConditionOrAction.Condition
 			// );
 			dispatch({
 				type: UPDATE_CONDITION_INPUTS,

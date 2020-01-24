@@ -1,8 +1,8 @@
 import React from 'react';
 
 import {
-	TriggerOrAction,
-	TriggerWhitelistData,
+	ConditionOrAction,
+	ConditionWhitelistData,
 	ActionWhitelistData
 } from '../constants/interfaces';
 
@@ -13,9 +13,9 @@ import InputField from './InputField';
 import { useIcedTxContext } from '../state/GlobalState';
 import { PastTransaction } from '../constants/interfaces';
 import {
-	findTriggerByAddress,
+	findConditionByAddress,
 	findActionByAddress,
-	decodeTriggerPayload,
+	decodeConditionPayload,
 	decodeActionPayload
 } from '../helpers/helpers';
 import { RouteComponentProps } from 'react-router-dom';
@@ -50,23 +50,23 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface TxSummaryParams {
-	trigger: TriggerWhitelistData;
+	condition: ConditionWhitelistData;
 	action: ActionWhitelistData;
-	triggerInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
+	conditionInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
 	actionInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
 }
 
 export default function TransactionSummary(props: TxSummaryParams) {
 	const classes = useStyles();
 
-	const { trigger, action, triggerInputs, actionInputs } = props;
+	const { condition, action, conditionInputs, actionInputs } = props;
 
 	// Get UserInput Types
-	const triggerInputTypes = trigger.userInputTypes;
+	const conditionInputTypes = condition.userInputTypes;
 	const actionInputTypes = action.userInputTypes;
 
 	// Apps
-	const triggerApp = trigger.app;
+	const conditionApp = condition.app;
 	const actionApp = action.app;
 
 	return (
@@ -96,7 +96,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 					<h2 style={{ textAlign: 'left' }}>
 						IF{' '}
 						<span style={{ color: COLOURS.salmon }}>
-							{trigger.title}{' '}
+							{condition.title}{' '}
 						</span>{' '}
 						is activated
 					</h2>
@@ -140,23 +140,23 @@ export default function TransactionSummary(props: TxSummaryParams) {
 				>
 					<h2>
 						{' '}
-						Trigger Settings:{' '}
+						Condition Settings:{' '}
 						<span style={{ color: COLOURS.salmon }}>
-							{trigger.title}{' '}
+							{condition.title}{' '}
 						</span>
 					</h2>
-					{triggerInputTypes.map((input, key) => (
+					{conditionInputTypes.map((input, key) => (
 						<InputField
-							key={`Trigger-${key}`}
+							key={`Condition-${key}`}
 							index={key}
 							inputType={input}
-							label={trigger.inputLabels[key]}
-							triggerOrAction={TriggerOrAction.Trigger}
-							inputs={triggerInputs}
-							app={triggerApp}
+							label={condition.inputLabels[key]}
+							conditionOrAction={ConditionOrAction.Condition}
+							inputs={conditionInputs}
+							app={conditionApp}
 							disabled={true}
-							approveIndex={trigger.approveIndex}
-							relevantInputData={trigger.relevantInputData[key]}
+							approveIndex={condition.approveIndex}
+							relevantInputData={condition.relevantInputData[key]}
 						></InputField>
 					))}
 					<Divider
@@ -203,7 +203,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 							key={`Action-${key}`}
 							inputType={input}
 							label={action.inputLabels[key]}
-							triggerOrAction={TriggerOrAction.Action}
+							conditionOrAction={ConditionOrAction.Action}
 							inputs={actionInputs}
 							app={actionApp}
 							disabled={true}

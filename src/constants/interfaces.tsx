@@ -20,11 +20,11 @@ import { ethers } from 'ethers';
 	address _selectedExecutor,
 	uint256 _executionClaimId,
 	IGelatoUserProxy _userProxy,
-	IGelatoTrigger _trigger,
-	bytes calldata _triggerPayloadWithSelector,
+	IGelatoCondition _condition,
+	bytes calldata _conditionPayloadWithSelector,
 	IGelatoAction _action,
 	bytes calldata _actionPayloadWithSelector,
-	uint256[3] calldata _triggerGasActionTotalGasMinExecutionGas,
+	uint256[3] calldata _conditionGasActionTotalGasMinExecutionGas,
 	uint256 _executionClaimExpiryDate,
 	uint256 _mintingDeposit
 
@@ -36,8 +36,8 @@ export interface PastTransaction {
 	executionClaimId: string;
 	selectedExecutor: string;
 	proxyAddress: string;
-	trigger: string;
-	triggerPayload: string;
+	condition: string;
+	conditionPayload: string;
 	action: string;
 	actionPayload: string;
 	expiryDate: string;
@@ -46,7 +46,7 @@ export interface PastTransaction {
 	mintingDate: string;
 	executionDate?: string;
 	status: string;
-	triggerGasActionTotalGasMinExecutionGas: Array<number>;
+	conditionGasActionTotalGasMinExecutionGas: Array<number>;
 }
 
 export interface Params {
@@ -61,7 +61,7 @@ export interface Addresses {
 	42: string;
 }
 
-export interface TriggerWhitelistData {
+export interface ConditionWhitelistData {
 	id: number;
 	app: string;
 	title: string;
@@ -72,8 +72,8 @@ export interface TriggerWhitelistData {
 	userInputTypes: Array<InputType>;
 	relevantInputData: Array<RelevantInputData>;
 	userInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
-	getTriggerValueAbi: string;
-	getTriggerValueInput: ethers.utils.BigNumber;
+	getConditionValueAbi: string;
+	getConditionValueInput: ethers.utils.BigNumber;
 	approveIndex: number;
 	boolIndex: number;
 	logo: string;
@@ -96,14 +96,14 @@ export interface ActionWhitelistData {
 }
 
 export interface UserSelection {
-	triggerApp: string;
+	conditionApp: string;
 	actionApp: string;
-	triggerAppFunctions: Array<TriggerWhitelistData>;
+	conditionAppFunctions: Array<ConditionWhitelistData>;
 	actionAppFunctions: Array<ActionWhitelistData>;
 }
 
 export interface IcedTx {
-	trigger: TriggerWhitelistData;
+	condition: ConditionWhitelistData;
 	action: ActionWhitelistData;
 	txState: TxState;
 	pastTransactions: Array<PastTransaction>;
@@ -117,8 +117,8 @@ export interface Error {
 	msg: string;
 }
 
-export enum TriggerOrAction {
-	Trigger,
+export enum ConditionOrAction {
+	Condition,
 	Action
 }
 
@@ -211,14 +211,14 @@ interface SelectAction {
 	id: string;
 }
 
-interface SelectTrigger {
+interface SelectCondition {
 	// UPDATE_ACTION
 	type: typeof SELECT_CONDITION;
 	// Id of Action
 	id: string;
 }
 
-interface UpdateTriggerInputs {
+interface UpdateConditionInputs {
 	// UPDATE_ACTION
 	type: typeof UPDATE_CONDITION_INPUTS;
 	// Id of Action
@@ -234,7 +234,7 @@ interface UpdateActionInputs {
 	value: any;
 }
 
-interface ResetTrigger {
+interface ResetCondition {
 	// UPDATE_ACTION
 	type: typeof RESET_CONDITION;
 }
@@ -285,18 +285,18 @@ interface UpdateGetValueInput {
 
 // export interface Action {
 // 	type: string;
-// 	triggerOrAction: TriggerOrAction;
+// 	conditionOrAction: ConditionOrAction;
 // 	id: string;
 // 	index: number;
 // 	value: string | number;
 // }
 
 export type Action =
-	| ResetTrigger
+	| ResetCondition
 	| ResetAction
 	| UpdateActionInputs
-	| UpdateTriggerInputs
-	| SelectTrigger
+	| UpdateConditionInputs
+	| SelectCondition
 	| SelectAction
 	| UpdateTxState
 	| UpdatePastTransactions

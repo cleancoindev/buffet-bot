@@ -95,7 +95,7 @@ function App() {
 											component={TransactionOverview}
 										/>
 										<Route
-											path="/create/:triggerId/:actionId"
+											path="/create/:conditionId/:actionId"
 											component={Create}
 										/>
 

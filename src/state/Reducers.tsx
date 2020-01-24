@@ -1,13 +1,13 @@
 // Import Interfaces
 import {
-	TriggerOrAction,
+	ConditionOrAction,
 	IcedTx,
 	Action,
 	ActionWhitelistData,
-	TriggerWhitelistData,
+	ConditionWhitelistData,
 	TxState
 } from '../constants/interfaces';
-import { findTriggerById, findActionById } from '../helpers/helpers';
+import { findConditionById, findActionById } from '../helpers/helpers';
 import {
 	RESET_CONDITION,
 	SELECT_CONDITION,
@@ -30,14 +30,14 @@ import { ethers } from 'ethers';
 
 function updateIcedTx(
 	state: IcedTx,
-	triggerOrAction: TriggerOrAction,
+	conditionOrAction: ConditionOrAction,
 	id: string
 ) {
 	let varName = '';
-	let updatedData: ActionWhitelistData | TriggerWhitelistData;
-	if (triggerOrAction === TriggerOrAction.Trigger) {
-		updatedData = findTriggerById(id);
-		varName = 'trigger';
+	let updatedData: ActionWhitelistData | ConditionWhitelistData;
+	if (conditionOrAction === ConditionOrAction.Condition) {
+		updatedData = findConditionById(id);
+		varName = 'condition';
 	} else {
 		updatedData = findActionById(id);
 		varName = 'action';
@@ -50,31 +50,31 @@ function updateUserInput(
 	state: IcedTx,
 	index: number,
 	value: any,
-	triggerOrAction: TriggerOrAction
+	conditionOrAction: ConditionOrAction
 ) {
 	// Update userInputArray
 	const stateCopy = { ...state };
-	if (triggerOrAction === TriggerOrAction.Trigger) {
-		stateCopy.trigger.userInputs[index] = value;
+	if (conditionOrAction === ConditionOrAction.Condition) {
+		stateCopy.condition.userInputs[index] = value;
 	} else {
 		stateCopy.action.userInputs[index] = value;
 	}
 	return stateCopy;
 }
 
-function setTriggerGetValue(state: IcedTx, newValue: ethers.utils.BigNumber) {
+function setConditionGetValue(state: IcedTx, newValue: ethers.utils.BigNumber) {
 	const stateCopy = { ...state };
 
-	stateCopy.trigger.getTriggerValueInput = newValue;
+	stateCopy.condition.getConditionValueInput = newValue;
 
 	return stateCopy;
 }
 
-function resetIcedTx(state: IcedTx, triggerOrAction: TriggerOrAction) {
+function resetIcedTx(state: IcedTx, conditionOrAction: ConditionOrAction) {
 	const stateCopy = { ...state };
-	if (triggerOrAction === TriggerOrAction.Trigger) {
-		stateCopy.trigger = { ...DEFAULT_DATA_TRIGGER };
-	} else if (triggerOrAction === TriggerOrAction.Action) {
+	if (conditionOrAction === ConditionOrAction.Condition) {
+		stateCopy.condition = { ...DEFAULT_DATA_TRIGGER };
+	} else if (conditionOrAction === ConditionOrAction.Action) {
 		stateCopy.action = { ...DEFAULT_DATA_ACTION };
 	}
 	// console.log("reset")
@@ -95,27 +95,27 @@ export const SELECT_ACTION = 'SELECT_ACTION';
 export const icedTxReducer = (state: IcedTx, action: Action) => {
 	switch (action.type) {
 		case SELECT_CONDITION:
-			return updateIcedTx(state, TriggerOrAction.Trigger, action.id);
+			return updateIcedTx(state, ConditionOrAction.Condition, action.id);
 		case SELECT_ACTION:
-			return updateIcedTx(state, TriggerOrAction.Action, action.id);
+			return updateIcedTx(state, ConditionOrAction.Action, action.id);
 		case UPDATE_CONDITION_INPUTS:
 			return updateUserInput(
 				state,
 				action.index,
 				action.value,
-				TriggerOrAction.Trigger
+				ConditionOrAction.Condition
 			);
 		case UPDATE_ACTION_INPUTS:
 			return updateUserInput(
 				state,
 				action.index,
 				action.value,
-				TriggerOrAction.Action
+				ConditionOrAction.Action
 			);
 		case RESET_CONDITION:
-			return resetIcedTx(state, TriggerOrAction.Trigger);
+			return resetIcedTx(state, ConditionOrAction.Condition);
 		case RESET_ACTION:
-			return resetIcedTx(state, TriggerOrAction.Action);
+			return resetIcedTx(state, ConditionOrAction.Action);
 		case UPDATE_TX_STATE:
 			return { ...state, txState: action.txState };
 		case UPDATE_PAST_TRANSACTIONS:
@@ -144,6 +144,6 @@ export const icedTxReducer = (state: IcedTx, action: Action) => {
 				txState: action.txState
 			};
 		case UPDATE_GET_VALUE_INPUT:
-			return setTriggerGetValue(state, action.newGetValueInput);
+			return setConditionGetValue(state, action.newGetValueInput);
 	}
 };

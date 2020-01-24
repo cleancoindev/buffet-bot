@@ -18,8 +18,8 @@ import {
 } from '../../constants/constants';
 import {
 	InputType,
-	TriggerWhitelistData,
-	TriggerOrAction,
+	ConditionWhitelistData,
+	ConditionOrAction,
 	ChainIds,
 	RelevantInputData,
 	TxState
@@ -86,7 +86,7 @@ interface ReactNumberFormatProps {
 	defaultValue: ethers.utils.BigNumber;
 	disabled: boolean;
 	approveIndex: number;
-	triggerOrAction: TriggerOrAction;
+	conditionOrAction: ConditionOrAction;
 	relevantInputData: RelevantInputData;
 }
 
@@ -100,7 +100,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		defaultValue,
 		disabled,
 		approveIndex,
-		triggerOrAction,
+		conditionOrAction,
 		relevantInputData
 	} = props;
 	const classes = useStyles();
@@ -122,10 +122,10 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		networkId = chainId as ChainIds;
 	}
 
-	// Fetch Trigger or Action ID
+	// Fetch Condition or Action ID
 	let id = 0;
-	triggerOrAction === TriggerOrAction.Trigger
-		? (id = icedTxState.trigger.id)
+	conditionOrAction === ConditionOrAction.Condition
+		? (id = icedTxState.condition.id)
 		: (id = icedTxState.action.id);
 
 	// Convert defaultValue into human readable version
@@ -160,7 +160,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 			initialValueString = convertWeiToHumanReadableForNumbersAndGetValue(
 				initialValueBigInt,
 				token,
-				triggerOrAction,
+				conditionOrAction,
 				id
 			);
 		}
@@ -191,13 +191,13 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 						relevantInputData
 					);
 
-					// Find ID of trigger or ACtion
+					// Find ID of condition or ACtion
 
-					// Includes expections e.g. for Kyber Price Trigger
+					// Includes expections e.g. for Kyber Price Condition
 					const humanReadableAmount = convertWeiToHumanReadableForNumbersAndGetValue(
 						defaultValue,
 						token,
-						triggerOrAction,
+						conditionOrAction,
 						id
 					);
 
@@ -282,12 +282,12 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 					);
 				}
 			}
-			// Trigger: 2 => Kyber Price
+			// Condition: 2 => Kyber Price
 			else if (inputType === InputType.Number) {
 				try {
 					const weiAmount = convertHumanReadableToWeiForNumbers(
 						newValue,
-						triggerOrAction,
+						conditionOrAction,
 						id
 					);
 
@@ -339,7 +339,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 			handleNewValue(newValue);
 			if (
 				inputType === InputType.TokenAmount &&
-				triggerOrAction === TriggerOrAction.Action &&
+				conditionOrAction === ConditionOrAction.Action &&
 				!whitelisted
 			) {
 				try {
@@ -382,12 +382,12 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 
 	const validateLimitAmount = (srcAmount: ethers.utils.BigNumber) => {
 		// IF user is whitelisted, skip
-		// Get Kyber Price Trigger
+		// Get Kyber Price Condition
 		const signer = library.getSigner();
 
-		const triggerContract = new ethers.Contract(
+		const conditionContract = new ethers.Contract(
 			TTYPES[1].address[networkId],
-			[TTYPES[1].getTriggerValueAbi],
+			[TTYPES[1].getConditionValueAbi],
 			signer
 		);
 
@@ -403,8 +403,8 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		// get value
 
 		try {
-			triggerContract
-				.getTriggerValue(...inputsForPrice)
+			conditionContract
+				.getConditionValue(...inputsForPrice)
 				.then((kyberPrice: ethers.utils.BigNumber) => {
 					const totalTransferVolume = kyberPrice
 						.mul(srcAmount)
@@ -455,7 +455,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 			label={label}
 			value={values.numberformat}
 			onChange={handleChange('numberformat')}
-			id={`formatted-numberformat-input-${triggerOrAction}-${index}`}
+			id={`formatted-numberformat-input-${conditionOrAction}-${index}`}
 			InputProps={{
 				inputComponent: NumberFormatCustom as any
 			}}
@@ -464,7 +464,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 			}}
 			error={error}
 			variant="outlined"
-			key={`num-textfield-${triggerOrAction}-${index}`}
+			key={`num-textfield-${conditionOrAction}-${index}`}
 			disabled={disabled}
 		/>
 	);

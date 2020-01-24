@@ -26,7 +26,7 @@ import {
 
 // @DEV Make Deep Copies
 export const DEFAULT_ICED_TX = {
-	trigger: { ...DEFAULT_DATA_TRIGGER },
+	condition: { ...DEFAULT_DATA_TRIGGER },
 	action: { ...DEFAULT_DATA_ACTION },
 	txState: TxState.displayInstallMetamask,
 	pastTransactions: { ...DEFAULT_PAST_TRANSACTIONS },

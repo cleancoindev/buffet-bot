@@ -4,9 +4,9 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 import {
-	TriggerWhitelistData,
+	ConditionWhitelistData,
 	ActionWhitelistData,
-	TriggerOrAction
+	ConditionOrAction
 } from '../constants/interfaces';
 import { useIcedTxContext } from '../state/GlobalState';
 import {
@@ -21,9 +21,9 @@ import { MenuItem } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 
 interface AppDropdownProps {
-	data: Array<TriggerWhitelistData | ActionWhitelistData>;
-	triggerOrAction: number;
-	// updateTriggerOrAction: Function;
+	data: Array<ConditionWhitelistData | ActionWhitelistData>;
+	conditionOrAction: number;
+	// updateConditionOrAction: Function;
 }
 
 export default function AppDropdown(props: AppDropdownProps) {
@@ -46,7 +46,7 @@ export default function AppDropdown(props: AppDropdownProps) {
 			}
 		}
 	});
-	const { data, triggerOrAction /*updateTriggerOrAction*/ } = props;
+	const { data, conditionOrAction /*updateConditionOrAction*/ } = props;
 	const { dispatch, icedTxState } = useIcedTxContext();
 	const classes = useStyles();
 	const [state, setState] = React.useState('0');
@@ -56,28 +56,28 @@ export default function AppDropdown(props: AppDropdownProps) {
 	// }, []);
 
 	// Dispatch Reducer
-	// const selectTrigger = (id: string) => {
-	// 	updateTriggerOrAction(TriggerOrAction.Trigger, id);
+	// const selectCondition = (id: string) => {
+	// 	updateConditionOrAction(ConditionOrAction.Condition, id);
 	// };
 	// const selectAction = (id: string) => {
-	// 	updateTriggerOrAction(TriggerOrAction.Action, id);
+	// 	updateConditionOrAction(ConditionOrAction.Action, id);
 	// };
 
 	// SET DEFAULT TRIGGER VALUE AT PAGE RENGERING
-	// Only change state if: a) we render a trigger, b) the id in global state matches default trigger id and 3) if state is currently empty (select is displayed)
+	// Only change state if: a) we render a condition, b) the id in global state matches default condition id and 3) if state is currently empty (select is displayed)
 	useEffect(() => {
 		if (
-			triggerOrAction === TriggerOrAction.Trigger &&
-			icedTxState.trigger.id === parseInt(DEFAULT_TRIGGER_ID) &&
+			conditionOrAction === ConditionOrAction.Condition &&
+			icedTxState.condition.id === parseInt(DEFAULT_TRIGGER_ID) &&
 			state === '0'
 		) {
 			setState(DEFAULT_TRIGGER_ID);
 		}
-	}, [icedTxState.trigger.id]);
+	}, [icedTxState.condition.id]);
 
 	useEffect(() => {
 		if (
-			triggerOrAction === TriggerOrAction.Action &&
+			conditionOrAction === ConditionOrAction.Action &&
 			icedTxState.action.id === parseInt(DEFAULT_ACTION_ID) &&
 			state === '0'
 		) {
@@ -92,7 +92,7 @@ export default function AppDropdown(props: AppDropdownProps) {
 	};
 
 	const setConditionOrAction = (functionId: string) => {
-		if (triggerOrAction === TriggerOrAction.Trigger) {
+		if (conditionOrAction === ConditionOrAction.Condition) {
 			dispatch({ type: SELECT_CONDITION, id: functionId });
 		} else {
 			dispatch({ type: SELECT_ACTION, id: functionId });
@@ -101,7 +101,7 @@ export default function AppDropdown(props: AppDropdownProps) {
 	};
 
 	// function getTitles(
-	// 	appList: Array<TriggerWhitelistData | ActionWhitelistData>
+	// 	appList: Array<ConditionWhitelistData | ActionWhitelistData>
 	// ) {
 	// 	const appTitles = appList.map(item => item.title);
 	// 	return appTitles.filter(
@@ -150,7 +150,7 @@ export default function AppDropdown(props: AppDropdownProps) {
 				onClose={handleClose}
 				onOpen={handleOpen}
 
-				// value={triggerOrAction === TriggerOrAction.Trigger ? icedTxState.trigger.id : icedTxState.action.id}
+				// value={conditionOrAction === ConditionOrAction.Condition ? icedTxState.condition.id : icedTxState.action.id}
 			>
 				<MenuItem key={0} value={'0'} style={{ overflowX: 'auto' }}>
 					<div

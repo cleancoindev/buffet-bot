@@ -12,7 +12,7 @@ import Select from '@material-ui/core/Select';
 
 import { useIcedTxContext } from '../../state/GlobalState';
 import {
-	TriggerOrAction,
+	ConditionOrAction,
 	Token,
 	ChainIds,
 	RelevantInputData
@@ -80,7 +80,7 @@ interface TokenSelectProps
 	extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
 	label: string;
 	index: number;
-	triggerOrAction: TriggerOrAction;
+	conditionOrAction: ConditionOrAction;
 	// @DEV CHANGE later when implented better DEFAULT VALUE system, this should only be string
 	defaultTokenAddress: string;
 	disabled: boolean;
@@ -92,7 +92,7 @@ export default function TokenSelect(props: TokenSelectProps) {
 		defaultTokenAddress,
 		label,
 		index,
-		triggerOrAction,
+		conditionOrAction,
 		disabled,
 		relevantInputData
 	} = props;
@@ -108,7 +108,7 @@ export default function TokenSelect(props: TokenSelectProps) {
 	// If action, dont display ETH
 	let tokenList = getTokenList(relevantInputData, networkId);
 
-	if (triggerOrAction === TriggerOrAction.Trigger) {
+	if (conditionOrAction === ConditionOrAction.Condition) {
 		tokenList.splice(0, 0, ETH);
 	}
 
@@ -118,7 +118,7 @@ export default function TokenSelect(props: TokenSelectProps) {
 	);
 
 	// updateUser Input
-	const updateTriggerInputs = (index: number, value: any) => {
+	const updateConditionInputs = (index: number, value: any) => {
 		// Default Index => @DEV Restructure Dispatcher later
 		dispatch({ type: UPDATE_CONDITION_INPUTS, index, value });
 	};
@@ -128,11 +128,11 @@ export default function TokenSelect(props: TokenSelectProps) {
 		dispatch({ type: UPDATE_ACTION_INPUTS, index, value });
 	};
 
-	// Based on whether the input is a trigger or action, select a different dispatch function
+	// Based on whether the input is a condition or action, select a different dispatch function
 	let updateUserInput: Function;
 	updateUserInput =
-		triggerOrAction === TriggerOrAction.Trigger
-			? updateTriggerInputs
+		conditionOrAction === ConditionOrAction.Condition
+			? updateConditionInputs
 			: updateActionInputs;
 
 	const classes = useStyles();
@@ -202,7 +202,7 @@ export default function TokenSelect(props: TokenSelectProps) {
 			>
 				{tokenList.map((possibleToken, key) => (
 					<MenuItem
-						key={`${key}-${index}-${disabled}-${triggerOrAction}`}
+						key={`${key}-${index}-${disabled}-${conditionOrAction}`}
 						value={possibleToken.address[networkId]}
 					>
 						<div

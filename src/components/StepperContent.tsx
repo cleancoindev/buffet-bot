@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { StepperContentProps, TriggerOrAction } from '../constants/interfaces';
+import { StepperContentProps, ConditionOrAction } from '../constants/interfaces';
 
 // Material UI
 import { makeStyles } from '@material-ui/core/styles';
@@ -42,16 +42,16 @@ export default function StepperContent(props: StepperContentProps) {
 	const { icedTxState, activeStep } = props;
 	const classes = useStyles();
 
-	const { trigger, action } = icedTxState;
-	const triggerInputTypes = trigger.userInputTypes;
+	const { condition, action } = icedTxState;
+	const conditionInputTypes = condition.userInputTypes;
 	const actionInputTypes = action.userInputTypes;
 
 	// User inputs when scrolling back
-	const triggerInputs = trigger.userInputs;
+	const conditionInputs = condition.userInputs;
 	const actionInputs = action.userInputs;
 
 	// Apps
-	const triggerApp = trigger.app;
+	const conditionApp = condition.app;
 	const actionApp = action.app;
 
 	// Based on the userInputs, render respective inputs
@@ -87,18 +87,18 @@ export default function StepperContent(props: StepperContentProps) {
 						>
 							{/* <h1>
 								{' '}
-								Step: {stepIndex + 1} - Define the trigger that
-								will trigger the action
+								Step: {stepIndex + 1} - Define the condition that
+								will condition the action
 							</h1> */}
 							<h2>
 								{' '}
-								Trigger:{' '}
+								Condition:{' '}
 								<span style={{ color: COLOURS.salmon }}>
-									{trigger.title}{' '}
+									{condition.title}{' '}
 								</span>
 								{/* on{' '}
 								<span style={{ color: COLOURS.salmon }}>
-									{trigger.app}
+									{condition.app}
 								</span>{' '} */}
 							</h2>
 							<Divider
@@ -109,20 +109,20 @@ export default function StepperContent(props: StepperContentProps) {
 									width: 'calc(100% )'
 								}}
 							/>
-							{triggerInputTypes.map((input, key) => (
+							{conditionInputTypes.map((input, key) => (
 								<InputField
-									trigger={trigger}
-									key={`Trigger-${key}`}
+									condition={condition}
+									key={`Condition-${key}`}
 									index={key}
 									inputType={input}
-									label={trigger.inputLabels[key]}
-									triggerOrAction={TriggerOrAction.Trigger}
-									inputs={triggerInputs}
-									app={triggerApp}
+									label={condition.inputLabels[key]}
+									conditionOrAction={ConditionOrAction.Condition}
+									inputs={conditionInputs}
+									app={conditionApp}
 									disabled={false}
-									approveIndex={trigger.approveIndex}
+									approveIndex={condition.approveIndex}
 									relevantInputData={
-										trigger.relevantInputData[key]
+										condition.relevantInputData[key]
 									}
 								></InputField>
 							))}
@@ -184,7 +184,7 @@ export default function StepperContent(props: StepperContentProps) {
 									key={`Action-${key}`}
 									inputType={input}
 									label={action.inputLabels[key]}
-									triggerOrAction={TriggerOrAction.Action}
+									conditionOrAction={ConditionOrAction.Action}
 									inputs={actionInputs}
 									app={actionApp}
 									disabled={false}
@@ -200,9 +200,9 @@ export default function StepperContent(props: StepperContentProps) {
 			case 2:
 				return (
 					<TransactionSummary
-						trigger={trigger}
+						condition={condition}
 						action={action}
-						triggerInputs={triggerInputs}
+						conditionInputs={conditionInputs}
 						actionInputs={actionInputs}
 					></TransactionSummary>
 				);

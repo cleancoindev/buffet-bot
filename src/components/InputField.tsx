@@ -3,9 +3,9 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import {
 	InputType,
-	TriggerOrAction,
+	ConditionOrAction,
 	ActionWhitelistData,
-	TriggerWhitelistData,
+	ConditionWhitelistData,
 	Token,
 	ChainIds,
 	RelevantInputData
@@ -54,11 +54,11 @@ interface InputProps {
 	inputType: InputType;
 	label: string;
 	index: number;
-	triggerOrAction: TriggerOrAction;
+	conditionOrAction: ConditionOrAction;
 	inputs: Array<string | number | ethers.utils.BigNumber | boolean>;
 	app: string;
 	disabled: boolean;
-	trigger?: TriggerWhitelistData;
+	condition?: ConditionWhitelistData;
 	action?: ActionWhitelistData;
 	approveIndex: number;
 	relevantInputData: RelevantInputData;
@@ -71,10 +71,10 @@ export default function LayoutTextFields(props: InputProps) {
 		inputType,
 		label,
 		index,
-		triggerOrAction,
+		conditionOrAction,
 		inputs,
 		disabled,
-		trigger,
+		condition,
 		action,
 		approveIndex,
 		relevantInputData
@@ -92,11 +92,11 @@ export default function LayoutTextFields(props: InputProps) {
 	}
 
 	const [getValueState, setGetValueState] = React.useState(
-		icedTxState.trigger.getTriggerValueInput
+		icedTxState.condition.getConditionValueInput
 	);
 
 	// updateUser Input
-	const updateTriggerInputs = (index: number, value: any) => {
+	const updateConditionInputs = (index: number, value: any) => {
 		// Default Index => @DEV Restructure Dispatcher later
 		dispatch({ type: UPDATE_CONDITION_INPUTS, index, value });
 	};
@@ -106,11 +106,11 @@ export default function LayoutTextFields(props: InputProps) {
 		dispatch({ type: UPDATE_ACTION_INPUTS, index, value });
 	};
 
-	// Based on whether the input is a trigger or action, select a different dispatch function
+	// Based on whether the input is a condition or action, select a different dispatch function
 	let updateUserInput: Function;
 	updateUserInput =
-		triggerOrAction === TriggerOrAction.Trigger
-			? updateTriggerInputs
+		conditionOrAction === ConditionOrAction.Condition
+			? updateConditionInputs
 			: updateActionInputs;
 
 	// CSS Classes
@@ -120,21 +120,21 @@ export default function LayoutTextFields(props: InputProps) {
 	const deriveBool = () => {
 		if (inputs[0] !== undefined) {
 			if (inputs[index] !== undefined) {
-				if (triggerOrAction === TriggerOrAction.Trigger) {
+				if (conditionOrAction === ConditionOrAction.Condition) {
 					const shouldBeGreaterForTrue = inputs[
-						icedTxState.trigger.boolIndex
+						icedTxState.condition.boolIndex
 					] as ethers.utils.BigNumber;
 
 					// dependent parameter that determines if greater or smaller
 
-					// getTriggerValueInput independent variable
-					const getTriggerValueInput = icedTxState.trigger
-						.getTriggerValueInput as ethers.utils.BigNumber;
+					// getConditionValueInput independent variable
+					const getConditionValueInput = icedTxState.condition
+						.getConditionValueInput as ethers.utils.BigNumber;
 
 					// Make comparison with bigNumbers
 
-					// If parameter is greater than getTriggerValueInput => bool _ isGreater => true
-					if (shouldBeGreaterForTrue.gte(getTriggerValueInput)) {
+					// If parameter is greater than getConditionValueInput => bool _ isGreater => true
+					if (shouldBeGreaterForTrue.gte(getConditionValueInput)) {
 						// Set bool to true, only if it's not already true
 						if (isBool(inputs[index])) {
 							if (inputs[index] === false) {
@@ -147,7 +147,7 @@ export default function LayoutTextFields(props: InputProps) {
 							// console.log('Type not bool');
 						}
 					}
-					// If parameter is smaller then getTriggerValueInput => bool _isGreater => false
+					// If parameter is smaller then getConditionValueInput => bool _isGreater => false
 					else {
 						// Set bool to false
 						if (isBool(inputs[index])) {
@@ -176,7 +176,7 @@ export default function LayoutTextFields(props: InputProps) {
 
 	// DEFAULT 1
 	// If user already inputted values, prefill inputs from state, otherwise display the default values
-	// œDEV make default values specific for each trigger and action, not global
+	// œDEV make default values specific for each condition and action, not global
 	function returnDefaultBigInt(): ethers.utils.BigNumber {
 		// If user has inputted something, go in here
 		if (inputs[0] !== undefined) {
@@ -273,10 +273,10 @@ export default function LayoutTextFields(props: InputProps) {
 						<TokenSelect
 							defaultTokenAddress={returnDefaultString()}
 							index={index}
-							triggerOrAction={triggerOrAction}
+							conditionOrAction={conditionOrAction}
 							label={label}
 							disabled={disabled}
-							key={`address-input-${disabled}-${triggerOrAction}-${index}`}
+							key={`address-input-${disabled}-${conditionOrAction}-${index}`}
 							relevantInputData={relevantInputData}
 						/>
 					</div>
@@ -294,8 +294,8 @@ export default function LayoutTextFields(props: InputProps) {
 							defaultValue={returnDefaultBigInt()}
 							disabled={disabled}
 							approveIndex={approveIndex}
-							triggerOrAction={triggerOrAction}
-							key={`tokenAmount-input-${disabled}-${triggerOrAction}-${index}`}
+							conditionOrAction={conditionOrAction}
+							key={`tokenAmount-input-${disabled}-${conditionOrAction}-${index}`}
 							relevantInputData={relevantInputData}
 						></ReactNumberFormat>
 					</div>
@@ -312,8 +312,8 @@ export default function LayoutTextFields(props: InputProps) {
 							defaultValue={returnDefaultBigInt()}
 							disabled={disabled}
 							approveIndex={approveIndex}
-							triggerOrAction={triggerOrAction}
-							key={`number-input-${disabled}-${triggerOrAction}-${index}`}
+							conditionOrAction={conditionOrAction}
+							key={`number-input-${disabled}-${conditionOrAction}-${index}`}
 							relevantInputData={relevantInputData}
 						></ReactNumberFormat>
 					</div>
@@ -343,12 +343,12 @@ export default function LayoutTextFields(props: InputProps) {
 				return (
 					<div className={classes.form}>
 						<AddressInput
-							trigger={trigger}
-							key={`address-input-${disabled}-${triggerOrAction}-${index}`}
+							condition={condition}
+							key={`address-input-${disabled}-${conditionOrAction}-${index}`}
 							index={index}
 							inputType={inputType}
 							label={label}
-							triggerOrAction={TriggerOrAction.Trigger}
+							conditionOrAction={ConditionOrAction.Condition}
 							inputs={inputs}
 							app={app}
 							disabled={disabled}
@@ -372,9 +372,9 @@ export default function LayoutTextFields(props: InputProps) {
 								inputs={inputs}
 								disabled={disabled}
 								approveIndex={approveIndex}
-								triggerOrAction={triggerOrAction}
-								key={`getValue-input-${disabled}-${triggerOrAction}-${index}`}
-								trigger={trigger}
+								conditionOrAction={conditionOrAction}
+								key={`getValue-input-${disabled}-${conditionOrAction}-${index}`}
+								condition={condition}
 								action={action}
 								relevantInputData={relevantInputData}
 							></StatelessGetValueInput>
@@ -388,8 +388,8 @@ export default function LayoutTextFields(props: InputProps) {
 								convertToWei
 								disabled={true}
 								approveIndex={approveIndex}
-								triggerOrAction={triggerOrAction}
-								key={`getValue-input-${disabled}-${triggerOrAction}-${index}`}
+								conditionOrAction={conditionOrAction}
+								key={`getValue-input-${disabled}-${conditionOrAction}-${index}`}
 							></ReactNumberFormat> */}
 						</div>
 					);

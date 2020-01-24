@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { ethers } from 'ethers';
 import {
-	TriggerOrAction,
+	ConditionOrAction,
 	ChainIds,
-	TriggerWhitelistData,
+	ConditionWhitelistData,
 	ActionWhitelistData,
 	Token,
 	InputType,
@@ -28,8 +28,8 @@ interface ReactNumberFormatProps {
 	inputs: Array<string | number | ethers.utils.BigNumber | boolean>;
 	disabled: boolean;
 	approveIndex: number;
-	triggerOrAction: TriggerOrAction;
-	trigger?: TriggerWhitelistData;
+	conditionOrAction: ConditionOrAction;
+	condition?: ConditionWhitelistData;
 	action?: ActionWhitelistData;
 	relevantInputData: RelevantInputData;
 }
@@ -43,8 +43,8 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 		inputs,
 		disabled,
 		approveIndex,
-		triggerOrAction,
-		trigger,
+		conditionOrAction,
+		condition,
 		action,
 		relevantInputData
 	} = props;
@@ -63,7 +63,7 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 	const { icedTxState } = useIcedTxContext();
 
 	const [getValueState, setGetValueState] = React.useState(
-		icedTxState.trigger.getTriggerValueInput
+		icedTxState.condition.getConditionValueInput
 	);
 	// If globalState changes, call once
 	useEffect(() => {
@@ -76,33 +76,33 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 	// Params: Contract address | Contract Parameters
 	const callGetValue = async () => {
 		// Get abi
-		let newValue = icedTxState.trigger.getTriggerValueInput;
+		let newValue = icedTxState.condition.getConditionValueInput;
 		// WHen on summary page, return global state
 
 		if (disabled) return newValue;
 
 		if (active && account) {
 			let abi = '';
-			triggerOrAction === TriggerOrAction.Trigger
-				? (abi = icedTxState.trigger.getTriggerValueAbi)
+			conditionOrAction === ConditionOrAction.Condition
+				? (abi = icedTxState.condition.getConditionValueAbi)
 				: (abi = icedTxState.action.getActionValueAbi);
 
 			try {
 				// Find token object by address
 				const signer = library.getSigner();
 
-				if (triggerOrAction === TriggerOrAction.Trigger) {
-					const triggerAddress =
-						icedTxState.trigger.address[networkId];
-					const triggerContract = new ethers.Contract(
-						triggerAddress,
+				if (conditionOrAction === ConditionOrAction.Condition) {
+					const conditionAddress =
+						icedTxState.condition.address[networkId];
+					const conditionContract = new ethers.Contract(
+						conditionAddress,
 						[abi],
 						signer
 					);
 
 					// get value
 					try {
-						newValue = await triggerContract.getTriggerValue(
+						newValue = await conditionContract.getTriggerValue(
 							...inputs
 						);
 						console.log(inputs);
@@ -194,9 +194,9 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 				defaultValue={getValueState}
 				disabled={true}
 				approveIndex={approveIndex}
-				triggerOrAction={triggerOrAction}
+				conditionOrAction={conditionOrAction}
 				relevantInputData={relevantInputData}
-				key={`getValue-input-${disabled}-${triggerOrAction}-${index}`}
+				key={`getValue-input-${disabled}-${conditionOrAction}-${index}`}
 			></ReactNumberFormat>
 		);
 	} else {

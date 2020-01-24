@@ -25,10 +25,10 @@ import { makeStyles } from '@material-ui/core/styles';
 
 // Import Interfaces
 import {
-	TriggerOrAction,
+	ConditionOrAction,
 	UserSelection,
 	ActionWhitelistData,
-	TriggerWhitelistData,
+	ConditionWhitelistData,
 	TxState
 } from '../constants/interfaces';
 import {
@@ -76,14 +76,14 @@ export default function AppSelection() {
 	// Import global state
 	//const { updateIcedTx, icedTxState, resetIcedTxInput } = useIcedTxContext();
 	const { icedTxState, dispatch } = useIcedTxContext();
-	console.log(icedTxState.trigger.id);
+	console.log(icedTxState.condition.id);
 
 	const web3 = useWeb3React();
 
 	// Import Web3react Context
 	// useEffect(() => {}, []);
 
-	const availableTriggers = [...TTYPES];
+	const availableConditions = [...TTYPES];
 	const availableActions = [...ATYPES];
 
 	useEffect(() => {
@@ -168,7 +168,7 @@ export default function AppSelection() {
 
 	return (
 		<div /*className={classes.box}*/>
-			{/* <h1>{`Create a conditional transaction by defining a trigger and action`}</h1> */}
+			{/* <h1>{`Create a conditional transaction by defining a condition and action`}</h1> */}
 			<Grid
 				container
 				direction="row"
@@ -193,12 +193,12 @@ export default function AppSelection() {
 						justify="flex-start"
 						className={classes.box}
 					>
-						<p className={classes.boxTitle}>Trigger</p>
+						<p className={classes.boxTitle}>Condition</p>
 						<Dropdown
 							// userSelection={userSelection}
-							triggerOrAction={TriggerOrAction.Trigger}
-							data={availableTriggers}
-							// updateTriggerOrAction={updateTriggerOrAction}
+							conditionOrAction={ConditionOrAction.Condition}
+							data={availableConditions}
+							// updateConditionOrAction={updateConditionOrAction}
 						/>
 					</Grid>
 					{/* <Grid container item justify="flex-start" style={{background: "yellow"}}>
@@ -246,16 +246,16 @@ export default function AppSelection() {
 						<p className={classes.boxTitle}>Action</p>
 						<Dropdown
 							// userSelection={userSelection}
-							triggerOrAction={TriggerOrAction.Action}
+							conditionOrAction={ConditionOrAction.Action}
 							data={availableActions}
-							// updateTriggerOrAction={updateTriggerOrAction}
+							// updateConditionOrAction={updateConditionOrAction}
 						/>
 					</Grid>
 				</Grid>
 			</Grid>
 			<Divider variant="middle" />
 
-			{icedTxState.trigger.id !== 0 && icedTxState.action.id !== 0 && (
+			{icedTxState.condition.id !== 0 && icedTxState.action.id !== 0 && (
 				<React.Fragment>
 					<Grid
 						container
@@ -278,9 +278,9 @@ export default function AppSelection() {
 							<span style={{ color: '#E50078' }}>
 								{icedTxState.action.title}
 							</span>{' '}
-							on your behalf, when the trigger{' '}
+							on your behalf, when the condition{' '}
 							<span style={{ color: '#E50078' }}>
-								{icedTxState.trigger.title}{' '}
+								{icedTxState.condition.title}{' '}
 							</span>
 							is activated
 						</h2>
@@ -314,7 +314,7 @@ export default function AppSelection() {
 						{icedTxState.txState !== TxState.displayWrongNetwork &&
 							web3.active && (
 								<Link
-									to={`create/${icedTxState.trigger.id}/${icedTxState.action.id}`}
+									to={`create/${icedTxState.condition.id}/${icedTxState.action.id}`}
 									style={{ textDecoration: 'none' }}
 								>
 									<Button

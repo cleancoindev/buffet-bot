@@ -24,7 +24,7 @@ import Paper from '@material-ui/core/Paper';
 
 import { useIcedTxContext } from '../state/GlobalState';
 import {
-	findTriggerByAddress,
+	findConditionByAddress,
 	findActionByAddress,
 	stringifyTimestamp
 } from '../helpers/helpers';
@@ -81,13 +81,13 @@ interface HeadCell {
 }
 
 // interface IcedTxStateTable {
-// 	trigger: TriggerWhitelistData;
+// 	condition: ConditionWhitelistData;
 // 	action: ActionWhitelistData;
 // }
 
 interface Data {
 	id: string;
-	trigger: string;
+	condition: string;
 	action: string;
 	date: string;
 	status: string;
@@ -97,14 +97,14 @@ interface Data {
 
 function createData(
 	id: string,
-	trigger: string,
+	condition: string,
 	action: string,
 	date: string,
 	status: string,
 	view: number,
 	cancel: string
 ): Data {
-	return { id, trigger, action, date, status, view, cancel };
+	return { id, condition, action, date, status, view, cancel };
 }
 
 const headCells: HeadCell[] = [
@@ -115,10 +115,10 @@ const headCells: HeadCell[] = [
 		label: '#'
 	},
 	{
-		id: 'trigger',
+		id: 'condition',
 		numeric: true,
 		disablePadding: false,
-		label: 'Trigger'
+		label: 'Condition'
 	},
 	{ id: 'action', numeric: true, disablePadding: false, label: 'Action' },
 	{ id: 'date', numeric: true, disablePadding: false, label: 'Created at' },
@@ -361,8 +361,8 @@ export default function EnhancedTable() {
 								executionClaimId
 								selectedExecutor
 								proxyAddress
-								trigger
-								triggerPayload
+								condition
+								conditionPayload
 								action
 								actionPayload
 								expiryDate
@@ -370,7 +370,7 @@ export default function EnhancedTable() {
 								mintingDate
 								executionDate
 								status
-								triggerGasActionTotalGasMinExecutionGas
+								conditionGasActionTotalGasMinExecutionGas
 							  }
 							}
 						  }
@@ -391,9 +391,9 @@ export default function EnhancedTable() {
 
 			let counter = 0;
 			executionClaims.forEach((executionClaim: any, index: any) => {
-				// With address, find trigger and action
-				const trigger = findTriggerByAddress(
-					executionClaim.trigger,
+				// With address, find condition and action
+				const condition = findConditionByAddress(
+					executionClaim.condition,
 					web3.chainId as ChainIds
 				);
 
@@ -424,11 +424,11 @@ export default function EnhancedTable() {
 				}
 
 				// @DEV USE THIS Decoding when the view button is being clicked
-				// console.log(trigger);
+				// console.log(condition);
 				// console.log(action);
 				const newData = createData(
 					counter.toString(),
-					trigger.title,
+					condition.title,
 					action.title,
 					stringifyTimestamp(executionClaim.mintingDate),
 					statusString,
@@ -588,7 +588,7 @@ export default function EnhancedTable() {
 												{parseInt(row.id) + 1}
 											</StyledTableCell>
 											<StyledTableCell align="left">
-												{row.trigger}
+												{row.condition}
 											</StyledTableCell>
 											<StyledTableCell align="left">
 												{row.action}

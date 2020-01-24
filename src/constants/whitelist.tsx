@@ -5,7 +5,7 @@ const BIG_NUM_ZERO = ethers.constants.Zero;
 const BIG_NUM_ONE = ethers.constants.One;
 
 export const APPS = {
-	triggers: ['Your Wallet', 'Calendar', 'Kyber'],
+	conditions: ['Your Wallet', 'Calendar', 'Kyber'],
 	actions: ['Your Wallet', 'Kyber', 'Fulcrum']
 };
 
@@ -34,9 +34,9 @@ export const EXECUTOR_ADDRESS = {
 
 // NOTES
 
-// Input Type Numbers and StatelessGetValue both might use arbitrary decimals as conversions when reading data from Blockchain as BNs and converting them to human readble form, as triggers such as Kyber Price dont return vlaues based on buyToken decimals, but simply always with 18 decimals
+// Input Type Numbers and StatelessGetValue both might use arbitrary decimals as conversions when reading data from Blockchain as BNs and converting them to human readble form, as conditions such as Kyber Price dont return vlaues based on buyToken decimals, but simply always with 18 decimals
 
-// Triggers
+// Conditions
 export const TTYPES = [
 	{
 		id: 3,
@@ -50,8 +50,8 @@ export const TTYPES = [
 		},
 		params: [{ type: 'uint256', name: '_timestamp' }],
 		abi: 'function fired(uint256 _timestamp)',
-		getTriggerValueAbi: '',
-		getTriggerValueInput: BIG_NUM_ZERO,
+		getConditionValueAbi: '',
+		getConditionValueInput: BIG_NUM_ZERO,
 		// 99 means nothing
 		approveIndex: 999,
 		boolIndex: 999,
@@ -79,9 +79,9 @@ export const TTYPES = [
 		],
 		abi:
 			'function fired(address _account, address _coin, uint256 _refBalance, bool _greaterElseSmaller)',
-		getTriggerValueAbi:
+		getConditionValueAbi:
 			'function getTriggerValue(address _account, address _coin, uint256, bool) view returns (uint256)',
-		getTriggerValueInput: BIG_NUM_ZERO,
+		getConditionValueInput: BIG_NUM_ZERO,
 		userInputTypes: [
 			InputType.Address,
 			InputType.Token,
@@ -95,7 +95,7 @@ export const TTYPES = [
 		inputLabels: [
 			'Address whose balance to monitor',
 			'Token',
-			'Future balance activating the trigger',
+			'Future balance activating the condition',
 			'',
 			'Current Balance'
 		],
@@ -138,17 +138,17 @@ export const TTYPES = [
 		],
 		abi:
 			'function fired(address _src, uint256 _srcAmount, address _dest, uint256 _refRate, bool _greaterElseSmaller)',
-		getTriggerValueAbi:
+		getConditionValueAbi:
 			'function getTriggerValue(address _src, uint256 _srcAmount, address _dest, uint256, bool) view returns (uint256)',
 		// Always 0
 		approveIndex: 0,
 		boolIndex: 3,
-		getTriggerValueInput: BIG_NUM_ZERO,
+		getConditionValueInput: BIG_NUM_ZERO,
 		inputLabels: [
 			'Sell Token',
 			'Sell Volume',
 			'Buy Token',
-			'Price activating trigger',
+			'Price activating condition',
 			'',
 			'Current Price'
 		],

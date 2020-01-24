@@ -11,9 +11,9 @@ import Grid from '@material-ui/core/Grid';
 import { useIcedTxContext } from '../state/GlobalState';
 import TransactionSummary from '../components/TransactionSummary';
 import {
-	findTriggerByAddress,
+	findConditionByAddress,
 	findActionByAddress,
-	decodeTriggerPayload,
+	decodeConditionPayload,
 	decodeActionPayload
 } from '../helpers/helpers';
 import { on } from 'cluster';
@@ -24,7 +24,7 @@ import {
 	DEFAULT_DATA_TRIGGER
 } from '../constants/constants';
 import { useWeb3React } from '@web3-react/core';
-import { ChainIds, TriggerWhitelistData } from '../constants/interfaces';
+import { ChainIds, ConditionWhitelistData } from '../constants/interfaces';
 
 interface TxOverviewParams {
 	transactionId: string;
@@ -33,7 +33,7 @@ interface TxOverviewParams {
 export default function TransactionOverview({
 	match
 }: RouteComponentProps<TxOverviewParams>) {
-	// See if TxState.trigger.id === 0
+	// See if TxState.condition.id === 0
 	// IF so, check transactionId params, if it is a number, then fetch data from blockchain
 	const {
 		params: { transactionId }
@@ -61,12 +61,12 @@ export default function TransactionOverview({
 		history.push('/dashboard');
 		return <React.Fragment />;
 	} else {
-		// Get respective triggers and action
-		// console.log(pastTransaction.trigger);
+		// Get respective conditions and action
+		// console.log(pastTransaction.condition);
 		// console.log(pastTransaction.action);
 
-		const trigger = findTriggerByAddress(
-			pastTransaction.trigger,
+		const condition = findConditionByAddress(
+			pastTransaction.condition,
 			web3.chainId as ChainIds
 		);
 
@@ -75,9 +75,9 @@ export default function TransactionOverview({
 			web3.chainId as ChainIds
 		);
 		// Get user inputs by decoding payloads
-		const triggerInputs = decodeTriggerPayload(
-			pastTransaction.triggerPayload,
-			trigger.params
+		const conditionInputs = decodeConditionPayload(
+			pastTransaction.conditionPayload,
+			condition.params
 		);
 
 		const actionInputs = decodeActionPayload(
@@ -97,9 +97,9 @@ export default function TransactionOverview({
 					alignItems="center"
 				>
 					<TransactionSummary
-						trigger={trigger}
+						condition={condition}
 						action={action}
-						triggerInputs={triggerInputs}
+						conditionInputs={conditionInputs}
 						actionInputs={actionInputs}
 					></TransactionSummary>
 				</Grid>

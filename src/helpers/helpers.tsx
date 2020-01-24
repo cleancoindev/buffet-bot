@@ -2,7 +2,7 @@ import { ATYPES, TTYPES, USER_WHITELIST } from '../constants/whitelist';
 import {
 	Token,
 	RelevantInputData,
-	TriggerOrAction
+	ConditionOrAction
 } from '../constants/interfaces';
 import { KYBER_TOKEN_LIST, TOKEN_LIST } from '../constants/tokens';
 
@@ -15,7 +15,7 @@ import { utils, ethers } from 'ethers';
 import {
 	Params,
 	ActionWhitelistData,
-	TriggerWhitelistData,
+	ConditionWhitelistData,
 	InputType,
 	ChainIds
 } from '../constants/interfaces';
@@ -25,11 +25,11 @@ export function stringifyTimestamp(timestamp: string) {
 	return `${date.toLocaleDateString()} - ${date.toLocaleTimeString()}`;
 }
 
-export function findTriggerById(id: string) {
+export function findConditionById(id: string) {
 	let returnData = { ...DEFAULT_DATA_TRIGGER };
-	const clonedTriggers = deepCloneTriggers();
+	const clonedConditions = deepCloneConditions();
 
-	clonedTriggers.forEach(type => {
+	clonedConditions.forEach(type => {
 		if (type.id === parseInt(id)) {
 			returnData = type;
 		}
@@ -38,12 +38,12 @@ export function findTriggerById(id: string) {
 	return returnData;
 }
 
-export function findTriggerByAddress(address: string, networkId: ChainIds) {
+export function findConditionByAddress(address: string, networkId: ChainIds) {
 	let returnData = { ...DEFAULT_DATA_TRIGGER };
 
-	const clonedTriggers = deepCloneTriggers();
+	const clonedConditions = deepCloneConditions();
 
-	clonedTriggers.forEach(type => {
+	clonedConditions.forEach(type => {
 		if (
 			ethers.utils.getAddress(type.address[networkId]) ===
 			ethers.utils.getAddress(address)
@@ -93,11 +93,11 @@ export function getTokenSymbol(
 export const convertWeiToHumanReadableForNumbersAndGetValue = (
 	weiAmount: ethers.utils.BigNumber,
 	token: Token,
-	triggerOrAction: TriggerOrAction,
+	conditionOrAction: ConditionOrAction,
 	id: number
 ): string => {
-	// If kyber price trigger
-	if (triggerOrAction === TriggerOrAction.Trigger && id === 2) {
+	// If kyber price condition
+	if (conditionOrAction === ConditionOrAction.Condition && id === 2) {
 		return ethers.utils.formatUnits(weiAmount, 18);
 	}
 	return ethers.utils.formatUnits(weiAmount, token.decimals);
@@ -106,11 +106,11 @@ export const convertWeiToHumanReadableForNumbersAndGetValue = (
 // Returns String
 export const convertHumanReadableToWeiForNumbers = (
 	humanReadableAmount: string,
-	triggerOrAction: TriggerOrAction,
+	conditionOrAction: ConditionOrAction,
 	id: number
 ): ethers.utils.BigNumber => {
-	// If kyber price trigger
-	if (triggerOrAction === TriggerOrAction.Trigger && id === 2) {
+	// If kyber price condition
+	if (conditionOrAction === ConditionOrAction.Condition && id === 2) {
 		return ethers.utils.parseUnits(humanReadableAmount, 18);
 	} else {
 		throw Error('Number used for something other than Kyber Price');
@@ -218,15 +218,15 @@ export function encodeActionPayload(
 	return actionPayloadWithSelector;
 }
 
-export function encodeTriggerPayload(
+export function encodeConditionPayload(
 	userInput: Array<string | number | ethers.utils.BigNumber | boolean>,
 	abi: string
 ) {
 	const iFace = new utils.Interface([abi]);
 
-	const triggerPayloadWithSelector = iFace.functions.fired.encode(userInput);
+	const conditionPayloadWithSelector = iFace.functions.fired.encode(userInput);
 
-	return triggerPayloadWithSelector;
+	return conditionPayloadWithSelector;
 }
 
 export function decodeActionPayload(
@@ -244,7 +244,7 @@ export function decodeActionPayload(
 	return decodedPayload;
 }
 
-export function decodeTriggerPayload(
+export function decodeConditionPayload(
 	payload: string,
 	inputParameter: Array<Params>
 ) {
@@ -264,8 +264,8 @@ export function paramsToSimpleParams(inputParameter: Array<Params>) {
 	return simpleParams;
 }
 
-export const deepCloneTriggers = () => {
-	const dataCopy: Array<TriggerWhitelistData> = [];
+export const deepCloneConditions = () => {
+	const dataCopy: Array<ConditionWhitelistData> = [];
 	TTYPES.forEach(data => {
 		// clone Id
 		const clonedId = data.id;
@@ -289,15 +289,15 @@ export const deepCloneTriggers = () => {
 		// clone abi
 		const clonedAbi = data.abi;
 
-		// clone getTriggerValueAbi
-		let clonedGetTriggerValueAbi = '';
-		clonedGetTriggerValueAbi = data.getTriggerValueAbi;
+		// clone getConditionValueAbi
+		let clonedGetConditionValueAbi = '';
+		clonedGetConditionValueAbi = data.getConditionValueAbi;
 
 		// clone boolIndex:
 		const clonedBoolIndex = data.boolIndex;
 
-		// clone getTriggerValueAbi
-		let clonedGetTriggerValueInput = data.getTriggerValueInput;
+		// clone getConditionValueAbi
+		let clonedGetConditionValueInput = data.getConditionValueInput;
 
 		// clone userInputTypes
 		const clonedUserInputTypes: Array<InputType> = [];
@@ -336,8 +336,8 @@ export const deepCloneTriggers = () => {
 			inputLabels: clonedInputLabels,
 			userInputs: emptyUserInput,
 			relevantInputData: clonedRelevantInputData,
-			getTriggerValueAbi: clonedGetTriggerValueAbi,
-			getTriggerValueInput: clonedGetTriggerValueInput,
+			getConditionValueAbi: clonedGetConditionValueAbi,
+			getConditionValueInput: clonedGetConditionValueInput,
 			boolIndex: clonedBoolIndex,
 			logo: clonedLogo
 		});

@@ -24,7 +24,7 @@ import {
 import {
 	getTokenSymbol,
 	encodeActionPayload,
-	encodeTriggerPayload
+	encodeConditionPayload
 } from '../helpers/helpers';
 
 // Web3 React
@@ -154,15 +154,15 @@ export default function TransactionCard(props: TxCardProps) {
 	}
 
 	async function getGasEstimatePlusBuffer(
-		encodedTrigger: string,
+		encodedCondition: string,
 		encodedAction: string,
 		prepaymentAmount: ethers.utils.BigNumber
 	) {
 		// @DEV ADD TRY/CATCHS to all ETHEREUM TRANSACTIONS
 		const gasEstimate = await gelatoCore.estimate.mintExecutionClaim(
 			EXECUTOR_ADDRESS[networkId],
-			icedTxState.trigger.address[networkId],
-			encodedTrigger,
+			icedTxState.condition.address[networkId],
+			encodedCondition,
 			icedTxState.action.address[networkId],
 			encodedAction,
 			// @DEV make dynamic
@@ -226,15 +226,15 @@ export default function TransactionCard(props: TxCardProps) {
 			case TxState.displayCreate:
 				const userProxy = await gelatoCore.proxyByUser(account);
 				const {
-					encodedTrigger,
+					encodedCondition,
 					encodedAction
-				} = encodeActionAndTrigger(userAccount, userProxy);
+				} = encodeActionAndCondition(userAccount, userProxy);
 
 				const prepaymentAmount = await getPrepaymentAmount();
 
 				// Get Gas Estimate
 				gasEstimatePlusBuffer = await getGasEstimatePlusBuffer(
-					encodedTrigger,
+					encodedCondition,
 					encodedAction,
 					prepaymentAmount
 				);
@@ -254,11 +254,11 @@ export default function TransactionCard(props: TxCardProps) {
 					pastTransaction?.executionClaimId,
 					account,
 					pastTransaction?.proxyAddress,
-					pastTransaction?.trigger,
-					pastTransaction?.triggerPayload,
+					pastTransaction?.condition,
+					pastTransaction?.conditionPayload,
 					pastTransaction?.action,
 					pastTransaction?.actionPayload,
-					pastTransaction?.triggerGasActionTotalGasMinExecutionGas,
+					pastTransaction?.conditionGasActionTotalGasMinExecutionGas,
 					pastTransaction?.expiryDate,
 					pastTransaction?.prepayment
 				);
@@ -304,7 +304,7 @@ export default function TransactionCard(props: TxCardProps) {
 	async function getPrepaymentAmount() {
 		const prepayment = await gelatoCore.getMintingDepositPayable(
 			EXECUTOR_ADDRESS[networkId],
-			icedTxState.trigger.address[networkId],
+			icedTxState.condition.address[networkId],
 			icedTxState.action.address[networkId]
 		);
 
@@ -328,10 +328,10 @@ export default function TransactionCard(props: TxCardProps) {
 		return { ethAmount: parseFloat(ethAmount).toFixed(4), dollar };
 	}
 
-	function encodeActionAndTrigger(account: string, userProxy: string) {
-		const encodedTrigger = encodeTriggerPayload(
-			icedTxState.trigger.userInputs,
-			icedTxState.trigger.abi
+	function encodeActionAndCondition(account: string, userProxy: string) {
+		const encodedCondition = encodeConditionPayload(
+			icedTxState.condition.userInputs,
+			icedTxState.condition.abi
 		);
 
 		const encodedAction = encodeActionPayload(
@@ -340,7 +340,7 @@ export default function TransactionCard(props: TxCardProps) {
 			account,
 			userProxy
 		);
-		return { encodedTrigger, encodedAction };
+		return { encodedCondition, encodedAction };
 	}
 
 	// Return gas price in wei with buffer
@@ -670,9 +670,9 @@ export default function TransactionCard(props: TxCardProps) {
 						// User has Proxy
 						if (account !== undefined && account !== null) {
 							const {
-								encodedTrigger,
+								encodedCondition,
 								encodedAction
-							} = encodeActionAndTrigger(account, proxyAddress);
+							} = encodeActionAndCondition(account, proxyAddress);
 
 							const prepaymentAmount = await getPrepaymentAmount();
 
@@ -680,7 +680,7 @@ export default function TransactionCard(props: TxCardProps) {
 
 							//  Add 50.000 gas to estimate
 							const gasEstimatePlusBuffer = await getGasEstimatePlusBuffer(
-								encodedTrigger,
+								encodedCondition,
 								encodedAction,
 								prepaymentAmount
 							);
@@ -703,16 +703,16 @@ export default function TransactionCard(props: TxCardProps) {
 							};
 							/*
 							 address _selectedExecutor,
-							IGelatoTrigger _trigger,
-							bytes calldata _triggerPayloadWithSelector,
+							IGelatoCondition _condition,
+							bytes calldata _conditionPayloadWithSelector,
 							IGelatoAction _action,
 							bytes calldata _actionPayloadWithSelector
 							*/
 							try {
 								const tx = await gelatoCore.mintExecutionClaim(
 									EXECUTOR_ADDRESS[networkId],
-									icedTxState.trigger.address[networkId],
-									encodedTrigger,
+									icedTxState.condition.address[networkId],
+									encodedCondition,
 									icedTxState.action.address[networkId],
 									encodedAction,
 									// @DEV make dynamic
@@ -812,11 +812,11 @@ export default function TransactionCard(props: TxCardProps) {
 								pastTransaction?.executionClaimId,
 								account,
 								pastTransaction?.proxyAddress,
-								pastTransaction?.trigger,
-								pastTransaction?.triggerPayload,
+								pastTransaction?.condition,
+								pastTransaction?.conditionPayload,
 								pastTransaction?.action,
 								pastTransaction?.actionPayload,
-								pastTransaction?.triggerGasActionTotalGasMinExecutionGas,
+								pastTransaction?.conditionGasActionTotalGasMinExecutionGas,
 								pastTransaction?.expiryDate,
 								pastTransaction?.prepayment
 							);
@@ -838,8 +838,8 @@ export default function TransactionCard(props: TxCardProps) {
 							};
 							/*
 								address _selectedExecutor,
-							IGelatoTrigger _trigger,
-							bytes calldata _triggerPayloadWithSelector,
+							IGelatoCondition _condition,
+							bytes calldata _conditionPayloadWithSelector,
 							IGelatoAction _action,
 							bytes calldata _actionPayloadWithSelector
 							*/
@@ -852,11 +852,11 @@ export default function TransactionCard(props: TxCardProps) {
 									pastTransaction?.executionClaimId,
 									account,
 									pastTransaction?.proxyAddress,
-									pastTransaction?.trigger,
-									pastTransaction?.triggerPayload,
+									pastTransaction?.condition,
+									pastTransaction?.conditionPayload,
 									pastTransaction?.action,
 									pastTransaction?.actionPayload,
-									pastTransaction?.triggerGasActionTotalGasMinExecutionGas,
+									pastTransaction?.conditionGasActionTotalGasMinExecutionGas,
 									pastTransaction?.expiryDate,
 									pastTransaction?.prepayment,
 									overrides
@@ -868,11 +868,11 @@ export default function TransactionCard(props: TxCardProps) {
 								// const tx = await gelatoCore.canExecute(
 								// 	pastTransaction?.executionClaimId,
 								// 	pastTransaction?.proxyAddress,
-								// 	pastTransaction?.trigger,
-								// 	pastTransaction?.triggerPayload,
+								// 	pastTransaction?.condition,
+								// 	pastTransaction?.conditionPayload,
 								// 	pastTransaction?.action,
 								// 	pastTransaction?.actionPayload,
-								// 	pastTransaction?.triggerGasActionTotalGasMinExecutionGas,
+								// 	pastTransaction?.conditionGasActionTotalGasMinExecutionGas,
 								// 	1000000,
 								// 	pastTransaction?.expiryDate,
 								// 	pastTransaction?.prepayment
@@ -1313,9 +1313,9 @@ export default function TransactionCard(props: TxCardProps) {
 							}}
 						>
 							<h4 style={{ margin: '0px' }}>
-								If the trigger{' '}
+								If the condition{' '}
 								<span style={{ color: COLOURS.salmon }}>
-									{icedTxState.trigger.title}
+									{icedTxState.condition.title}
 								</span>{' '}
 								is activated, your gelato bot will{' '}
 								<span style={{ color: COLOURS.salmon }}>
@@ -1399,7 +1399,7 @@ export default function TransactionCard(props: TxCardProps) {
 							}}
 							color="primary"
 							onClick={() => {
-								const queryString = `I%20just%20tasked%20my%20gelato%20bot%20to%20${icedTxState.action.title}%20on%20my%20behalf%20when%20my%20predefined%20${icedTxState.trigger.title}%20trigger%20gets%20activated - via @gelatofinance`;
+								const queryString = `I%20just%20tasked%20my%20gelato%20bot%20to%20${icedTxState.action.title}%20on%20my%20behalf%20when%20my%20predefined%20${icedTxState.condition.title}%20condition%20gets%20activated - via @gelatofinance`;
 								console.log(queryString);
 								const url = `https://twitter.com/intent/tweet?text=${queryString}`;
 								window.open(url, '_blank');

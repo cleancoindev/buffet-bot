@@ -58,8 +58,8 @@ export const DEFAULT_DATA_TRIGGER = {
 	address: { 1: '', 3: '', 4: '', 42: '' },
 	params: EMPTY_PARAM_ARRAY, // [ ]
 	abi: '',
-	getTriggerValueAbi: '',
-	getTriggerValueInput: BIG_NUM_ZERO,
+	getConditionValueAbi: '',
+	getConditionValueInput: BIG_NUM_ZERO,
 	approveIndex: 999,
 	inputLabels: EMPTY_STRING_ARRAY, // [ ]
 	userInputTypes: EMPTY_USER_INPUT_TYPE_ARRAY, // [ ]
@@ -87,7 +87,7 @@ export const DEFAULT_DATA_ACTION = {
 		'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png'
 };
 
-// ID that determines which trigger to render by default at initial render of root
+// ID that determines which condition to render by default at initial render of root
 export const DEFAULT_TRIGGER_ID = '2';
 export const DEFAULT_ACTION_ID = '3';
 
@@ -97,11 +97,11 @@ Interface
 	selectedExecutor: string;
 	id: string;
 	userProxy: string;
-	trigger: string;
-	triggerPayload: string;
+	condition: string;
+	conditionPayload: string;
 	action: string;
 	actionPayload: string;
-	triggerGasActionTotalGasMinExecutionGas: number;
+	conditionGasActionTotalGasMinExecutionGas: number;
 	expiryDate: string;
 	prepayment: string;
 	// Graph specific values
@@ -118,21 +118,21 @@ export const DEFAULT_PAST_TRANSACTIONS = [
 		id: '0x1',
 		executionClaimId: '1',
 		proxyAddress: '0x0',
-		trigger: '0x1',
-		triggerPayload: '0x030949304934009413094309320493049039049204',
+		condition: '0x1',
+		conditionPayload: '0x030949304934009413094309320493049039049204',
 		action: '0x5',
 		actionPayload: '0x030949304934009413094309320493049039049204',
 		expiryDate: '1',
 		prepayment: '1009032030020',
 		mintingDate: '1576759372',
 		status: 'open',
-		triggerGasActionTotalGasMinExecutionGas: [0, 1, 2]
+		conditionGasActionTotalGasMinExecutionGas: [0, 1, 2]
 	}
 	// {
 	// 	id: '0',
-	// 	triggerAddress: '0x2',
+	// 	conditionAddress: '0x2',
 	// 	actionAddress: '0x4',
-	// 	triggerPayload: '0x030949304934009413094309320493049039049204',
+	// 	conditionPayload: '0x030949304934009413094309320493049039049204',
 	// 	actionPayload: '0x030949304934009413094309320493049039049204',
 	// 	expiryDate: '12353434312',
 	// 	prepayment: '1009032030020',
