@@ -3,8 +3,11 @@ import React from 'react';
 import {
 	ConditionOrAction,
 	ConditionWhitelistData,
-	ActionWhitelistData
+	ActionWhitelistData,
+	RelevantInputData
 } from '../constants/interfaces';
+import { useWeb3React } from '@web3-react/core';
+import { ChainIds } from '../constants/interfaces';
 
 import {
 	Grid,
@@ -27,6 +30,10 @@ import {
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 import { BOX, COLOURS } from '../constants/constants';
 import { ethers } from 'ethers';
+
+import LinkIcon from '@material-ui/icons/Link';
+import { getEtherscanPrefix } from '../helpers/helpers';
+import { getTriggerText, getActionText } from '../constants/summaryTest';
 
 const useStyles = makeStyles(theme => ({
 	box: {
@@ -60,14 +67,24 @@ interface TxSummaryParams {
 	action: ActionWhitelistData;
 	conditionInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
 	actionInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
+	pastTransactionHash?: string;
 }
 
 export default function TransactionSummary(props: TxSummaryParams) {
 	const classes = useStyles();
 
-	const { condition, action, conditionInputs, actionInputs } = props;
+	const {
+		condition,
+		action,
+		conditionInputs,
+		actionInputs,
+		pastTransactionHash
+	} = props;
 
 	const history = useHistory();
+
+	const { active, chainId } = useWeb3React();
+	const networkId = chainId as ChainIds;
 
 	// Get UserInput Types
 	const conditionInputTypes = condition.userInputTypes;
@@ -77,8 +94,10 @@ export default function TransactionSummary(props: TxSummaryParams) {
 	const conditionApp = condition.app;
 	const actionApp = action.app;
 
-	console.log(history.location.pathname);
-	console.log(history.location.pathname.includes('dashboard'));
+	let etherscanPrefix = '';
+	if (active) {
+		etherscanPrefix = getEtherscanPrefix(chainId as ChainIds);
+	}
 
 	const GelatoButton = withStyles({
 		root: {
@@ -110,6 +129,8 @@ export default function TransactionSummary(props: TxSummaryParams) {
 		}
 	})(Button);
 
+	console.log(pastTransactionHash);
+
 	return (
 		<div style={{ marginBottom: '24px', width: '100%' }}>
 			<Grid
@@ -135,10 +156,56 @@ export default function TransactionSummary(props: TxSummaryParams) {
 					}}
 				>
 					<div style={{ marginRight: 'auto' }}>
-						<h2 style={{ marginTop: '0px' }}>
-							Instruction Summary
-						</h2>
-						<h2 style={{ textAlign: 'left' }}>
+						<h2>Instruction Summary</h2>
+						{pastTransactionHash !== null &&
+							pastTransactionHash !== undefined && (
+								<Grid
+									container
+									direction="column"
+									alignItems="flex-start"
+									style={{
+										marginTop: '16px'
+									}}
+								>
+									<h3 style={{ marginTop: '24px' }}>
+										Execution Status: 'Open'
+									</h3>
+									<Grid
+										container
+										direction="row"
+										alignItems="center"
+										style={{
+											marginTop: '16px'
+										}}
+									>
+										<h3
+											style={{
+												marginRight: '8px',
+												marginTop: '-6px',
+												marginBottom: '0px'
+											}}
+										>
+											Execution Receipt (Etherscan):
+										</h3>
+										<a
+											href={`https://${etherscanPrefix}etherscan.io/tx/${pastTransactionHash}`}
+											target="_blank"
+										>
+											<LinkIcon
+												// color={'primary'}
+												style={{
+													color: COLOURS.salmon,
+													marginTop: '0px'
+												}}
+												fontSize={'large'}
+												// style={{ marginRight: '8px' }}
+											/>
+										</a>
+									</Grid>
+								</Grid>
+							)}
+						{/* CONTENT FOR TRANSACTION SUMMARY IN CREATE*/}
+						{/* <h2 style={{ textAlign: 'left' }}>
 							IF{' '}
 							<span style={{ color: COLOURS.salmon }}>
 								{condition.title}{' '}
@@ -150,7 +217,25 @@ export default function TransactionSummary(props: TxSummaryParams) {
 							<span style={{ color: COLOURS.salmon }}>
 								{action.title}
 							</span>
-						</h2>
+						</h2> */}
+						{history.location.pathname.includes('create') && (
+							// <h2 style={{ textAlign: 'left' }}>
+							// 	In 2 days, 40 minutes and 10 seconds, your gelato bot will withdraw 10 DAI from your wallet and send it to the following address: 0x99E69499973484a96639f4Fb17893BC96000b3b8
+							// </h2>
+							<h2 style={{ textAlign: 'left' }}>
+								{`${getTriggerText(
+									condition.userInputs,
+									condition.id,
+									networkId,
+									RelevantInputData.all
+								)} ${getActionText(
+									action.userInputs,
+									action.id,
+									networkId,
+									RelevantInputData.all
+								)}`}
+							</h2>
+						)}
 					</div>
 					<div>
 						{history.location.pathname.includes('dashboard') && (
@@ -164,9 +249,18 @@ export default function TransactionSummary(props: TxSummaryParams) {
 							</GelatoButton>
 						)}
 					</div>
+
+					<Divider
+						style={{
+							background: 'white',
+							marginBottom: '8px',
+							marginTop: '24px',
+							width: '100%'
+						}}
+					/>
 				</Grid>
 			</Grid>
-			<Grid
+			{/* <Grid
 				container
 				direction="row"
 				justify="space-evenly"
@@ -181,7 +275,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 						width: 'calc(100%)'
 					}}
 				/>
-			</Grid>
+			</Grid> */}
 			<Grid
 				container
 				direction="row"
@@ -200,7 +294,6 @@ export default function TransactionSummary(props: TxSummaryParams) {
 					// className={classes.box}
 					style={{
 						// paddingLeft: '24px',
-						minHeight: '200px',
 						textAlign: 'left'
 					}}
 				>
@@ -229,8 +322,8 @@ export default function TransactionSummary(props: TxSummaryParams) {
 						style={{
 							background: 'white',
 							marginBottom: '8px',
-							marginTop: '16px',
-							width: 'calc(100%)'
+							marginTop: '24px',
+							width: '100%'
 						}}
 					/>
 				</Grid>
@@ -253,7 +346,6 @@ export default function TransactionSummary(props: TxSummaryParams) {
 					// className={classes.box}
 					style={{
 						// paddingLeft: '24px',
-						minHeight: '200px',
 						textAlign: 'left'
 					}}
 				>

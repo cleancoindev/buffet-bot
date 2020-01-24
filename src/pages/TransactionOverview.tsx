@@ -56,6 +56,7 @@ export default function TransactionOverview({
 	// Get the identified past transaction from state
 	const pastTransaction =
 		icedTxState.pastTransactions[parseInt(transactionId.toString())];
+	console.log(pastTransaction);
 
 	if (pastTransaction === undefined) {
 		history.push('/dashboard');
@@ -97,6 +98,7 @@ export default function TransactionOverview({
 					alignItems="center"
 				>
 					<TransactionSummary
+						pastTransactionHash={pastTransaction.executionHash}
 						condition={condition}
 						action={action}
 						conditionInputs={conditionInputs}

@@ -242,5 +242,9 @@ export const TOKEN_LIST = [
 	{
 		name: RelevantInputData.fulcrumTokenList,
 		data: [...FULCRUM_LEVERAGE_TOKEN_LIST]
+	},
+	{
+		name: RelevantInputData.all,
+		data: [...FULCRUM_LEVERAGE_TOKEN_LIST, ...KYBER_TOKEN_LIST]
 	}
 ];

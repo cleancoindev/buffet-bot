@@ -126,7 +126,8 @@ export const DEFAULT_PAST_TRANSACTIONS = [
 		prepayment: '1009032030020',
 		mintingDate: '1576759372',
 		status: 'open',
-		conditionGasActionTotalGasMinExecutionGas: [0, 1, 2]
+		conditionGasActionTotalGasMinExecutionGas: [0, 1, 2],
+		executionHash: ''
 	}
 	// {
 	// 	id: '0',

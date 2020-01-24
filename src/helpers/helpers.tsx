@@ -103,6 +103,13 @@ export const convertWeiToHumanReadableForNumbersAndGetValue = (
 	return ethers.utils.formatUnits(weiAmount, token.decimals);
 };
 
+export const convertWeiToHumanReadableForTokenAmount = (
+	weiAmount: ethers.utils.BigNumber,
+	tokenDecimals: number
+): string => {
+	return ethers.utils.formatUnits(weiAmount, tokenDecimals);
+};
+
 // Returns String
 export const convertHumanReadableToWeiForNumbers = (
 	humanReadableAmount: string,
@@ -224,7 +231,9 @@ export function encodeConditionPayload(
 ) {
 	const iFace = new utils.Interface([abi]);
 
-	const conditionPayloadWithSelector = iFace.functions.fired.encode(userInput);
+	const conditionPayloadWithSelector = iFace.functions.fired.encode(
+		userInput
+	);
 
 	return conditionPayloadWithSelector;
 }
@@ -429,4 +438,22 @@ export const deepCloneActions = () => {
 		});
 	});
 	return dataCopy;
+};
+
+export const getEtherscanPrefix = (chainId: ChainIds): string => {
+	switch (chainId) {
+		case 1:
+			return '';
+		case 3:
+			return 'ropsten.';
+
+		case 4:
+			return 'rinkeby.';
+
+		case 42:
+			return 'kovan.';
+
+		default:
+			return '';
+	}
 };

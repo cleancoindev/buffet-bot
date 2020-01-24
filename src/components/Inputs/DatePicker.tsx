@@ -154,6 +154,15 @@ const TextFieldWrap = (props: TextFieldWrapProps) => {
 	);
 };
 
+export function timestampToDate(timestamp: number | string) {
+	// We get timestamp in seconds
+	const timestampInMilli = parseInt(timestamp.toString()) * 1000;
+	// Convert into date object
+	const dateObject = new Date(timestampInMilli);
+	// We want to return Date Object
+	return dateObject;
+}
+
 // #################################################
 
 export default function DateAndTimePicker(props: InputProps) {
@@ -203,15 +212,6 @@ export default function DateAndTimePicker(props: InputProps) {
 
 			handleDateChange(newDate);
 		}
-	}
-
-	function timestampToDate(timestamp: number | string) {
-		// We get timestamp in seconds
-		const timestampInMilli = parseInt(timestamp.toString()) * 1000;
-		// Convert into date object
-		const dateObject = new Date(timestampInMilli);
-		// We want to return Date Object
-		return dateObject;
 	}
 
 	function dateToTimestamp(date: Date) {

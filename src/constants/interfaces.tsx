@@ -47,6 +47,7 @@ export interface PastTransaction {
 	executionDate?: string;
 	status: string;
 	conditionGasActionTotalGasMinExecutionGas: Array<number>;
+	executionHash: string;
 }
 
 export interface Params {
@@ -140,7 +141,8 @@ export enum InputType {
 export enum RelevantInputData {
 	none = 0,
 	kyberTokenList = 1,
-	fulcrumTokenList = 2
+	fulcrumTokenList = 2,
+	all = 3
 }
 
 export interface MatchParams {

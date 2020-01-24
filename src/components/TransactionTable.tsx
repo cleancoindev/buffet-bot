@@ -369,6 +369,7 @@ export default function EnhancedTable() {
 								prepayment
 								mintingDate
 								executionDate
+								executionHash
 								status
 								conditionGasActionTotalGasMinExecutionGas
 							  }

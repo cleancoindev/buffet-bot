@@ -1,6 +1,9 @@
 import React from 'react';
 
-import { StepperContentProps, ConditionOrAction } from '../constants/interfaces';
+import {
+	StepperContentProps,
+	ConditionOrAction
+} from '../constants/interfaces';
 
 // Material UI
 import { makeStyles } from '@material-ui/core/styles';
@@ -116,7 +119,9 @@ export default function StepperContent(props: StepperContentProps) {
 									index={key}
 									inputType={input}
 									label={condition.inputLabels[key]}
-									conditionOrAction={ConditionOrAction.Condition}
+									conditionOrAction={
+										ConditionOrAction.Condition
+									}
 									inputs={conditionInputs}
 									app={conditionApp}
 									disabled={false}
