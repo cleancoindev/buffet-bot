@@ -14,6 +14,9 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
 import SendIcon from '@material-ui/icons/Send';
 import WarningIcon from '@material-ui/icons/Warning';
+
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+
 import {
 	COLOURS,
 	SELECTED_CHAIN_ID,
@@ -147,6 +150,7 @@ export default function LoginButton() {
 				aria-controls="customized-menu"
 				aria-haspopup="true"
 				onClick={handleClick}
+				endIcon={<ArrowDropDownIcon />}
 			>
 				{account
 					? `${account.substring(0, 6)}...${account.substring(

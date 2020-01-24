@@ -30,6 +30,7 @@ import Footer from './components/Footer';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import Help from './pages/Help';
+import { Typography } from '@material-ui/core';
 
 const theme = createMuiTheme({
 	typography: {
@@ -53,6 +54,17 @@ function App() {
 						<div className="container">
 							<Header></Header>
 							<WarningMessage></WarningMessage>
+							{/* <Typography
+								style={{
+									textAlign: 'center',
+									marginTop: '48px'
+								}}
+								variant="h5"
+								component="h5"
+								gutterBottom
+							>
+								Give your gelato bot new instructions
+							</Typography> */}
 							<Container
 								className={'sub-container'}
 								style={{

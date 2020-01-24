@@ -76,6 +76,7 @@ export default function AppSelection() {
 	// Import global state
 	//const { updateIcedTx, icedTxState, resetIcedTxInput } = useIcedTxContext();
 	const { icedTxState, dispatch } = useIcedTxContext();
+	console.log(icedTxState.trigger.id);
 
 	const web3 = useWeb3React();
 
@@ -86,18 +87,22 @@ export default function AppSelection() {
 	const availableActions = [...ATYPES];
 
 	useEffect(() => {
-		preTxCheck();
+		// IF metamask is not logged in, but TxState already advanced to beyond displaylOgIntoMetamsk (User logged in and then out) => then revert back to displayLogIntoMetamask state
+		if (
+			!web3.active &&
+			icedTxState.txState > TxState.displayLogIntoMetamask
+		) {
+			dispatch({
+				type: UPDATE_TX_STATE,
+				txState: TxState.displayLogIntoMetamask
+			});
+		} else {
+			preTxCheck();
+		}
 	}, [icedTxState.txState, web3.active, web3.chainId]);
 
 	const preTxCheck = () => {
 		const { ethereum } = window as any;
-		if (!web3.active && !ethereum.isMetaMask) {
-			dispatch({
-				type: UPDATE_TX_STATE,
-				txState: TxState.displayInstallMetamask
-			});
-			return 0;
-		}
 		switch (icedTxState.txState) {
 			case TxState.displayInstallMetamask:
 				// Web3 object is injected

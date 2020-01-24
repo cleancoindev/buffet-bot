@@ -14,7 +14,8 @@ import {
 	SELECT_ACTION,
 	COLOURS,
 	DEFAULT_TRIGGER_ID,
-	BOX
+	BOX,
+	DEFAULT_ACTION_ID
 } from '../constants/constants';
 import { MenuItem } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
@@ -73,6 +74,16 @@ export default function AppDropdown(props: AppDropdownProps) {
 			setState(DEFAULT_TRIGGER_ID);
 		}
 	}, [icedTxState.trigger.id]);
+
+	useEffect(() => {
+		if (
+			triggerOrAction === TriggerOrAction.Action &&
+			icedTxState.action.id === parseInt(DEFAULT_ACTION_ID) &&
+			state === '0'
+		) {
+			setState(DEFAULT_ACTION_ID);
+		}
+	}, [icedTxState.action.id]);
 
 	const handleChange = (event: React.ChangeEvent<{ value: any }>) => {
 		const functionId = event.target.value as string;

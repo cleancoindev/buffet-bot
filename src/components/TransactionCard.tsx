@@ -1333,27 +1333,33 @@ export default function TransactionCard(props: TxCardProps) {
 							justify="center"
 							alignItems="center"
 							style={{
-								marginTop: '40px',
-								background: 'FFFFFF'
-							}}
-							color="primary"
-							onClick={() => {
-								const queryString = `I%20just%20tasked%20my%20gelato%20bot%20to%20${icedTxState.action.title}%20on%20my%20behalf%20when%20my%20predefined%20${icedTxState.trigger.title}%20trigger%20gets%20activated - via @gelatofinance`;
-								console.log(queryString);
-								const url = `https://twitter.com/intent/tweet?text=${queryString}`;
-								window.open(url, '_blank');
+								background: 'FFFFFF',
+								marginTop: '40px'
 							}}
 						>
 							<Button
+								color="primary"
+								onClick={() => {
+									// Reset txState
+									dispatch({
+										type: CLOSE_MODAL
+									});
+									dispatch({
+										type: UPDATE_TX_STATE,
+										txState: TxState.displayLogIntoMetamask
+									});
+									history.push('/dashboard');
+								}}
 								style={{
 									width: '100%',
 									border: '0.5px solid',
 									borderColor: COLOURS.salmon,
 									// borderRadius: '1px 1px 1px 1px',
 									color: 'white'
+									// color: COLOURS.salmon
 								}}
 							>
-								Share on Twitter
+								My Bot Activity
 							</Button>
 						</Grid>
 						<Grid
@@ -1388,33 +1394,27 @@ export default function TransactionCard(props: TxCardProps) {
 							justify="center"
 							alignItems="center"
 							style={{
+								// marginTop: '40px',
 								background: 'FFFFFF'
-								// marginTop: '40px'
+							}}
+							color="primary"
+							onClick={() => {
+								const queryString = `I%20just%20tasked%20my%20gelato%20bot%20to%20${icedTxState.action.title}%20on%20my%20behalf%20when%20my%20predefined%20${icedTxState.trigger.title}%20trigger%20gets%20activated - via @gelatofinance`;
+								console.log(queryString);
+								const url = `https://twitter.com/intent/tweet?text=${queryString}`;
+								window.open(url, '_blank');
 							}}
 						>
 							<Button
-								color="primary"
-								onClick={() => {
-									// Reset txState
-									dispatch({
-										type: CLOSE_MODAL
-									});
-									dispatch({
-										type: UPDATE_TX_STATE,
-										txState: TxState.displayLogIntoMetamask
-									});
-									history.push('/dashboard');
-								}}
 								style={{
 									width: '100%',
 									border: '0.5px solid',
 									borderColor: COLOURS.salmon,
 									// borderRadius: '1px 1px 1px 1px',
 									color: 'white'
-									// color: COLOURS.salmon
 								}}
 							>
-								Dashboard
+								Share on Twitter
 							</Button>
 						</Grid>
 					</React.Fragment>

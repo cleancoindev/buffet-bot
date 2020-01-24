@@ -154,6 +154,7 @@ export default function StepperParent(props: StepperProps) {
 										// 	txState:
 										// 		TxState.displayInstallMetamask
 										// });
+										// preTxCheck();
 										dispatch({ type: OPEN_MODAL });
 									}}
 									className={classes.nextButton}

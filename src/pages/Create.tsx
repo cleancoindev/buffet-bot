@@ -47,6 +47,8 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 	// web3React context
 	const web3 = useWeb3React();
 
+	web3.connector?.getProvider();
+
 	// Returns true if wrong params were inputted in URL
 	const [notFound, setNotFound] = useState(false);
 
@@ -310,17 +312,8 @@ export default function Create({ match }: RouteComponentProps<Params>) {
 			});
 		} else {
 			preTxCheck();
-			if (
-				!web3.active &&
-				icedTxState.txState !== TxState.displayInstallMetamask
-			) {
-				dispatch({
-					type: UPDATE_TX_STATE,
-					txState: TxState.displayInstallMetamask
-				});
-			}
 		}
-	}, [icedTxState.txState, web3.active, activeStep]);
+	}, [icedTxState.txState, web3.active, activeStep, web3.account]);
 
 	// MODAL STUFF END
 

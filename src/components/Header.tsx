@@ -42,7 +42,9 @@ import {
 	RESET_ACTION,
 	SELECT_CONDITION,
 	DEFAULT_TRIGGER_ID,
-	INPUT_OK
+	INPUT_OK,
+	DEFAULT_ACTION_ID,
+	SELECT_ACTION
 } from '../constants/constants';
 import { useIcedTxContext } from '../state/GlobalState';
 import { TxState } from '../constants/interfaces';
@@ -115,7 +117,7 @@ const useStyles = makeStyles(theme => ({
 		textDecoration: 'none',
 		color: 'white',
 		cursor: 'pointer',
-		'&:hover': { color: COLOURS.salmon },
+		// '&:hover': { color: COLOURS.salmon },
 		display: 'flex',
 		flexDirection: 'row',
 		justify: 'center',
@@ -161,8 +163,10 @@ export default function ButtonAppBar() {
 	// Set default selected Trigger, as header only gets mounted once
 	useEffect(() => {
 		console.log('Mount header');
-		const functionId = DEFAULT_TRIGGER_ID;
-		dispatch({ type: SELECT_CONDITION, id: functionId });
+		const functionIdTrigger = DEFAULT_TRIGGER_ID;
+		dispatch({ type: SELECT_CONDITION, id: functionIdTrigger });
+		const functionIdAction = DEFAULT_ACTION_ID;
+		dispatch({ type: SELECT_ACTION, id: functionIdAction });
 	}, []);
 
 	// handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
@@ -178,6 +182,16 @@ export default function ButtonAppBar() {
 		}
 	};
 
+	const linkBackToHome = () => {
+		dispatch({ type: RESET_CONDITION });
+		dispatch({ type: RESET_ACTION });
+		dispatch({
+			type: INPUT_OK,
+			txState: TxState.displayInstallMetamask
+		});
+		history.push('/');
+	};
+
 	// Web3 Logic END
 
 	return (
@@ -185,7 +199,10 @@ export default function ButtonAppBar() {
 			<AppBar className={classes.appBar} position="static">
 				<Toolbar style={{ paddingLeft: '0px', paddingRight: '0px' }}>
 					{/* <Link className={classes.menuButton} to="/"> */}
-					<div className={classes.menuButton}>
+					<div
+						className={classes.menuButton}
+						onClick={linkBackToHome}
+					>
 						{/* <img
 							src={`${process.env.PUBLIC_URL}/images/gelato_logo.png`}
 							alt="logo"
@@ -207,16 +224,7 @@ export default function ButtonAppBar() {
 					<Hidden xsDown>
 						<BootstrapButton
 							style={{ border: 'none' }}
-							onClick={() => {
-								// First refresh state of Create Page to start from the beginning
-								dispatch({ type: RESET_CONDITION });
-								dispatch({ type: RESET_ACTION });
-								dispatch({
-									type: INPUT_OK,
-									txState: TxState.displayInstallMetamask
-								});
-								history.push('/');
-							}}
+							onClick={linkBackToHome}
 						>
 							New Instruction
 						</BootstrapButton>
