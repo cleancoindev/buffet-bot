@@ -63,7 +63,7 @@ const StyledMenuItem = withStyles(theme => ({
 	}
 }))(MenuItem);
 
-const BootstrapButton = withStyles({
+const GelatoButton = withStyles({
 	root: {
 		// minWidth: '150px',
 		boxShadow: 'none',
@@ -86,30 +86,6 @@ const BootstrapButton = withStyles({
 			boxShadow: 'none',
 			backgroundColor: '#0062cc',
 			borderColor: '#005cbf'
-		}
-		// '&:focus': {
-		// 	boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)'
-		// }
-	}
-})(Button);
-
-const BootstrapButtonDanger = withStyles({
-	root: {
-		boxShadow: 'none',
-		textTransform: 'none',
-		fontSize: 16,
-		padding: '6px 12px',
-		border: '1px solid',
-		marginLeft: '16px',
-		lineHeight: 1.5,
-		borderColor: 'red',
-		backgroundColor: 'red',
-		color: 'white',
-
-		'&:hover': {
-			backgroundColor: 'red',
-			borderColor: 'red',
-			boxShadow: 'none'
 		}
 		// '&:focus': {
 		// 	boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)'
@@ -146,7 +122,7 @@ export default function LoginButton() {
 	// if (active && chainId === SELECTED_CHAIN_ID)
 	return (
 		<div>
-			<BootstrapButton
+			<GelatoButton
 				aria-controls="customized-menu"
 				aria-haspopup="true"
 				onClick={handleClick}
@@ -158,7 +134,7 @@ export default function LoginButton() {
 							41
 					  )}`
 					: 'Connected'}
-			</BootstrapButton>
+			</GelatoButton>
 			<StyledMenu
 				id="customized-menu"
 				anchorEl={anchorEl}
