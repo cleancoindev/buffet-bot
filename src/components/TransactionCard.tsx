@@ -423,12 +423,15 @@ export default function TransactionCard(props: TxCardProps) {
 		switch (txState) {
 			case TxState.displayMobile:
 				return {
-					title: `Gelato is not available on mobile as of now, please use it on your desktop`,
+					title: `The gelato alpha is not available on mobile right now, please use it on your desktop`,
 					progress: Progress.awaitingModalConfirm,
 					progressText: ``,
 					prepayment: false,
-					closeBtn: true,
-					btn: ''
+					closeBtn: false,
+					btn: 'Seriously... ?',
+					btnFunc: async () => {
+						modalClose();
+					}
 				};
 			case TxState.displayInstallMetamask:
 				return {
