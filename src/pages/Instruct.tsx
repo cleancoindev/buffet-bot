@@ -38,7 +38,7 @@ interface Params {
 
 // interface Match extends RouteComponentProps<Params> {}
 
-export default function Create({ match }: RouteComponentProps<Params>) {
+export default function Instruct({ match }: RouteComponentProps<Params>) {
 	const {
 		params: { conditionId, actionId }
 	} = match;

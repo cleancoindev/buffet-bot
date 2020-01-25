@@ -28,12 +28,21 @@ import {
 	decodeActionPayload
 } from '../helpers/helpers';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
-import { BOX, COLOURS } from '../constants/constants';
+import {
+	BOX,
+	COLOURS,
+	DEFAULT_PAST_TRANSACTIONS
+} from '../constants/constants';
 import { ethers } from 'ethers';
 
 import LinkIcon from '@material-ui/icons/Link';
 import { getEtherscanPrefix } from '../helpers/helpers';
-import { getTriggerText, getActionText } from '../constants/summaryTest';
+import {
+	getTriggerText,
+	getActionText,
+	getStatusText
+} from '../constants/summaryTest';
+import { timestampToDate } from './Inputs/DatePicker';
 
 const useStyles = makeStyles(theme => ({
 	box: {
@@ -68,6 +77,7 @@ interface TxSummaryParams {
 	conditionInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
 	actionInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
 	pastTransactionHash?: string;
+	pastTransaction?: PastTransaction;
 }
 
 export default function TransactionSummary(props: TxSummaryParams) {
@@ -78,8 +88,12 @@ export default function TransactionSummary(props: TxSummaryParams) {
 		action,
 		conditionInputs,
 		actionInputs,
-		pastTransactionHash
+		pastTransactionHash,
+		pastTransaction
 	} = props;
+
+	console.log(pastTransaction);
+	console.log((pastTransaction?.status as string) === 'executedSuccess');
 
 	const history = useHistory();
 
@@ -157,36 +171,77 @@ export default function TransactionSummary(props: TxSummaryParams) {
 				>
 					<div style={{ marginRight: 'auto' }}>
 						<h2>Instruction Summary</h2>
-						{pastTransactionHash !== null &&
-							pastTransactionHash !== undefined && (
-								<Grid
-									container
-									direction="column"
-									alignItems="flex-start"
+
+						{pastTransaction !== undefined && (
+							<div
+								style={{
+									display: 'flex',
+									flexDirection: 'column',
+									alignItems: 'flex-start',
+									marginTop: '16px'
+								}}
+							>
+								<p
 									style={{
-										marginTop: '16px'
+										marginTop: '24px',
+										fontSize: '1rem'
 									}}
 								>
-									<h3 style={{ marginTop: '24px' }}>
-										Execution Status: 'Open'
-									</h3>
-									<Grid
-										container
-										direction="row"
-										alignItems="center"
+									Exeuction Status:{' '}
+									<span style={{ color: COLOURS.salmon }}>
+										{getStatusText(
+											pastTransaction?.status as string
+										)}
+									</span>
+								</p>
+
+								{pastTransaction?.status === 'open' && (
+									<React.Fragment>
+										<p
+											style={{
+												marginTop: '24px',
+												marginBottom: '8px',
+												fontSize: '1rem'
+											}}
+										>
+											Instruction, if not executed, will
+											expire on:{' '}
+										</p>
+										<p
+											style={{
+												fontSize: '1rem',
+												marginTop: '0px',
+												color: COLOURS.salmon
+											}}
+										>
+											{`${timestampToDate(
+												parseInt(
+													pastTransaction?.expiryDate
+												)
+											)}`}
+										</p>
+									</React.Fragment>
+								)}
+								{pastTransaction.status ===
+									'executedSuccess' && (
+									<div
 										style={{
+											display: 'flex',
+											flexDirection: 'row',
+											alignItems: 'center',
 											marginTop: '16px'
 										}}
 									>
-										<h3
+										<p
 											style={{
+												fontSize: '1rem',
 												marginRight: '8px',
 												marginTop: '-6px',
 												marginBottom: '0px'
 											}}
 										>
 											Execution Receipt (Etherscan):
-										</h3>
+										</p>
 										<a
 											href={`https://${etherscanPrefix}etherscan.io/tx/${pastTransactionHash}`}
 											target="_blank"
@@ -201,9 +256,47 @@ export default function TransactionSummary(props: TxSummaryParams) {
 												// style={{ marginRight: '8px' }}
 											/>
 										</a>
-									</Grid>
-								</Grid>
-							)}
+									</div>
+								)}
+								{pastTransaction.status ===
+									'executedFailure' && (
+									<div
+										style={{
+											display: 'flex',
+											flexDirection: 'row',
+											alignItems: 'center',
+											marginTop: '16px'
+										}}
+									>
+										<p
+											style={{
+												fontSize: '1rem',
+												marginRight: '8px',
+												marginTop: '-6px',
+												marginBottom: '0px'
+											}}
+										>
+											Execution Receipt (Etherscan):
+										</p>
+										<a
+											href={`https://${etherscanPrefix}etherscan.io/tx/${pastTransactionHash}`}
+											target="_blank"
+										>
+											<LinkIcon
+												// color={'primary'}
+												style={{
+													color: COLOURS.salmon,
+													marginTop: '0px'
+												}}
+												fontSize={'large'}
+												// style={{ marginRight: '8px' }}
+											/>
+										</a>
+									</div>
+								)}
+							</div>
+						)}
+
 						{/* CONTENT FOR TRANSACTION SUMMARY IN CREATE*/}
 						{/* <h2 style={{ textAlign: 'left' }}>
 							IF{' '}
@@ -218,7 +311,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 								{action.title}
 							</span>
 						</h2> */}
-						{history.location.pathname.includes('create') && (
+						{history.location.pathname.includes('instruct') && (
 							// <h2 style={{ textAlign: 'left' }}>
 							// 	In 2 days, 40 minutes and 10 seconds, your gelato bot will withdraw 10 DAI from your wallet and send it to the following address: 0x99E69499973484a96639f4Fb17893BC96000b3b8
 							// </h2>

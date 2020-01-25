@@ -38,6 +38,7 @@ import {
 import { useWeb3React } from '@web3-react/core';
 import { useGelatoCore } from '../hooks/hooks';
 import { ChainIds } from '../constants/interfaces';
+import { getStatusText } from '../constants/summaryTest';
 
 function desc<T>(a: T, b: T, orderBy: keyof T) {
 	if (b[orderBy] < a[orderBy]) {
@@ -403,26 +404,7 @@ export default function EnhancedTable() {
 					web3.chainId as ChainIds
 				);
 
-				// Set default status string
-				let statusString: string = 'open';
-
-				switch (executionClaim.status) {
-					case 'open':
-						statusString = 'open';
-						break;
-					case 'executedSuccess':
-						statusString = 'succesfully executed';
-						break;
-					case 'executedFailure':
-						statusString = 'failed to execute - please contact us';
-						break;
-					case 'cancelled':
-						statusString = 'cancelled';
-						break;
-					case 'expired':
-						statusString = 'expired';
-						break;
-				}
+				let statusString = getStatusText(executionClaim.status);
 
 				// @DEV USE THIS Decoding when the view button is being clicked
 				// console.log(condition);

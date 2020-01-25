@@ -116,7 +116,7 @@ export const DEFAULT_PAST_TRANSACTIONS = [
 	{
 		selectedExecutor: EXECUTOR_ADDRESS[3],
 		id: '0x1',
-		executionClaimId: '1',
+		executionClaimId: '0',
 		proxyAddress: '0x0',
 		condition: '0x1',
 		conditionPayload: '0x030949304934009413094309320493049039049204',

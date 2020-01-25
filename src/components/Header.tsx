@@ -233,7 +233,7 @@ export default function ButtonAppBar() {
 						<BootstrapButton
 							style={{ border: 'none' }}
 							onClick={() => {
-								// First refresh state of Create Page to start from the beginning
+								// First refresh state of Instruct Page to start from the beginning
 								history.push('/how-it-works');
 							}}
 						>
@@ -366,34 +366,35 @@ export default function ButtonAppBar() {
 						<ListItem
 							button
 							onClick={() => {
-								dispatch({ type: RESET_CONDITION });
-								dispatch({ type: RESET_ACTION });
-								history.push('/');
+								history.push('/dashboard');
 								handleDrawerToggle();
 							}}
 						>
 							<ListItemIcon>
 								<InboxIcon />
 							</ListItemIcon>
-							<ListItemText primary={'New Instruction'} />
+							<ListItemText primary={'My Bot Activity'} />
 						</ListItem>
 					)}
 					<ListItem
 						button
 						onClick={() => {
-							history.push('/dashboard');
+							dispatch({ type: RESET_CONDITION });
+							dispatch({ type: RESET_ACTION });
+							history.push('/');
 							handleDrawerToggle();
 						}}
 					>
 						<ListItemIcon>
 							<InboxIcon />
 						</ListItemIcon>
-						<ListItemText primary={'My Bot Activity'} />
+						<ListItemText primary={'New Instruction'} />
 					</ListItem>
+
 					<ListItem
 						button
 						onClick={() => {
-							// First refresh state of Create Page to start from the beginning
+							// First refresh state of Instruct Page to start from the beginning
 							history.push('/how-it-works');
 							handleDrawerToggle();
 						}}

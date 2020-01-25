@@ -232,7 +232,7 @@ export default function AppSelection() {
 
 	return (
 		<div /*className={classes.box}*/>
-			{/* <h1>{`Create a conditional transaction by defining a condition and action`}</h1> */}
+			{/* <h1>{`Instruct a conditional transaction by defining a condition and action`}</h1> */}
 			<Grid
 				container
 				direction="row"
@@ -380,7 +380,7 @@ export default function AppSelection() {
 								<Button
 									onClick={() => {
 										history.push(
-											`create/${icedTxState.condition.id}/${icedTxState.action.id}`
+											`instruct/${icedTxState.condition.id}/${icedTxState.action.id}`
 										);
 										dispatch({
 											type: UPDATE_TX_STATE,

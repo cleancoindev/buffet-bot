@@ -40,7 +40,7 @@ export const DEFAULT_ICED_TX = {
 // 	dispatch: Dispatch<Action>;
 // }
 
-// Create web3 Provider using ethers and web3react
+// Instruct web3 Provider using ethers and web3react
 const getLibrary = (provider?: any, connector?: AbstractConnectorInterface) => {
 	const library = new ethers.providers.Web3Provider(provider);
 	// @DEV check what this does
@@ -48,7 +48,7 @@ const getLibrary = (provider?: any, connector?: AbstractConnectorInterface) => {
 	return library;
 };
 
-// Create Context
+// Instruct Context
 const IcedTxContext = createContext({
 	icedTxState: DEFAULT_ICED_TX,
 	dispatch: (action: Action) => {}

@@ -203,3 +203,25 @@ export const getActionText = (
 			return '';
 	}
 };
+
+export const getStatusText = (status: string) => {
+	switch (status) {
+		case 'open':
+			return 'open';
+			break;
+		case 'executedSuccess':
+			return 'succesfully executed';
+			break;
+		case 'executedFailure':
+			return 'failed to execute - please contact us';
+			break;
+		case 'cancelled':
+			return 'cancelled';
+			break;
+		case 'expired':
+			return 'expired';
+			break;
+		default:
+			return 'error';
+	}
+};

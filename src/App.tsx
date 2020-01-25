@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 // Pages
 import Configurator from './pages/Configurator';
-import Create from './pages/Create';
+import Instruct from './pages/Instruct';
 import Dashboard from './pages/Dashboard';
 
 // Components
@@ -95,8 +95,8 @@ function App() {
 											component={TransactionOverview}
 										/>
 										<Route
-											path="/create/:conditionId/:actionId"
-											component={Create}
+											path="/instruct/:conditionId/:actionId"
+											component={Instruct}
 										/>
 
 										{/*Last route acts as an try catch*/}

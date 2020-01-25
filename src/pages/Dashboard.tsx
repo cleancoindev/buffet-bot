@@ -14,7 +14,7 @@ import { useWeb3React } from '@web3-react/core';
 
 // interface Match extends RouteComponentProps<Params> {}
 
-export default function Create() {
+export default function Dashboard() {
 	// const { icedTxState, dispatch } = useIcedTxContext();
 	return (
 		<div
