@@ -423,7 +423,7 @@ export default function TransactionCard(props: TxCardProps) {
 		switch (txState) {
 			case TxState.displayMobile:
 				return {
-					title: `The gelato alpha is not available on mobile right now, please use it on your desktop`,
+					title: `The gelato alpha is not available on mobile right now, please use it on your desktop or use the Metamask mobile app (beta)`,
 					progress: Progress.awaitingModalConfirm,
 					progressText: ``,
 					prepayment: false,
