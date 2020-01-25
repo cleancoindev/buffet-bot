@@ -43,6 +43,7 @@ import {
 	CLOSE_MODAL
 } from '../constants/constants';
 import { useWeb3React } from '@web3-react/core';
+import { checkIfMobile } from '../helpers/helpers';
 
 const useStyles = makeStyles(theme => ({
 	box: {
@@ -105,31 +106,6 @@ export default function AppSelection() {
 			preTxCheck();
 		}
 	}, [icedTxState.txState, web3.active, web3.chainId]);
-
-	const checkIfMobile = () => {
-		let userAgent = navigator.userAgent;
-		let msMaxTouchPoints = navigator.msMaxTouchPoints;
-		let hasTouchScreen = false;
-		if ('maxTouchPoints' in navigator) {
-			hasTouchScreen = navigator.maxTouchPoints > 0;
-		} else if ('msMaxTouchPoints' in navigator) {
-			hasTouchScreen = msMaxTouchPoints > 0;
-		} else {
-			var mQ = window.matchMedia && matchMedia('(pointer:coarse)');
-			if (mQ && mQ.media === '(pointer:coarse)') {
-				hasTouchScreen = !!mQ.matches;
-			} else if ('orientation' in window) {
-				hasTouchScreen = true; // deprecated, but good fallback
-			} else {
-				// Only as a last resort, fall back to user agent sniffing
-				let UA = userAgent;
-				hasTouchScreen =
-					/\b(BlackBerry|webOS|iPhone|IEMobile)\b/i.test(UA) ||
-					/\b(Android|Windows Phone|iPad|iPod)\b/i.test(UA);
-			}
-		}
-		return hasTouchScreen;
-	};
 
 	const preTxCheck = () => {
 		const { ethereum } = window as any;

@@ -141,8 +141,9 @@ export enum InputType {
 export enum RelevantInputData {
 	none = 0,
 	kyberTokenList = 1,
-	fulcrumTokenList = 2,
-	all = 3
+	kyberTokenListWithEth = 2,
+	fulcrumTokenList = 3,
+	all = 4
 }
 
 export interface MatchParams {

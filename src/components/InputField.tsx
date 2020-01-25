@@ -22,12 +22,8 @@ import {
 	SELECTED_CHAIN_ID,
 	SELECTED_NETWORK_NAME
 } from '../constants/constants';
-import {
-	KYBER_TOKEN_LIST,
-	FULCRUM_LEVERAGE_TOKEN_LIST
-} from '../constants/tokens';
 import { ethers } from 'ethers';
-import { getTokenByAddress } from '../helpers/helpers';
+import { getTokenByAddress, getTokenList } from '../helpers/helpers';
 
 // Number formater
 import ReactNumberFormat from './Inputs/ReactNumberFormat';
@@ -233,18 +229,13 @@ export default function LayoutTextFields(props: InputProps) {
 	const getDefaultStringValue = () => {
 		switch (inputType) {
 			case InputType.Token:
-				if (relevantInputData === RelevantInputData.kyberTokenList) {
-					let defaultToken = KYBER_TOKEN_LIST[0];
-					if (index !== 0) defaultToken = KYBER_TOKEN_LIST[1];
-					updateUserInput(index, defaultToken.address[networkId]);
-					return defaultToken.address[networkId];
-				} else if (
-					relevantInputData === RelevantInputData.fulcrumTokenList
-				) {
-					let defaultToken = FULCRUM_LEVERAGE_TOKEN_LIST[0];
-					updateUserInput(index, defaultToken.address[networkId]);
-					return defaultToken.address[networkId];
-				}
+				const tokenList = getTokenList(relevantInputData, networkId);
+				let defaultToken = tokenList[0];
+				console.log(defaultToken);
+				console.log(tokenList);
+				if (index !== 0) defaultToken = tokenList[1];
+				updateUserInput(index, defaultToken.address[networkId]);
+				return defaultToken.address[networkId];
 			case InputType.Date:
 				const date = new Date();
 				const timestamp = date.getTime();

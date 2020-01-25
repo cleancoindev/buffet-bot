@@ -265,7 +265,7 @@ export const ATYPES = [
 		relevantInputData: [
 			RelevantInputData.kyberTokenList,
 			RelevantInputData.kyberTokenList,
-			RelevantInputData.kyberTokenList,
+			RelevantInputData.kyberTokenListWithEth,
 			RelevantInputData.kyberTokenList
 		],
 		userInputs: EMPTY_STRING_ARRAY,

@@ -11,7 +11,11 @@ import MobileStepper from '../components/MobileStepper';
 // Types
 import { RouteComponentProps } from 'react-router-dom';
 import { useIcedTxContext } from '../state/GlobalState';
-import { findConditionById, findActionById } from '../helpers/helpers';
+import {
+	findConditionById,
+	findActionById,
+	checkIfMobile
+} from '../helpers/helpers';
 import {
 	SELECT_CONDITION,
 	SELECT_ACTION,
@@ -127,6 +131,37 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 		const { ethereum } = window as any;
 
 		switch (icedTxState.txState) {
+			case TxState.displayMobile:
+				if (!checkIfMobile()) {
+					console.log('user on desktop');
+					// Change txState to "Login with metamask"
+					// console.log('Change TxState to displayLogIntoMetamask');
+					dispatch({
+						type: UPDATE_TX_STATE,
+						txState: TxState.displayInstallMetamask
+					});
+				} else {
+					if (typeof ethereum !== 'undefined') {
+						// Check if the object is injected by metamask
+						if (ethereum.isMetaMask) {
+							// Yes it is metamask
+							console.log('User uses metamask mobile app');
+							// Change txState to "Login with metamask"
+							// console.log('Change TxState to displayLogIntoMetamask');
+							dispatch({
+								type: UPDATE_TX_STATE,
+								txState: TxState.displayLogIntoMetamask
+							});
+						} else {
+							// No Metamask installed => Show install Metamask Modal
+							console.log(
+								'No Metamask is installed - Render no mobile modal'
+								// No need to change icedTx.txState
+							);
+						}
+					}
+					console.log('User on mobile');
+				}
 			case TxState.displayInstallMetamask:
 				// Web3 object is injected
 				if (typeof ethereum !== 'undefined') {

@@ -1260,9 +1260,9 @@ export default function TransactionCard(props: TxCardProps) {
 									<h4
 										style={{ margin: '0px' }}
 									>{`${txFee.eth} ETH`}</h4>
-									<p
-										style={{ margin: '0px' }}
-									>{`$${txFee.dollar} USD`}</p>
+									<p style={{ margin: '0px' }}>
+										{`~ $${txFee.dollar} USD`}
+									</p>
 								</div>
 							</Grid>
 							<Grid
