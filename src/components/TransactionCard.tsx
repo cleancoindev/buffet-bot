@@ -141,6 +141,11 @@ export default function TransactionCard(props: TxCardProps) {
 		dollar: 0
 	});
 
+	// Set default modal Content through txState (are we at approval, insufficient balance, or creation phase transaction wise)
+	const [modalContent, setModalContent] = React.useState<ModalContent>(
+		returnModalContent(txState)
+	);
+
 	const handleClick = (event: React.MouseEvent<unknown>) => {
 		if (modalContent.btnFunc === undefined) {
 			console.log('undefined');
@@ -299,6 +304,8 @@ export default function TransactionCard(props: TxCardProps) {
 			eth: parseFloat(ethAmount),
 			dollar: parseFloat(dollar)
 		});
+
+		return prepayment;
 	}
 
 	async function getPrepaymentAmount() {
@@ -319,13 +326,28 @@ export default function TransactionCard(props: TxCardProps) {
 		let etherscanProvider = new ethers.providers.EtherscanProvider();
 
 		// Getting the current Ethereum price
-		let etherPrice = await etherscanProvider.getEtherPrice();
+		let etherPrice = 0;
+		try {
+			etherPrice = await etherscanProvider.getEtherPrice();
+		} catch (error) {
+			console.log(error);
+			try {
+				const infuraEtherPriceResponse = await fetch(
+					'https://api.infura.io/v1/ticker/ethusd'
+				);
+				const infuraEtherPriceJson = await infuraEtherPriceResponse.json();
+				etherPrice = infuraEtherPriceJson.bid;
+			} catch (error) {
+				console.log(error);
+			}
+		}
+		const dollar =
+			parseFloat(ethAmount) * parseFloat(etherPrice.toString());
 
-		const dollar = (
-			parseFloat(ethAmount) * parseFloat(etherPrice.toString())
-		).toFixed(2);
-
-		return { ethAmount: parseFloat(ethAmount).toFixed(4), dollar };
+		return {
+			ethAmount: parseFloat(ethAmount).toFixed(4),
+			dollar: dollar.toFixed(2)
+		};
 	}
 
 	function encodeActionAndCondition(account: string, userProxy: string) {
@@ -373,6 +395,7 @@ export default function TransactionCard(props: TxCardProps) {
 				setPrepaymentAmount();
 			}
 			setTransactionFee();
+			setModalContent(returnModalContent(txState));
 			let prefix;
 			switch (chainId) {
 				case 1:
@@ -666,7 +689,6 @@ export default function TransactionCard(props: TxCardProps) {
 						const proxyAddress = await gelatoCore.proxyByUser(
 							account
 						);
-						console.log(icedTxState);
 						// User has Proxy
 						if (account !== undefined && account !== null) {
 							const {
@@ -1012,15 +1034,10 @@ export default function TransactionCard(props: TxCardProps) {
 		modalClickOpen();
 	};
 
-	// Set default modal Content through txState (are we at approval, insufficient balance, or creation phase transaction wise)
-	const [modalContent, setModalContent] = React.useState<ModalContent>(
-		returnModalContent(txState)
-	);
-
-	// On every render, update the modals content
-	useEffect(() => {
-		setModalContent(returnModalContent(txState));
-	}, [txState]);
+	// // On every render, update the modals content
+	// useEffect(() => {
+	// 	setModalContent(returnModalContent(txState));
+	// }, [txState]);
 
 	return (
 		<div className="modal">

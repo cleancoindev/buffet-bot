@@ -88,6 +88,7 @@ export default function AppSelection() {
 
 	useEffect(() => {
 		// IF metamask is not logged in, but TxState already advanced to beyond displaylOgIntoMetamsk (User logged in and then out) => then revert back to displayLogIntoMetamask state
+		checkIfMobile();
 		if (
 			!web3.active &&
 			icedTxState.txState > TxState.displayLogIntoMetamask
@@ -100,6 +101,31 @@ export default function AppSelection() {
 			preTxCheck();
 		}
 	}, [icedTxState.txState, web3.active, web3.chainId]);
+
+	const checkIfMobile = () => {
+		let userAgent = navigator.userAgent;
+		let msMaxTouchPoints = navigator.msMaxTouchPoints;
+		let hasTouchScreen = false;
+		if ('maxTouchPoints' in navigator) {
+			hasTouchScreen = navigator.maxTouchPoints > 0;
+		} else if ('msMaxTouchPoints' in navigator) {
+			hasTouchScreen = msMaxTouchPoints > 0;
+		} else {
+			var mQ = window.matchMedia && matchMedia('(pointer:coarse)');
+			if (mQ && mQ.media === '(pointer:coarse)') {
+				hasTouchScreen = !!mQ.matches;
+			} else if ('orientation' in window) {
+				hasTouchScreen = true; // deprecated, but good fallback
+			} else {
+				// Only as a last resort, fall back to user agent sniffing
+				let UA = userAgent;
+				hasTouchScreen =
+					/\b(BlackBerry|webOS|iPhone|IEMobile)\b/i.test(UA) ||
+					/\b(Android|Windows Phone|iPad|iPod)\b/i.test(UA);
+			}
+		}
+		console.log(hasTouchScreen);
+	};
 
 	const preTxCheck = () => {
 		const { ethereum } = window as any;
