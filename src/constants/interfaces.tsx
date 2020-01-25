@@ -180,26 +180,27 @@ export type KyberToken = Array<Token>;
 
 // Transaction Statea
 export enum TxState {
-	displayInstallMetamask = 0,
-	displayLogIntoMetamask = 1,
-	displayWrongNetwork = 2,
-	displayGelatoWallet = 3,
-	preGelatoWallet = 4,
-	waitingGelatoWallet = 5,
-	postGelatoWallet = 6,
-	displayApprove = 7,
-	preApprove = 8,
-	displayCreate = 9,
-	preCreate = 10,
-	waitingCreate = 11,
-	postCreate = 12,
-	displayCancel = 13,
-	preCancel = 14,
-	waitingCancel = 15,
-	postCancel = 16,
-	cancelled = 17,
-	insufficientBalance = 18,
-	inputError = 19
+	displayMobile = 0,
+	displayInstallMetamask = 1,
+	displayLogIntoMetamask = 2,
+	displayWrongNetwork = 3,
+	displayGelatoWallet = 4,
+	preGelatoWallet = 5,
+	waitingGelatoWallet = 6,
+	postGelatoWallet = 7,
+	displayApprove = 8,
+	preApprove = 9,
+	displayCreate = 10,
+	preCreate = 11,
+	waitingCreate = 12,
+	postCreate = 13,
+	displayCancel = 14,
+	preCancel = 15,
+	waitingCancel = 16,
+	postCancel = 17,
+	cancelled = 18,
+	insufficientBalance = 19,
+	inputError = 20
 }
 
 export type ChainIds = 1 | 3 | 4 | 42;

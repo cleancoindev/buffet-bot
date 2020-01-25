@@ -28,7 +28,7 @@ import {
 export const DEFAULT_ICED_TX = {
 	condition: { ...DEFAULT_DATA_TRIGGER },
 	action: { ...DEFAULT_DATA_ACTION },
-	txState: TxState.displayInstallMetamask,
+	txState: TxState.displayMobile,
 	pastTransactions: { ...DEFAULT_PAST_TRANSACTIONS },
 	pastTransactionId: '0',
 	modalOpen: false,

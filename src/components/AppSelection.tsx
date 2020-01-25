@@ -1,7 +1,7 @@
 import React, { Props, useEffect } from 'react';
 
 // Routing
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 // Context API
 import { useIcedTxContext } from '../state/GlobalState';
@@ -29,7 +29,8 @@ import {
 	UserSelection,
 	ActionWhitelistData,
 	ConditionWhitelistData,
-	TxState
+	TxState,
+	ChainIds
 } from '../constants/interfaces';
 import {
 	RESET_CONDITION,
@@ -38,7 +39,8 @@ import {
 	BOX,
 	UPDATE_TX_STATE,
 	SELECTED_CHAIN_ID,
-	OPEN_MODAL
+	OPEN_MODAL,
+	CLOSE_MODAL
 } from '../constants/constants';
 import { useWeb3React } from '@web3-react/core';
 
@@ -79,6 +81,8 @@ export default function AppSelection() {
 	console.log(icedTxState.condition.id);
 
 	const web3 = useWeb3React();
+
+	const history = useHistory();
 
 	// Import Web3react Context
 	// useEffect(() => {}, []);
@@ -124,12 +128,43 @@ export default function AppSelection() {
 					/\b(Android|Windows Phone|iPad|iPod)\b/i.test(UA);
 			}
 		}
-		console.log(hasTouchScreen);
+		return hasTouchScreen;
 	};
 
 	const preTxCheck = () => {
 		const { ethereum } = window as any;
 		switch (icedTxState.txState) {
+			case TxState.displayMobile:
+				if (!checkIfMobile()) {
+					console.log('user on desktop');
+					// Change txState to "Login with metamask"
+					// console.log('Change TxState to displayLogIntoMetamask');
+					dispatch({
+						type: UPDATE_TX_STATE,
+						txState: TxState.displayInstallMetamask
+					});
+				} else {
+					if (typeof ethereum !== 'undefined') {
+						// Check if the object is injected by metamask
+						if (ethereum.isMetaMask) {
+							// Yes it is metamask
+							console.log('User uses metamask mobile app');
+							// Change txState to "Login with metamask"
+							// console.log('Change TxState to displayLogIntoMetamask');
+							dispatch({
+								type: UPDATE_TX_STATE,
+								txState: TxState.displayLogIntoMetamask
+							});
+						} else {
+							// No Metamask installed => Show install Metamask Modal
+							console.log(
+								'No Metamask is installed - Render no mobile modal'
+								// No need to change icedTx.txState
+							);
+						}
+					}
+					console.log('User on mobile');
+				}
 			case TxState.displayInstallMetamask:
 				// Web3 object is injected
 				if (typeof ethereum !== 'undefined') {
@@ -162,13 +197,17 @@ export default function AppSelection() {
 				if (web3.active) {
 					// Check if the object is injected by metamask
 					// console.log('Change TxState to displayWrongNetwork');
-					dispatch({
-						type: UPDATE_TX_STATE,
-						txState: TxState.displayWrongNetwork
-					});
-				} else {
-					// No Metamask installed => Show install Metamask Modal
+					if ((web3.chainId as ChainIds) !== SELECTED_CHAIN_ID) {
+						// No Metamask installed => Show install Metamask Modal
+						dispatch({
+							type: UPDATE_TX_STATE,
+							txState: TxState.displayWrongNetwork
+						});
+					} else {
+						console.log('User is active and on the right network');
+					}
 					// console.log('User has to log into metamask');
+				} else {
 				}
 
 				break;
@@ -177,11 +216,10 @@ export default function AppSelection() {
 			case TxState.displayWrongNetwork:
 				// User is already logged in => Change to insufficientBalance
 				if (web3.chainId === SELECTED_CHAIN_ID) {
-					// Check if the object is injected by metamask
-					// console.log('Change TxState to insufficientBalance');
+					console.log('Change TxState to insufficientBalance');
 					dispatch({
 						type: UPDATE_TX_STATE,
-						txState: TxState.insufficientBalance
+						txState: TxState.displayLogIntoMetamask
 					});
 				} else {
 					// No Metamask installed => Show install Metamask Modal
@@ -339,17 +377,21 @@ export default function AppSelection() {
 						)}
 						{icedTxState.txState !== TxState.displayWrongNetwork &&
 							web3.active && (
-								<Link
-									to={`create/${icedTxState.condition.id}/${icedTxState.action.id}`}
-									style={{ textDecoration: 'none' }}
+								<Button
+									onClick={() => {
+										history.push(
+											`create/${icedTxState.condition.id}/${icedTxState.action.id}`
+										);
+										dispatch({
+											type: UPDATE_TX_STATE,
+											txState: TxState.insufficientBalance
+										});
+									}}
+									className={classes.createButton}
+									endIcon={<FlashOnOutlinedIcon />}
 								>
-									<Button
-										className={classes.createButton}
-										endIcon={<FlashOnOutlinedIcon />}
-									>
-										Instruct Bot
-									</Button>
-								</Link>
+									Instruct Bot
+								</Button>
 							)}
 						{icedTxState.txState !== TxState.displayWrongNetwork &&
 							!web3.active && (

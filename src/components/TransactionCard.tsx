@@ -421,6 +421,15 @@ export default function TransactionCard(props: TxCardProps) {
 	function returnModalContent(txState: TxState): ModalContent {
 		console.log(txState);
 		switch (txState) {
+			case TxState.displayMobile:
+				return {
+					title: `Gelato is not available on mobile as of now, please use it on your desktop`,
+					progress: Progress.awaitingModalConfirm,
+					progressText: ``,
+					prepayment: false,
+					closeBtn: true,
+					btn: ''
+				};
 			case TxState.displayInstallMetamask:
 				return {
 					title: `To use gelato, please install the Metamask Plugin`,
@@ -441,9 +450,9 @@ export default function TransactionCard(props: TxCardProps) {
 					prepayment: false,
 					closeBtn: true,
 					btn: 'Connect Metamask',
-					btnFunc: () => {
-						activate(injected);
-						console.log('modal close');
+					btnFunc: async () => {
+						await activate(injected);
+
 						modalClose();
 					}
 				};
