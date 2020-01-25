@@ -428,7 +428,7 @@ export default function TransactionCard(props: TxCardProps) {
 					progressText: ``,
 					prepayment: false,
 					closeBtn: false,
-					btn: 'Seriously... ?',
+					btn: 'Will do',
 					btnFunc: async () => {
 						modalClose();
 					}
