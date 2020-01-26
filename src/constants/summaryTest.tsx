@@ -91,7 +91,7 @@ export const getTriggerText = (
 		case 3:
 			return `When the following date has been reached: ${timestampToDate(
 				inputs[0] as number
-			)}, `;
+			)} `;
 		default:
 			return '';
 	}

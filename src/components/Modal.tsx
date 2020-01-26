@@ -47,6 +47,8 @@ export default function TransactionModal() {
 				// onClose={modalClose}
 				aria-labelledby="alert-dialog-title"
 				aria-describedby="alert-dialog-description"
+				// style={{ maxWidth: '100%' }}
+				maxWidth={false}
 			>
 				{/* <DialogTitle id="alert-dialog-title">{title}</DialogTitle> */}
 				<DialogContent

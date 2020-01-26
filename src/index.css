@@ -50,10 +50,6 @@ body {
 	flex: 1 0 auto;
 }
 
-.modal {
-	/* padding: 40px; */
-}
-
 @media (max-width: 600px) {
 	.container {
 		width: auto;

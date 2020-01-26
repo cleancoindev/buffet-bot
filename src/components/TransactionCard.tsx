@@ -1052,7 +1052,7 @@ export default function TransactionCard(props: TxCardProps) {
 	// }, [txState]);
 
 	return (
-		<div className="modal">
+		<div>
 			<Grid
 				container
 				direction="column"
