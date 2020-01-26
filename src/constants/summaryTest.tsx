@@ -52,14 +52,17 @@ export const getTriggerText = (
 			'',
 
         */
+
 		case 2:
-			return `If the price on Kyber for 1 ${
+			const sellAmount = convertWeiToHumanReadableForTokenAmount(
+				inputs[1] as ethers.utils.BigNumber,
 				getTokenByAddress(
 					inputs[0] as string,
 					networkId,
 					relevantInputData
-				).symbol
-			} is equal to ${convertWeiToHumanReadableForNumbersAndGetValue(
+				).decimals
+			);
+			const price = convertWeiToHumanReadableForNumbersAndGetValue(
 				inputs[3] as ethers.utils.BigNumber,
 				getTokenByAddress(
 					inputs[2] as string,
@@ -68,26 +71,29 @@ export const getTriggerText = (
 				),
 				ConditionOrAction.Condition,
 				id
-			)} ${
-				getTokenByAddress(
-					inputs[2] as string,
-					networkId,
-					relevantInputData
-				).symbol
-			}, based on a sell volume of ${convertWeiToHumanReadableForTokenAmount(
-				inputs[1] as ethers.utils.BigNumber,
-				getTokenByAddress(
-					inputs[0] as string,
-					networkId,
-					relevantInputData
-				).decimals
-			)} ${
-				getTokenByAddress(
-					inputs[0] as string,
-					networkId,
-					relevantInputData
-				).symbol
-			}`;
+			);
+
+			const expectedBuyAmount =
+				parseFloat(sellAmount) * parseFloat(price);
+
+			const isOrAre = parseFloat(sellAmount) === 1.0;
+			console.log(isOrAre);
+
+			const buySymbol = getTokenByAddress(
+				inputs[0] as string,
+				networkId,
+				relevantInputData
+			).symbol;
+
+			const sellSymbol = getTokenByAddress(
+				inputs[2] as string,
+				networkId,
+				relevantInputData
+			).symbol;
+
+			return `If ${sellAmount} ${buySymbol} ${
+				isOrAre ? 'is' : 'are'
+			} worth ${expectedBuyAmount} ${sellSymbol} (1 ${buySymbol} = ${price} ${sellSymbol}) on Kyber `;
 		case 3:
 			return `When the following date has been reached: ${timestampToDate(
 				inputs[0] as number

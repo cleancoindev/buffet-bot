@@ -12,6 +12,9 @@ import { COLOURS, UPDATE_TX_STATE, OPEN_MODAL } from '../constants/constants';
 import { useIcedTxContext } from '../state/GlobalState';
 import { useWeb3React } from '@web3-react/core';
 
+// Web3
+import { injected } from '../constants/connectors';
+
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		root: {
@@ -96,7 +99,7 @@ export default function StepperParent(props: StepperProps) {
 
 	const { dispatch } = useIcedTxContext();
 
-	const { active } = useWeb3React();
+	const { active, activate } = useWeb3React();
 
 	return (
 		<div className={classes.root}>
@@ -162,14 +165,30 @@ export default function StepperParent(props: StepperProps) {
 									{'Submit Instruction'}
 								</Button>
 							) : (
-								<Button
-									variant="contained"
-									color="primary"
-									onClick={handleNext}
-									className={classes.nextButton}
-								>
-									{'Next'}
-								</Button>
+								<React.Fragment>
+									{active && (
+										<Button
+											variant="contained"
+											color="primary"
+											onClick={handleNext}
+											className={classes.nextButton}
+										>
+											{'Next'}
+										</Button>
+									)}
+									{!active && (
+										<Button
+											variant="contained"
+											color="primary"
+											onClick={async () => {
+												await activate(injected);
+											}}
+											className={classes.nextButton}
+										>
+											{'Log into Metamask'}
+										</Button>
+									)}
+								</React.Fragment>
 							)}
 						</div>
 					</div>
