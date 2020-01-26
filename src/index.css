@@ -1,6 +1,7 @@
 html {
 	background-color: #000000;
 	background-image: url('./images/slash-it.png');
+	font-size: 15px;
 	/* background-image: url('./images/stardust.png'); */
 	/* background-image: url('./images/stardust.png') bottom center; */
 }
@@ -8,10 +9,12 @@ html {
 body {
 	height: 100%;
 	margin: 0;
-	font-family: 'PT Mono', monospace;
+	/* font-family: 'Ubuntu Mono', monospace; */
+	font-family: 'Ubuntu Mono', monospace;
 
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+	font-size: 1.075rem !important;
 }
 
 /* code {
@@ -25,8 +28,8 @@ body {
 	background-color: #000000;
 	background-image: url('./images/slash-it.png');
 	/* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
-	font-family: 'PT Mono', monospace;
-	font-size: 11px;
+	/* font-family: 'Ubuntu Mono', monospace; */
+	font-family: 'Ubuntu Mono', monospace;
 	color: #fff;
 	/* new */
 	position: relative;
@@ -81,17 +84,18 @@ body {
 .datepickerWrapper * {
 	border-color: #e91e63 !important;
 	border-width: 1px !important;
-	font-family: 'PT Mono', monospace !important;
+	font-family: 'Ubuntu Mono', monospace !important;
 }
 
 .datepickerWrapperDisabled * {
 	border-color: #72627b !important;
 	border-width: 1px !important;
-	font-family: 'PT Mono', monospace !important;
+	font-family: 'Ubuntu Mono', monospace !important;
 }
 
 .datepicker > * {
 	color: white !important;
+	font-size: 18px !important;
 	/* border-color: #e91e63;
 	border-width: 1; */
 }

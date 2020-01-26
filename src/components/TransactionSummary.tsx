@@ -169,7 +169,14 @@ export default function TransactionSummary(props: TxSummaryParams) {
 						marginTop: '8px'
 					}}
 				>
-					<div style={{ marginRight: 'auto' }}>
+					<div
+						style={{
+							marginRight: 'auto',
+							overflowX: 'auto'
+
+							// overflow: 'hidden'
+						}}
+					>
 						<h2>Instruction Summary</h2>
 
 						{pastTransaction !== undefined && (
@@ -315,11 +322,11 @@ export default function TransactionSummary(props: TxSummaryParams) {
 							// <h2 style={{ textAlign: 'left' }}>
 							// 	In 2 days, 40 minutes and 10 seconds, your gelato bot will withdraw 10 DAI from your wallet and send it to the following address: 0x99E69499973484a96639f4Fb17893BC96000b3b8
 							// </h2>
-							<div>
+							<div style={{}}>
 								<p
 									style={{
 										textAlign: 'left',
-										fontSize: '1rem'
+										fontSize: '18px'
 									}}
 								>
 									{getConditionText(
@@ -332,7 +339,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 								<p
 									style={{
 										textAlign: 'left',
-										fontSize: '1rem'
+										fontSize: '18px'
 									}}
 								>
 									{getActionText(

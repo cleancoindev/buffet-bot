@@ -44,6 +44,13 @@ export default function AppDropdown(props: AppDropdownProps) {
 			'& .MuiSelect-icon': {
 				color: 'white'
 			}
+		},
+		dropdownText: {
+			textOverflow: 'ellipsis',
+			whiteSpace: 'nowrap',
+			overflow: 'hidden',
+			background: 'transparent !important',
+			fontSize: '18px'
 		}
 	});
 	const { data, conditionOrAction /*updateConditionOrAction*/ } = props;
@@ -171,16 +178,7 @@ export default function AppDropdown(props: AppDropdownProps) {
 							// src={'/images/gelato_logo.png'}
 							// alt="Kaka"
 						></SearchIcon>
-						<p
-							style={{
-								textOverflow: 'ellipsis',
-								whiteSpace: 'nowrap',
-								overflow: 'hidden',
-								background: 'transparent'
-							}}
-						>
-							Select...
-						</p>
+						<p className={classes.dropdownText}>Select...</p>
 					</div>
 				</MenuItem>
 
@@ -209,14 +207,7 @@ export default function AppDropdown(props: AppDropdownProps) {
 								src={value.logo}
 								alt=""
 							></img>
-							<p
-								style={{
-									textOverflow: 'ellipsis',
-									whiteSpace: 'nowrap',
-									overflow: 'hidden',
-									background: 'transparent'
-								}}
-							>
+							<p className={classes.dropdownText}>
 								{value.title}
 							</p>
 						</div>

@@ -46,7 +46,7 @@ const Footer = () => {
 			<div
 				style={{
 					marginLeft: 'auto',
-					fontSize: '0.75rem',
+					fontSize: '0.95rem',
 					color: 'white',
 					textAlign: 'center'
 				}}
@@ -54,11 +54,23 @@ const Footer = () => {
 				{' '}
 				Supported by:{' '}
 				{/* <span style={{ fontSize: '0.9rem', color: COLOURS.salmon }}> */}
-				Gnosis GECO
+				<a
+					href="https://gnosis.io/geco"
+					target="_blank"
+					style={{ textDecoration: 'none', color: 'white' }}
+				>
+					Gnosis GECO
+				</a>
 				{/* </span> */}
 				{' & '}
 				{/* <span style={{ fontSize: '0.9rem', color: COLOURS.salmon }}> */}
-				Meta Cartel
+				<a
+					href="https://www.metacartel.org/"
+					target="_blank"
+					style={{ textDecoration: 'none', color: 'white' }}
+				>
+					Meta Cartel
+				</a>
 				{/* </span> */}
 			</div>
 		</div>

@@ -91,9 +91,13 @@ export const getConditionText = (
 				relevantInputData
 			).symbol;
 
+			const exchangeRate = `(1 ${buySymbol} = ${price} ${sellSymbol})`;
+
 			return `If ${sellAmount} ${buySymbol} ${
 				isOrAre ? 'is' : 'are'
-			} worth ${expectedBuyAmount} ${sellSymbol} (1 ${buySymbol} = ${price} ${sellSymbol}) on Kyber `;
+			} worth ${expectedBuyAmount} ${sellSymbol} ${
+				isOrAre ? '' : exchangeRate
+			} on Kyber `;
 		case 3:
 			return `When the following date has been reached: ${timestampToDate(
 				inputs[0] as number

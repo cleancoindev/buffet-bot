@@ -8,6 +8,8 @@ import StepperContent from './StepperContent';
 import { StepperProps } from '../constants/interfaces';
 import { useIcedTxContext } from '../state/GlobalState';
 import { OPEN_MODAL, COLOURS } from '../constants/constants';
+import { useWeb3React } from '@web3-react/core';
+import { injected } from '../constants/connectors';
 
 const useStyles = makeStyles({
 	root: {
@@ -29,6 +31,7 @@ export default function DotsMobileStepper(props: StepperProps) {
 	const theme = useTheme();
 	const { activeStep, handleNext, handleBack, steps } = props;
 	const { dispatch, icedTxState } = useIcedTxContext();
+	const { active, activate } = useWeb3React();
 
 	const NextButton = () => {
 		if (activeStep === steps.length - 1) {
@@ -52,22 +55,49 @@ export default function DotsMobileStepper(props: StepperProps) {
 				</Button>
 			);
 		} else {
-			return (
-				<Button
-					variant="contained"
-					// color="primary"
-					style={{ backgroundColor: COLOURS.salmon, color: 'white' }}
-					onClick={handleNext}
-					size="small"
-				>
-					Next
-					{theme.direction === 'rtl' ? (
-						<KeyboardArrowLeft />
-					) : (
-						<KeyboardArrowRight />
-					)}
-				</Button>
-			);
+			if (active) {
+				return (
+					<Button
+						variant="contained"
+						// color="primary"
+						style={{
+							backgroundColor: COLOURS.salmon,
+							color: 'white'
+						}}
+						onClick={handleNext}
+						size="small"
+					>
+						Next
+						{theme.direction === 'rtl' ? (
+							<KeyboardArrowLeft />
+						) : (
+							<KeyboardArrowRight />
+						)}
+					</Button>
+				);
+			} else {
+				return (
+					<Button
+						variant="contained"
+						// color="primary"
+						style={{
+							backgroundColor: COLOURS.salmon,
+							color: 'white'
+						}}
+						onClick={async () => {
+							await activate(injected);
+						}}
+						size="small"
+					>
+						Log in
+						{theme.direction === 'rtl' ? (
+							<KeyboardArrowLeft />
+						) : (
+							<KeyboardArrowRight />
+						)}
+					</Button>
+				);
+			}
 		}
 	};
 

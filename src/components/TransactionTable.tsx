@@ -167,12 +167,13 @@ const StyledTableCell = withStyles((theme: Theme) =>
 			background: 'none',
 			color: 'white',
 			fontWeight: 'bold',
-			borderBottom: `1.5px solid ${COLOURS.salmon}`
+			borderBottom: `1.5px solid ${COLOURS.salmon}`,
+			fontSize: 16
 			// borderRight: `1.5px solid ${COLOURS.salmon}`
 			// ...BOX
 		},
 		body: {
-			fontSize: 14,
+			fontSize: 16,
 			color: 'white',
 			borderBottom: `1.5px solid ${COLOURS.salmon}`
 			// borderRadius: '1px 1px 1px 1px'
@@ -190,6 +191,46 @@ const StyledTableRow = withStyles((theme: Theme) =>
 		}
 	})
 )(TableRow);
+
+export async function callGraphApi(graphName: string, account: string) {
+	try {
+		const response = await fetch(
+			`https://api.thegraph.com/subgraphs/name/gelatodigital/${graphName}`,
+			{
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					query: `{
+						users (where: {address:"${account}"}) {
+							executionClaims (orderBy:mintingDate) {
+							id
+							executionClaimId
+							selectedExecutor
+							proxyAddress
+							condition
+							conditionPayload
+							action
+							actionPayload
+							expiryDate
+							prepayment
+							mintingDate
+							executionDate
+							executionHash
+							status
+							conditionGasActionTotalGasMinExecutionGas
+						  }
+						}
+					  }
+					  `
+				})
+			}
+		);
+		const json = await response.json();
+		return json;
+	} catch (error) {
+		console.log('No data returned');
+	}
+}
 
 function EnhancedTableHead(props: EnhancedTableProps) {
 	const { order, orderBy } = props;
@@ -232,7 +273,8 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
 		},
 		title: {
 			flex: '1 1 100%',
-			color: 'white'
+			color: 'white',
+			fontSize: 20
 		}
 	})
 );
@@ -349,38 +391,7 @@ export default function EnhancedTable() {
 
 	async function fetchPastExecutionClaims() {
 		try {
-			const response = await fetch(
-				`https://api.thegraph.com/subgraphs/name/gelatodigital/${graphName}`,
-				{
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({
-						query: `{
-							users (where: {address:"${account}"}) {
-								executionClaims (orderBy:mintingDate) {
-								id
-								executionClaimId
-								selectedExecutor
-								proxyAddress
-								condition
-								conditionPayload
-								action
-								actionPayload
-								expiryDate
-								prepayment
-								mintingDate
-								executionDate
-								executionHash
-								status
-								conditionGasActionTotalGasMinExecutionGas
-							  }
-							}
-						  }
-						  `
-					})
-				}
-			);
-			const json = await response.json();
+			const json = await callGraphApi(graphName, account);
 			const executionClaims = json.data.users[0].executionClaims;
 
 			let newRows: Array<Data> = [];
@@ -439,10 +450,15 @@ export default function EnhancedTable() {
 
 	useEffect(() => {
 		fetchPastExecutionClaims();
+		const intervalId = setInterval(() => {
+			fetchPastExecutionClaims();
+		}, 20000);
+
 		// this will clear Timeout when component unmont like in willComponentUnmount
 
+		return () => clearInterval(intervalId);
 		// Clean up function
-	}, [renderCounter]);
+	}, [renderCounter, web3.active]);
 
 	// Cancel ExecutionClaim
 

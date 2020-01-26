@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 // Routes
 import { useHistory } from 'react-router-dom';
 
-import { Grid, CircularProgress, Button } from '@material-ui/core';
+import { Grid, CircularProgress } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { TxState, IcedTx, ChainIds } from '../constants/interfaces';
 
@@ -40,6 +40,7 @@ import ERC20_ABI from '../constants/abis/erc20.json';
 
 // CSS
 import '../index.css';
+import { GelatoButton } from './Button';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -1052,7 +1053,7 @@ export default function TransactionCard(props: TxCardProps) {
 	// }, [txState]);
 
 	return (
-		<div>
+		<div style={{ fontSize: '18' }}>
 			<Grid
 				container
 				direction="column"
@@ -1366,7 +1367,7 @@ export default function TransactionCard(props: TxCardProps) {
 								marginTop: '40px'
 							}}
 						>
-							<Button
+							<GelatoButton
 								color="primary"
 								onClick={() => {
 									// Reset txState
@@ -1389,7 +1390,7 @@ export default function TransactionCard(props: TxCardProps) {
 								}}
 							>
 								My Bot Activity
-							</Button>
+							</GelatoButton>
 						</Grid>
 						<Grid
 							container
@@ -1408,7 +1409,8 @@ export default function TransactionCard(props: TxCardProps) {
 							<h5
 								style={{
 									margin: '16px',
-									fontFamily: 'PT Mono, monospace !important'
+									fontFamily:
+										'Ubuntu Mono, monospace !important'
 								}}
 							>
 								or
@@ -1434,7 +1436,7 @@ export default function TransactionCard(props: TxCardProps) {
 								window.open(url, '_blank');
 							}}
 						>
-							<Button
+							<GelatoButton
 								style={{
 									width: '100%',
 									border: '0.5px solid',
@@ -1444,7 +1446,7 @@ export default function TransactionCard(props: TxCardProps) {
 								}}
 							>
 								Share on Twitter
-							</Button>
+							</GelatoButton>
 						</Grid>
 					</React.Fragment>
 				)}
@@ -1462,7 +1464,7 @@ export default function TransactionCard(props: TxCardProps) {
 							// marginTop: '24px'
 						}}
 					>
-						<Button
+						<GelatoButton
 							color="primary"
 							style={{
 								width: '100%',
@@ -1475,7 +1477,7 @@ export default function TransactionCard(props: TxCardProps) {
 							onClick={handleClick}
 						>
 							{modalContent.btn}
-						</Button>
+						</GelatoButton>
 					</Grid>
 				)}
 				{/* Dont display close button for some of the modals*/}
@@ -1493,7 +1495,7 @@ export default function TransactionCard(props: TxCardProps) {
 							marginTop: '24px'
 						}}
 					>
-						<Button
+						<GelatoButton
 							color="primary"
 							onClick={modalClose}
 							style={{
@@ -1510,7 +1512,7 @@ export default function TransactionCard(props: TxCardProps) {
 							txState === TxState.postCancel
 								? 'Close'
 								: 'Cancel'}
-						</Button>
+						</GelatoButton>
 					</Grid>
 				)}
 			</Grid>

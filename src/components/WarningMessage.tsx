@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 		borderRadius: '1px 1px 1px 1px',
 		// backgroundColor: COLOURS.salmon,
 		// borderRadius: '1rem',
-		fontSize: '0.85rem',
+		fontSize: '0.95rem',
 		lineHeight: '1rem',
 		textAlign: 'center',
 		overflow: 'visible',

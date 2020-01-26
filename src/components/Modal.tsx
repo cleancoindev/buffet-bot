@@ -7,6 +7,8 @@ import { TxState, IcedTx } from '../constants/interfaces';
 import { useIcedTxContext } from '../state/GlobalState';
 import { OPEN_MODAL, CLOSE_MODAL, BOX } from '../constants/constants';
 
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+
 // interface TransactioModalProps {
 // 	modalOpen: boolean;
 // 	modalClose: () => void;
@@ -14,20 +16,22 @@ import { OPEN_MODAL, CLOSE_MODAL, BOX } from '../constants/constants';
 // 	icedTxState: IcedTx;
 // }
 
-// const useStyles = makeStyles((theme: Theme) =>
-// 	createStyles({
-// 		card: {
-// 			width: '50%',
-// 			height: '50%',
-// 			background: 'white'
-// 		}
-// 	})
-// );
+const useStyles = makeStyles((theme: Theme) =>
+	createStyles({
+		root: {
+			'& .MuiDialog-paperWidthMd': {
+				minWidth: '40%'
+			}
+		}
+	})
+);
 
 export default function TransactionModal() {
 	const { icedTxState, dispatch } = useIcedTxContext();
 
 	const txState = icedTxState.txState;
+
+	const classes = useStyles();
 
 	// MODAL STUFF
 	const modalOpen = icedTxState.modalOpen;
@@ -44,6 +48,7 @@ export default function TransactionModal() {
 		<div>
 			<Dialog
 				open={modalOpen}
+				className={classes.root}
 				// onClose={modalClose}
 				aria-labelledby="alert-dialog-title"
 				aria-describedby="alert-dialog-description"

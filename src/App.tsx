@@ -35,7 +35,8 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 
 const theme = createMuiTheme({
 	typography: {
-		fontFamily: ['PT Mono'].join(',')
+		// fontFamily: ['Ubuntu Mono'].join(',')
+		fontFamily: ['Ubuntu Mono'].join(',')
 	},
 	palette: {
 		primary: {

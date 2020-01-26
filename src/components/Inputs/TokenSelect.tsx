@@ -33,9 +33,11 @@ import { ethers } from 'ethers';
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		button: {
-			display: 'block'
+			display: 'block',
+			fontSize: '18px'
 		},
 		formControl: {
+			fontSize: '18px',
 			// marginRight: '24px',
 			width: '100%',
 			'& .MuiOutlinedInput-root:hover': {
@@ -56,6 +58,7 @@ const useStyles = makeStyles((theme: Theme) =>
 			}
 		},
 		select: {
+			fontSize: '18px',
 			'& fieldset': {
 				borderColor: COLOURS.salmon,
 				borderWidth: 1,

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useWeb3React } from '@web3-react/core';
 
 import { injected } from '../constants/connectors';

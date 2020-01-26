@@ -95,7 +95,8 @@ const TextFieldWrap = (props: TextFieldWrapProps) => {
 	const useInputStyles = makeStyles({
 		...INPUT_CSS,
 		typography: {
-			fontFamily: 'PT Mono'
+			fontFamily: 'Ubuntu Mono',
+			fontSize: '18px'
 		},
 		'&.test *': {
 			backgroundColor: 'red',

@@ -160,7 +160,8 @@ export const INPUT_CSS = {
 		width: '100%',
 		'& input:valid + fieldset': {
 			borderColor: COLOURS.salmon,
-			borderWidth: 1
+			borderWidth: 1,
+			fontSize: '18px'
 		},
 		// '& input:invalid + fieldset': {
 		// 	borderColor: 'red',
@@ -173,6 +174,7 @@ export const INPUT_CSS = {
 		// },
 		'& .MuiOutlinedInput-root': {
 			color: 'white',
+			fontSize: '18px',
 			// '& fieldset': {
 			// 	borderColor: 'red'
 			// },
@@ -184,6 +186,7 @@ export const INPUT_CSS = {
 			// }
 		},
 		'& .MuiOutlinedInput-root.Mui-disabled': {
+			fontSize: '18px',
 			'& fieldset': {
 				borderColor: '#72627b',
 				borderWidth: 1
@@ -193,6 +196,7 @@ export const INPUT_CSS = {
 			}
 		},
 		'& .MuiFormLabel-root': {
+			fontSize: '18px',
 			color: 'white !important'
 		}
 	}

@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
 			// paddingRight: theme.spacing(3),
 			paddingBottom: theme.spacing(2)
 		},
+
 		// Import TextField CSS
 		...INPUT_CSS
 	})

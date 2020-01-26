@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
 			height: 48,
 			padding: '0 30px',
 			margin: 8,
+			fontSize: '16px',
 			'&:hover': {
 				background: '#222120'
 			}
@@ -44,6 +45,7 @@ const useStyles = makeStyles((theme: Theme) =>
 			height: 48,
 			padding: '0 30px',
 			margin: 8,
+			fontSize: '16px',
 			'&:hover': {
 				background: COLOURS.salmon60
 			}

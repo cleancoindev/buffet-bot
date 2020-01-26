@@ -14,6 +14,7 @@ import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import FlashOnOutlinedIcon from '@material-ui/icons/FlashOnOutlined';
+import Typography from '@material-ui/core/Typography';
 
 import { ATYPES, TTYPES } from '../constants/whitelist';
 
@@ -58,7 +59,9 @@ const useStyles = makeStyles(theme => ({
 		textAlign: 'left'
 	},
 	createButton: {
-		background: COLOURS.salmon,
+		fontSize: '18px',
+
+		background: COLOURS.salmon60,
 		minWidth: '100px',
 		color: 'white',
 		border: 0,
@@ -69,7 +72,7 @@ const useStyles = makeStyles(theme => ({
 		margin: 8,
 		// marginBottom: '40px',
 		'&:hover': {
-			background: COLOURS.salmon60
+			background: COLOURS.salmon
 		}
 	}
 }));
@@ -307,9 +310,27 @@ export default function AppSelection() {
 							marginTop: '32px'
 						}}
 					>
-						<h2
+						<div
 							style={{
 								textAlign: 'justify',
+								textAlignLast: 'center',
+								fontSize: '18px'
+							}}
+						>
+							Your gelato bot will{' '}
+							<span style={{ color: '#E50078' }}>
+								{icedTxState.action.title}
+							</span>{' '}
+							on your behalf, when the condition{' '}
+							<span style={{ color: '#E50078' }}>
+								{icedTxState.condition.title}{' '}
+							</span>
+							is activated
+						</div>
+						{/* <h2
+							style={{
+								textAlign: 'justify',,
+								fontSize: '18px'
 								textAlignLast: 'center'
 							}}
 						>
@@ -322,7 +343,7 @@ export default function AppSelection() {
 								{icedTxState.condition.title}{' '}
 							</span>
 							is activated
-						</h2>
+						</h2> */}
 					</Grid>
 					<Grid
 						container
