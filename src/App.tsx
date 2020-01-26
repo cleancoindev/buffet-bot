@@ -31,6 +31,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import Help from './pages/Help';
 import { Typography } from '@material-ui/core';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 const theme = createMuiTheme({
 	typography: {
@@ -65,48 +66,50 @@ function App() {
 							>
 								Give your gelato bot new instructions
 							</Typography> */}
-							<Container
-								className={'sub-container'}
-								style={{
-									// marginTop: '48px',
-									marginTop: '32px',
-									padding: '0px'
-								}}
-							>
-								<div>
-									<Switch>
-										<Route
-											path="/"
-											exact
-											component={Configurator}
-										/>
-										<Route
-											path="/dashboard"
-											exact
-											component={Dashboard}
-										/>
-										<Route
-											path="/how-it-works"
-											exact
-											component={Help}
-										/>
-										<Route
-											path="/dashboard/:transactionId"
-											component={TransactionOverview}
-										/>
-										<Route
-											path="/instruct/:conditionId/:actionId"
-											component={Instruct}
-										/>
+							<ErrorBoundary>
+								<Container
+									className={'sub-container'}
+									style={{
+										// marginTop: '48px',
+										marginTop: '32px',
+										padding: '0px'
+									}}
+								>
+									<div>
+										<Switch>
+											<Route
+												path="/"
+												exact
+												component={Configurator}
+											/>
+											<Route
+												path="/dashboard"
+												exact
+												component={Dashboard}
+											/>
+											<Route
+												path="/how-it-works"
+												exact
+												component={Help}
+											/>
+											<Route
+												path="/dashboard/:transactionId"
+												component={TransactionOverview}
+											/>
+											<Route
+												path="/instruct/:conditionId/:actionId"
+												component={Instruct}
+											/>
 
-										{/*Last route acts as an try catch*/}
-										<Route
-											path="/"
-											component={Configurator}
-										/>
-									</Switch>
-								</div>
-							</Container>
+											{/*Last route acts as an try catch*/}
+											<Route
+												path="/"
+												component={Configurator}
+											/>
+										</Switch>
+									</div>
+								</Container>
+							</ErrorBoundary>
 							<Footer></Footer>
 						</div>
 						<TransactionModal></TransactionModal>
