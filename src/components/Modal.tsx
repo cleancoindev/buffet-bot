@@ -48,14 +48,15 @@ export default function TransactionModal() {
 				aria-labelledby="alert-dialog-title"
 				aria-describedby="alert-dialog-description"
 				// style={{ maxWidth: '100%' }}
-				maxWidth={false}
+				maxWidth={'md'}
+				style={{ minWidth: '33vw' }}
 			>
 				{/* <DialogTitle id="alert-dialog-title">{title}</DialogTitle> */}
 				<DialogContent
 					style={{
 						...BOX,
-						backgroundColor: 'black',
-						minWidth: '33vw'
+						backgroundColor: 'black'
+						// minWidth: '33vw'
 					}}
 				>
 					<TransactionCard
