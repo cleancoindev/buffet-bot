@@ -22,8 +22,8 @@
       },
       {
         "indexed": false,
-        "internalType": "contract IGelatoTrigger",
-        "name": "trigger",
+        "internalType": "contract IGelatoCondition",
+        "name": "condition",
         "type": "address"
       },
       {
@@ -65,8 +65,8 @@
       },
       {
         "indexed": false,
-        "internalType": "contract IGelatoTrigger",
-        "name": "trigger",
+        "internalType": "contract IGelatoCondition",
+        "name": "condition",
         "type": "address"
       },
       {
@@ -177,14 +177,14 @@
       },
       {
         "indexed": false,
-        "internalType": "contract IGelatoTrigger",
-        "name": "trigger",
+        "internalType": "contract IGelatoCondition",
+        "name": "condition",
         "type": "address"
       },
       {
         "indexed": false,
         "internalType": "bytes",
-        "name": "triggerPayloadWithSelector",
+        "name": "conditionPayloadWithSelector",
         "type": "bytes"
       },
       {
@@ -202,7 +202,7 @@
       {
         "indexed": false,
         "internalType": "uint256[3]",
-        "name": "triggerGasActionTotalGasMinExecutionGas",
+        "name": "conditionGasActionTotalGasMinExecutionGas",
         "type": "uint256[3]"
       },
       {
@@ -244,8 +244,8 @@
       },
       {
         "indexed": false,
-        "internalType": "contract IGelatoTrigger",
-        "name": "trigger",
+        "internalType": "contract IGelatoCondition",
+        "name": "condition",
         "type": "address"
       },
       {
@@ -407,8 +407,8 @@
       },
       {
         "indexed": false,
-        "internalType": "contract IGelatoTrigger",
-        "name": "trigger",
+        "internalType": "contract IGelatoCondition",
+        "name": "condition",
         "type": "address"
       },
       {
@@ -476,13 +476,13 @@
         "type": "address"
       },
       {
-        "internalType": "contract IGelatoTrigger",
-        "name": "_trigger",
+        "internalType": "contract IGelatoCondition",
+        "name": "_condition",
         "type": "address"
       },
       {
         "internalType": "bytes",
-        "name": "_triggerPayloadWithSelector",
+        "name": "_conditionPayloadWithSelector",
         "type": "bytes"
       },
       {
@@ -497,7 +497,7 @@
       },
       {
         "internalType": "uint256[3]",
-        "name": "_triggerGasActionGasMinExecutionGas",
+        "name": "_conditionGasActionGasMinExecutionGas",
         "type": "uint256[3]"
       },
       {
@@ -550,13 +550,13 @@
         "type": "address"
       },
       {
-        "internalType": "contract IGelatoTrigger",
-        "name": "_trigger",
+        "internalType": "contract IGelatoCondition",
+        "name": "_condition",
         "type": "address"
       },
       {
         "internalType": "bytes",
-        "name": "_triggerPayloadWithSelector",
+        "name": "_conditionPayloadWithSelector",
         "type": "bytes"
       },
       {
@@ -571,7 +571,7 @@
       },
       {
         "internalType": "uint256[3]",
-        "name": "_triggerGasActionGasMinExecutionGas",
+        "name": "_conditionGasActionGasMinExecutionGas",
         "type": "uint256[3]"
       },
       {
@@ -641,13 +641,13 @@
         "type": "address"
       },
       {
-        "internalType": "contract IGelatoTrigger",
-        "name": "_trigger",
+        "internalType": "contract IGelatoCondition",
+        "name": "_condition",
         "type": "address"
       },
       {
         "internalType": "bytes",
-        "name": "_triggerPayloadWithSelector",
+        "name": "_conditionPayloadWithSelector",
         "type": "bytes"
       },
       {
@@ -662,7 +662,7 @@
       },
       {
         "internalType": "uint256[3]",
-        "name": "_triggerGasActionGasMinExecutionGas",
+        "name": "_conditionGasActionGasMinExecutionGas",
         "type": "uint256[3]"
       },
       {
@@ -803,13 +803,13 @@
         "type": "address"
       },
       {
-        "internalType": "contract IGelatoTrigger",
-        "name": "_trigger",
+        "internalType": "contract IGelatoCondition",
+        "name": "_condition",
         "type": "address"
       },
       {
         "internalType": "bytes",
-        "name": "_triggerPayloadWithSelector",
+        "name": "_conditionPayloadWithSelector",
         "type": "bytes"
       },
       {
@@ -824,7 +824,7 @@
       },
       {
         "internalType": "uint256[3]",
-        "name": "_triggerGasActionGasMinExecutionGas",
+        "name": "_conditionGasActionGasMinExecutionGas",
         "type": "uint256[3]"
       },
       {
@@ -857,6 +857,40 @@
   {
     "inputs": [
       {
+        "internalType": "contract IGelatoCondition",
+        "name": "_condition",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_conditionPayloadWithSelector",
+        "type": "bytes"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_conditionGas",
+        "type": "uint256"
+      }
+    ],
+    "name": "gasTestConditionCheck",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "conditionReached",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint8",
+        "name": "reason",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "_executionClaimId",
         "type": "uint256"
@@ -872,13 +906,13 @@
         "type": "address"
       },
       {
-        "internalType": "contract IGelatoTrigger",
-        "name": "_trigger",
+        "internalType": "contract IGelatoCondition",
+        "name": "_condition",
         "type": "address"
       },
       {
         "internalType": "bytes",
-        "name": "_triggerPayloadWithSelector",
+        "name": "_conditionPayloadWithSelector",
         "type": "bytes"
       },
       {
@@ -893,7 +927,7 @@
       },
       {
         "internalType": "uint256[3]",
-        "name": "_triggerGasActionGasMinExecutionGas",
+        "name": "_conditionGasActionGasMinExecutionGas",
         "type": "uint256[3]"
       },
       {
@@ -960,40 +994,6 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "contract IGelatoTrigger",
-        "name": "_trigger",
-        "type": "address"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_triggerPayloadWithSelector",
-        "type": "bytes"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_triggerGas",
-        "type": "uint256"
-      }
-    ],
-    "name": "gasTestTriggerCheck",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "triggerFired",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint8",
-        "name": "reason",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "gelatoCoreExecGasOverhead",
     "outputs": [
@@ -1023,7 +1023,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_triggerGas",
+        "name": "_conditionGas",
         "type": "uint256"
       },
       {
@@ -1051,8 +1051,8 @@
         "type": "address"
       },
       {
-        "internalType": "contract IGelatoTrigger",
-        "name": "_trigger",
+        "internalType": "contract IGelatoCondition",
+        "name": "_condition",
         "type": "address"
       },
       {
@@ -1150,13 +1150,13 @@
         "type": "address"
       },
       {
-        "internalType": "contract IGelatoTrigger",
-        "name": "_trigger",
+        "internalType": "contract IGelatoCondition",
+        "name": "_condition",
         "type": "address"
       },
       {
         "internalType": "bytes",
-        "name": "_triggerPayloadWithSelector",
+        "name": "_conditionPayloadWithSelector",
         "type": "bytes"
       },
       {

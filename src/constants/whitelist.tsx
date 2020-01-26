@@ -22,7 +22,7 @@ export const GELATO_CORE_ADDRESS = {
 	1: '0x0',
 	3: '0x563700A8A6740C8a474DF8F289716afDc30ED07a',
 	4: '0x501aF774Eb578203CC34E7171273124A93706C06',
-	42: '0x8456FEcB4F2FbcB5992b3533428F82f98C40f55C'
+	42: '0x2b4Bd5d0df60aaE4D68B5a4e315be0bdf72cf765'
 };
 
 export const EXECUTOR_ADDRESS = {
@@ -46,10 +46,10 @@ export const TTYPES = [
 			1: '',
 			3: '0x525EB0c1279f1CC690D01a2Fcb78A0D5d156D1Ee',
 			4: '',
-			42: '0x328eAA9C817383e0A2fc815F810BCA7FF3ea6288'
+			42: '0x036810290a0D1d07a3329baaE54FE65E720e4491'
 		},
 		params: [{ type: 'uint256', name: '_timestamp' }],
-		abi: 'function fired(uint256 _timestamp)',
+		abi: 'function reached(uint256 _timestamp)',
 		getConditionValueAbi: '',
 		getConditionValueInput: BIG_NUM_ZERO,
 		// 99 means nothing
@@ -69,7 +69,7 @@ export const TTYPES = [
 			1: '',
 			3: '0xaf4c11A90e98D0C5ecFb403C62Cc8Dfe8DF11030',
 			4: '',
-			42: '0xc0993255E46FD2E911d92fa63477e061b917aA14'
+			42: '0xA5EA265F49A574BA5CfeEdB7cE5fc9E330DF1441'
 		},
 		params: [
 			{ type: 'address', name: '_account' },
@@ -78,9 +78,9 @@ export const TTYPES = [
 			{ type: 'bool', name: '_greaterElseSmaller' }
 		],
 		abi:
-			'function fired(address _account, address _coin, uint256 _refBalance, bool _greaterElseSmaller)',
+			'function reached(address _account, address _coin, uint256 _refBalance, bool _greaterElseSmaller)',
 		getConditionValueAbi:
-			'function getTriggerValue(address _account, address _coin, uint256, bool) view returns (uint256)',
+			'function getConditionValue(address _account, address _coin, uint256, bool) view returns (uint256)',
 		getConditionValueInput: BIG_NUM_ZERO,
 		userInputTypes: [
 			InputType.Address,
@@ -119,7 +119,7 @@ export const TTYPES = [
 			1: '',
 			3: '0x61Bd89De0912c5E07d03f2c533D29A8eB78dc925',
 			4: '',
-			42: '0xfEe2C4Fd7Be69AC4353230e56EAe6a156c9d4dC4'
+			42: '0x4c741109e77D579754AcA15753fa34FA02CBb154'
 		},
 		params: [
 			{ type: 'address', name: '_src' },
@@ -137,9 +137,9 @@ export const TTYPES = [
 			InputType.StatelessGetValue
 		],
 		abi:
-			'function fired(address _src, uint256 _srcAmount, address _dest, uint256 _refRate, bool _greaterElseSmaller)',
+			'function reached(address _src, uint256 _srcAmount, address _dest, uint256 _refRate, bool _greaterElseSmaller)',
 		getConditionValueAbi:
-			'function getTriggerValue(address _src, uint256 _srcAmount, address _dest, uint256, bool) view returns (uint256)',
+			'function getConditionValue(address _src, uint256 _srcAmount, address _dest, uint256, bool) view returns (uint256)',
 		// Always 0
 		approveIndex: 0,
 		boolIndex: 3,
@@ -175,7 +175,7 @@ export const ATYPES = [
 			1: '',
 			3: '0x8FdAf109e391C304939CF64C9B9912b320AdfE56',
 			4: '',
-			42: '0x3E9665BB5C3bBa2A89a14c289fE503D50fE44319'
+			42: '0x99cB92f9f853918773de899EBCd942f50f9A6ABb'
 		},
 		/*
 		IERC20 _src,
@@ -216,7 +216,7 @@ export const ATYPES = [
 		approveIndex: 0,
 		logo: '/images/ethereum_logo.png',
 		getActionValueAbi:
-			'function getUsersSourceTokenBalance(address _user, address _userProxy, address _src, uint256, address) view returns (uint256)'
+			'function getUsersSendTokenBalance(address _user, address _userProxy, address _src, uint256, address) view returns (uint256)'
 	},
 
 	{
@@ -227,7 +227,7 @@ export const ATYPES = [
 			1: '',
 			3: '0x67f647bDF012A718d5F9bD9C7bEd6e5a2023ccC6',
 			4: '',
-			42: '0x48c8BCD7aB7ACf9A485643262D1b0e447C156BA1'
+			42: '0xE5656d2dAAbF6a94F7B05315735D33193246289a'
 		},
 		/*
 		 // Standard Action Params
@@ -272,7 +272,7 @@ export const ATYPES = [
 		approveIndex: 0,
 		logo: '/images/kyber_logo.png',
 		getActionValueAbi:
-			'function getUsersSourceTokenBalance(address _user, address _userProxy, address _src, uint256, address) view returns (uint256)'
+			'function getUsersSendTokenBalance(address _user, address _userProxy, address _src, uint256, address) view returns (uint256)'
 	},
 	{
 		id: 3,
@@ -282,7 +282,7 @@ export const ATYPES = [
 			1: '',
 			3: '0x0',
 			4: '',
-			42: '0x10C06Ab7F13E9Ae1e3c8cD82370C2Fc01002a9EF'
+			42: '0x1e2E09a49bda3fc44b792D4aa607Fa301698A91f'
 		},
 		/*
 		 // Standard Action Params
@@ -327,7 +327,7 @@ export const ATYPES = [
 		approveIndex: 0,
 		logo: '/images/fulcrum_logo.png',
 		getActionValueAbi:
-			'function getUsersSourceTokenBalance(address _user, address _userProxy, address _depositTokenAddress, uint256, address) view returns (uint256)'
+			'function getUsersSendTokenBalance(address _user, address _userProxy, address _depositTokenAddress, uint256, address) view returns (uint256)'
 	},
 	{
 		id: 4,
@@ -337,7 +337,7 @@ export const ATYPES = [
 			1: '',
 			3: '0x0',
 			4: '',
-			42: '0xA5d7aFfBe3049efa9BC5DC23A16946cd7CE70061'
+			42: '0x62CC3fC9Cf620a48a6587Fd0e3c548bAcEFfAd21'
 		},
 		params: [
 			{ type: 'address', name: '_user' },
@@ -371,7 +371,7 @@ export const ATYPES = [
 		approveIndex: 0,
 		logo: '/images/fulcrum_logo.png',
 		getActionValueAbi:
-			'function getUsersSourceTokenBalance(address _user, address _userProxy, address _pTokenAddress, uint256, address) view returns (uint256)'
+			'function getUsersSendTokenBalance(address _user, address _userProxy, address _pTokenAddress, uint256, address) view returns (uint256)'
 	}
 ];
 

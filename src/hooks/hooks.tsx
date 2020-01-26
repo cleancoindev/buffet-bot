@@ -9,6 +9,7 @@ import { ethers } from 'ethers';
 
 import GELATO_CORE_ABI from '../constants/abis/gelatoCore.json';
 import { SELECTED_CHAIN_ID } from '../constants/constants';
+import { useHistory } from 'react-router-dom';
 
 export function useEagerConnect() {
 	const { activate, active } = useWeb3React();
@@ -39,12 +40,14 @@ export function useEagerConnect() {
 
 export function useInactiveListener(suppress: boolean = false) {
 	const { active, error, activate } = useWeb3React();
+	const history = useHistory();
 
 	useEffect((): any => {
 		const { ethereum } = window as any;
 		if (ethereum && ethereum.on && !active && !error && !suppress) {
 			const handleConnect = () => {
 				console.log("Handling 'connect' event");
+				console.log('...');
 				activate(injected);
 			};
 			const handleChainChanged = (chainId: string | number) => {
@@ -52,6 +55,7 @@ export function useInactiveListener(suppress: boolean = false) {
 					"Handling 'chainChanged' event with payload",
 					chainId
 				);
+				console.log('...');
 				activate(injected);
 			};
 			const handleAccountsChanged = (accounts: string[]) => {
@@ -60,7 +64,8 @@ export function useInactiveListener(suppress: boolean = false) {
 					accounts
 				);
 				if (accounts.length > 0) {
-					activate(injected);
+					// NO EAGER CONNECT
+					// activate(injected);
 				}
 			};
 			const handleNetworkChanged = (networkId: string | number) => {
@@ -69,7 +74,11 @@ export function useInactiveListener(suppress: boolean = false) {
 					"Handling 'networkChanged' event with payload",
 					networkId
 				);
-				activate(injected);
+
+				if (history.location.pathname === '/dashboard') {
+					// Only eager conenct when on dashboard page
+					activate(injected);
+				}
 			};
 
 			ethereum.on('connect', handleConnect);

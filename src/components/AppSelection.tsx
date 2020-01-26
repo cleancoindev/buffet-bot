@@ -147,7 +147,6 @@ export default function AppSelection() {
 					// Check if the object is injected by metamask
 					if (ethereum.isMetaMask) {
 						// Yes it is metamask
-						console.log(ethereum);
 						console.log('Metamask is installed');
 						// Change txState to "Login with metamask"
 						// console.log('Change TxState to displayLogIntoMetamask');

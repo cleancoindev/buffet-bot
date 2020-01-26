@@ -112,12 +112,12 @@ export default function LoginButton() {
 		setAnchorEl(null);
 	};
 
-	const logInLogOutMetamask = async () => {
-		if (!active) {
-			await activate(injected);
-		} else {
-		}
-	};
+	// const logInLogOutMetamask = async () => {
+	// 	if (!active) {
+	// 		await activate(injected);
+	// 	} else {
+	// 	}
+	// };
 
 	// if (active && chainId === SELECTED_CHAIN_ID)
 	return (

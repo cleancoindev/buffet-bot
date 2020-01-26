@@ -11,11 +11,7 @@ import {
 } from '../../constants/interfaces';
 import { useStyles } from '@material-ui/pickers/views/Calendar/SlideTransition';
 import { useWeb3React } from '@web3-react/core';
-import {
-	SELECTED_CHAIN_ID,
-	BIG_NUM_ZERO,
-	ACTION_GET_VALUE_ABI
-} from '../../constants/constants';
+import { SELECTED_CHAIN_ID, BIG_NUM_ZERO } from '../../constants/constants';
 import ReactNumberFormat from './ReactNumberFormat';
 import { useIcedTxContext } from '../../state/GlobalState';
 import { getTokenByAddress, encodeActionPayload } from '../../helpers/helpers';
@@ -102,7 +98,7 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 
 					// get value
 					try {
-						newValue = await conditionContract.getTriggerValue(
+						newValue = await conditionContract.getConditionValue(
 							...inputs
 						);
 						console.log(inputs);
@@ -132,7 +128,7 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 						copyUserInput.splice(0, 0, account);
 						// œDEV simply using account here, as proxy doesnt make a difference
 						copyUserInput.splice(1, 0, account);
-						newValue = await actionContract.getUsersSourceTokenBalance(
+						newValue = await actionContract.getUsersSendTokenBalance(
 							...copyUserInput
 						);
 						// Convert fetched wei amount to human reable amount

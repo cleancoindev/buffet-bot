@@ -685,7 +685,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.displayCreate:
 				return {
-					title: `Submit instruction to your bot`,
+					title: `Submit the instruction to your bot`,
 					progress: Progress.awaitingModalConfirm,
 					progressText: ``,
 					prepayment: true,
@@ -781,7 +781,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.preCreate:
 				return {
-					title: `Please confirm the transaction in Metamask`,
+					title: `Please confirm the instruction submission in Metamask`,
 					progress: Progress.awaitingMetamaskConfirm,
 					progressText: `Waiting for confirmation`,
 					prepayment: true,
@@ -797,7 +797,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.waitingCreate:
 				return {
-					title: `Instructing your gelato bot ...`,
+					title: `Submitting the instruction to your gelato bot ...`,
 					progress: Progress.awaitingeMining,
 					progressText: `Transaction in progress...`,
 					prepayment: true,

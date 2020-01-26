@@ -231,7 +231,7 @@ export function encodeConditionPayload(
 ) {
 	const iFace = new utils.Interface([abi]);
 
-	const conditionPayloadWithSelector = iFace.functions.fired.encode(
+	const conditionPayloadWithSelector = iFace.functions.reached.encode(
 		userInput
 	);
 

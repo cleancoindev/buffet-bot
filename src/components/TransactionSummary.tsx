@@ -38,7 +38,7 @@ import { ethers } from 'ethers';
 import LinkIcon from '@material-ui/icons/Link';
 import { getEtherscanPrefix } from '../helpers/helpers';
 import {
-	getTriggerText,
+	getConditionText,
 	getActionText,
 	getStatusText
 } from '../constants/summaryTest';
@@ -322,7 +322,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 										fontSize: '1rem'
 									}}
 								>
-									{getTriggerText(
+									{getConditionText(
 										condition.userInputs,
 										condition.id,
 										networkId,

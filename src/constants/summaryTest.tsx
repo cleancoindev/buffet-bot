@@ -12,7 +12,7 @@ import {
 } from '../helpers/helpers';
 import { timestampToDate } from '../components/Inputs/DatePicker';
 
-export const getTriggerText = (
+export const getConditionText = (
 	inputs: Array<string | number | boolean | ethers.utils.BigNumber>,
 	id: number,
 	networkId: ChainIds,
