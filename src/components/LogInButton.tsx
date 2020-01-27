@@ -112,6 +112,16 @@ export default function LoginButton() {
 		setAnchorEl(null);
 	};
 
+	const linkBackToHome = () => {
+		dispatch({ type: RESET_CONDITION });
+		dispatch({ type: RESET_ACTION });
+		dispatch({
+			type: INPUT_OK,
+			txState: TxState.displayInstallMetamask
+		});
+		history.push('/');
+	};
+
 	// const logInLogOutMetamask = async () => {
 	// 	if (!active) {
 	// 		await activate(injected);
@@ -162,12 +172,8 @@ export default function LoginButton() {
 				<StyledMenuItem
 					onClick={() => {
 						deactivate();
-						dispatch({
-							type: UPDATE_TX_STATE,
-							txState: TxState.displayInstallMetamask
-						});
+						linkBackToHome();
 						handleClose();
-						history.push('/');
 					}}
 				>
 					<span style={{ minWidth: '56px' }}>👋</span>
