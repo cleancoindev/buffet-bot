@@ -1,5 +1,5 @@
 import { RelevantInputData } from './interfaces';
-import { ETH, SELECTED_CHAIN_ID } from './constants';
+import { ETH } from './constants';
 
 // export enum TokenList {
 //     KyberTokenList = 0
@@ -17,17 +17,17 @@ export const KYBER_TOKEN_LIST = [
 		name: 'DAI Stablecoin',
 		decimals: 18
 	},
-	// {
-	// 	address: {
-	// 		1: '0x6810e776880c02933d47db1b9fc05908e5386b96',
-	// 		3: '0x0',
-	// 		4: '0x0',
-	// 		42: '0x0'
-	// 	},
-	// 	symbol: 'GNO',
-	// 	name: 'Gnosis',
-	// 	decimals: 18
-	// },
+	{
+		address: {
+			1: '0x6810e776880c02933d47db1b9fc05908e5386b96',
+			3: '0x0',
+			4: '0x0',
+			42: '0x0'
+		},
+		symbol: 'GNO',
+		name: 'Gnosis',
+		decimals: 18
+	},
 	// {
 	// 	address: {
 	// 		1: '0x0f5d2fb29fb7d3cfee444a200298f468908cc942',
@@ -167,17 +167,17 @@ export const KYBER_TOKEN_LIST_WITH_ETH = [
 		name: 'DAI Stablecoin',
 		decimals: 18
 	},
-	// {
-	// 	address: {
-	// 		1: '0x6810e776880c02933d47db1b9fc05908e5386b96',
-	// 		3: '0x0',
-	// 		4: '0x0',
-	// 		42: '0x0'
-	// 	},
-	// 	symbol: 'GNO',
-	// 	name: 'Gnosis',
-	// 	decimals: 18
-	// },
+	{
+		address: {
+			1: '0x6810e776880c02933d47db1b9fc05908e5386b96',
+			3: '0x0',
+			4: '0x0',
+			42: '0x0'
+		},
+		symbol: 'GNO',
+		name: 'Gnosis',
+		decimals: 18
+	},
 	// {
 	// 	address: {
 	// 		1: '0x0f5d2fb29fb7d3cfee444a200298f468908cc942',

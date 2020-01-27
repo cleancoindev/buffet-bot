@@ -45,8 +45,8 @@ export const ETH = {
 	decimals: 18
 };
 
-export const SELECTED_CHAIN_ID = 42;
-export const SELECTED_NETWORK_NAME = 'Kovan';
+export const SELECTED_CHAIN_ID = 1;
+export const SELECTED_NETWORK_NAME = 'Mainnet';
 
 export const DEFAULT_DATA_TRIGGER = {
 	id: 0,

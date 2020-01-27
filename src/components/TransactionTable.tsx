@@ -409,7 +409,7 @@ export default function EnhancedTable() {
 	let graphName: string = '';
 	switch (web3.chainId) {
 		case 1:
-			graphName = 'gelato-mainet';
+			graphName = 'gelato';
 
 			break;
 		case 3:
@@ -425,7 +425,7 @@ export default function EnhancedTable() {
 
 			break;
 		default:
-			graphName = 'gelato-kovan';
+			graphName = 'gelato';
 			break;
 	}
 

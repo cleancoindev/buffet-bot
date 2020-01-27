@@ -2,12 +2,6 @@ import { InputType, RelevantInputData } from './interfaces';
 import { ethers } from 'ethers';
 
 const BIG_NUM_ZERO = ethers.constants.Zero;
-const BIG_NUM_ONE = ethers.constants.One;
-
-export const APPS = {
-	conditions: ['Your Wallet', 'Calendar', 'Kyber'],
-	actions: ['Your Wallet', 'Kyber', 'Fulcrum']
-};
 
 const EMPTY_STRING_ARRAY: Array<string> = [];
 
@@ -19,14 +13,14 @@ const EMPTY_STRING_ARRAY: Array<string> = [];
 
 // Smart Contract Addresses
 export const GELATO_CORE_ADDRESS = {
-	1: '0x0',
+	1: '0x4E2Ca0093028C8401C93AaCcCaF59288CA6fb728',
 	3: '0x563700A8A6740C8a474DF8F289716afDc30ED07a',
 	4: '0x501aF774Eb578203CC34E7171273124A93706C06',
 	42: '0x2b4Bd5d0df60aaE4D68B5a4e315be0bdf72cf765'
 };
 
 export const EXECUTOR_ADDRESS = {
-	1: '0x0',
+	1: '0x4B7363b8a7DaB76ff73dFbA00801bdDcE699F3A2',
 	3: '0x203AdbbA2402a36C202F207caA8ce81f1A4c7a72',
 	4: '0x203AdbbA2402a36C202F207caA8ce81f1A4c7a72',
 	42: '0x203AdbbA2402a36C202F207caA8ce81f1A4c7a72'
@@ -43,7 +37,7 @@ export const TTYPES = [
 		app: 'Calendar',
 		title: 'Time',
 		address: {
-			1: '',
+			1: '0x10A46c633adfe5a6719f3DBd2c162676779fE70B',
 			3: '0x525EB0c1279f1CC690D01a2Fcb78A0D5d156D1Ee',
 			4: '',
 			42: '0x036810290a0D1d07a3329baaE54FE65E720e4491'
@@ -224,7 +218,7 @@ export const ATYPES = [
 		app: 'Kyber',
 		title: 'Trade Tokens on Kyber',
 		address: {
-			1: '',
+			1: '0xF829B506c378AaD11dB7Efe8d626cc7d0e015CBA',
 			3: '0x67f647bDF012A718d5F9bD9C7bEd6e5a2023ccC6',
 			4: '',
 			42: '0xE5656d2dAAbF6a94F7B05315735D33193246289a'
@@ -376,50 +370,3 @@ export const ATYPES = [
 ];
 
 export const USER_WHITELIST = ['0x99e69499973484a96639f4fb17893bc96000b3b8'];
-
-// Add network to tokenList
-// Rinkeby
-// export const KYBER_TOKEN_LIST = [
-// 	{
-// 		address: '0x732fBA98dca813C3A630b53a8bFc1d6e87B1db65',
-// 		symbol: 'OMG',
-// 		name: 'OmiseGo',
-// 		decimals: 18
-// 	},
-// 	{
-// 		address: '0x725d648E6ff2B8C44c96eFAEa29b305e5bb1526a',
-// 		symbol: 'MANA',
-// 		name: 'MANA',
-// 		decimals: 18
-// 	},
-// 	{
-// 		address: '0x6FA355a7b6bD2D6bD8b927C489221BFBb6f1D7B2',
-// 		symbol: 'KNC',
-// 		name: 'Kyber Network',
-// 		decimals: 18
-// 	}
-// ];
-
-// Ropsten
-// export const KYBER_TOKEN_LIST = [
-// 	{
-// 		address: '0x4BFBa4a8F28755Cb2061c413459EE562c6B9c51b',
-// 		symbol: 'OMG',
-// 		name: 'OmiseGo',
-// 		decimals: 18
-// 	},
-// 	{
-// 		address: '0x72fd6C7C1397040A66F33C2ecC83A0F71Ee46D5c',
-// 		symbol: 'MANA',
-// 		name: 'MANA',
-// 		decimals: 18
-// 	},
-// 	{
-// 		address: '0x4E470dc7321E84CA96FcAEDD0C8aBCebbAEB68C6',
-// 		symbol: 'KNC',
-// 		name: 'Kyber Network',
-// 		decimals: 18
-// 	}
-// ];
-
-// Kovan
