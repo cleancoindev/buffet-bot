@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { useEagerConnect } from '../hooks/hooks';
+
 // Material UI
 import {
 	createStyles,
@@ -39,6 +41,8 @@ import { useWeb3React } from '@web3-react/core';
 import { useGelatoCore } from '../hooks/hooks';
 import { ChainIds } from '../constants/interfaces';
 import { getStatusText } from '../constants/summaryTest';
+
+import { injected } from '../constants/connectors';
 
 function desc<T>(a: T, b: T, orderBy: keyof T) {
 	if (b[orderBy] < a[orderBy]) {
@@ -371,6 +375,13 @@ export default function EnhancedTable() {
 
 	// Router Context
 	let history = useHistory();
+
+	// Eager Connect
+	const triedEager = useEagerConnect();
+	// useEffect(() => {
+	// 	web3.activate(injected);
+	// 	console.log('activating user');
+	// }, []);
 
 	const classes = useStyles();
 	const [order, setOrder] = React.useState<Order>('desc');
