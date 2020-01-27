@@ -97,6 +97,7 @@ export const ErrorMessage: React.FC<{ onReset: () => void }> = ({
 			txState: TxState.displayInstallMetamask
 		});
 		history.push('/');
+		window.location.reload();
 	};
 	return (
 		<div style={{ color: 'white' }}>

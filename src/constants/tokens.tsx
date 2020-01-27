@@ -85,17 +85,17 @@ export const KYBER_TOKEN_LIST = [
 		decimals: 18
 	},
 
-	{
-		address: {
-			1: '0x4156D3342D5c385a87D264F90653733592000581',
-			3: '0x0',
-			4: '0x0',
-			42: '0x6fEE5727EE4CdCBD91f3A873ef2966dF31713A04'
-		},
-		symbol: 'SALT',
-		name: 'Salt',
-		decimals: 8
-	},
+	// {
+	// 	address: {
+	// 		1: '0x4156D3342D5c385a87D264F90653733592000581',
+	// 		3: '0x0',
+	// 		4: '0x0',
+	// 		42: '0x6fEE5727EE4CdCBD91f3A873ef2966dF31713A04'
+	// 	},
+	// 	symbol: 'SALT',
+	// 	name: 'Salt',
+	// 	decimals: 8
+	// },
 	{
 		address: {
 			1: '0xc011a72400e58ecd99ee497cf89e3775d4bd732f',
@@ -140,18 +140,18 @@ export const KYBER_TOKEN_LIST = [
 		symbol: 'WETH',
 		name: 'Wrapped Ether',
 		decimals: 18
-	},
-	{
-		address: {
-			1: '0x05f4a42e251f2d52b8ed15e9fedaacfcef1fad27',
-			3: '0x0',
-			4: '0x0',
-			42: '0xAb74653cac23301066ABa8eba62b9Abd8a8c51d6'
-		},
-		symbol: 'ZIL',
-		name: 'Zilliqa',
-		decimals: 12
 	}
+	// {
+	// 	address: {
+	// 		1: '0x05f4a42e251f2d52b8ed15e9fedaacfcef1fad27',
+	// 		3: '0x0',
+	// 		4: '0x0',
+	// 		42: '0xAb74653cac23301066ABa8eba62b9Abd8a8c51d6'
+	// 	},
+	// 	symbol: 'ZIL',
+	// 	name: 'Zilliqa',
+	// 	decimals: 12
+	// }
 ];
 
 export const KYBER_TOKEN_LIST_WITH_ETH = [
@@ -235,17 +235,17 @@ export const KYBER_TOKEN_LIST_WITH_ETH = [
 		decimals: 18
 	},
 
-	{
-		address: {
-			1: '0x4156D3342D5c385a87D264F90653733592000581',
-			3: '0x0',
-			4: '0x0',
-			42: '0x6fEE5727EE4CdCBD91f3A873ef2966dF31713A04'
-		},
-		symbol: 'SALT',
-		name: 'Salt',
-		decimals: 8
-	},
+	// {
+	// 	address: {
+	// 		1: '0x4156D3342D5c385a87D264F90653733592000581',
+	// 		3: '0x0',
+	// 		4: '0x0',
+	// 		42: '0x6fEE5727EE4CdCBD91f3A873ef2966dF31713A04'
+	// 	},
+	// 	symbol: 'SALT',
+	// 	name: 'Salt',
+	// 	decimals: 8
+	// },
 	{
 		address: {
 			1: '0xc011a72400e58ecd99ee497cf89e3775d4bd732f',
@@ -290,18 +290,18 @@ export const KYBER_TOKEN_LIST_WITH_ETH = [
 		symbol: 'WETH',
 		name: 'Wrapped Ether',
 		decimals: 18
-	},
-	{
-		address: {
-			1: '0x05f4a42e251f2d52b8ed15e9fedaacfcef1fad27',
-			3: '0x0',
-			4: '0x0',
-			42: '0xAb74653cac23301066ABa8eba62b9Abd8a8c51d6'
-		},
-		symbol: 'ZIL',
-		name: 'Zilliqa',
-		decimals: 12
 	}
+	// {
+	// 	address: {
+	// 		1: '0x05f4a42e251f2d52b8ed15e9fedaacfcef1fad27',
+	// 		3: '0x0',
+	// 		4: '0x0',
+	// 		42: '0xAb74653cac23301066ABa8eba62b9Abd8a8c51d6'
+	// 	},
+	// 	symbol: 'ZIL',
+	// 	name: 'Zilliqa',
+	// 	decimals: 12
+	// }
 ];
 
 export const FULCRUM_LEVERAGE_TOKEN_LIST = [
