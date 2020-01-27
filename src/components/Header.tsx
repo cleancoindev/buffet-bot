@@ -214,12 +214,12 @@ export default function ButtonAppBar() {
 						/> */}
 						<GelatoLogo></GelatoLogo>
 
-						<Typography
+						{/* <Typography
 							style={{ paddingBottom: '6px' }}
 							variant="h5"
 						>
 							gelato
-						</Typography>
+						</Typography> */}
 					</div>
 					{/* </Link> */}
 					<Hidden xsDown>
