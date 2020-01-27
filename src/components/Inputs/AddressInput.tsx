@@ -119,7 +119,7 @@ export default function AddressInput(props: AddressInputProps) {
 				console.log(icedTxState.txState);
 				dispatch({
 					type: INPUT_ERROR,
-					msg: `Input field '${label}' hat to be a correct Ethereum address`,
+					msg: `Input field '${label}' has to be a correct Ethereum address`,
 					txState: TxState.inputError
 				});
 			}

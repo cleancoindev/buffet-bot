@@ -171,12 +171,11 @@ export default function ButtonAppBar() {
 
 	// handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
 	// Only eager connect when in dashboard
-	if (history.location.pathname === '/dashboard') {
-		const triedEager = useEagerConnect();
-	}
+
+	const triedEager = useEagerConnect();
 
 	// handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
-	useInactiveListener();
+	useInactiveListener(triedEager);
 
 	const logInLogOutMetamask = async () => {
 		if (!active) {
