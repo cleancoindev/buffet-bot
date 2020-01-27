@@ -72,7 +72,7 @@ function App() {
 									className={'sub-container'}
 									style={{
 										// marginTop: '48px',
-										marginTop: '32px',
+										marginTop: '40px',
 										padding: '0px'
 									}}
 								>

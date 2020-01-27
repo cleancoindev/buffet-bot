@@ -313,7 +313,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 								<p
 									style={{
 										marginTop: '24px',
-										fontSize: '1rem'
+										fontSize: '18px'
 									}}
 								>
 									Exeuction Status:{' '}
@@ -330,7 +330,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 											style={{
 												marginTop: '24px',
 												marginBottom: '8px',
-												fontSize: '1rem'
+												fontSize: '18px'
 											}}
 										>
 											Instruction, if not executed, will
@@ -338,7 +338,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 										</p>
 										<p
 											style={{
-												fontSize: '1rem',
+												fontSize: '18px',
 												marginTop: '0px',
 												color: COLOURS.salmon
 											}}
@@ -364,7 +364,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 										>
 											<p
 												style={{
-													fontSize: '1rem',
+													fontSize: '18px',
 													marginRight: '8px',
 													marginTop: '-6px',
 													marginBottom: '0px'
@@ -397,7 +397,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 										>
 											<p
 												style={{
-													fontSize: '1rem',
+													fontSize: '18px',
 													marginRight: '8px',
 													marginBottom: '0px'
 												}}
@@ -432,7 +432,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 									>
 										<p
 											style={{
-												fontSize: '1rem',
+												fontSize: '18px',
 												marginRight: '8px',
 												marginTop: '-6px',
 												marginBottom: '0px'

@@ -281,17 +281,46 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
 
 interface EnhancedTableToolbarProps {
 	numSelected: number;
+	renderCounter: number;
 }
 
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
 	const classes = useToolbarStyles();
-	// const { numSelected } = props;
+	const web3 = useWeb3React();
+
+	const { numSelected, renderCounter } = props;
 
 	return (
-		<Toolbar style={{ alignItems: 'flex-start' }}>
+		<Toolbar style={{ alignItems: 'center', flexDirection: 'column' }}>
 			<Typography className={classes.title} variant="h6" id="tableTitle">
 				My Bot Activity
 			</Typography>
+			{!web3.active && numSelected === 0 && (
+				<div
+					className={classes.title}
+					style={{
+						fontSize: '16px',
+						marginTop: '8px',
+						marginBottom: '8px'
+					}}
+					id="tableSubTitle"
+				>
+					(Please connect to Metamask)
+				</div>
+			)}
+			{numSelected === 0 && web3.active && renderCounter === 5 && (
+				<div
+					className={classes.title}
+					style={{
+						fontSize: '16px',
+						marginTop: '8px',
+						marginBottom: '8px'
+					}}
+					id="tableSubTitle"
+				>
+					(No bot instructions found)
+				</div>
+			)}
 		</Toolbar>
 	);
 };
@@ -340,7 +369,6 @@ export default function EnhancedTable() {
 	} = useIcedTxContext();
 	const web3 = useWeb3React();
 
-	const gelatoCore = useGelatoCore();
 	// Router Context
 	let history = useHistory();
 
@@ -366,6 +394,8 @@ export default function EnhancedTable() {
 
 	const [displayedRows, setDisplayedRows] = React.useState(rows);
 	const [renderCounter, setRenderCounter] = React.useState(0);
+
+	console.log(renderCounter);
 	let graphName: string = '';
 	switch (web3.chainId) {
 		case 1:
@@ -534,6 +564,7 @@ export default function EnhancedTable() {
 		rowsPerPage -
 		Math.min(rowsPerPage, displayedRows.length - page * rowsPerPage);
 
+	console.log(displayedRows.length);
 	return (
 		<React.Fragment>
 			<div className={classes.root}>
@@ -541,7 +572,10 @@ export default function EnhancedTable() {
 					Fetch
 				</Button> */}
 				<Paper className={classes.paper}>
-					<EnhancedTableToolbar numSelected={selected.length} />
+					<EnhancedTableToolbar
+						numSelected={displayedRows.length}
+						renderCounter={renderCounter}
+					/>
 
 					<Table
 						className={classes.table}
@@ -613,9 +647,9 @@ export default function EnhancedTable() {
 													}}
 												>
 													{/* <Button
-														onClick={showDetails}
-														value={'test'}
-													> */}
+																onClick={showDetails}
+																value={'test'}
+															> */}
 													<VisibilityIcon
 														// color="primary"
 														fontSize={'small'}

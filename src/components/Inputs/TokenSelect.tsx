@@ -242,7 +242,9 @@ export default function TokenSelect(props: TokenSelectProps) {
 									alt={``}
 								></img>
 							)}
-							<p>{`${possibleToken.symbol} (${possibleToken.name}) `}</p>
+							<p
+								style={{ fontSize: '18px' }}
+							>{`${possibleToken.symbol} (${possibleToken.name}) `}</p>
 						</div>
 					</MenuItem>
 				))}

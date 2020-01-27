@@ -307,7 +307,7 @@ export default function AppSelection() {
 						justify="space-evenly"
 						alignItems="stretch"
 						style={{
-							marginTop: '32px'
+							marginTop: '40px'
 						}}
 					>
 						<div
@@ -353,7 +353,7 @@ export default function AppSelection() {
 						justify="space-evenly"
 						alignItems="stretch"
 						style={{
-							marginTop: '16px'
+							marginTop: '24px'
 						}}
 					>
 						{icedTxState.txState ===
