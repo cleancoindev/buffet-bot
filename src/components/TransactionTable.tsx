@@ -293,7 +293,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
 	return (
 		<Toolbar style={{ alignItems: 'center', flexDirection: 'column' }}>
 			<Typography className={classes.title} variant="h6" id="tableTitle">
-				My Bot Activity
+				Your Bot Activity
 			</Typography>
 			{!web3.active && numSelected === 0 && (
 				<div
@@ -395,7 +395,6 @@ export default function EnhancedTable() {
 	const [displayedRows, setDisplayedRows] = React.useState(rows);
 	const [renderCounter, setRenderCounter] = React.useState(0);
 
-	console.log(renderCounter);
 	let graphName: string = '';
 	switch (web3.chainId) {
 		case 1:

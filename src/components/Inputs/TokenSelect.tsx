@@ -29,6 +29,7 @@ import { getTokenByAddress, getTokenList, isEth } from '../../helpers/helpers';
 import { useWeb3React } from '@web3-react/core';
 
 import { ethers } from 'ethers';
+import { Divider } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -40,6 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
 			fontSize: '18px',
 			// marginRight: '24px',
 			width: '100%',
+
 			'& .MuiOutlinedInput-root:hover': {
 				'& fieldset': {
 					borderColor: 'white'
@@ -76,6 +78,15 @@ const useStyles = makeStyles((theme: Theme) =>
 				}
 			}
 		}
+		// listItem: {
+		// 	'li:after': {
+		// 		content: ' ',
+		// 		display: 'block',
+		// 		height: '1px',
+		// 		borderBottom: 'solid 1px red',
+		// 		width: '80%'
+		// 	}
+		// }
 	})
 );
 
@@ -191,7 +202,9 @@ export default function TokenSelect(props: TokenSelectProps) {
 			</InputLabel>
 			<Select
 				className={classes.select}
-				style={{ textAlign: 'left' }}
+				style={{
+					textAlign: 'left'
+				}}
 				labelId="demo-simple-select-outlined-label"
 				id="demo-simple-select-outlined-label"
 				open={open}
@@ -207,6 +220,10 @@ export default function TokenSelect(props: TokenSelectProps) {
 					<MenuItem
 						key={`${key}-${index}-${disabled}-${conditionOrAction}`}
 						value={possibleToken.address[networkId]}
+						// style={{
+						// 	background: 'black',
+						// 	color: 'white'
+						// }}
 					>
 						<div
 							style={{

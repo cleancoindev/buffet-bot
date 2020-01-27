@@ -157,7 +157,7 @@ export default function LoginButton() {
 					<span style={{ minWidth: '56px' }}>🤖</span>
 					{/* <SendIcon fontSize="small" /> */}
 					{/* </ListItemIcon> */}
-					<ListItemText primary="My Bot Activity" />
+					<ListItemText primary="Your Bot Activity" />
 				</StyledMenuItem>
 				<StyledMenuItem
 					onClick={() => {

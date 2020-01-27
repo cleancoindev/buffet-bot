@@ -170,7 +170,10 @@ export default function ButtonAppBar() {
 	}, []);
 
 	// handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
-	// const triedEager = useEagerConnect();
+	// Only eager connect when in dashboard
+	if (history.location.pathname === '/dashboard') {
+		const triedEager = useEagerConnect();
+	}
 
 	// handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
 	useInactiveListener();
@@ -373,7 +376,7 @@ export default function ButtonAppBar() {
 							<ListItemIcon>
 								<InboxIcon />
 							</ListItemIcon>
-							<ListItemText primary={'My Bot Activity'} />
+							<ListItemText primary={'Your Bot Activity'} />
 						</ListItem>
 					)}
 					<ListItem
