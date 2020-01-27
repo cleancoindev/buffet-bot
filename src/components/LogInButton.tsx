@@ -68,7 +68,7 @@ const GelatoButton = withStyles({
 		// minWidth: '150px',
 		boxShadow: 'none',
 		textTransform: 'none',
-		fontSize: 16,
+		fontSize: 18,
 		padding: '6px 12px',
 		marginLeft: '16px',
 		lineHeight: 1.5,
