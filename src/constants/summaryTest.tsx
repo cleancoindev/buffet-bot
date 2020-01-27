@@ -214,6 +214,135 @@ export const getActionText = (
 	}
 };
 
+export const getActionResultText = (
+	inputs: Array<string | number | boolean | ethers.utils.BigNumber>,
+	id: number,
+	networkId: ChainIds,
+	relevantInputData: RelevantInputData,
+	sellAmount?: ethers.utils.BigNumber
+): string => {
+	switch (id) {
+		// Send Tokens
+		case 1:
+			return `Your gelato bot transferred ${convertWeiToHumanReadableForTokenAmount(
+				inputs[1] as ethers.utils.BigNumber,
+				getTokenByAddress(
+					inputs[0] as string,
+					networkId,
+					relevantInputData
+				).decimals
+			)} ${
+				getTokenByAddress(
+					inputs[0] as string,
+					networkId,
+					relevantInputData
+				).symbol
+			} to address ${inputs[2]}`;
+		// Trade Tokens on Kyber
+		case 2:
+			return `Your gelato bot sold ${convertWeiToHumanReadableForTokenAmount(
+				inputs[1] as ethers.utils.BigNumber,
+				getTokenByAddress(
+					inputs[0] as string,
+					networkId,
+					relevantInputData
+				).decimals
+			)} ${
+				getTokenByAddress(
+					inputs[0] as string,
+					networkId,
+					relevantInputData
+				).symbol
+			} for ${convertWeiToHumanReadableForTokenAmount(
+				sellAmount as ethers.utils.BigNumber,
+				getTokenByAddress(
+					inputs[2] as string,
+					networkId,
+					relevantInputData
+				).decimals
+			)} ${
+				getTokenByAddress(
+					inputs[2] as string,
+					networkId,
+					relevantInputData
+				).symbol
+			} on Kyber`;
+		// Buy Leverage Tokens on Fulcrum
+		case 3:
+			return `Your gelato bot sold ${convertWeiToHumanReadableForTokenAmount(
+				inputs[1] as ethers.utils.BigNumber,
+				getTokenByAddress(
+					inputs[0] as string,
+					networkId,
+					relevantInputData
+				).decimals
+			)} ${
+				getTokenByAddress(
+					inputs[0] as string,
+					networkId,
+					relevantInputData
+				).symbol
+			} for ${convertWeiToHumanReadableForTokenAmount(
+				sellAmount as ethers.utils.BigNumber,
+				getTokenByAddress(
+					inputs[2] as string,
+					networkId,
+					relevantInputData
+				).decimals
+			)} ${
+				getTokenByAddress(
+					inputs[2] as string,
+					networkId,
+					relevantInputData
+				).symbol
+			} (${
+				getTokenByAddress(
+					inputs[2] as string,
+					networkId,
+					relevantInputData
+				).name
+			}) tokens on Fulcrum`;
+		// Sell Leverage Tokens on Fulcrum
+		case 4:
+			return `Then your gelato bot sold ${convertWeiToHumanReadableForTokenAmount(
+				inputs[1] as ethers.utils.BigNumber,
+				getTokenByAddress(
+					inputs[0] as string,
+					networkId,
+					relevantInputData
+				).decimals
+			)} ${
+				getTokenByAddress(
+					inputs[0] as string,
+					networkId,
+					relevantInputData
+				).symbol
+			} (${
+				getTokenByAddress(
+					inputs[0] as string,
+					networkId,
+					relevantInputData
+				).name
+			}) tokens for ${convertWeiToHumanReadableForTokenAmount(
+				sellAmount as ethers.utils.BigNumber,
+				getTokenByAddress(
+					inputs[2] as string,
+					networkId,
+					relevantInputData
+				).decimals
+			)} ${
+				getTokenByAddress(
+					inputs[2] as string,
+					networkId,
+					relevantInputData
+				).symbol
+			} on Fulcrum`;
+
+		default:
+			return '';
+	}
+};
+
 export const getStatusText = (status: string) => {
 	switch (status) {
 		case 'open':

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import {
 	ConditionOrAction,
@@ -40,9 +40,11 @@ import { getEtherscanPrefix } from '../helpers/helpers';
 import {
 	getConditionText,
 	getActionText,
-	getStatusText
+	getStatusText,
+	getActionResultText
 } from '../constants/summaryTest';
 import { timestampToDate } from './Inputs/DatePicker';
+import { useGelatoCore } from '../hooks/hooks';
 
 const useStyles = makeStyles(theme => ({
 	box: {
@@ -71,6 +73,29 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
+interface EthersLog {
+	transactionLogIndex: number;
+	transactionIndex: number;
+	blockNumber: number;
+	transactionHash: string;
+	address: string;
+	topics: Array<string>;
+	data: string;
+	logIndex: number;
+	blockHash: string;
+}
+interface EthersLog2 {
+	blockNumber: number;
+	blockHash: string;
+	transactionIndex: number;
+	removed: boolean;
+	address: string;
+	data: string;
+	topics: Array<string>;
+	transactionHash: string;
+	logIndex: number;
+}
+
 interface TxSummaryParams {
 	condition: ConditionWhitelistData;
 	action: ActionWhitelistData;
@@ -83,6 +108,10 @@ interface TxSummaryParams {
 export default function TransactionSummary(props: TxSummaryParams) {
 	const classes = useStyles();
 
+	const [swapAmount, setSwapAmount] = React.useState(
+		ethers.utils.bigNumberify('0')
+	);
+
 	const {
 		condition,
 		action,
@@ -93,12 +122,106 @@ export default function TransactionSummary(props: TxSummaryParams) {
 	} = props;
 
 	console.log(pastTransaction);
-	console.log((pastTransaction?.status as string) === 'executedSuccess');
+
+	const gelatoCore = useGelatoCore();
 
 	const history = useHistory();
 
-	const { active, chainId } = useWeb3React();
+	const { account, library, active, chainId } = useWeb3React();
 	const networkId = chainId as ChainIds;
+
+	/*
+	 event LogOneWay(
+        address origin,
+        address sendToken,
+        uint256 sendAmount,
+        address destination
+    );
+
+    event LogTwoWay(
+        address origin,
+        address sendToken,
+        uint256 sendAmount,
+        address destination,
+        address receiveToken,
+        uint256 receiveAmount,
+        address receiver
+    );
+
+
+
+	*/
+
+	interface LogOneWay {
+		origin: string;
+		sendToken: string;
+		sendAmount: ethers.utils.BigNumber;
+		destination: string;
+	}
+
+	interface LogTwoWay {
+		origin: string;
+		sendToken: string;
+		sendAmount: ethers.utils.BigNumber;
+		destination: string;
+		receiveToken: string;
+		receiveAmount: ethers.utils.BigNumber;
+		receiver: string;
+	}
+
+	// WHat do I have to know about types in advance?
+	// 1. abi
+	// 2. LogOneWay interface
+
+	// If action has a swap value call this function with LogTwoWay
+	const getEvents = async () => {
+		const transactionByHash = await library.getTransactionReceipt(
+			pastTransaction?.executionHash
+		);
+		// console.log(transactionByHash);
+		const startBlock = transactionByHash.blockNumber;
+		const endBlock = startBlock + 1;
+		const proxyAddress = await gelatoCore.proxyByUser(account);
+		// const abi = [
+		// 	'event LogOneWay(address origin, address sendToken, uint256 sendAmount, address destination)'
+		// ];
+
+		const abi = [
+			'event LogTwoWay(address origin, address sendToken, uint256 sendAmount, address destination, address receiveToken, uint256 receiveAmount, address receiver)'
+		];
+
+		transactionByHash.logs.forEach((log: EthersLog) => {
+			// console.log(log.address);
+		});
+
+		let iface = new ethers.utils.Interface(abi);
+		const filter = {
+			address: proxyAddress,
+			fromBlock: 0,
+			transactionHash: pastTransaction?.executionHash
+			// fromBlock: startBlock,
+			// toBlock: endBlock
+		};
+
+		const logs = await library.getLogs(filter);
+
+		try {
+			const log = logs.find(
+				(log: EthersLog2) =>
+					log.transactionHash === pastTransaction?.executionHash
+			);
+			let event = iface.parseLog(log);
+			console.log(event.values.receiveAmount);
+			setSwapAmount(event.values.receiveAmount);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	useEffect(() => {
+		// Only show in past Transaction Summary
+		if (pastTransaction !== undefined) getEvents();
+	}, []);
 
 	// Get UserInput Types
 	const conditionInputTypes = condition.userInputTypes;
@@ -143,8 +266,6 @@ export default function TransactionSummary(props: TxSummaryParams) {
 		}
 	})(Button);
 
-	console.log(pastTransactionHash);
-
 	return (
 		<div style={{ marginBottom: '24px', width: '100%' }}>
 			<Grid
@@ -172,6 +293,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 					<div
 						style={{
 							marginRight: 'auto',
+							maxWidth: '85%',
 							overflowX: 'auto'
 
 							// overflow: 'hidden'
@@ -231,39 +353,72 @@ export default function TransactionSummary(props: TxSummaryParams) {
 								)}
 								{pastTransaction.status ===
 									'executedSuccess' && (
-									<div
-										style={{
-											display: 'flex',
-											flexDirection: 'row',
-											alignItems: 'center',
-											marginTop: '16px'
-										}}
-									>
-										<p
+									<React.Fragment>
+										<div
 											style={{
-												fontSize: '1rem',
-												marginRight: '8px',
-												marginTop: '-6px',
-												marginBottom: '0px'
+												display: 'flex',
+												flexDirection: 'row',
+												alignItems: 'center',
+												marginTop: '16px'
 											}}
 										>
-											Execution Receipt (Etherscan):
-										</p>
-										<a
-											href={`https://${etherscanPrefix}etherscan.io/tx/${pastTransactionHash}`}
-											target="_blank"
-										>
-											<LinkIcon
-												// color={'primary'}
+											<p
 												style={{
-													color: COLOURS.salmon,
-													marginTop: '0px'
+													fontSize: '1rem',
+													marginRight: '8px',
+													marginTop: '-6px',
+													marginBottom: '0px'
 												}}
-												fontSize={'large'}
-												// style={{ marginRight: '8px' }}
-											/>
-										</a>
-									</div>
+											>
+												Execution Receipt (Etherscan):
+											</p>
+											<a
+												href={`https://${etherscanPrefix}etherscan.io/tx/${pastTransactionHash}`}
+												target="_blank"
+											>
+												<LinkIcon
+													// color={'primary'}
+													style={{
+														color: COLOURS.salmon,
+														marginTop: '0px'
+													}}
+													fontSize={'large'}
+													// style={{ marginRight: '8px' }}
+												/>
+											</a>
+										</div>
+										<div
+											style={{
+												display: 'flex',
+												flexDirection: 'column',
+												alignItems: 'left',
+												marginTop: '16px'
+											}}
+										>
+											<p
+												style={{
+													fontSize: '1rem',
+													marginRight: '8px',
+													marginBottom: '0px'
+												}}
+											>
+												{'Execution Result:'}
+											</p>
+											<p
+												style={{
+													color: COLOURS.salmon
+												}}
+											>
+												{getActionResultText(
+													actionInputs,
+													action.id,
+													networkId,
+													RelevantInputData.all,
+													swapAmount
+												)}
+											</p>
+										</div>
+									</React.Fragment>
 								)}
 								{pastTransaction.status ===
 									'executedFailure' && (
@@ -352,7 +507,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 							</div>
 						)}
 					</div>
-					<div>
+					<div style={{ marginTop: '16px' }}>
 						{history.location.pathname.includes('dashboard') && (
 							<GelatoButton
 								style={{ marginLeft: '0px' }}
