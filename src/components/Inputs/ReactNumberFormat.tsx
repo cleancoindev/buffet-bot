@@ -30,7 +30,8 @@ import {
 	convertWeiToHumanReadableForNumbersAndGetValue,
 	convertHumanReadableToWeiForNumbers,
 	getTokenSymbol,
-	userIsWhitelisted
+	userIsWhitelisted,
+	findConditionById
 } from '../../helpers/helpers';
 import { useIcedTxContext } from '../../state/GlobalState';
 import { useWeb3React } from '@web3-react/core';
@@ -342,7 +343,9 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				conditionOrAction === ConditionOrAction.Action &&
 				!whitelisted
 			) {
+				console.log('2');
 				try {
+					console.log('3');
 					validateLimitAmount(ethers.utils.parseUnits(newValue, 18));
 				} catch (error) {
 					console.log('bug');
@@ -385,9 +388,10 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		// Get Kyber Price Condition
 		const signer = library.getSigner();
 
+		const condition = findConditionById('3');
 		const conditionContract = new ethers.Contract(
-			TTYPES[1].address[networkId],
-			[TTYPES[1].getConditionValueAbi],
+			condition.address[networkId],
+			[condition.getConditionValueAbi],
 			signer
 		);
 
@@ -401,7 +405,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 			false
 		];
 		// get value
-
+		// getConditionValue(address _src, uint256 _srcAmount, address _dest, uint256, bool)
 		try {
 			conditionContract
 				.getConditionValue(...inputsForPrice)
@@ -409,10 +413,10 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 					const totalTransferVolume = kyberPrice
 						.mul(srcAmount)
 						.div(ethers.constants.WeiPerEther);
-
+					console.log('Getting there');
 					// If the total Transfer volume is greater than the Token Transfer Ceiling, spit out error for unwhitelisted users and no error for whitelisted users
 					if (TOKEN_TRANSFER_CEILING.lt(totalTransferVolume)) {
-						// console.log('in err');
+						console.log('in err');
 						// console.log(TOKEN_TRANSFER_CEILING.toString());
 						// console.log('Is smaller than');
 						// console.log(totalTransferVolume.toString());
@@ -435,7 +439,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 							)} max. To gain a higher allowance, please contact us!`
 						);
 					} else {
-						// console.log('Not in Err err');
+						console.log('Not in Err err');
 						// console.log('Ceiling');
 						// console.log(TOKEN_TRANSFER_CEILING.toString());
 						// console.log('Total Amount');
@@ -445,7 +449,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 					// convert Value into human readable form
 				});
 		} catch (error) {
-			// console.log('Did not fetch price');
+			console.log(error);
 		}
 	};
 

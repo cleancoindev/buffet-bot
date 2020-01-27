@@ -39,7 +39,7 @@ export const EXECUTOR_ADDRESS = {
 // Conditions
 export const TTYPES = [
 	{
-		id: 3,
+		id: 1,
 		app: 'Calendar',
 		title: 'Time',
 		address: {
@@ -62,7 +62,7 @@ export const TTYPES = [
 		logo: '/images/ethereum_logo.png'
 	},
 	{
-		id: 1,
+		id: 2,
 		app: 'Your Wallet',
 		title: 'Token balance',
 		address: {
@@ -112,7 +112,7 @@ export const TTYPES = [
 
 	// Use isGreater as bool
 	{
-		id: 2,
+		id: 3,
 		app: 'Kyber',
 		title: 'Price on Kyber',
 		address: {

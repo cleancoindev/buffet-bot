@@ -194,7 +194,7 @@ export default function TokenSelect(props: TokenSelectProps) {
 	return (
 		<FormControl variant="outlined" className={classes.formControl}>
 			<InputLabel
-				style={{ color: 'white' }}
+				style={{ color: 'white', fontSize: '18px' }}
 				ref={inputLabel}
 				id="demo-simple-select-outlined-label"
 			>

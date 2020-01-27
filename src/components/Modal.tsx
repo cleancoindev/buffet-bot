@@ -19,8 +19,8 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		root: {
-			'& .MuiDialog-paperWidthMd': {
-				minWidth: '40%'
+			'& .MuiDialog-paperWidthSm': {
+				minWidth: '33%'
 			}
 		}
 	})
@@ -53,7 +53,7 @@ export default function TransactionModal() {
 				aria-labelledby="alert-dialog-title"
 				aria-describedby="alert-dialog-description"
 				// style={{ maxWidth: '100%' }}
-				maxWidth={'md'}
+				maxWidth={'sm'}
 				style={{ minWidth: '33vw' }}
 			>
 				{/* <DialogTitle id="alert-dialog-title">{title}</DialogTitle> */}

@@ -101,14 +101,15 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 						newValue = await conditionContract.getConditionValue(
 							...inputs
 						);
-						console.log(inputs);
 						console.log(newValue.toString());
+						// console.log(inputs);
+						// console.log(newValue.toString());
 						// Convert fetched wei amount to human reable amount
 
 						// convert Value into human readable form
 						return newValue;
 					} catch (error) {
-						console.log(error);
+						console.log('Error in return date');
 						newValue = BIG_NUM_ZERO;
 						// console.log(2);
 						return newValue;

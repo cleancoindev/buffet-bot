@@ -85,7 +85,7 @@ export const DEFAULT_DATA_ACTION = {
 };
 
 // ID that determines which condition to render by default at initial render of root
-export const DEFAULT_TRIGGER_ID = '2';
+export const DEFAULT_TRIGGER_ID = '3';
 export const DEFAULT_ACTION_ID = '3';
 
 /*
