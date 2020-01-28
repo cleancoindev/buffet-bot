@@ -128,27 +128,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 	const { account, library, active, chainId } = useWeb3React();
 	const networkId = chainId as ChainIds;
 
-	/*
-	 event LogOneWay(
-        address origin,
-        address sendToken,
-        uint256 sendAmount,
-        address destination
-    );
-
-    event LogTwoWay(
-        address origin,
-        address sendToken,
-        uint256 sendAmount,
-        address destination,
-        address receiveToken,
-        uint256 receiveAmount,
-        address receiver
-    );
-
-
-
-	*/
+	console.log(pastTransaction);
 
 	interface LogOneWay {
 		origin: string;
@@ -209,7 +189,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 					log.transactionHash === pastTransaction?.executionHash
 			);
 			let event = iface.parseLog(log);
-			console.log(event.values.receiveAmount);
+			// console.log(event.values.receiveAmount);
 			setSwapAmount(event.values.receiveAmount);
 		} catch (error) {
 			console.log(error);
@@ -218,7 +198,11 @@ export default function TransactionSummary(props: TxSummaryParams) {
 
 	useEffect(() => {
 		// Only show in past Transaction Summary
-		if (pastTransaction !== undefined) getEvents();
+		if (
+			pastTransaction?.executionHash !== null &&
+			pastTransaction?.executionHash !== undefined
+		)
+			getEvents();
 	}, []);
 
 	// Get UserInput Types
@@ -263,8 +247,6 @@ export default function TransactionSummary(props: TxSummaryParams) {
 			// }
 		}
 	})(Button);
-
-	console.log(action.userInputs);
 
 	return (
 		<div style={{ marginBottom: '24px', width: '100%' }}>
