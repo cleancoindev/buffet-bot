@@ -14,7 +14,8 @@ import {
 	INPUT_OK,
 	SELECTED_CHAIN_ID,
 	TOKEN_TRANSFER_CEILING,
-	COLOURS
+	COLOURS,
+	ETH
 } from '../../constants/constants';
 import {
 	InputType,
@@ -22,7 +23,8 @@ import {
 	ConditionOrAction,
 	ChainIds,
 	RelevantInputData,
-	TxState
+	TxState,
+	Token
 } from '../../constants/interfaces';
 import { ethers } from 'ethers';
 import {
@@ -31,13 +33,15 @@ import {
 	convertHumanReadableToWeiForNumbers,
 	getTokenSymbol,
 	userIsWhitelisted,
-	findConditionById
+	findConditionById,
+	convertWeiToHumanReadableForTokenAmount
 } from '../../helpers/helpers';
 import { useIcedTxContext } from '../../state/GlobalState';
 import { useWeb3React } from '@web3-react/core';
 import { TTYPES } from '../../constants/whitelist';
 
 import '../../index.css';
+import TokenSelect from './TokenSelect';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -335,6 +339,18 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		// updateUser Input
 		const newValue = event.target.value as string;
 
+		const token = getTokenByAddress(
+			inputs[approveIndex] as string,
+			networkId,
+			relevantInputData
+		);
+
+		// @DEV Make it decimal dependend!!!
+		// @DEV NOT FOR NUMBERS ONLY TOKEN AMOUNT
+		validateLimitAmount(
+			ethers.utils.parseUnits(newValue, token.decimals),
+			token
+		);
 		// Only update State when number input actually changed from last input!
 		if (newValue !== values.numberformat) {
 			handleNewValue(newValue);
@@ -343,9 +359,9 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				conditionOrAction === ConditionOrAction.Action &&
 				!whitelisted
 			) {
-				try {
-					validateLimitAmount(ethers.utils.parseUnits(newValue, 18));
-				} catch (error) {}
+				// try {
+				// 	validateLimitAmount(ethers.utils.parseUnits(newValue, 18));
+				// } catch (error) {}
 			}
 		}
 	};
@@ -379,80 +395,240 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 	// @DEV we do indirect validation through default values. Value 0 is imporant e.g. when wanting balance to go to zero
 	// If default value is equal to ZERO => show error
 
-	const validateLimitAmount = (srcAmount: ethers.utils.BigNumber) => {
+	const validateLimitAmount = (
+		srcAmount: ethers.utils.BigNumber,
+		token: Token
+	) => {
 		// IF user is whitelisted, skip
 		// Get Kyber Price Condition
 		const signer = library.getSigner();
 
-		const condition = findConditionById('3');
-		const conditionContract = new ethers.Contract(
-			condition.address[networkId],
-			[condition.getConditionValueAbi],
-			signer
-		);
-
-		const sellToken = inputs[approveIndex] as string;
 		let daiAddress = '';
 		if (networkId === 1) {
 			daiAddress = '0x6b175474e89094c44da98b954eedeac495271d0f';
 		} else if (networkId === 42) {
 			daiAddress = '0xC4375B7De8af5a38a93548eb8453a498222C4fF2';
 		}
-		const inputsForPrice = [
-			sellToken,
-			BIG_NUM_ONE,
-			daiAddress,
-			BIG_NUM_ZERO,
-			false
-		];
-		// get value
-		// getConditionValue(address _src, uint256 _srcAmount, address _dest, uint256, bool)
-		try {
-			conditionContract
-				.getConditionValue(...inputsForPrice)
-				.then((kyberPrice: ethers.utils.BigNumber) => {
-					const totalTransferVolume = kyberPrice
-						.mul(srcAmount)
-						.div(ethers.constants.WeiPerEther);
 
-					// If the total Transfer volume is greater than the Token Transfer Ceiling, spit out error for unwhitelisted users and no error for whitelisted users
-					if (TOKEN_TRANSFER_CEILING.lt(totalTransferVolume)) {
-						// console.log('in err');
-						// console.log(TOKEN_TRANSFER_CEILING.toString());
-						// console.log('Is smaller than');
-						// console.log(totalTransferVolume.toString());
-						const ceilingBN = TOKEN_TRANSFER_CEILING.mul(
-							ethers.utils.bigNumberify('100')
-						).div(kyberPrice);
-						// console.log(ceilingBN);
-						// console.log(ceilingBN.toString());
-						const ceilingFloat =
-							parseFloat(ceilingBN.toString()) / 100;
-						// .mul(ethers.utils.bigNumberify('100'))
-						// const ceilingFloat = (
-						// 	parseFloat(ceilingBN.toString()) / 100
-						// ).toFixed(3);
-						setErrorTrue(
-							`This alpha is restricted to move ${ceilingFloat} ${getTokenSymbol(
-								sellToken,
-								networkId,
-								relevantInputData
-							)} max. To gain a higher allowance, please contact us!`
+		if (relevantInputData === RelevantInputData.fulcrumTokenList) {
+			// Instantiate pToken Contract
+			const pTokenAbi =
+				'function tokenPrice() external view returns (uint256 price)';
+
+			const pTokenContract = new ethers.Contract(
+				token.address[networkId] as string,
+				[pTokenAbi],
+				signer
+			);
+
+			// Get the price of one pToken denominated in the underylint
+			// Note: For short tokens, this would be DAI
+			// For Long Tokens, this is whatever the underyling is, e.g. dETH Long 2x == ETH
+			// In case of Long Token, we need to also convert the e.g. ETH value into DAI price
+			try {
+				pTokenContract
+					.tokenPrice()
+					.then(
+						(underlyingValuePerPtoken: ethers.utils.BigNumber) => {
+							// console.log(tokenPrice);
+							let valueToBeComparedWithDai = underlyingValuePerPtoken;
+							// IF token is a short sell token, price will be already in DAI denominated
+							const underlyingPerPtoken = convertWeiToHumanReadableForTokenAmount(
+								valueToBeComparedWithDai,
+								token.decimals
+							);
+							// console.log(underlyingPerPtoken);
+
+							if (token.name.includes('Long')) {
+								// console.log('Long Token');
+								// IF token is long token, make additional getExpectedRate call with Kyber
+								const condition = findConditionById('3');
+								const conditionContract = new ethers.Contract(
+									condition.address[networkId],
+									[condition.getConditionValueAbi],
+									signer
+								);
+
+								// @ DEV Change later when introducing more underylings
+								const underylingAddress = ETH.address[1];
+
+								const inputsForPrice = [
+									underylingAddress,
+									BIG_NUM_ONE,
+									daiAddress,
+									BIG_NUM_ZERO,
+									false
+								];
+
+								conditionContract
+									.getConditionValue(...inputsForPrice)
+									.then(
+										(
+											kyberPrice: ethers.utils.BigNumber
+										) => {
+											// console.log(kyberPrice);
+											const ethPriceInDai = convertWeiToHumanReadableForTokenAmount(
+												kyberPrice,
+												18
+											);
+											// console.log(ethPriceInDai);
+											const howMuchPTokenIfLongIsWorthInDay =
+												parseFloat(ethPriceInDai) *
+												parseFloat(underlyingPerPtoken);
+											console.log(
+												howMuchPTokenIfLongIsWorthInDay
+											);
+
+											console.log(
+												275.0 /
+													howMuchPTokenIfLongIsWorthInDay
+											);
+											// Multiply the amount of underyling we receive per pToken by the amount of DAI we would get for that underyling
+											valueToBeComparedWithDai = kyberPrice
+												.div(
+													ethers.constants.WeiPerEther
+												)
+												.mul(valueToBeComparedWithDai);
+											// .div(
+											// 	ethers.constants.WeiPerEther
+											// );
+											// console.log(
+											// 	valueToBeComparedWithDai.toString()
+											// );
+
+											// const totalTransferVolume = kyberPrice
+											// 	.mul(srcAmount)
+											// 	.div(ethers.constants.WeiPerEther);
+											// console.log(
+											// 	valueToBeComparedWithDai.toString()
+											// );
+											// console.log(
+											// 	srcAmount
+											// 		.div(
+											// 			ethers.constants
+											// 				.WeiPerEther
+											// 		)
+											// 		.toString()
+											// );
+											const totalDollarAmountUserWantsToTransfer = valueToBeComparedWithDai
+												.mul(srcAmount)
+												.div(
+													ethers.constants.WeiPerEther
+												);
+											console.log(
+												totalDollarAmountUserWantsToTransfer.toString()
+											);
+											compareUserInputToDaiMax(
+												totalDollarAmountUserWantsToTransfer,
+												valueToBeComparedWithDai,
+												token.address[networkId]
+											);
+										}
+									);
+							} else {
+								const totalDollarAmountUserWantsToTransfer = valueToBeComparedWithDai
+									.mul(srcAmount)
+									.div(ethers.constants.WeiPerEther);
+								console.log(
+									totalDollarAmountUserWantsToTransfer.toString()
+								);
+								compareUserInputToDaiMax(
+									totalDollarAmountUserWantsToTransfer,
+									valueToBeComparedWithDai,
+									token.address[networkId]
+								);
+							}
+
+							// console.log(humanReadableDollarPrice);
+						}
+					);
+			} catch (error) {
+				console.log(error);
+				setDefaultAmountRestriction(token);
+				// Set default amount restriction
+			}
+		} else if (relevantInputData === RelevantInputData.kyberTokenList) {
+			const condition = findConditionById('3');
+			const conditionContract = new ethers.Contract(
+				condition.address[networkId],
+				[condition.getConditionValueAbi],
+				signer
+			);
+
+			const sellToken = token.address[networkId];
+			const inputsForPrice = [
+				sellToken,
+				BIG_NUM_ONE,
+				daiAddress,
+				BIG_NUM_ZERO,
+				false
+			];
+			// get value
+			// getConditionValue(address _src, uint256 _srcAmount, address _dest, uint256, bool)
+			try {
+				conditionContract
+					.getConditionValue(...inputsForPrice)
+					.then((kyberPrice: ethers.utils.BigNumber) => {
+						const totalTransferVolume = kyberPrice
+							.mul(srcAmount)
+							.div(ethers.constants.WeiPerEther);
+						compareUserInputToDaiMax(
+							totalTransferVolume,
+							kyberPrice,
+							token.address[networkId]
 						);
-					} else {
-						// console.log('Not in Err err');
-						// console.log('Ceiling');
-						// console.log(TOKEN_TRANSFER_CEILING.toString());
-						// console.log('Total Amount');
-						// console.log(totalTransferVolume.toString());
-						setErrorFalse();
-					}
-					// convert Value into human readable form
-				});
-		} catch (error) {
-			// console.log(error);
+
+						// convert Value into human readable form
+					});
+			} catch (error) {
+				// console.log(error);
+			}
 		}
 	};
+
+	const compareUserInputToDaiMax = (
+		valueToBeComparedWithDaiCeiling: ethers.utils.BigNumber,
+		exchangeRate: ethers.utils.BigNumber,
+		sellTokenAddress: string
+	) => {
+		// If the total Transfer volume is greater than the Token Transfer Ceiling, spit out error for unwhitelisted users and no error for whitelisted users
+		if (TOKEN_TRANSFER_CEILING.lt(valueToBeComparedWithDaiCeiling)) {
+			console.log(
+				'Inputted value is higher than our current DAI Ceiling'
+			);
+			// console.log('in err');
+			// console.log(TOKEN_TRANSFER_CEILING.toString());
+			// console.log('Is smaller than');
+			// console.log(totalTransferVolume.toString());
+			const ceilingBN = TOKEN_TRANSFER_CEILING.mul(
+				ethers.utils.bigNumberify('100000')
+			).div(exchangeRate);
+			// console.log(ceilingBN);
+			// console.log(ceilingBN.toString());
+			const ceilingFloat = parseFloat(ceilingBN.toString()) / 100000;
+			// .mul(ethers.utils.bigNumberify('100'))
+			// const ceilingFloat = (
+			// 	parseFloat(ceilingBN.toString()) / 100
+			// ).toFixed(3);
+			setErrorTrue(
+				`This alpha is restricted to move ${ceilingFloat} ${getTokenSymbol(
+					sellTokenAddress,
+					networkId,
+					relevantInputData
+				)} max. To gain a higher allowance, please contact us!`
+			);
+		} else {
+			console.log('Value is low enough');
+			// console.log('Not in Err err');
+			// console.log('Ceiling');
+			// console.log(TOKEN_TRANSFER_CEILING.toString());
+			// console.log('Total Amount');
+			// console.log(totalTransferVolume.toString());
+			setErrorFalse();
+		}
+	};
+
+	const setDefaultAmountRestriction = (token: Token) => {};
 
 	return (
 		<TextField

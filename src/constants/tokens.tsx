@@ -15,7 +15,8 @@ export const KYBER_TOKEN_LIST = [
 		},
 		symbol: 'DAI',
 		name: 'DAI Stablecoin',
-		decimals: 18
+		decimals: 18,
+		max: 275
 	},
 	{
 		address: {
@@ -26,7 +27,8 @@ export const KYBER_TOKEN_LIST = [
 		},
 		symbol: 'GNO',
 		name: 'Gnosis',
-		decimals: 18
+		decimals: 18,
+		max: 21
 	},
 	// {
 	// 	address: {
@@ -48,7 +50,8 @@ export const KYBER_TOKEN_LIST = [
 		},
 		symbol: 'KNC',
 		name: 'Kyber Network',
-		decimals: 18
+		decimals: 18,
+		max: 1000
 	},
 
 	{
@@ -60,7 +63,8 @@ export const KYBER_TOKEN_LIST = [
 		},
 		symbol: 'LINK',
 		name: 'ChainLink',
-		decimals: 18
+		decimals: 18,
+		max: 105
 	},
 	{
 		address: {
@@ -71,7 +75,8 @@ export const KYBER_TOKEN_LIST = [
 		},
 		symbol: 'MKR',
 		name: 'Maker',
-		decimals: 18
+		decimals: 18,
+		max: 0.55
 	},
 	{
 		address: {
@@ -82,9 +87,9 @@ export const KYBER_TOKEN_LIST = [
 		},
 		symbol: 'SAI Stablecoin',
 		name: 'SAI',
-		decimals: 18
+		decimals: 18,
+		max: 275
 	},
-
 	// {
 	// 	address: {
 	// 		1: '0x4156D3342D5c385a87D264F90653733592000581',
@@ -105,7 +110,8 @@ export const KYBER_TOKEN_LIST = [
 		},
 		symbol: 'SNX',
 		name: 'Synthetix Network Token',
-		decimals: 18
+		decimals: 18,
+		max: 240
 	},
 
 	{
@@ -117,7 +123,8 @@ export const KYBER_TOKEN_LIST = [
 		},
 		symbol: 'USDT',
 		name: 'Tether',
-		decimals: 6
+		decimals: 6,
+		max: 275
 	},
 	{
 		address: {
@@ -128,7 +135,8 @@ export const KYBER_TOKEN_LIST = [
 		},
 		symbol: 'USDC',
 		name: 'USD Coin',
-		decimals: 6
+		decimals: 6,
+		max: 275
 	},
 	{
 		address: {
@@ -139,7 +147,8 @@ export const KYBER_TOKEN_LIST = [
 		},
 		symbol: 'WETH',
 		name: 'Wrapped Ether',
-		decimals: 18
+		decimals: 18,
+		max: 1.53
 	}
 	// {
 	// 	address: {
@@ -165,7 +174,8 @@ export const KYBER_TOKEN_LIST_WITH_ETH = [
 		},
 		symbol: 'DAI',
 		name: 'DAI Stablecoin',
-		decimals: 18
+		decimals: 18,
+		max: 275
 	},
 	{
 		address: {
@@ -176,7 +186,8 @@ export const KYBER_TOKEN_LIST_WITH_ETH = [
 		},
 		symbol: 'GNO',
 		name: 'Gnosis',
-		decimals: 18
+		decimals: 18,
+		max: 21
 	},
 	// {
 	// 	address: {
@@ -198,7 +209,8 @@ export const KYBER_TOKEN_LIST_WITH_ETH = [
 		},
 		symbol: 'KNC',
 		name: 'Kyber Network',
-		decimals: 18
+		decimals: 18,
+		max: 1000
 	},
 
 	{
@@ -210,7 +222,8 @@ export const KYBER_TOKEN_LIST_WITH_ETH = [
 		},
 		symbol: 'LINK',
 		name: 'ChainLink',
-		decimals: 18
+		decimals: 18,
+		max: 105
 	},
 	{
 		address: {
@@ -221,7 +234,8 @@ export const KYBER_TOKEN_LIST_WITH_ETH = [
 		},
 		symbol: 'MKR',
 		name: 'Maker',
-		decimals: 18
+		decimals: 18,
+		max: 0.55
 	},
 	{
 		address: {
@@ -232,9 +246,9 @@ export const KYBER_TOKEN_LIST_WITH_ETH = [
 		},
 		symbol: 'SAI Stablecoin',
 		name: 'SAI',
-		decimals: 18
+		decimals: 18,
+		max: 275
 	},
-
 	// {
 	// 	address: {
 	// 		1: '0x4156D3342D5c385a87D264F90653733592000581',
@@ -255,7 +269,8 @@ export const KYBER_TOKEN_LIST_WITH_ETH = [
 		},
 		symbol: 'SNX',
 		name: 'Synthetix Network Token',
-		decimals: 18
+		decimals: 18,
+		max: 240
 	},
 
 	{
@@ -267,7 +282,8 @@ export const KYBER_TOKEN_LIST_WITH_ETH = [
 		},
 		symbol: 'USDT',
 		name: 'Tether',
-		decimals: 6
+		decimals: 6,
+		max: 275
 	},
 	{
 		address: {
@@ -278,7 +294,8 @@ export const KYBER_TOKEN_LIST_WITH_ETH = [
 		},
 		symbol: 'USDC',
 		name: 'USD Coin',
-		decimals: 6
+		decimals: 6,
+		max: 275
 	},
 	{
 		address: {
@@ -289,19 +306,9 @@ export const KYBER_TOKEN_LIST_WITH_ETH = [
 		},
 		symbol: 'WETH',
 		name: 'Wrapped Ether',
-		decimals: 18
+		decimals: 18,
+		max: 1.53
 	}
-	// {
-	// 	address: {
-	// 		1: '0x05f4a42e251f2d52b8ed15e9fedaacfcef1fad27',
-	// 		3: '0x0',
-	// 		4: '0x0',
-	// 		42: '0xAb74653cac23301066ABa8eba62b9Abd8a8c51d6'
-	// 	},
-	// 	symbol: 'ZIL',
-	// 	name: 'Zilliqa',
-	// 	decimals: 12
-	// }
 ];
 
 export const FULCRUM_LEVERAGE_TOKEN_LIST = [
@@ -314,7 +321,8 @@ export const FULCRUM_LEVERAGE_TOKEN_LIST = [
 		},
 		symbol: 'dLETH2x',
 		name: '2x Long ETH',
-		decimals: 18
+		decimals: 18,
+		max: 0.0014
 	},
 	{
 		address: {
@@ -325,7 +333,8 @@ export const FULCRUM_LEVERAGE_TOKEN_LIST = [
 		},
 		symbol: 'dLETH3x',
 		name: '3x Long ETH',
-		decimals: 18
+		decimals: 18,
+		max: 0.0013
 	},
 	{
 		address: {
@@ -336,7 +345,8 @@ export const FULCRUM_LEVERAGE_TOKEN_LIST = [
 		},
 		symbol: 'dLETH4x',
 		name: '4x Long ETH',
-		decimals: 18
+		decimals: 18,
+		max: 0.00138
 	},
 	{
 		address: {
@@ -347,7 +357,8 @@ export const FULCRUM_LEVERAGE_TOKEN_LIST = [
 		},
 		symbol: 'dsETH',
 		name: 'Short ETH',
-		decimals: 18
+		decimals: 18,
+		max: 150
 	},
 	{
 		address: {
@@ -358,7 +369,8 @@ export const FULCRUM_LEVERAGE_TOKEN_LIST = [
 		},
 		symbol: 'dsETH2x',
 		name: '2x Short ETH',
-		decimals: 18
+		decimals: 18,
+		max: 0.7
 	},
 	{
 		address: {
@@ -369,7 +381,8 @@ export const FULCRUM_LEVERAGE_TOKEN_LIST = [
 		},
 		symbol: 'dsETH3x',
 		name: '3x Short ETH',
-		decimals: 18
+		decimals: 18,
+		max: 0.34
 	},
 	{
 		address: {
@@ -380,7 +393,8 @@ export const FULCRUM_LEVERAGE_TOKEN_LIST = [
 		},
 		symbol: 'dsETH4x',
 		name: '4x Short ETH',
-		decimals: 18
+		decimals: 18,
+		max: 17.3
 	}
 ];
 

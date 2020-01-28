@@ -108,7 +108,7 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 			setActiveStep(prevActiveStep => prevActiveStep + 1);
 		} else {
 			// Open Modal and show error
-			console.log('openModal');
+			// console.log('openModal');
 			dispatch({ type: OPEN_MODAL });
 		}
 	}
@@ -127,14 +127,13 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 
 	// ########################### Checks before minting
 	const preTxCheck = () => {
-		console.log('in here');
 		// 1. Check if user has metamask installed, if not display install metamask link
 		const { ethereum } = window as any;
 
 		switch (icedTxState.txState) {
 			case TxState.displayMobile:
 				if (!checkIfMobile()) {
-					console.log('user on desktop');
+					// console.log('user on desktop');
 					// Change txState to "Login with metamask"
 					// console.log('Change TxState to displayLogIntoMetamask');
 					dispatch({
@@ -146,7 +145,7 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 						// Check if the object is injected by metamask
 						if (ethereum.isMetaMask) {
 							// Yes it is metamask
-							console.log('User uses metamask mobile app');
+							// console.log('User uses metamask mobile app');
 							// Change txState to "Login with metamask"
 							// console.log('Change TxState to displayLogIntoMetamask');
 							dispatch({
@@ -155,13 +154,13 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 							});
 						} else {
 							// No Metamask installed => Show install Metamask Modal
-							console.log(
-								'No Metamask is installed - Render no mobile modal'
-								// No need to change icedTx.txState
-							);
+							// console.log(
+							// 	'No Metamask is installed - Render no mobile modal'
+							// 	// No need to change icedTx.txState
+							// );
 						}
 					}
-					console.log('User on mobile');
+					// console.log('User on mobile');
 				}
 			case TxState.displayInstallMetamask:
 				// Web3 object is injected
@@ -178,10 +177,10 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 						});
 					} else {
 						// No Metamask installed => Show install Metamask Modal
-						console.log(
-							'No Metamask is installed - Render Install metamask modal'
-							// No need to change icedTx.txState
-						);
+						// console.log(
+						// 	'No Metamask is installed - Render Install metamask modal'
+						// 	// No need to change icedTx.txState
+						// );
 					}
 				} else {
 					// No ethereum provider => Still install metamask
@@ -217,7 +216,7 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 					});
 				} else {
 					// No Metamask installed => Show install Metamask Modal
-					console.log('User has to switch networks');
+					// console.log('User has to switch networks');
 				}
 
 				break;
@@ -244,7 +243,7 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 								txState: TxState.displayGelatoWallet
 							});
 						} else {
-							console.log('User has insufficient balance');
+							// console.log('User has insufficient balance');
 						}
 					});
 				break;
@@ -295,19 +294,19 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 								.allowance(web3.account, proxyAddress)
 								.then((result: ethers.utils.BigNumber) => {
 									const allowance = result;
-									console.log('Allowance: ');
-									console.log(allowance.toString());
+									// console.log('Allowance: ');
+									// console.log(allowance.toString());
 									// If the Allowance is greater than the selected token amount, move on
 									if (tokenAmount.lte(allowance)) {
-										console.log(
-											'Change TxState to displayCreate'
-										);
+										// console.log(
+										// 	'Change TxState to displayCreate'
+										// );
 										dispatch({
 											type: UPDATE_TX_STATE,
 											txState: TxState.displayCreate
 										});
 									} else {
-										console.log('Insufficient allowance');
+										// console.log('Insufficient allowance');
 									}
 									// User has Proxy
 								});
@@ -321,7 +320,7 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 					icedTxState.txState === TxState.preCancel ||
 					icedTxState.txState === TxState.postCancel
 				) {
-					console.log('User wanted to cancel, refresh txState');
+					// console.log('User wanted to cancel, refresh txState');
 					dispatch({
 						type: UPDATE_TX_STATE,
 						txState: TxState.displayInstallMetamask

@@ -42,7 +42,8 @@ export const ETH = {
 	},
 	symbol: 'ETH',
 	name: 'Ether',
-	decimals: 18
+	decimals: 18,
+	max: 1.53
 };
 
 export const SELECTED_CHAIN_ID = 1;
