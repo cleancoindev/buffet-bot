@@ -73,17 +73,30 @@ export default function AppDropdown(props: AppDropdownProps) {
 	// SET DEFAULT TRIGGER VALUE AT PAGE RENGERING
 	// Only change state if: a) we render a condition, b) the id in global state matches default condition id and 3) if state is currently empty (select is displayed)
 
-	// useEffect(() => {
-	// 	console.log('/ Render');
-	// 	if (web3.active) {
-	// 		dispatch({ type: RESET_CONDITION });
-	// 		dispatch({ type: RESET_ACTION });
-	// 		dispatch({
-	// 			type: INPUT_OK,
-	// 			txState: TxState.displayInstallMetamask
-	// 		});
-	// 	}
-	// }, []);
+	useEffect(() => {
+		if (
+			conditionOrAction === ConditionOrAction.Condition &&
+			icedTxState.condition.id !== parseInt(DEFAULT_TRIGGER_ID) &&
+			state === '0'
+		) {
+			setState(icedTxState.condition.id.toString());
+		} else if (
+			conditionOrAction === ConditionOrAction.Action &&
+			icedTxState.action.id !== parseInt(DEFAULT_ACTION_ID) &&
+			state === '0'
+		) {
+			setState(icedTxState.action.id.toString());
+		}
+
+		// if (web3.active) {
+		// 	dispatch({ type: RESET_CONDITION });
+		// 	dispatch({ type: RESET_ACTION });
+		// 	dispatch({
+		// 		type: INPUT_OK,
+		// 		txState: TxState.displayInstallMetamask
+		// 	});
+		// }
+	}, []);
 
 	useEffect(() => {
 		if (
