@@ -110,6 +110,17 @@ export default function AppSelection() {
 		}
 	}, [icedTxState.txState, web3.active, web3.chainId]);
 
+	// ON Mounting, set error to False
+
+	useEffect(() => {
+		if (icedTxState.error.isError) {
+			dispatch({
+				type: INPUT_OK,
+				txState: TxState.displayInstallMetamask
+			});
+		}
+	}, []);
+
 	const preTxCheck = () => {
 		const { ethereum } = window as any;
 		switch (icedTxState.txState) {
