@@ -117,7 +117,7 @@ export const convertHumanReadableToWeiForNumbers = (
 	id: number
 ): ethers.utils.BigNumber => {
 	// If kyber price condition
-	if (conditionOrAction === ConditionOrAction.Condition && id === 2) {
+	if (conditionOrAction === ConditionOrAction.Condition && id === 3) {
 		return ethers.utils.parseUnits(humanReadableAmount, 18);
 	} else {
 		throw Error('Number used for something other than Kyber Price');

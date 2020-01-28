@@ -85,7 +85,8 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 
 			try {
 				// Find token object by address
-				const signer = library.getSigner();
+				// const signer = library.getSigner();
+				const signer = ethers.getDefaultProvider();
 
 				if (conditionOrAction === ConditionOrAction.Condition) {
 					const conditionAddress =
