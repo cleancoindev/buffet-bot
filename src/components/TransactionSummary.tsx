@@ -121,8 +121,6 @@ export default function TransactionSummary(props: TxSummaryParams) {
 		pastTransaction
 	} = props;
 
-	console.log(pastTransaction);
-
 	const gelatoCore = useGelatoCore();
 
 	const history = useHistory();
@@ -265,6 +263,8 @@ export default function TransactionSummary(props: TxSummaryParams) {
 			// }
 		}
 	})(Button);
+
+	console.log(action.userInputs);
 
 	return (
 		<div style={{ marginBottom: '24px', width: '100%' }}>

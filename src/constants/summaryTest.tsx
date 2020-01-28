@@ -21,6 +21,10 @@ export const getConditionText = (
 	switch (id) {
 		// Token balance
 		case 1:
+			return `When the following date has been reached: ${timestampToDate(
+				inputs[0] as number
+			)} `;
+		case 2:
 			return `If the ${
 				getTokenByAddress(
 					inputs[1] as string,
@@ -53,7 +57,7 @@ export const getConditionText = (
 
         */
 
-		case 2:
+		case 3:
 			const sellAmount = convertWeiToHumanReadableForTokenAmount(
 				inputs[1] as ethers.utils.BigNumber,
 				getTokenByAddress(
@@ -98,10 +102,7 @@ export const getConditionText = (
 			} worth ${expectedBuyAmount} ${sellSymbol} ${
 				isOrAre ? '' : exchangeRate
 			} on Kyber `;
-		case 3:
-			return `When the following date has been reached: ${timestampToDate(
-				inputs[0] as number
-			)} `;
+
 		default:
 			return '';
 	}

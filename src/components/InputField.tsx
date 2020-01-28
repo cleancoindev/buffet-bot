@@ -195,8 +195,7 @@ export default function LayoutTextFields(props: InputProps) {
 						'1',
 						token.decimals
 					);
-					console.log('Default wei amount calculated');
-					console.log(defaultWeiAmountPerToken.toString());
+
 					updateUserInput(index, defaultWeiAmountPerToken);
 					return defaultWeiAmountPerToken;
 				} else {
@@ -232,8 +231,6 @@ export default function LayoutTextFields(props: InputProps) {
 			case InputType.Token:
 				const tokenList = getTokenList(relevantInputData, networkId);
 				let defaultToken = tokenList[0];
-				console.log(defaultToken);
-				console.log(tokenList);
 				if (index !== 0 && tokenList.length > 2)
 					defaultToken = tokenList[2];
 				updateUserInput(index, defaultToken.address[networkId]);
