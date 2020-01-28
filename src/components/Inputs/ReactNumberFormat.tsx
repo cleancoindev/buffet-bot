@@ -280,6 +280,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 						token.decimals
 					);
 
+					console.log('Setting error to false');
 					setErrorFalse();
 
 					// If we need to convert the input from userfriendly amount to WEi amount, take the converted amount, else take the original
@@ -413,8 +414,6 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 			daiAddress = '0xC4375B7De8af5a38a93548eb8453a498222C4fF2';
 		}
 
-		setDefaultAmountRestriction(token, srcAmount);
-
 		if (relevantInputData === RelevantInputData.fulcrumTokenList) {
 			// Instantiate pToken Contract
 			const pTokenAbi =
@@ -536,34 +535,35 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 					.div(ethers.constants.WeiPerEther);
 
 				compareUserInputToDaiMax(totalTransferVolume, price, sellToken);
-			}
-			const inputsForPrice = [
-				sellToken,
-				BIG_NUM_ONE,
-				daiAddress,
-				BIG_NUM_ZERO,
-				false
-			];
-			// get value
-			// getConditionValue(address _src, uint256 _srcAmount, address _dest, uint256, bool)
-			try {
-				conditionContract
-					.getConditionValue(...inputsForPrice)
-					.then((kyberPrice: ethers.utils.BigNumber) => {
-						const totalTransferVolume = kyberPrice
-							.mul(srcAmount)
-							.div(ethers.constants.WeiPerEther);
-						compareUserInputToDaiMax(
-							totalTransferVolume,
-							kyberPrice,
-							token.address[networkId]
-						);
+			} else {
+				const inputsForPrice = [
+					sellToken,
+					BIG_NUM_ONE,
+					daiAddress,
+					BIG_NUM_ZERO,
+					false
+				];
+				// get value
+				// getConditionValue(address _src, uint256 _srcAmount, address _dest, uint256, bool)
+				try {
+					conditionContract
+						.getConditionValue(...inputsForPrice)
+						.then((kyberPrice: ethers.utils.BigNumber) => {
+							const totalTransferVolume = kyberPrice
+								.mul(srcAmount)
+								.div(ethers.constants.WeiPerEther);
+							compareUserInputToDaiMax(
+								totalTransferVolume,
+								kyberPrice,
+								token.address[networkId]
+							);
 
-						// convert Value into human readable form
-					});
-			} catch (error) {
-				// console.log(error);
-				setDefaultAmountRestriction(token, srcAmount);
+							// convert Value into human readable form
+						});
+				} catch (error) {
+					// console.log(error);
+					setDefaultAmountRestriction(token, srcAmount);
+				}
 			}
 		}
 	};
@@ -589,6 +589,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 			// const ceilingFloat = (
 			// 	parseFloat(ceilingBN.toString()) / 100
 			// ).toFixed(3);
+			console.log('Setting error to TRUE');
 			setErrorTrue(
 				`This alpha is restricted to move ${ceilingFloat} ${getTokenSymbol(
 					sellTokenAddress,
@@ -597,6 +598,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				)} max. To gain a higher allowance, please contact us!`
 			);
 		} else {
+			console.log('Setting error to FALSE BOTTOM');
 			// console.log('Not in Err err');
 			// console.log('Ceiling');
 			// console.log(TOKEN_TRANSFER_CEILING.toString());
@@ -624,6 +626,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		);
 		// If sell amount is greater than ceiling => ERROR
 		if (inflatedSellVolume.gt(hardcap)) {
+			console.log('Setting error to TRUE DEFAULT');
 			// Error
 			setErrorTrue(
 				`This alpha is restricted to move ${token.max} ${getTokenSymbol(
@@ -633,6 +636,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				)} max. To gain a higher allowance, please contact us!`
 			);
 		} else {
+			console.log('Setting error to FALSE DEFAULT');
 			// All good
 			setErrorFalse();
 		}

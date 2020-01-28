@@ -2,7 +2,9 @@ import React from 'react';
 
 import {
 	StepperContentProps,
-	ConditionOrAction
+	ConditionOrAction,
+	RelevantInputData,
+	ChainIds
 } from '../constants/interfaces';
 
 // Material UI
@@ -14,6 +16,8 @@ import { Grid, Divider } from '@material-ui/core';
 import InputField from './InputField';
 import { COLOURS, BOX } from '../constants/constants';
 import TransactionSummary from './TransactionSummary';
+import { getConditionText } from '../constants/summaryTest';
+import { useWeb3React } from '@web3-react/core';
 
 const useStyles = makeStyles(theme => ({
 	box: {
@@ -44,6 +48,8 @@ const useStyles = makeStyles(theme => ({
 export default function StepperContent(props: StepperContentProps) {
 	const { icedTxState, activeStep } = props;
 	const classes = useStyles();
+	const { active, chainId } = useWeb3React();
+	const networkId = chainId as ChainIds;
 
 	const { condition, action } = icedTxState;
 	const conditionInputTypes = condition.userInputTypes;
@@ -99,6 +105,25 @@ export default function StepperContent(props: StepperContentProps) {
 								<span style={{ color: COLOURS.salmon }}>
 									{condition.title}{' '}
 								</span>
+								{/* {active &&
+									condition.userInputs[0] !== undefined && (
+										<div style={{}}>
+											<p
+												style={{
+													textAlign: 'left',
+													fontSize: '18px'
+												}}
+											>
+												{getConditionText(
+													condition.userInputs,
+													condition.id,
+													networkId,
+													RelevantInputData.all
+												)}
+											</p>
+
+										</div>
+									)} */}
 								{/* on{' '}
 								<span style={{ color: COLOURS.salmon }}>
 									{condition.app}
