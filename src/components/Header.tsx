@@ -162,6 +162,7 @@ export default function ButtonAppBar() {
 
 	// Set default selected Condition, as header only gets mounted once
 	useEffect(() => {
+		console.log('Mount header');
 		const functionIdCondition = DEFAULT_TRIGGER_ID;
 		dispatch({ type: SELECT_CONDITION, id: functionIdCondition });
 		const functionIdAction = DEFAULT_ACTION_ID;
@@ -183,13 +184,16 @@ export default function ButtonAppBar() {
 	};
 
 	const linkBackToHome = () => {
-		dispatch({ type: RESET_CONDITION });
-		dispatch({ type: RESET_ACTION });
-		dispatch({
-			type: INPUT_OK,
-			txState: TxState.displayInstallMetamask
-		});
-		history.push('/');
+		// Do not Change state when already on ROOT /
+		if (history.location.pathname !== '/') {
+			dispatch({ type: RESET_CONDITION });
+			dispatch({ type: RESET_ACTION });
+			dispatch({
+				type: INPUT_OK,
+				txState: TxState.displayInstallMetamask
+			});
+			history.push('/');
+		}
 	};
 
 	// Web3 Logic END

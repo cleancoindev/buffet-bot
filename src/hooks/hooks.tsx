@@ -48,7 +48,7 @@ export function useInactiveListener(suppress: boolean = false) {
 			const handleConnect = () => {
 				console.log("Handling 'connect' event");
 				console.log('...');
-				activate(injected);
+				if (history.location.pathname !== '/') activate(injected);
 			};
 			const handleChainChanged = (chainId: string | number) => {
 				console.log(
@@ -56,7 +56,7 @@ export function useInactiveListener(suppress: boolean = false) {
 					chainId
 				);
 				console.log('...');
-				activate(injected);
+				if (history.location.pathname !== '/') activate(injected);
 			};
 			const handleAccountsChanged = (accounts: string[]) => {
 				console.log(
@@ -65,7 +65,7 @@ export function useInactiveListener(suppress: boolean = false) {
 				);
 				if (accounts.length > 0) {
 					// NO EAGER CONNECT
-					// activate(injected);
+					if (history.location.pathname !== '/') activate(injected);
 				}
 			};
 			const handleNetworkChanged = (networkId: string | number) => {

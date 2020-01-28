@@ -41,7 +41,8 @@ import {
 	UPDATE_TX_STATE,
 	SELECTED_CHAIN_ID,
 	OPEN_MODAL,
-	CLOSE_MODAL
+	CLOSE_MODAL,
+	INPUT_OK
 } from '../constants/constants';
 import { useWeb3React } from '@web3-react/core';
 import { checkIfMobile } from '../helpers/helpers';

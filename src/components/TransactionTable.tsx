@@ -377,7 +377,9 @@ export default function EnhancedTable() {
 	let history = useHistory();
 
 	// Eager Connect
+	console.log('eager connect');
 	const triedEager = useEagerConnect();
+
 	// useEffect(() => {
 	// 	web3.activate(injected);
 	// 	console.log('activating user');
