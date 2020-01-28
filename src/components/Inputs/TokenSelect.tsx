@@ -170,7 +170,7 @@ export default function TokenSelect(props: TokenSelectProps) {
 			relevantInputData
 		);
 		if (tokenObject === undefined) {
-			console.log('ERROR in fetching Token');
+			// console.log('ERROR in fetching Token');
 			return 'ERROR in finding Token';
 		}
 		// Update local state

@@ -36,9 +36,7 @@ export default function TransactionModal() {
 	// MODAL STUFF
 	const modalOpen = icedTxState.modalOpen;
 	const modalClickOpen = () => {
-		console.log('setting modal to true');
 		dispatch({ type: OPEN_MODAL });
-		console.log(modalOpen);
 	};
 	const modalClose = () => {
 		dispatch({ type: CLOSE_MODAL });

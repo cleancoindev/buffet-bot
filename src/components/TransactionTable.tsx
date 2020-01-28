@@ -197,8 +197,6 @@ const StyledTableRow = withStyles((theme: Theme) =>
 )(TableRow);
 
 export async function callGraphApi(graphName: string, account: string) {
-	console.log(graphName);
-	console.log(account);
 	try {
 		const response = await fetch(
 			`https://api.thegraph.com/subgraphs/name/gelatodigital/${graphName}`,
@@ -232,10 +230,9 @@ export async function callGraphApi(graphName: string, account: string) {
 			}
 		);
 		const json = await response.json();
-		console.log(json);
 		return json;
 	} catch (error) {
-		console.log('No data returned');
+		// console.log('No data returned');
 	}
 }
 
@@ -480,13 +477,11 @@ export default function EnhancedTable() {
 
 			setDisplayedRows(newRows);
 		} catch (err) {
-			console.log(err);
+			// console.log(err);
 			// console.log('Could not fetch past execution claims');
 
 			// Do UseEffect 5 times, if it API request still fails, stop
-			renderCounter < 5
-				? setRenderCounter(renderCounter + 1)
-				: console.log('Cannnot fetch graph api');
+			if (renderCounter < 5) setRenderCounter(renderCounter + 1);
 		}
 	}
 

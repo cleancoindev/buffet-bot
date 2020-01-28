@@ -102,7 +102,7 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 						newValue = await conditionContract.getConditionValue(
 							...inputs
 						);
-						console.log(newValue.toString());
+						// console.log(newValue.toString());
 						// console.log(inputs);
 						// console.log(newValue.toString());
 						// Convert fetched wei amount to human reable amount
@@ -110,7 +110,7 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 						// convert Value into human readable form
 						return newValue;
 					} catch (error) {
-						console.log('Error in return date');
+						// console.log('Error in return date');
 						newValue = BIG_NUM_ZERO;
 						// console.log(2);
 						return newValue;
@@ -138,7 +138,7 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 						// convert Value into human readable form
 						return newValue;
 					} catch (error) {
-						console.log(error);
+						// console.log(error);
 						newValue = BIG_NUM_ZERO;
 						// console.log(2);
 						return newValue;
@@ -157,13 +157,13 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 				// }
 			} catch (error) {
 				// console.log('token not in state yet');
-				console.log(error);
+				// console.log(error);
 				newValue = BIG_NUM_ZERO;
 				// console.log(3);
 				return newValue;
 			}
 		} else {
-			console.log('catch2');
+			// console.log('catch2');
 			newValue = BIG_NUM_ZERO;
 			// console.log(4);
 			return newValue;

@@ -212,7 +212,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 						newGetValueInput: defaultValue
 					});
 				} catch (error) {
-					console.log(error);
+					// console.log(error);
 				}
 			}
 		}
@@ -239,7 +239,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 						updateUserInput(index, weiAmount);
 					}
 				} catch (error) {
-					console.log(error);
+					// console.log(error);
 				}
 			}
 		}
@@ -343,13 +343,9 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				conditionOrAction === ConditionOrAction.Action &&
 				!whitelisted
 			) {
-				console.log('2');
 				try {
-					console.log('3');
 					validateLimitAmount(ethers.utils.parseUnits(newValue, 18));
-				} catch (error) {
-					console.log('bug');
-				}
+				} catch (error) {}
 			}
 		}
 	};
@@ -418,10 +414,10 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 					const totalTransferVolume = kyberPrice
 						.mul(srcAmount)
 						.div(ethers.constants.WeiPerEther);
-					console.log('Getting there');
+
 					// If the total Transfer volume is greater than the Token Transfer Ceiling, spit out error for unwhitelisted users and no error for whitelisted users
 					if (TOKEN_TRANSFER_CEILING.lt(totalTransferVolume)) {
-						console.log('in err');
+						// console.log('in err');
 						// console.log(TOKEN_TRANSFER_CEILING.toString());
 						// console.log('Is smaller than');
 						// console.log(totalTransferVolume.toString());
@@ -444,7 +440,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 							)} max. To gain a higher allowance, please contact us!`
 						);
 					} else {
-						console.log('Not in Err err');
+						// console.log('Not in Err err');
 						// console.log('Ceiling');
 						// console.log(TOKEN_TRANSFER_CEILING.toString());
 						// console.log('Total Amount');
@@ -454,7 +450,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 					// convert Value into human readable form
 				});
 		} catch (error) {
-			console.log(error);
+			// console.log(error);
 		}
 	};
 

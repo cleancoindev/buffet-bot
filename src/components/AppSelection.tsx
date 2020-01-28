@@ -82,7 +82,6 @@ export default function AppSelection() {
 	// Import global state
 	//const { updateIcedTx, icedTxState, resetIcedTxInput } = useIcedTxContext();
 	const { icedTxState, dispatch } = useIcedTxContext();
-	console.log(icedTxState.condition.id);
 
 	const web3 = useWeb3React();
 
@@ -115,7 +114,7 @@ export default function AppSelection() {
 		switch (icedTxState.txState) {
 			case TxState.displayMobile:
 				if (!checkIfMobile()) {
-					console.log('user on desktop');
+					// console.log('user on desktop');
 					// Change txState to "Login with metamask"
 					// console.log('Change TxState to displayLogIntoMetamask');
 					dispatch({
@@ -127,7 +126,7 @@ export default function AppSelection() {
 						// Check if the object is injected by metamask
 						if (ethereum.isMetaMask) {
 							// Yes it is metamask
-							console.log('User uses metamask mobile app');
+							// console.log('User uses metamask mobile app');
 							// Change txState to "Login with metamask"
 							// console.log('Change TxState to displayLogIntoMetamask');
 							dispatch({
@@ -136,13 +135,13 @@ export default function AppSelection() {
 							});
 						} else {
 							// No Metamask installed => Show install Metamask Modal
-							console.log(
-								'No Metamask is installed - Render no mobile modal'
-								// No need to change icedTx.txState
-							);
+							// console.log(
+							// 	'No Metamask is installed - Render no mobile modal'
+							// 	// No need to change icedTx.txState
+							// );
 						}
 					}
-					console.log('User on mobile');
+					// console.log('User on mobile');
 				}
 			case TxState.displayInstallMetamask:
 				// Web3 object is injected
@@ -150,7 +149,7 @@ export default function AppSelection() {
 					// Check if the object is injected by metamask
 					if (ethereum.isMetaMask) {
 						// Yes it is metamask
-						console.log('Metamask is installed');
+						// console.log('Metamask is installed');
 						// Change txState to "Login with metamask"
 						// console.log('Change TxState to displayLogIntoMetamask');
 						dispatch({
@@ -158,11 +157,11 @@ export default function AppSelection() {
 							txState: TxState.displayLogIntoMetamask
 						});
 					} else {
-						// No Metamask installed => Show install Metamask Modal
-						console.log(
-							'No Metamask is installed - Render Install metamask modal'
-							// No need to change icedTx.txState
-						);
+						// // No Metamask installed => Show install Metamask Modal
+						// console.log(
+						// 	'No Metamask is installed - Render Install metamask modal'
+						// 	// No need to change icedTx.txState
+						// );
 					}
 				} else {
 					// No ethereum provider => Still install metamask
@@ -182,7 +181,7 @@ export default function AppSelection() {
 							txState: TxState.displayWrongNetwork
 						});
 					} else {
-						console.log('User is active and on the right network');
+						// console.log('User is active and on the right network');
 					}
 					// console.log('User has to log into metamask');
 				} else {
@@ -194,14 +193,14 @@ export default function AppSelection() {
 			case TxState.displayWrongNetwork:
 				// User is already logged in => Change to insufficientBalance
 				if (web3.chainId === SELECTED_CHAIN_ID) {
-					console.log('Change TxState to insufficientBalance');
+					// console.log('Change TxState to insufficientBalance');
 					dispatch({
 						type: UPDATE_TX_STATE,
 						txState: TxState.displayLogIntoMetamask
 					});
 				} else {
 					// No Metamask installed => Show install Metamask Modal
-					console.log('User has to switch networks');
+					// console.log('User has to switch networks');
 				}
 
 				break;

@@ -104,7 +104,7 @@ export default function AddressInput(props: AddressInputProps) {
 				setError(false);
 			}
 			if (icedTxState.error.isError) {
-				console.log('Address Correct');
+				// console.log('Address Correct');
 				dispatch({
 					type: INPUT_OK,
 					txState: TxState.displayInstallMetamask
@@ -115,8 +115,8 @@ export default function AddressInput(props: AddressInputProps) {
 				setError(true);
 			}
 			if (!icedTxState.error.isError) {
-				console.log('Error');
-				console.log(icedTxState.txState);
+				// console.log('Error');
+				// console.log(icedTxState.txState);
 				dispatch({
 					type: INPUT_ERROR,
 					msg: `Input field '${label}' has to be a correct Ethereum address`,

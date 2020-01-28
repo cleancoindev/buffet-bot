@@ -194,7 +194,6 @@ export default function DateAndTimePicker(props: InputProps) {
 	}, []);
 
 	function handleChange(date: MaterialUiPickersDate) {
-		console.log('Handle Change');
 		if (date !== null) {
 			const stringDate: string = date.toString();
 			const newDate = new Date(stringDate);

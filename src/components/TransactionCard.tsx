@@ -149,7 +149,6 @@ export default function TransactionCard(props: TxCardProps) {
 
 	const handleClick = (event: React.MouseEvent<unknown>) => {
 		if (modalContent.btnFunc === undefined) {
-			console.log('undefined');
 		} else {
 			modalContent.btnFunc();
 		}
@@ -198,7 +197,7 @@ export default function TransactionCard(props: TxCardProps) {
 				gasEstimatePlusBuffer = addGasBuffer(gasEstimate);
 				break;
 			case TxState.displayApprove:
-				console.log('in here');
+				// console.log('in here');
 				const proxyAddress = await gelatoCore.proxyByUser(account);
 
 				// Get Erc20 contract
@@ -208,14 +207,14 @@ export default function TransactionCard(props: TxCardProps) {
 					icedTxState.action.userInputs[
 						icedTxState.action.approveIndex
 					];
-				console.log(tokenAddress);
+				// console.log(tokenAddress);
 				const erc20 = new ethers.Contract(
 					tokenAddress.toString(),
 					JSON.stringify(ERC20_ABI),
 					signer
 				);
-				console.log(account);
-				console.log(proxyAddress);
+				// console.log(account);
+				// console.log(proxyAddress);
 				try {
 					const gasEstimateApprove = await erc20.estimate.approve(
 						proxyAddress,
@@ -224,8 +223,8 @@ export default function TransactionCard(props: TxCardProps) {
 					gasEstimatePlusBuffer = addGasBuffer(gasEstimateApprove);
 					break;
 				} catch (error) {
-					console.log('Cant estimate approval');
-					console.log(error);
+					// console.log('Cant estimate approval');
+					// console.log(error);
 					break;
 				}
 
@@ -247,13 +246,10 @@ export default function TransactionCard(props: TxCardProps) {
 				break;
 
 			case TxState.displayCancel:
-				console.log(icedTxState.pastTransactionId);
-				console.log(icedTxState.pastTransactions);
 				const pastTransaction =
 					icedTxState.pastTransactions[
 						parseInt(icedTxState.pastTransactionId)
 					];
-				console.log(pastTransaction);
 
 				const estimate = await gelatoCore.estimate.cancelExecutionClaim(
 					pastTransaction?.selectedExecutor,
@@ -331,7 +327,7 @@ export default function TransactionCard(props: TxCardProps) {
 		try {
 			etherPrice = await etherscanProvider.getEtherPrice();
 		} catch (error) {
-			console.log(error);
+			// console.log(error);
 			try {
 				const infuraEtherPriceResponse = await fetch(
 					'https://api.infura.io/v1/ticker/ethusd'
@@ -339,7 +335,7 @@ export default function TransactionCard(props: TxCardProps) {
 				const infuraEtherPriceJson = await infuraEtherPriceResponse.json();
 				etherPrice = infuraEtherPriceJson.bid;
 			} catch (error) {
-				console.log(error);
+				// console.log(error);
 			}
 		}
 		const dollar =
@@ -420,7 +416,7 @@ export default function TransactionCard(props: TxCardProps) {
 	}, [active, txState]);
 
 	function returnModalContent(txState: TxState): ModalContent {
-		console.log(txState);
+		// console.log(txState);
 		switch (txState) {
 			case TxState.displayMobile:
 				return {
@@ -481,7 +477,7 @@ export default function TransactionCard(props: TxCardProps) {
 					btn: 'Deploy bot',
 					btnFunc: async () => {
 						// Change Modal to illustrate that user has to confirm Tx
-						console.log('Change TxState to preGelatoWallet');
+						// console.log('Change TxState to preGelatoWallet');
 						dispatch({
 							type: UPDATE_TX_STATE,
 							txState: TxState.preGelatoWallet
@@ -510,32 +506,32 @@ export default function TransactionCard(props: TxCardProps) {
 								);
 
 								setTxHash(tx.hash);
-								console.log(
-									'Change TxState to waitingGelatoWallet'
-								);
+								// console.log(
+								// 	'Change TxState to waitingGelatoWallet'
+								// );
 								dispatch({
 									type: UPDATE_TX_STATE,
 									txState: TxState.waitingGelatoWallet
 								});
 								await tx.wait();
 
-								console.log(
-									'Change TxState to postGelatoWallet'
-								);
+								// console.log(
+								// 	'Change TxState to postGelatoWallet'
+								// );
 								dispatch({
 									type: UPDATE_TX_STATE,
 									txState: TxState.postGelatoWallet
 								});
 							} catch (error) {
-								console.log(error);
-								console.log('Change TxState to cancelled');
+								// console.log(error);
+								// console.log('Change TxState to cancelled');
 								dispatch({
 									type: UPDATE_TX_STATE,
 									txState: TxState.cancelled
 								});
 							}
 						} else {
-							console.log('ERROR, undefined account');
+							// console.log('ERROR, undefined account');
 						}
 					}
 				};
@@ -587,7 +583,7 @@ export default function TransactionCard(props: TxCardProps) {
 					btn: 'Approve',
 					btnFunc: async () => {
 						// Change Modal to illustrate that user has to confirm Tx
-						console.log('Change TxState to preApprove');
+						// console.log('Change TxState to preApprove');
 						dispatch({
 							type: UPDATE_TX_STATE,
 							txState: TxState.preApprove
@@ -595,8 +591,6 @@ export default function TransactionCard(props: TxCardProps) {
 						const proxyAddress = await gelatoCore.proxyByUser(
 							account
 						);
-
-						console.log(proxyAddress);
 
 						// Get Erc20 contract
 						const signer = library.getSigner();
@@ -639,7 +633,7 @@ export default function TransactionCard(props: TxCardProps) {
 								);
 
 								setTxHash(tx.hash);
-								console.log('Change TxState to displayCreate');
+								// console.log('Change TxState to displayCreate');
 								dispatch({
 									type: UPDATE_TX_STATE,
 									txState: TxState.displayCreate
@@ -655,15 +649,13 @@ export default function TransactionCard(props: TxCardProps) {
 								// 	txState: TxState.postGelatoWallet
 								// });
 							} catch (error) {
-								console.log(error);
-								console.log('Change TxState to cancelled');
 								dispatch({
 									type: UPDATE_TX_STATE,
 									txState: TxState.cancelled
 								});
 							}
 						} else {
-							console.log('ERROR, undefined account');
+							// console.log('ERROR, undefined account');
 						}
 					}
 				};
@@ -677,7 +669,7 @@ export default function TransactionCard(props: TxCardProps) {
 					btn: 'Cancel',
 					btnFunc: () => {
 						// Change state back to display approve:
-						console.log('Change TxState to displayApprove');
+						// console.log('Change TxState to displayApprove');
 						dispatch({
 							type: UPDATE_TX_STATE,
 							txState: TxState.displayApprove
@@ -694,7 +686,7 @@ export default function TransactionCard(props: TxCardProps) {
 					btn: 'Submit Instruction',
 					btnFunc: async () => {
 						// Change Modal to illustrate that user has to confirm Tx
-						console.log('Change TxState to preCreate');
+						// console.log('Change TxState to preCreate');
 						dispatch({
 							type: UPDATE_TX_STATE,
 							txState: TxState.preCreate
@@ -755,28 +747,27 @@ export default function TransactionCard(props: TxCardProps) {
 								);
 
 								setTxHash(tx.hash);
-								console.log('Change TxState to waitingCreate');
+								// console.log('Change TxState to waitingCreate');
 								dispatch({
 									type: UPDATE_TX_STATE,
 									txState: TxState.waitingCreate
 								});
 								await tx.wait();
 
-								console.log('Change TxState to postCreate');
+								// console.log('Change TxState to postCreate');
 								dispatch({
 									type: UPDATE_TX_STATE,
 									txState: TxState.postCreate
 								});
 							} catch (error) {
 								// console.log(error);
-								console.log('Change TxState to cancelled');
+								// console.log('Change TxState to cancelled');
 								dispatch({
 									type: UPDATE_TX_STATE,
 									txState: TxState.cancelled
 								});
 							}
 						} else {
-							console.log('ERROR, undefined account');
 						}
 					}
 				};
@@ -789,7 +780,6 @@ export default function TransactionCard(props: TxCardProps) {
 					closeBtn: false,
 					btn: 'Cancel',
 					btnFunc: () => {
-						console.log('Change TxState to displayCreate');
 						dispatch({
 							type: UPDATE_TX_STATE,
 							txState: TxState.displayCreate
@@ -824,7 +814,7 @@ export default function TransactionCard(props: TxCardProps) {
 					btn: 'Cancel instruction',
 					btnFunc: async () => {
 						// Change Modal to illustrate that user has to confirm Tx
-						console.log('Change TxState to preCancel');
+
 						dispatch({
 							type: UPDATE_TX_STATE,
 							txState: TxState.preCancel
@@ -918,28 +908,24 @@ export default function TransactionCard(props: TxCardProps) {
 								// console.log(tx);
 
 								setTxHash(tx.hash);
-								console.log('Change TxState to waitingCancel');
+
 								dispatch({
 									type: UPDATE_TX_STATE,
 									txState: TxState.waitingCancel
 								});
 								await tx.wait();
 
-								console.log('Change TxState to postCancel');
 								dispatch({
 									type: UPDATE_TX_STATE,
 									txState: TxState.postCancel
 								});
 							} catch (error) {
-								console.log(error);
-								console.log('Change TxState to cancelled');
 								dispatch({
 									type: UPDATE_TX_STATE,
 									txState: TxState.cancelled
 								});
 							}
 						} else {
-							console.log('ERROR, undefined account');
 						}
 					}
 				};
@@ -985,7 +971,7 @@ export default function TransactionCard(props: TxCardProps) {
 					btn: 'Close',
 					btnFunc: () => {
 						modalClose();
-						console.log('Change TxState to insufficientBalance');
+
 						dispatch({
 							type: UPDATE_TX_STATE,
 							txState: TxState.displayInstallMetamask
@@ -1001,7 +987,6 @@ export default function TransactionCard(props: TxCardProps) {
 					closeBtn: false,
 					btn: 'OK',
 					btnFunc: () => {
-						console.log('Change TxState to displayApprove');
 						modalClose();
 						// dispatch({
 						// 	type: UPDATE_TX_STATE,
@@ -1018,7 +1003,6 @@ export default function TransactionCard(props: TxCardProps) {
 					closeBtn: false,
 					btn: 'OK',
 					btnFunc: () => {
-						console.log('Change TxState to displayApprove');
 						modalClose();
 						// dispatch({
 						// 	type: UPDATE_TX_STATE,

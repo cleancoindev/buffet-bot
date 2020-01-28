@@ -192,7 +192,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 			// console.log(event.values.receiveAmount);
 			setSwapAmount(event.values.receiveAmount);
 		} catch (error) {
-			console.log(error);
+			// console.log(error);
 		}
 	};
 
