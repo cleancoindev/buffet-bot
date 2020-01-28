@@ -175,6 +175,7 @@ export interface Token {
 	symbol: string;
 	name: string;
 	decimals: number;
+	max: string;
 }
 
 export type KyberToken = Array<Token>;

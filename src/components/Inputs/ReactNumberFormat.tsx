@@ -238,6 +238,9 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 						values.numberformat,
 						token.decimals
 					);
+					// Validate new state
+					validateLimitAmount(weiAmount, token);
+
 					// We get here if user changed token, but the tokenAmount input remained the same, but the tokens decimals are different
 					if (!weiAmount.eq(defaultValue)) {
 						updateUserInput(index, weiAmount);
@@ -345,12 +348,6 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 			relevantInputData
 		);
 
-		// @DEV Make it decimal dependend!!!
-		// @DEV NOT FOR NUMBERS ONLY TOKEN AMOUNT
-		validateLimitAmount(
-			ethers.utils.parseUnits(newValue, token.decimals),
-			token
-		);
 		// Only update State when number input actually changed from last input!
 		if (newValue !== values.numberformat) {
 			handleNewValue(newValue);
@@ -359,6 +356,12 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				conditionOrAction === ConditionOrAction.Action &&
 				!whitelisted
 			) {
+				// @DEV Make it decimal dependend!!!
+				// @DEV NOT FOR NUMBERS ONLY TOKEN AMOUNT
+				validateLimitAmount(
+					ethers.utils.parseUnits(newValue, token.decimals),
+					token
+				);
 				// try {
 				// 	validateLimitAmount(ethers.utils.parseUnits(newValue, 18));
 				// } catch (error) {}
@@ -409,6 +412,8 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		} else if (networkId === 42) {
 			daiAddress = '0xC4375B7De8af5a38a93548eb8453a498222C4fF2';
 		}
+
+		setDefaultAmountRestriction(token, srcAmount);
 
 		if (relevantInputData === RelevantInputData.fulcrumTokenList) {
 			// Instantiate pToken Contract
@@ -475,49 +480,20 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 											const howMuchPTokenIfLongIsWorthInDay =
 												parseFloat(ethPriceInDai) *
 												parseFloat(underlyingPerPtoken);
-											console.log(
-												howMuchPTokenIfLongIsWorthInDay
-											);
 
-											console.log(
-												275.0 /
-													howMuchPTokenIfLongIsWorthInDay
-											);
 											// Multiply the amount of underyling we receive per pToken by the amount of DAI we would get for that underyling
 											valueToBeComparedWithDai = kyberPrice
 												.div(
 													ethers.constants.WeiPerEther
 												)
 												.mul(valueToBeComparedWithDai);
-											// .div(
-											// 	ethers.constants.WeiPerEther
-											// );
-											// console.log(
-											// 	valueToBeComparedWithDai.toString()
-											// );
 
-											// const totalTransferVolume = kyberPrice
-											// 	.mul(srcAmount)
-											// 	.div(ethers.constants.WeiPerEther);
-											// console.log(
-											// 	valueToBeComparedWithDai.toString()
-											// );
-											// console.log(
-											// 	srcAmount
-											// 		.div(
-											// 			ethers.constants
-											// 				.WeiPerEther
-											// 		)
-											// 		.toString()
-											// );
 											const totalDollarAmountUserWantsToTransfer = valueToBeComparedWithDai
 												.mul(srcAmount)
 												.div(
 													ethers.constants.WeiPerEther
 												);
-											console.log(
-												totalDollarAmountUserWantsToTransfer.toString()
-											);
+
 											compareUserInputToDaiMax(
 												totalDollarAmountUserWantsToTransfer,
 												valueToBeComparedWithDai,
@@ -529,9 +505,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 								const totalDollarAmountUserWantsToTransfer = valueToBeComparedWithDai
 									.mul(srcAmount)
 									.div(ethers.constants.WeiPerEther);
-								console.log(
-									totalDollarAmountUserWantsToTransfer.toString()
-								);
+
 								compareUserInputToDaiMax(
 									totalDollarAmountUserWantsToTransfer,
 									valueToBeComparedWithDai,
@@ -543,8 +517,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 						}
 					);
 			} catch (error) {
-				console.log(error);
-				setDefaultAmountRestriction(token);
+				setDefaultAmountRestriction(token, srcAmount);
 				// Set default amount restriction
 			}
 		} else if (relevantInputData === RelevantInputData.kyberTokenList) {
@@ -556,6 +529,14 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 			);
 
 			const sellToken = token.address[networkId];
+			if (sellToken === daiAddress) {
+				const price = ethers.constants.WeiPerEther;
+				const totalTransferVolume = price
+					.mul(srcAmount)
+					.div(ethers.constants.WeiPerEther);
+
+				compareUserInputToDaiMax(totalTransferVolume, price, sellToken);
+			}
 			const inputsForPrice = [
 				sellToken,
 				BIG_NUM_ONE,
@@ -582,6 +563,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 					});
 			} catch (error) {
 				// console.log(error);
+				setDefaultAmountRestriction(token, srcAmount);
 			}
 		}
 	};
@@ -593,9 +575,6 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 	) => {
 		// If the total Transfer volume is greater than the Token Transfer Ceiling, spit out error for unwhitelisted users and no error for whitelisted users
 		if (TOKEN_TRANSFER_CEILING.lt(valueToBeComparedWithDaiCeiling)) {
-			console.log(
-				'Inputted value is higher than our current DAI Ceiling'
-			);
 			// console.log('in err');
 			// console.log(TOKEN_TRANSFER_CEILING.toString());
 			// console.log('Is smaller than');
@@ -618,7 +597,6 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				)} max. To gain a higher allowance, please contact us!`
 			);
 		} else {
-			console.log('Value is low enough');
 			// console.log('Not in Err err');
 			// console.log('Ceiling');
 			// console.log(TOKEN_TRANSFER_CEILING.toString());
@@ -628,7 +606,37 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		}
 	};
 
-	const setDefaultAmountRestriction = (token: Token) => {};
+	const setDefaultAmountRestriction = (
+		token: Token,
+		sellAmount: ethers.utils.BigNumber
+	) => {
+		// Need to do number mambo Jambo due to big numbers not accepting decimal values
+		const inflationConstant = '10000000000';
+		const tokenMaxFloat = parseFloat(token.max);
+		const tokenMaxInflated = tokenMaxFloat * parseFloat(inflationConstant);
+
+		const hardcap = ethers.utils
+			.bigNumberify(tokenMaxInflated.toString())
+			.mul(ethers.constants.WeiPerEther);
+
+		const inflatedSellVolume = sellAmount.mul(
+			ethers.utils.bigNumberify(inflationConstant)
+		);
+		// If sell amount is greater than ceiling => ERROR
+		if (inflatedSellVolume.gt(hardcap)) {
+			// Error
+			setErrorTrue(
+				`This alpha is restricted to move ${token.max} ${getTokenSymbol(
+					token.address[networkId],
+					networkId,
+					relevantInputData
+				)} max. To gain a higher allowance, please contact us!`
+			);
+		} else {
+			// All good
+			setErrorFalse();
+		}
+	};
 
 	return (
 		<TextField

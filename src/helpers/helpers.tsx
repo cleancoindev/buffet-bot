@@ -175,12 +175,14 @@ export const deepCloneTokenList = (
 			let copySymbol = token.symbol;
 			let copyName = token.name;
 			let copyDecimals = token.decimals;
+			let copyMax = token.max;
 
 			tokenListCopy.push({
 				address: copyAddress,
 				symbol: copySymbol,
 				name: copyName,
-				decimals: copyDecimals
+				decimals: copyDecimals,
+				max: copyMax
 			});
 		}
 	});
