@@ -255,6 +255,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 	// We always store the WEI amount in global state, but in local state we store the userFriendly version
 	const handleNewValue = (newValue: string) => {
 		// Set local and global state
+		const defaultZero = ethers.constants.Zero;
 		if (newValue !== '' && newValue !== '.') {
 			// setValues({
 			// 	...values,
@@ -269,18 +270,20 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				relevantInputData
 			);
 
+			let weiAmount = defaultZero;
+
 			// Handle special case if InputType is TokenAmount
 			if (inputType === InputType.TokenAmount) {
 				// get index of token in question
 
 				// Try Catch to detect under - and overflows in TokenAmounts
 				try {
-					const weiAmount = ethers.utils.parseUnits(
+					weiAmount = ethers.utils.parseUnits(
 						newValue,
 						token.decimals
 					);
 
-					console.log('Setting error to false');
+					// console.log('Setting error to false');
 					setErrorFalse();
 
 					// If we need to convert the input from userfriendly amount to WEi amount, take the converted amount, else take the original
@@ -294,7 +297,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 			// Condition: 2 => Kyber Price
 			else if (inputType === InputType.Number) {
 				try {
-					const weiAmount = convertHumanReadableToWeiForNumbers(
+					weiAmount = convertHumanReadableToWeiForNumbers(
 						newValue,
 						conditionOrAction,
 						id
@@ -314,6 +317,8 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				...values,
 				numberformat: newValue
 			});
+			// Will be default zero if we land in the try catches, after which we should not validate
+			return weiAmount;
 
 			// ######### End of big IF
 		} else if (newValue === '.') {
@@ -321,17 +326,15 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				...values,
 				numberformat: '0.'
 			});
-			const zero = ethers.constants.Zero;
-
-			updateUserInput(index, zero);
+			updateUserInput(index, defaultZero);
+			return defaultZero;
 		} else if (newValue === '') {
 			setValues({
 				...values,
 				numberformat: ''
 			});
-			const zero = ethers.constants.Zero;
-
-			updateUserInput(index, zero);
+			updateUserInput(index, defaultZero);
+			return defaultZero;
 		} else {
 			throw Error('Input value is empty / wrong');
 		}
@@ -351,12 +354,15 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 
 		// Only update State when number input actually changed from last input!
 		if (newValue !== values.numberformat) {
-			handleNewValue(newValue);
+			const newValueBN = handleNewValue(newValue);
+			// If handleNewValue return 0, we know an error occured before, dont validate
 			if (
+				!newValueBN?.eq(ethers.constants.Zero) &&
 				inputType === InputType.TokenAmount &&
 				conditionOrAction === ConditionOrAction.Action &&
 				!whitelisted
 			) {
+				console.log('Validate');
 				// @DEV Make it decimal dependend!!!
 				// @DEV NOT FOR NUMBERS ONLY TOKEN AMOUNT
 				validateLimitAmount(
@@ -589,7 +595,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 			// const ceilingFloat = (
 			// 	parseFloat(ceilingBN.toString()) / 100
 			// ).toFixed(3);
-			console.log('Setting error to TRUE');
+			// console.log('Setting error to TRUE');
 			setErrorTrue(
 				`This alpha is restricted to move ${ceilingFloat} ${getTokenSymbol(
 					sellTokenAddress,
@@ -598,7 +604,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				)} max. To gain a higher allowance, please contact us!`
 			);
 		} else {
-			console.log('Setting error to FALSE BOTTOM');
+			// console.log('Setting error to FALSE BOTTOM');
 			// console.log('Not in Err err');
 			// console.log('Ceiling');
 			// console.log(TOKEN_TRANSFER_CEILING.toString());
@@ -626,7 +632,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		);
 		// If sell amount is greater than ceiling => ERROR
 		if (inflatedSellVolume.gt(hardcap)) {
-			console.log('Setting error to TRUE DEFAULT');
+			// console.log('Setting error to TRUE DEFAULT');
 			// Error
 			setErrorTrue(
 				`This alpha is restricted to move ${token.max} ${getTokenSymbol(
@@ -636,7 +642,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				)} max. To gain a higher allowance, please contact us!`
 			);
 		} else {
-			console.log('Setting error to FALSE DEFAULT');
+			// console.log('Setting error to FALSE DEFAULT');
 			// All good
 			setErrorFalse();
 		}

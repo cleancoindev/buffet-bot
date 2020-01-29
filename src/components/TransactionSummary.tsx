@@ -128,7 +128,9 @@ export default function TransactionSummary(props: TxSummaryParams) {
 	const { account, library, active, chainId } = useWeb3React();
 	const networkId = chainId as ChainIds;
 
-	console.log(pastTransaction);
+	// console.log(pastTransaction);
+	// console.log(condition);
+	// console.log(action);
 
 	interface LogOneWay {
 		origin: string;
@@ -294,6 +296,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 							>
 								<p
 									style={{
+										textAlign: 'left',
 										marginTop: '24px',
 										fontSize: '18px'
 									}}
@@ -310,6 +313,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 									<React.Fragment>
 										<p
 											style={{
+												textAlign: 'left',
 												marginTop: '24px',
 												marginBottom: '8px',
 												fontSize: '18px'
@@ -320,6 +324,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 										</p>
 										<p
 											style={{
+												textAlign: 'left',
 												fontSize: '18px',
 												marginTop: '0px',
 												color: COLOURS.salmon
@@ -331,6 +336,45 @@ export default function TransactionSummary(props: TxSummaryParams) {
 												)
 											)}`}
 										</p>
+										<div style={{}}>
+											<p
+												style={{
+													textAlign: 'left',
+													marginBottom: '8px',
+													fontSize: '18px'
+												}}
+											>
+												What will happen:{' '}
+											</p>
+											<p
+												style={{
+													textAlign: 'left',
+													fontSize: '18px',
+													color: COLOURS.salmon
+												}}
+											>
+												{`If ${getConditionText(
+													conditionInputs,
+													condition.id,
+													networkId,
+													RelevantInputData.all
+												)}`}
+											</p>
+											<p
+												style={{
+													textAlign: 'left',
+													fontSize: '18px',
+													color: COLOURS.salmon
+												}}
+											>
+												{`Then ${getActionText(
+													actionInputs,
+													action.id,
+													networkId,
+													RelevantInputData.all
+												)}`}
+											</p>
+										</div>
 									</React.Fragment>
 								)}
 								{pastTransaction.status ===
@@ -466,12 +510,12 @@ export default function TransactionSummary(props: TxSummaryParams) {
 										fontSize: '18px'
 									}}
 								>
-									{getConditionText(
+									{`If ${getConditionText(
 										condition.userInputs,
 										condition.id,
 										networkId,
 										RelevantInputData.all
-									)}
+									)}`}
 								</p>
 								<p
 									style={{
@@ -479,12 +523,12 @@ export default function TransactionSummary(props: TxSummaryParams) {
 										fontSize: '18px'
 									}}
 								>
-									{getActionText(
+									{`Then ${getActionText(
 										action.userInputs,
 										action.id,
 										networkId,
 										RelevantInputData.all
-									)}
+									)}`}
 								</p>
 							</div>
 						)}

@@ -21,11 +21,11 @@ export const getConditionText = (
 	switch (id) {
 		// Token balance
 		case 1:
-			return `When the following date has been reached: ${timestampToDate(
+			return `the following date has been reached: ${timestampToDate(
 				inputs[0] as number
 			)} `;
 		case 2:
-			return `If the ${
+			return `the ${
 				getTokenByAddress(
 					inputs[1] as string,
 					networkId,
@@ -81,7 +81,6 @@ export const getConditionText = (
 				parseFloat(sellAmount) * parseFloat(price);
 
 			const isOrAre = parseFloat(sellAmount) === 1.0;
-			console.log(isOrAre);
 
 			const buySymbol = getTokenByAddress(
 				inputs[0] as string,
@@ -97,7 +96,7 @@ export const getConditionText = (
 
 			const exchangeRate = `(1 ${buySymbol} = ${price} ${sellSymbol})`;
 
-			return `If ${sellAmount} ${buySymbol} ${
+			return `${sellAmount} ${buySymbol} ${
 				isOrAre ? 'is' : 'are'
 			} worth ${expectedBuyAmount} ${sellSymbol} ${
 				isOrAre ? '' : exchangeRate
@@ -117,7 +116,7 @@ export const getActionText = (
 	switch (id) {
 		// Send Tokens
 		case 1:
-			return `Then your gelato bot will send ${convertWeiToHumanReadableForTokenAmount(
+			return `your gelato bot will send ${convertWeiToHumanReadableForTokenAmount(
 				inputs[1] as ethers.utils.BigNumber,
 				getTokenByAddress(
 					inputs[0] as string,
@@ -133,7 +132,7 @@ export const getActionText = (
 			} to address ${inputs[2]}`;
 		// Trade Tokens on Kyber
 		case 2:
-			return `Then your gelato bot will sell ${convertWeiToHumanReadableForTokenAmount(
+			return `your gelato bot will sell ${convertWeiToHumanReadableForTokenAmount(
 				inputs[1] as ethers.utils.BigNumber,
 				getTokenByAddress(
 					inputs[0] as string,
@@ -155,7 +154,7 @@ export const getActionText = (
 			} on Kyber`;
 		// Buy Leverage Tokens on Fulcrum
 		case 3:
-			return `Then your gelato bot will sell ${convertWeiToHumanReadableForTokenAmount(
+			return `your gelato bot will sell ${convertWeiToHumanReadableForTokenAmount(
 				inputs[1] as ethers.utils.BigNumber,
 				getTokenByAddress(
 					inputs[0] as string,
@@ -183,7 +182,7 @@ export const getActionText = (
 			}) tokens on Fulcrum`;
 		// Sell Leverage Tokens on Fulcrum
 		case 4:
-			return `Then your gelato bot will sell ${convertWeiToHumanReadableForTokenAmount(
+			return `your gelato bot will sell ${convertWeiToHumanReadableForTokenAmount(
 				inputs[1] as ethers.utils.BigNumber,
 				getTokenByAddress(
 					inputs[0] as string,

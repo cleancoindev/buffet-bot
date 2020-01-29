@@ -16,7 +16,7 @@ import { Grid, Divider } from '@material-ui/core';
 import InputField from './InputField';
 import { COLOURS, BOX } from '../constants/constants';
 import TransactionSummary from './TransactionSummary';
-import { getConditionText } from '../constants/summaryTest';
+import { getConditionText, getActionText } from '../constants/summaryTest';
 import { useWeb3React } from '@web3-react/core';
 
 const useStyles = makeStyles(theme => ({
@@ -105,7 +105,7 @@ export default function StepperContent(props: StepperContentProps) {
 								<span style={{ color: COLOURS.salmon }}>
 									{condition.title}{' '}
 								</span>
-								{/* {active &&
+								{active &&
 									condition.userInputs[0] !== undefined && (
 										<div style={{}}>
 											<p
@@ -114,16 +114,15 @@ export default function StepperContent(props: StepperContentProps) {
 													fontSize: '18px'
 												}}
 											>
-												{getConditionText(
+												{`Your bot will execute your action if ${getConditionText(
 													condition.userInputs,
 													condition.id,
 													networkId,
 													RelevantInputData.all
-												)}
+												)}`}
 											</p>
-
 										</div>
-									)} */}
+									)}
 								{/* on{' '}
 								<span style={{ color: COLOURS.salmon }}>
 									{condition.app}
@@ -193,6 +192,23 @@ export default function StepperContent(props: StepperContentProps) {
 								<span style={{ color: COLOURS.salmon }}>
 									{action.title}
 								</span>{' '}
+								{active && action.userInputs[0] !== undefined && (
+									<div style={{}}>
+										<p
+											style={{
+												textAlign: 'left',
+												fontSize: '18px'
+											}}
+										>
+											{`When the condition is fulfilled ${getActionText(
+												action.userInputs,
+												action.id,
+												networkId,
+												RelevantInputData.all
+											)} on your behalf`}
+										</p>
+									</div>
+								)}
 								{/* with{' '}
 								<span style={{ color: COLOURS.salmon }}>
 									{action.app}
