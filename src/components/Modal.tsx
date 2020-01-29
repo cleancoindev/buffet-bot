@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		root: {
 			'& .MuiDialog-paperWidthSm': {
-				minWidth: '33%'
+				minWidth: '40%'
 			}
 		}
 	})
@@ -52,7 +52,6 @@ export default function TransactionModal() {
 				aria-describedby="alert-dialog-description"
 				// style={{ maxWidth: '100%' }}
 				maxWidth={'sm'}
-				style={{ minWidth: '33vw' }}
 			>
 				{/* <DialogTitle id="alert-dialog-title">{title}</DialogTitle> */}
 				<DialogContent

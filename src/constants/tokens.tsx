@@ -85,8 +85,8 @@ export const KYBER_TOKEN_LIST = [
 			4: '0x0',
 			42: '0x0'
 		},
-		symbol: 'SAI Stablecoin',
-		name: 'SAI',
+		symbol: 'SAI',
+		name: 'SAI (Stablecoin)',
 		decimals: 18,
 		max: '275'
 	},
@@ -245,8 +245,8 @@ export const KYBER_TOKEN_LIST_WITH_ETH = [
 			4: '0x0',
 			42: '0x0'
 		},
-		symbol: 'SAI Stablecoin',
-		name: 'SAI',
+		symbol: 'SAI',
+		name: 'SAI (Stablecoin)',
 		decimals: 18,
 		max: '275'
 	},

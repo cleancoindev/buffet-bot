@@ -575,7 +575,7 @@ export default function TransactionCard(props: TxCardProps) {
 						icedTxState.action.relevantInputData[
 							icedTxState.action.approveIndex
 						]
-					)} for you`,
+					)} on your behalf.`,
 					progress: Progress.awaitingModalConfirm,
 					progressText: ``,
 					prepayment: false,
@@ -1036,6 +1036,21 @@ export default function TransactionCard(props: TxCardProps) {
 	// 	setModalContent(returnModalContent(txState));
 	// }, [txState]);
 
+	const showEtherscanLink = () => {
+		if (
+			txState === TxState.waitingGelatoWallet ||
+			txState === TxState.postGelatoWallet ||
+			txState === TxState.waitingCreate ||
+			txState === TxState.waitingCancel ||
+			txState === TxState.postCancel ||
+			txState === TxState.postCreate
+		) {
+			return true;
+		} else {
+			return false;
+		}
+	};
+
 	return (
 		<div style={{ fontSize: '18' }}>
 			<Grid
@@ -1064,7 +1079,26 @@ export default function TransactionCard(props: TxCardProps) {
 						textAlign: 'center'
 					}}
 				>
-					<h3>{modalContent.title}</h3>
+					{txState !== TxState.displayApprove && (
+						<h3>{modalContent.title}</h3>
+					)}
+					{txState === TxState.displayApprove && (
+						<React.Fragment>
+							<h3 style={{ marginBottom: '0px' }}>
+								{modalContent.title}
+							</h3>
+							<p
+								style={{
+									textAlign: 'center',
+									fontSize: '14px',
+									marginTop: '8px'
+								}}
+							>
+								(You won't have to wait for this transaction, it
+								will happen in the background)
+							</p>
+						</React.Fragment>
+					)}
 				</Grid>
 
 				{modalContent.progress !== Progress.awaitingModalConfirm && (
@@ -1152,43 +1186,48 @@ export default function TransactionCard(props: TxCardProps) {
 							</h4>
 						</Grid>
 					)}
-				{txState === TxState.postCreate &&
-					txState > TxState.displayLogIntoMetamask && (
-						<Grid
-							className={classes.gridItem}
-							container
-							item
-							sm={12}
-							xs={12}
-							direction="row"
-							justify="space-evenly"
-							alignItems="center"
+				{showEtherscanLink() && (
+					<Grid
+						className={classes.gridItem}
+						container
+						item
+						sm={12}
+						xs={12}
+						direction="row"
+						justify="space-evenly"
+						alignItems="center"
+						style={{
+							border: '0.5px solid',
+							borderColor: COLOURS.salmon,
+							color: 'white'
+						}}
+					>
+						<h4>{`${
+							txState === TxState.postCreate ||
+							txState === TxState.postCancel ||
+							txState === TxState.postGelatoWallet
+								? 'Transaction Confirmation'
+								: 'Link to Transaction'
+						}`}</h4>
+						<a
 							style={{
-								border: '0.5px solid',
-								borderColor: COLOURS.salmon,
-								color: 'white'
+								display: 'flex',
+								alignItems: 'center',
+								marginLeft: 'auto'
 							}}
+							href={`https://${etherscanPrefix}etherscan.io/tx/${txHash}`}
+							target="_blank"
 						>
-							<h4>Transaction Confirmation</h4>
-							<a
-								style={{
-									display: 'flex',
-									alignItems: 'center',
-									marginLeft: 'auto'
-								}}
-								href={`https://${etherscanPrefix}etherscan.io/tx/${txHash}`}
-								target="_blank"
-							>
-								<LinkIcon
-									// color={'primary'}
-									style={{ color: 'white' }}
-									fontSize={'large'}
-									// style={{ marginRight: '8px' }}
-								/>
-							</a>
-							{/* <h4 style={{ marginLeft: 'auto' }}>0x232...fdf32</h4> */}
-						</Grid>
-					)}
+							<LinkIcon
+								// color={'primary'}
+								style={{ color: 'white' }}
+								fontSize={'large'}
+								// style={{ marginRight: '8px' }}
+							/>
+						</a>
+						{/* <h4 style={{ marginLeft: 'auto' }}>0x232...fdf32</h4> */}
+					</Grid>
+				)}
 				{/* Only show gelato prepayment between displayCreate and postCreate */}
 				{modalContent.prepayment &&
 					txState >= TxState.displayCreate &&

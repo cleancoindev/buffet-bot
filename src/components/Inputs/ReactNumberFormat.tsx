@@ -239,7 +239,12 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 						token.decimals
 					);
 					// Validate new state
-					validateLimitAmount(weiAmount, token);
+					if (
+						conditionOrAction === ConditionOrAction.Action &&
+						!whitelisted &&
+						!weiAmount.eq(ethers.constants.Zero)
+					)
+						validateLimitAmount(weiAmount, token);
 
 					// We get here if user changed token, but the tokenAmount input remained the same, but the tokens decimals are different
 					if (!weiAmount.eq(defaultValue)) {
@@ -581,7 +586,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 	) => {
 		// If the total Transfer volume is greater than the Token Transfer Ceiling, spit out error for unwhitelisted users and no error for whitelisted users
 		if (TOKEN_TRANSFER_CEILING.lt(valueToBeComparedWithDaiCeiling)) {
-			// console.log('in err');
+			console.log('Setting error true in dynamic Validation');
 			// console.log(TOKEN_TRANSFER_CEILING.toString());
 			// console.log('Is smaller than');
 			// console.log(totalTransferVolume.toString());
@@ -604,7 +609,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				)} max. To gain a higher allowance, please contact us!`
 			);
 		} else {
-			// console.log('Setting error to FALSE BOTTOM');
+			console.log('Setting error false in dynamic Validation');
 			// console.log('Not in Err err');
 			// console.log('Ceiling');
 			// console.log(TOKEN_TRANSFER_CEILING.toString());
@@ -632,7 +637,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		);
 		// If sell amount is greater than ceiling => ERROR
 		if (inflatedSellVolume.gt(hardcap)) {
-			// console.log('Setting error to TRUE DEFAULT');
+			console.log('Setting error true in static Validation');
 			// Error
 			setErrorTrue(
 				`This alpha is restricted to move ${token.max} ${getTokenSymbol(
@@ -642,7 +647,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				)} max. To gain a higher allowance, please contact us!`
 			);
 		} else {
-			// console.log('Setting error to FALSE DEFAULT');
+			console.log('Setting error false in static Validation');
 			// All good
 			setErrorFalse();
 		}

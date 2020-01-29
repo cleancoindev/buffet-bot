@@ -270,8 +270,8 @@ export default function TransactionSummary(props: TxSummaryParams) {
 					// className={classes.box}
 					style={{
 						// paddingLeft: '24px',
-						textAlign: 'left',
-						marginTop: '8px'
+						textAlign: 'left'
+						// marginTop: '8px'
 					}}
 				>
 					<div

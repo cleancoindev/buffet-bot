@@ -90,7 +90,6 @@ export default function StepperContent(props: StepperContentProps) {
 							// className={classes.box}
 							style={{
 								// paddingLeft: '24px',
-								minHeight: '200px',
 								textAlign: 'left'
 							}}
 						>
@@ -105,29 +104,29 @@ export default function StepperContent(props: StepperContentProps) {
 								<span style={{ color: COLOURS.salmon }}>
 									{condition.title}{' '}
 								</span>
-								{active &&
-									condition.userInputs[0] !== undefined && (
-										<div style={{}}>
-											<p
-												style={{
-													textAlign: 'left',
-													fontSize: '18px'
-												}}
-											>
-												{`Your bot will execute your action if ${getConditionText(
-													condition.userInputs,
-													condition.id,
-													networkId,
-													RelevantInputData.all
-												)}`}
-											</p>
-										</div>
-									)}
-								{/* on{' '}
+							</h2>
+							{active && condition.userInputs[0] !== undefined && (
+								<div style={{}}>
+									<p
+										style={{
+											textAlign: 'left',
+											fontSize: '18px'
+										}}
+									>
+										{`Your bot will execute your action if ${getConditionText(
+											condition.userInputs,
+											condition.id,
+											networkId,
+											RelevantInputData.all
+										)}`}
+									</p>
+								</div>
+							)}
+							{/* on{' '}
 								<span style={{ color: COLOURS.salmon }}>
 									{condition.app}
 								</span>{' '} */}
-							</h2>
+
 							<Divider
 								style={{
 									background: 'white',
@@ -192,28 +191,29 @@ export default function StepperContent(props: StepperContentProps) {
 								<span style={{ color: COLOURS.salmon }}>
 									{action.title}
 								</span>{' '}
-								{active && action.userInputs[0] !== undefined && (
-									<div style={{}}>
-										<p
-											style={{
-												textAlign: 'left',
-												fontSize: '18px'
-											}}
-										>
-											{`When the condition is fulfilled ${getActionText(
-												action.userInputs,
-												action.id,
-												networkId,
-												RelevantInputData.all
-											)} on your behalf`}
-										</p>
-									</div>
-								)}
-								{/* with{' '}
+							</h2>
+							{active && action.userInputs[0] !== undefined && (
+								<div style={{}}>
+									<p
+										style={{
+											textAlign: 'left',
+											fontSize: '18px'
+										}}
+									>
+										{`When the previous condition is fulfilled ${getActionText(
+											action.userInputs,
+											action.id,
+											networkId,
+											RelevantInputData.all
+										)} on your behalf`}
+									</p>
+								</div>
+							)}
+							{/* with{' '}
 								<span style={{ color: COLOURS.salmon }}>
 									{action.app}
 								</span>{' '} */}
-							</h2>
+
 							<Divider
 								style={{
 									background: 'white',
