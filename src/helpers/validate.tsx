@@ -64,7 +64,8 @@ export const userInputHasError = async (
 			);
 
 			// 1. Check if value is correct decimal wise
-			if (userInput === ethers.constants.MaxUint256) {
+			const bigBumInput = userInput as ethers.utils.BigNumber;
+			if (bigBumInput.gte(ethers.constants.MaxUint256)) {
 				// has error
 
 				return [
@@ -100,7 +101,8 @@ export const userInputHasError = async (
 			);
 
 			// 1. Check if value is correct decimal wise
-			if (userInput === ethers.constants.MaxUint256) {
+			const bigBumInput = userInput as ethers.utils.BigNumber;
+			if (bigBumInput.gte(ethers.constants.MaxUint256)) {
 				// has error
 
 				return [
