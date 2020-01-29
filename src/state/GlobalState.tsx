@@ -6,7 +6,7 @@ import React, {
 	useEffect
 } from 'react';
 // Import Interfaces
-import { IcedTx, Action, TxState, ErrorOrigin } from '../constants/interfaces';
+import { IcedTx, Action, TxState } from '../constants/interfaces';
 
 // Import Web3 React
 // Exposes following funcs: 1) getLibrary and 2) _useWeb3ReactManager
@@ -32,7 +32,7 @@ export const DEFAULT_ICED_TX = {
 	pastTransactions: { ...DEFAULT_PAST_TRANSACTIONS },
 	pastTransactionId: '0',
 	modalOpen: false,
-	error: { isError: false, msg: '', origin: ErrorOrigin.None }
+	error: { isError: false, msg: '', origin: 999 }
 };
 
 // interface InitContextProps {

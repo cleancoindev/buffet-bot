@@ -5,8 +5,7 @@ import {
 	ConditionOrAction,
 	ActionWhitelistData,
 	ConditionWhitelistData,
-	TxState,
-	ErrorOrigin
+	TxState
 } from '../../constants/interfaces';
 
 import { useIcedTxContext } from '../../state/GlobalState';
@@ -60,8 +59,8 @@ export default function AddressInput(props: AddressInputProps) {
 	// On every render, check validity
 	useEffect(() => {
 		console.log('Validating Address useEffect');
-		validateAddressInput(inputs[index] as string);
-	}, []);
+		// validateAddressInput(inputs[index] as string);
+	}, [inputs[index]]);
 
 	const returnDefaultString = (): string => {
 		// FETCH FROM STATE
@@ -86,7 +85,7 @@ export default function AddressInput(props: AddressInputProps) {
 			defaultAddress = '0x0';
 		}
 		updateUserInput(index, defaultAddress);
-		validateAddressInput(defaultAddress);
+		// validateAddressInput(defaultAddress);
 		return defaultAddress;
 	};
 
@@ -94,43 +93,43 @@ export default function AddressInput(props: AddressInputProps) {
 
 	const handleAddressChange = (event: React.ChangeEvent<{ value: any }>) => {
 		const newAddress = event.target.value as string;
-		validateAddressInput(newAddress);
+		// validateAddressInput(newAddress);
 		updateUserInput(index, newAddress);
 	};
 
-	const validateAddressInput = (newAddress: string) => {
-		// Validate address
-		try {
-			ethers.utils.getAddress(newAddress);
-			if (error) {
-				setError(false);
-			}
-			if (
-				icedTxState.error.isError &&
-				icedTxState.error.origin === ErrorOrigin.WrongAddress
-			) {
-				console.log('Set ERROR to false Address');
-				dispatch({
-					type: INPUT_OK,
-					txState: TxState.displayInstallMetamask
-				});
-			}
-		} catch (error) {
-			if (!error) {
-				setError(true);
-			}
-			if (!icedTxState.error.isError) {
-				console.log('Set ERROR to true Address');
-				// console.log(icedTxState.txState);
-				dispatch({
-					type: INPUT_ERROR,
-					msg: `Input field '${label}' has to be a correct Ethereum address`,
-					origin: ErrorOrigin.WrongAddress,
-					txState: TxState.inputError
-				});
-			}
-		}
-	};
+	// const validateAddressInput = (newAddress: string) => {
+	// 	// Validate address
+	// 	try {
+	// 		ethers.utils.getAddress(newAddress);
+	// 		if (error) {
+	// 			setError(false);
+	// 		}
+	// 		if (
+	// 			icedTxState.error.isError &&
+	// 			icedTxState.error.origin === ErrorOrigin.WrongAddress
+	// 		) {
+	// 			console.log('Set ERROR to false Address');
+	// 			dispatch({
+	// 				type: INPUT_OK,
+	// 				txState: TxState.displayInstallMetamask
+	// 			});
+	// 		}
+	// 	} catch (error) {
+	// 		if (!error) {
+	// 			setError(true);
+	// 		}
+	// 		if (!icedTxState.error.isError) {
+	// 			console.log('Set ERROR to true Address');
+	// 			// console.log(icedTxState.txState);
+	// 			dispatch({
+	// 				type: INPUT_ERROR,
+	// 				msg: `Input field '${label}' has to be a correct Ethereum address`,
+	// 				origin: ErrorOrigin.WrongAddress,
+	// 				txState: TxState.inputError
+	// 			});
+	// 		}
+	// 	}
+	// };
 
 	return (
 		<TextField

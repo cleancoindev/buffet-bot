@@ -1095,7 +1095,7 @@ export default function TransactionCard(props: TxCardProps) {
 								}}
 							>
 								(You won't have to wait for this transaction, it
-								will happen in the background)
+								will confirm in the background)
 							</p>
 						</React.Fragment>
 					)}

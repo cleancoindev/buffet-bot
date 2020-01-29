@@ -19,12 +19,27 @@ export const getConditionText = (
 	relevantInputData: RelevantInputData
 ): string => {
 	switch (id) {
-		// Token balance
+		// Time
 		case 1:
 			return `the following date has been reached: ${timestampToDate(
 				inputs[0] as number
 			)} `;
-		case 2:
+
+		// Token Balance
+		case 2: {
+			let tokenBalance = inputs[2] as ethers.utils.BigNumber;
+			if (tokenBalance.eq(ethers.constants.MaxUint256)) {
+				tokenBalance = ethers.constants.Zero;
+			}
+
+			let tokenBalanceHumanReadable = convertWeiToHumanReadableForTokenAmount(
+				tokenBalance,
+				getTokenByAddress(
+					inputs[1] as string,
+					networkId,
+					relevantInputData
+				).decimals
+			);
 			return `the ${
 				getTokenByAddress(
 					inputs[1] as string,
@@ -33,41 +48,35 @@ export const getConditionText = (
 				).symbol
 			} balance of address ${inputs[0]} ${
 				inputs[3] ? 'is higher or equal to' : 'is lower or equal to'
-			} ${convertWeiToHumanReadableForTokenAmount(
-				inputs[2] as ethers.utils.BigNumber,
-				getTokenByAddress(
-					inputs[1] as string,
-					networkId,
-					relevantInputData
-				).decimals
-			)} ${
+			} ${tokenBalanceHumanReadable} ${
 				getTokenByAddress(
 					inputs[1] as string,
 					networkId,
 					relevantInputData
 				).symbol
 			}`;
+		}
 		// Price on Kyber
-		/*
-            'Sell Token',
-			'Sell Volume',
-			'Buy Token',
-			'Price activating condition',
-			'',
+		case 3: {
+			let sellAmount = inputs[1] as ethers.utils.BigNumber;
+			if (sellAmount.eq(ethers.constants.MaxUint256)) {
+				sellAmount = ethers.constants.Zero;
+			}
 
-        */
-
-		case 3:
-			const sellAmount = convertWeiToHumanReadableForTokenAmount(
-				inputs[1] as ethers.utils.BigNumber,
+			const sellAmountHumanReadable = convertWeiToHumanReadableForTokenAmount(
+				sellAmount,
 				getTokenByAddress(
 					inputs[0] as string,
 					networkId,
 					relevantInputData
 				).decimals
 			);
-			const price = convertWeiToHumanReadableForNumbersAndGetValue(
-				inputs[3] as ethers.utils.BigNumber,
+			let price = inputs[3] as ethers.utils.BigNumber;
+			if (price.eq(ethers.constants.MaxUint256)) {
+				price = ethers.constants.Zero;
+			}
+			const priceHumanReadable = convertWeiToHumanReadableForNumbersAndGetValue(
+				price,
 				getTokenByAddress(
 					inputs[2] as string,
 					networkId,
@@ -78,9 +87,10 @@ export const getConditionText = (
 			);
 
 			const expectedBuyAmount =
-				parseFloat(sellAmount) * parseFloat(price);
+				parseFloat(sellAmountHumanReadable) *
+				parseFloat(priceHumanReadable);
 
-			const isOrAre = parseFloat(sellAmount) === 1.0;
+			const isOrAre = parseFloat(sellAmountHumanReadable) === 1.0;
 
 			const buySymbol = getTokenByAddress(
 				inputs[0] as string,
@@ -94,13 +104,14 @@ export const getConditionText = (
 				relevantInputData
 			).symbol;
 
-			const exchangeRate = `(1 ${buySymbol} = ${price} ${sellSymbol})`;
+			const exchangeRate = `(1 ${buySymbol} = ${priceHumanReadable} ${sellSymbol})`;
 
-			return `${sellAmount} ${buySymbol} ${
+			return `${sellAmountHumanReadable} ${buySymbol} ${
 				isOrAre ? 'is' : 'are'
 			} worth ${expectedBuyAmount} ${sellSymbol} ${
 				isOrAre ? '' : exchangeRate
 			} on Kyber `;
+		}
 
 		default:
 			return '';
@@ -115,31 +126,44 @@ export const getActionText = (
 ): string => {
 	switch (id) {
 		// Send Tokens
-		case 1:
-			return `your gelato bot will send ${convertWeiToHumanReadableForTokenAmount(
-				inputs[1] as ethers.utils.BigNumber,
+		case 1: {
+			let sendAmount = inputs[1] as ethers.utils.BigNumber;
+			if (sendAmount.eq(ethers.constants.MaxUint256)) {
+				sendAmount = ethers.constants.Zero;
+			}
+
+			const sendAmountHumanReadable = convertWeiToHumanReadableForTokenAmount(
+				sendAmount,
 				getTokenByAddress(
 					inputs[0] as string,
 					networkId,
 					relevantInputData
 				).decimals
-			)} ${
+			);
+			return `your gelato bot will send ${sendAmountHumanReadable} ${
 				getTokenByAddress(
 					inputs[0] as string,
 					networkId,
 					relevantInputData
 				).symbol
 			} to address ${inputs[2]}`;
+		}
 		// Trade Tokens on Kyber
-		case 2:
-			return `your gelato bot will sell ${convertWeiToHumanReadableForTokenAmount(
-				inputs[1] as ethers.utils.BigNumber,
+		case 2: {
+			let sellAmount = inputs[1] as ethers.utils.BigNumber;
+			if (sellAmount.eq(ethers.constants.MaxUint256)) {
+				sellAmount = ethers.constants.Zero;
+			}
+
+			let sellAmountHumanReadable = convertWeiToHumanReadableForTokenAmount(
+				sellAmount,
 				getTokenByAddress(
 					inputs[0] as string,
 					networkId,
 					relevantInputData
 				).decimals
-			)} ${
+			);
+			return `your gelato bot will sell ${sellAmountHumanReadable} ${
 				getTokenByAddress(
 					inputs[0] as string,
 					networkId,
@@ -152,16 +176,23 @@ export const getActionText = (
 					relevantInputData
 				).symbol
 			} on Kyber`;
+		}
 		// Buy Leverage Tokens on Fulcrum
-		case 3:
-			return `your gelato bot will sell ${convertWeiToHumanReadableForTokenAmount(
-				inputs[1] as ethers.utils.BigNumber,
+		case 3: {
+			let sellAmount = inputs[1] as ethers.utils.BigNumber;
+			if (sellAmount.eq(ethers.constants.MaxUint256)) {
+				sellAmount = ethers.constants.Zero;
+			}
+
+			const sellAmountHumanReadable = convertWeiToHumanReadableForTokenAmount(
+				sellAmount,
 				getTokenByAddress(
 					inputs[0] as string,
 					networkId,
 					relevantInputData
 				).decimals
-			)} ${
+			);
+			return `your gelato bot will sell ${sellAmountHumanReadable} ${
 				getTokenByAddress(
 					inputs[0] as string,
 					networkId,
@@ -180,16 +211,23 @@ export const getActionText = (
 					relevantInputData
 				).name
 			}) tokens on Fulcrum`;
+		}
 		// Sell Leverage Tokens on Fulcrum
-		case 4:
-			return `your gelato bot will sell ${convertWeiToHumanReadableForTokenAmount(
-				inputs[1] as ethers.utils.BigNumber,
+		case 4: {
+			let sellAmount = inputs[1] as ethers.utils.BigNumber;
+			if (sellAmount.eq(ethers.constants.MaxUint256)) {
+				sellAmount = ethers.constants.Zero;
+			}
+
+			const sellAmountHumanReadable = convertWeiToHumanReadableForTokenAmount(
+				sellAmount,
 				getTokenByAddress(
 					inputs[0] as string,
 					networkId,
 					relevantInputData
 				).decimals
-			)} ${
+			);
+			return `your gelato bot will sell ${sellAmountHumanReadable} ${
 				getTokenByAddress(
 					inputs[0] as string,
 					networkId,
@@ -208,6 +246,7 @@ export const getActionText = (
 					relevantInputData
 				).symbol
 			} on Fulcrum`;
+		}
 
 		default:
 			return '';

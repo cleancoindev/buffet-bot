@@ -5,8 +5,7 @@ import {
 	Action,
 	ActionWhitelistData,
 	ConditionWhitelistData,
-	TxState,
-	ErrorOrigin
+	TxState
 } from '../constants/interfaces';
 import { findConditionById, findActionById } from '../helpers/helpers';
 import {
@@ -145,7 +144,7 @@ export const icedTxReducer = (state: IcedTx, action: Action) => {
 		case INPUT_OK:
 			return {
 				...state,
-				error: { isError: false, msg: '', origin: ErrorOrigin.None },
+				error: { isError: false, msg: '', origin: 999 },
 				txState: action.txState
 			};
 		case UPDATE_GET_VALUE_INPUT:

@@ -24,10 +24,11 @@ import {
 	CLOSE_MODAL,
 	SELECTED_CHAIN_ID,
 	BOX,
-	INPUT_OK
+	INPUT_OK,
+	INPUT_ERROR
 } from '../constants/constants';
 import TransactionModal from '../components/Modal';
-import { TxState, ChainIds } from '../constants/interfaces';
+import { TxState, ChainIds, ConditionOrAction } from '../constants/interfaces';
 import { Web3Provider } from 'ethers/providers';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
@@ -35,6 +36,7 @@ import { ethers } from 'ethers';
 import ERC20_ABI from '../constants/abis/erc20.json';
 
 import { useGelatoCore } from '../hooks/hooks';
+import { userInputHasError } from '../helpers/validate';
 
 interface Params {
 	conditionId: string;
@@ -102,16 +104,116 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 	// const steps = getSteps();
 
 	// Stepper Functions
-	function handleNext() {
-		// @ DEV INCLUDE VALIDATION, ONLY ALLOW IF ALL INPUT FIELDS HAVE BEEN VALIDATED
+	async function handleNext() {
+		// If condition
+		let allowedToContinue = true;
+		if (activeStep === 0) {
+			const relevantInputData = icedTxState.condition.relevantInputData;
+			const inputTypes = icedTxState.condition.userInputTypes;
+			// let continue = false
+			for (
+				let index = 0;
+				index < icedTxState.condition.userInputs.length;
+				index++
+			) {
+				// Runs 5 times, with values of step 0 through 4.
+				const result = await userInputHasError(
+					icedTxState.condition.inputLabels[index],
+					icedTxState.condition.userInputs[index],
+					inputTypes[index],
+					relevantInputData[index],
+					icedTxState.condition,
+					web3,
+					ConditionOrAction.Condition
+				);
+				if (result?.length === 2) {
+					const hasError = result[0] as boolean;
+					const errorText = result[1] as string;
 
-		if (!icedTxState.error.isError) {
+					// If no error, continue
+					if (hasError) {
+						// console.log(
+						// 	`${icedTxState.condition.inputLabels[index]} has error: `
+						// );
+						// console.log('Not allowed to continue');
+						allowedToContinue = false;
+						dispatch({
+							type: INPUT_ERROR,
+							msg: errorText,
+							origin: index,
+							txState: TxState.inputError
+						});
+						// break out of for loop
+						break;
+					}
+				}
+			}
+		}
+		// Action Step
+		else if (activeStep === 1) {
+			const relevantInputData = icedTxState.action.relevantInputData;
+			const inputTypes = icedTxState.action.userInputTypes;
+			for (
+				let index = 0;
+				index < icedTxState.action.userInputs.length;
+				index++
+			) {
+				const result = await userInputHasError(
+					icedTxState.action.inputLabels[index],
+					icedTxState.action.userInputs[index],
+					inputTypes[index],
+					relevantInputData[index],
+					icedTxState.action,
+					web3,
+					ConditionOrAction.Action
+				);
+				if (result?.length === 2) {
+					const hasError = result[0] as boolean;
+					const errorText = result[1] as string;
+					// console.log(errorText);
+					// console.log(
+					// 	`${icedTxState.action.inputLabels[index]} has error: `
+					// );
+					// console.log(hasError);
+					// If no error, continue
+					if (hasError) {
+						// console.log('Not allowed to continue');
+						allowedToContinue = false;
+						dispatch({
+							type: INPUT_ERROR,
+							msg: errorText,
+							origin: index,
+							txState: TxState.inputError
+						});
+						// break out of for loop
+						break;
+					}
+				}
+			}
+		}
+
+		if (allowedToContinue) {
+			// console.log('All good');
+			dispatch({
+				type: INPUT_OK,
+				txState: TxState.displayInstallMetamask
+			});
 			setActiveStep(prevActiveStep => prevActiveStep + 1);
 		} else {
-			// Open Modal and show error
-			// console.log('openModal');
+			// 	// Open Modal and show error
+			// console.log('Error');
 			dispatch({ type: OPEN_MODAL });
 		}
+
+		// @ DEV INCLUDE VALIDATION, ONLY ALLOW IF ALL INPUT FIELDS HAVE BEEN VALIDATED
+
+		// if (!icedTxState.error.isError) {
+		// 	setActiveStep(prevActiveStep => prevActiveStep + 1);
+		// } else {
+		// 	// Open Modal and show error
+		// 	// console.log('openModal');
+		// 	dispatch({ type: OPEN_MODAL });
+		// }
 	}
 
 	const handleBack = () => {
