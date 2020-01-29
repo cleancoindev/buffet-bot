@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import {
 	InputType,
 	ConditionOrAction,
 	ActionWhitelistData,
 	ConditionWhitelistData,
-	TxState
+	TxState,
+	ErrorOrigin
 } from '../../constants/interfaces';
 
 import { useIcedTxContext } from '../../state/GlobalState';
@@ -56,10 +57,11 @@ export default function AddressInput(props: AddressInputProps) {
 
 	const { dispatch, icedTxState } = useIcedTxContext();
 
-	// At first render, check validity of input
-	// useEffect(() => {
-	// 	validateAddressInput('0x0');
-	// }, []);
+	// On every render, check validity
+	useEffect(() => {
+		console.log('Validating Address useEffect');
+		validateAddressInput(inputs[index] as string);
+	}, []);
 
 	const returnDefaultString = (): string => {
 		// FETCH FROM STATE
@@ -103,8 +105,11 @@ export default function AddressInput(props: AddressInputProps) {
 			if (error) {
 				setError(false);
 			}
-			if (icedTxState.error.isError) {
-				// console.log('Address Correct');
+			if (
+				icedTxState.error.isError &&
+				icedTxState.error.origin === ErrorOrigin.WrongAddress
+			) {
+				console.log('Set ERROR to false Address');
 				dispatch({
 					type: INPUT_OK,
 					txState: TxState.displayInstallMetamask
@@ -115,11 +120,12 @@ export default function AddressInput(props: AddressInputProps) {
 				setError(true);
 			}
 			if (!icedTxState.error.isError) {
-				// console.log('Error');
+				console.log('Set ERROR to true Address');
 				// console.log(icedTxState.txState);
 				dispatch({
 					type: INPUT_ERROR,
 					msg: `Input field '${label}' has to be a correct Ethereum address`,
+					origin: ErrorOrigin.WrongAddress,
 					txState: TxState.inputError
 				});
 			}

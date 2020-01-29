@@ -116,6 +116,14 @@ export interface IcedTx {
 export interface Error {
 	isError: boolean;
 	msg: string;
+	origin: ErrorOrigin;
+}
+
+export enum ErrorOrigin {
+	None,
+	Overflow,
+	DaiCeiling,
+	WrongAddress
 }
 
 export enum ConditionOrAction {
@@ -275,6 +283,7 @@ interface UpdateSelectedTx {
 interface InputError {
 	type: typeof INPUT_ERROR;
 	msg: string;
+	origin: ErrorOrigin;
 	txState: TxState;
 }
 

@@ -23,7 +23,8 @@ import {
 	OPEN_MODAL,
 	CLOSE_MODAL,
 	SELECTED_CHAIN_ID,
-	BOX
+	BOX,
+	INPUT_OK
 } from '../constants/constants';
 import TransactionModal from '../components/Modal';
 import { TxState, ChainIds } from '../constants/interfaces';
@@ -114,6 +115,13 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 	}
 
 	const handleBack = () => {
+		if (icedTxState.error.isError) {
+			dispatch({
+				type: INPUT_OK,
+				txState: TxState.displayInstallMetamask
+			});
+		}
+
 		setActiveStep(prevActiveStep => prevActiveStep - 1);
 	};
 

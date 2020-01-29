@@ -1366,11 +1366,12 @@ export default function TransactionCard(props: TxCardProps) {
 							}}
 						>
 							<h4 style={{ margin: '0px' }}>
-								If the condition{' '}
+								Your bot will monitor the{' '}
 								<span style={{ color: COLOURS.salmon }}>
 									{icedTxState.condition.title}
 								</span>{' '}
-								is activated, your gelato bot will{' '}
+								you specified and if the details of your
+								condition are fulfilled, it will{' '}
 								<span style={{ color: COLOURS.salmon }}>
 									{icedTxState.action.title}
 								</span>{' '}

@@ -24,7 +24,8 @@ import {
 	ChainIds,
 	RelevantInputData,
 	TxState,
-	Token
+	Token,
+	ErrorOrigin
 } from '../../constants/interfaces';
 import { ethers } from 'ethers';
 import {
@@ -255,7 +256,9 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				}
 			}
 		}
-	}, [inputs[approveIndex]]);
+		// 1 to rerun validation at every new render, even if input did not change
+	}, [inputs[approveIndex], 1]);
+	// }, [icedTxState.condition.userInputs, icedTxState.action.userInputs]);
 
 	// We always store the WEI amount in global state, but in local state we store the userFriendly version
 	const handleNewValue = (newValue: string) => {
@@ -289,13 +292,15 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 					);
 
 					// console.log('Setting error to false');
-					setErrorFalse();
+
+					setErrorFalse(ErrorOrigin.Overflow);
 
 					// If we need to convert the input from userfriendly amount to WEi amount, take the converted amount, else take the original
 					updateUserInput(index, weiAmount);
 				} catch (error) {
 					setErrorTrue(
-						`Input field '${label}' can only have ${token.decimals} decimals`
+						`Input field '${label}' can only have ${token.decimals} decimals`,
+						ErrorOrigin.Overflow
 					);
 				}
 			}
@@ -309,11 +314,12 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 					);
 
 					// If local state is error, reset
-					setErrorFalse();
+					setErrorFalse(ErrorOrigin.Overflow);
 					updateUserInput(index, weiAmount);
 				} catch (err) {
 					setErrorTrue(
-						`Input field '${label}' can only have ${token.decimals} decimals`
+						`Input field '${label}' can only have ${token.decimals} decimals`,
+						ErrorOrigin.Overflow
 					);
 				}
 			}
@@ -381,7 +387,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		}
 	};
 
-	const setErrorTrue = (text: string) => {
+	const setErrorTrue = (text: string, origin: ErrorOrigin) => {
 		setError(true);
 
 		// console.log('Error');
@@ -389,16 +395,17 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		dispatch({
 			type: INPUT_ERROR,
 			msg: text,
+			origin: origin,
 			txState: TxState.inputError
 		});
 	};
 
-	const setErrorFalse = () => {
+	const setErrorFalse = (origin: ErrorOrigin) => {
 		// If local state is error, reset
 		if (error) {
 			setError(false);
 		}
-		if (icedTxState.error.isError) {
+		if (icedTxState.error.isError && icedTxState.error.origin === origin) {
 			// console.log('Token Amount within limit');
 			dispatch({
 				type: INPUT_OK,
@@ -606,7 +613,8 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 					sellTokenAddress,
 					networkId,
 					relevantInputData
-				)} max. To gain a higher allowance, please contact us!`
+				)} max. To gain a higher allowance, please contact us!`,
+				ErrorOrigin.DaiCeiling
 			);
 		} else {
 			console.log('Setting error false in dynamic Validation');
@@ -615,7 +623,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 			// console.log(TOKEN_TRANSFER_CEILING.toString());
 			// console.log('Total Amount');
 			// console.log(totalTransferVolume.toString());
-			setErrorFalse();
+			setErrorFalse(ErrorOrigin.DaiCeiling);
 		}
 	};
 
@@ -644,12 +652,13 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 					token.address[networkId],
 					networkId,
 					relevantInputData
-				)} max. To gain a higher allowance, please contact us!`
+				)} max. To gain a higher allowance, please contact us!`,
+				ErrorOrigin.DaiCeiling
 			);
 		} else {
 			console.log('Setting error false in static Validation');
 			// All good
-			setErrorFalse();
+			setErrorFalse(ErrorOrigin.DaiCeiling);
 		}
 	};
 
