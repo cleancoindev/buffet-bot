@@ -31,7 +31,8 @@ import {
 	convertWeiToHumanReadableForTokenAmount,
 	findConditionById,
 	getTokenSymbol,
-	getTokenByAddress
+	getTokenByAddress,
+	userIsWhitelisted
 } from './helpers';
 
 export const userInputHasError = async (
@@ -75,8 +76,16 @@ export const userInputHasError = async (
 			}
 			// 2. Check if is is below DAi Celining
 			else {
+				// a Check if user is on whitelist. If so, skip validation
+				let whitelisted = false;
+				if (web3.account !== undefined) {
+					whitelisted = userIsWhitelisted(web3.account as string);
+				}
 				// Only validate DAI celing for Actions
-				if (conditionOrAction === ConditionOrAction.Action) {
+				if (
+					conditionOrAction === ConditionOrAction.Action &&
+					!whitelisted
+				) {
 					const result = await validateLimitAmount(
 						userInput as ethers.utils.BigNumber,
 						token,

@@ -113,17 +113,18 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 	// Error Bool, default false
 	// Applied to:
 	// // Number
-	let whitelisted = false;
-	if (account !== undefined) {
-		whitelisted = userIsWhitelisted(account as string);
-	}
 
 	const { dispatch, icedTxState } = useIcedTxContext();
 
 	// If the error origin is equal to the index of this input, this is the input with error
-	let error = false;
-	if (icedTxState.error.isError && icedTxState.error.origin === index)
-		error = true;
+	const [displayError, setDisplayError] = React.useState(false);
+
+	// On every render, if this input field is the one with the error, mark it as such
+	useEffect(() => {
+		if (icedTxState.error.isError && icedTxState.error.origin === index) {
+			setDisplayError(true);
+		}
+	});
 
 	// In case network Id is not defined yet, use default
 	let networkId: ChainIds = SELECTED_CHAIN_ID;
@@ -228,7 +229,6 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 
 	// When user selects different token, check wheather decimal number is different
 	useEffect(() => {
-		console.log('RUN EFFECT NUMBER');
 		if (inputs[0] !== undefined) {
 			if (inputType === InputType.TokenAmount) {
 				try {
@@ -246,7 +246,6 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 					// Validate new state
 					if (
 						conditionOrAction === ConditionOrAction.Action &&
-						!whitelisted &&
 						!weiAmount.eq(ethers.constants.Zero)
 					)
 						if (!weiAmount.eq(defaultValue)) {
@@ -269,11 +268,6 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		// Set local and global state
 		const defaultZero = ethers.constants.Zero;
 		if (newValue !== '' && newValue !== '.') {
-			// setValues({
-			// 	...values,
-			// 	numberformat: newValue
-			// });
-			// NO need for getValue index beaucse it doesnt change manually
 			const tokenAddress = inputs[approveIndex].toString();
 			// Find token object by address
 			let token = getTokenByAddress(
@@ -286,28 +280,17 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 
 			// Handle special case if InputType is TokenAmount
 			if (inputType === InputType.TokenAmount) {
-				// get index of token in question
-
 				// Try Catch to detect under - and overflows in TokenAmounts
 				try {
 					weiAmount = ethers.utils.parseUnits(
 						newValue,
 						token.decimals
 					);
-
-					// console.log('Setting error to false');
-
-					// setErrorFalse(ErrorOrigin.Overflow);
-
 					// If we need to convert the input from userfriendly amount to WEi amount, take the converted amount, else take the original
 					updateUserInput(index, weiAmount);
 				} catch (error) {
 					weiAmount = ethers.constants.MaxUint256;
 					updateUserInput(index, weiAmount);
-					// setErrorTrue(
-					// 	`Input field '${label}' can only have ${token.decimals} decimals`,
-					// 	ErrorOrigin.Overflow
-					// );
 				}
 			}
 			// Condition: 2 => Kyber Price
@@ -319,14 +302,8 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 						id
 					);
 
-					// If local state is error, reset
-					// setErrorFalse(ErrorOrigin.Overflow);
 					updateUserInput(index, weiAmount);
 				} catch (err) {
-					// setErrorTrue(
-					// 	`Input field '${label}' can only have ${token.decimals} decimals`,
-					// 	ErrorOrigin.Overflow
-					// );
 					weiAmount = ethers.constants.MaxUint256;
 					updateUserInput(index, weiAmount);
 				}
@@ -337,7 +314,6 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				numberformat: newValue
 			});
 			// Will be default zero if we land in the try catches, after which we should not validate
-			return weiAmount;
 
 			// ######### End of big IF
 		} else if (newValue === '.') {
@@ -346,14 +322,12 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				numberformat: '0.'
 			});
 			updateUserInput(index, defaultZero);
-			return defaultZero;
 		} else if (newValue === '') {
 			setValues({
 				...values,
 				numberformat: ''
 			});
 			updateUserInput(index, defaultZero);
-			return defaultZero;
 		} else {
 			throw Error('Input value is empty / wrong');
 		}
@@ -362,36 +336,21 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 	const handleChange = (name: keyof State) => (
 		event: React.ChangeEvent<{ value: unknown }>
 	) => {
-		// updateUser Input
-		const newValue = event.target.value as string;
+		// 1. Refresh displayError if it's on
+		if (displayError) {
+			dispatch({
+				type: INPUT_OK,
+				txState: TxState.displayInstallMetamask
+			});
+			setDisplayError(false);
+		}
 
-		const token = getTokenByAddress(
-			inputs[approveIndex] as string,
-			networkId,
-			relevantInputData
-		);
+		// 2. Convert human readable input to bigNumber
+		const newValue = event.target.value as string;
 
 		// Only update State when number input actually changed from last input!
 		if (newValue !== values.numberformat) {
-			const newValueBN = handleNewValue(newValue);
-			// If handleNewValue return 0, we know an error occured before, dont validate
-			if (
-				!newValueBN?.eq(ethers.constants.Zero) &&
-				inputType === InputType.TokenAmount &&
-				conditionOrAction === ConditionOrAction.Action &&
-				!whitelisted
-			) {
-				console.log('Validate');
-				// @DEV Make it decimal dependend!!!
-				// @DEV NOT FOR NUMBERS ONLY TOKEN AMOUNT
-				// validateLimitAmount(
-				// 	ethers.utils.parseUnits(newValue, token.decimals),
-				// 	token
-				// );
-				// try {
-				// 	validateLimitAmount(ethers.utils.parseUnits(newValue, 18));
-				// } catch (error) {}
-			}
+			handleNewValue(newValue);
 		}
 	};
 
@@ -683,7 +642,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 			InputLabelProps={{
 				shrink: true
 			}}
-			error={error}
+			error={displayError}
 			variant="outlined"
 			key={`num-textfield-${conditionOrAction}-${index}`}
 			disabled={disabled}

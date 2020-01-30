@@ -128,15 +128,19 @@ export const convertHumanReadableToWeiForNumbers = (
 export const userIsWhitelisted = (user: string) => {
 	const whitelist = [...USER_WHITELIST];
 	let result = false;
-	whitelist.forEach(whitelistedUser => {
-		if (
-			ethers.utils.getAddress(whitelistedUser) ===
-			ethers.utils.getAddress(user)
-		) {
-			result = true;
-		}
-	});
-	return result;
+	try {
+		whitelist.forEach(whitelistedUser => {
+			if (
+				ethers.utils.getAddress(whitelistedUser) ===
+				ethers.utils.getAddress(user)
+			) {
+				result = true;
+			}
+		});
+		return result;
+	} catch (error) {
+		return false;
+	}
 };
 
 // @DEV Potenital bug in returning error string

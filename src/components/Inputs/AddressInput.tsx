@@ -45,31 +45,28 @@ export default function AddressInput(props: AddressInputProps) {
 		updateUserInput,
 		classes
 	} = props;
+
 	// Context
-
-	// Error Bool, default false
-	// Applied to:
-	// // Address
-	const [error, setError] = React.useState(false);
-
 	const { active, account, library } = useWeb3React();
 
 	const { dispatch, icedTxState } = useIcedTxContext();
 
+	// If the error origin is equal to the index of this input, this is the input with error
+	const [displayError, setDisplayError] = React.useState(false);
+
 	// On every render, check validity
 	useEffect(() => {
-		console.log('Validating Address useEffect');
-		// validateAddressInput(inputs[index] as string);
-	}, [inputs[index]]);
+		if (icedTxState.error.isError && icedTxState.error.origin === index) {
+			setDisplayError(true);
+		}
+	});
 
 	const returnDefaultString = (): string => {
 		// FETCH FROM STATE
 		if (inputs[0] !== undefined) {
 			if (inputs[index] !== undefined) {
 				return inputs[index] as string;
-			}
-			// Else, Use default value
-			else {
+			} else {
 				return getDefaultStringValue();
 			}
 		} else {
@@ -92,44 +89,16 @@ export default function AddressInput(props: AddressInputProps) {
 	// Used to validate address
 
 	const handleAddressChange = (event: React.ChangeEvent<{ value: any }>) => {
+		if (displayError) {
+			dispatch({
+				type: INPUT_OK,
+				txState: TxState.displayInstallMetamask
+			});
+			setDisplayError(false);
+		}
 		const newAddress = event.target.value as string;
-		// validateAddressInput(newAddress);
 		updateUserInput(index, newAddress);
 	};
-
-	// const validateAddressInput = (newAddress: string) => {
-	// 	// Validate address
-	// 	try {
-	// 		ethers.utils.getAddress(newAddress);
-	// 		if (error) {
-	// 			setError(false);
-	// 		}
-	// 		if (
-	// 			icedTxState.error.isError &&
-	// 			icedTxState.error.origin === ErrorOrigin.WrongAddress
-	// 		) {
-	// 			console.log('Set ERROR to false Address');
-	// 			dispatch({
-	// 				type: INPUT_OK,
-	// 				txState: TxState.displayInstallMetamask
-	// 			});
-	// 		}
-	// 	} catch (error) {
-	// 		if (!error) {
-	// 			setError(true);
-	// 		}
-	// 		if (!icedTxState.error.isError) {
-	// 			console.log('Set ERROR to true Address');
-	// 			// console.log(icedTxState.txState);
-	// 			dispatch({
-	// 				type: INPUT_ERROR,
-	// 				msg: `Input field '${label}' has to be a correct Ethereum address`,
-	// 				origin: ErrorOrigin.WrongAddress,
-	// 				txState: TxState.inputError
-	// 			});
-	// 		}
-	// 	}
-	// };
 
 	return (
 		<TextField
@@ -139,10 +108,8 @@ export default function AddressInput(props: AddressInputProps) {
 			label={label}
 			defaultValue={returnDefaultString()}
 			onChange={handleAddressChange}
-			error={error}
+			error={displayError}
 			key={`address-input-${disabled}-${conditionOrAction}-${index}`}
-			// helperText="Full width!"
-			// Import TextField CSS
 			margin="normal"
 			InputLabelProps={{
 				shrink: true
@@ -151,5 +118,4 @@ export default function AddressInput(props: AddressInputProps) {
 			disabled={disabled}
 		/>
 	);
-	// Import TextField CSS
 }
