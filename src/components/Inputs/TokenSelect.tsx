@@ -1,4 +1,4 @@
-import React, { Dispatch } from 'react';
+import React, { Dispatch, useEffect } from 'react';
 import {
 	makeStyles,
 	Theme,
@@ -17,6 +17,7 @@ import {
 	ChainIds,
 	RelevantInputData
 } from '../../constants/interfaces';
+import TokenObject from './TokenObject';
 import {
 	UPDATE_CONDITION_INPUTS,
 	UPDATE_ACTION_INPUTS,
@@ -25,11 +26,16 @@ import {
 	ETH,
 	SELECTED_CHAIN_ID
 } from '../../constants/constants';
-import { getTokenByAddress, getTokenList, isEth } from '../../helpers/helpers';
+import {
+	getTokenByAddress,
+	getTokenList,
+	isEth,
+	convertWeiToHumanReadableForTokenAmount
+} from '../../helpers/helpers';
 import { useWeb3React } from '@web3-react/core';
 
 import { ethers } from 'ethers';
-import { Divider } from '@material-ui/core';
+import ERC20_ABI from '../../constants/abis/erc20.json';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -111,7 +117,7 @@ export default function TokenSelect(props: TokenSelectProps) {
 		relevantInputData
 	} = props;
 	const { dispatch, icedTxState } = useIcedTxContext();
-	const { chainId } = useWeb3React();
+	const { account, active, library, chainId } = useWeb3React();
 
 	// In case network Id is not defined yet, use default
 	let networkId: ChainIds = SELECTED_CHAIN_ID;
@@ -156,6 +162,43 @@ export default function TokenSelect(props: TokenSelectProps) {
 	const inputLabel = React.useRef<HTMLLabelElement>(null);
 
 	const [labelWidth, setLabelWidth] = React.useState(0);
+
+	useEffect(() => {
+		tokenList.forEach(token => {
+			fetchTokenBalance(token);
+		});
+	}, []);
+
+	const fetchTokenBalance = async (tokenObject: Token) => {
+		// Get Erc20 contract
+		if (active) {
+			const signer = library.getSigner();
+			const erc20 = new ethers.Contract(
+				tokenObject.address[networkId],
+				JSON.stringify(ERC20_ABI),
+				signer
+			);
+			const tokenAddress = tokenObject.address[networkId];
+			if (isEth(tokenAddress)) {
+				return 'ETH';
+			} else {
+				try {
+					const balance = await erc20.balanceOf(account as string);
+					console.log(balance.toString());
+					const humanReadableBalance = convertWeiToHumanReadableForTokenAmount(
+						balance,
+						token.decimals
+					);
+					console.log(humanReadableBalance);
+					return humanReadableBalance;
+				} catch (error) {
+					console.log(error);
+					return '0';
+				}
+			}
+		}
+	};
+
 	React.useEffect(() => {
 		setLabelWidth(inputLabel.current!.offsetWidth);
 		// Set state wih default token
@@ -225,44 +268,7 @@ export default function TokenSelect(props: TokenSelectProps) {
 						// 	color: 'white'
 						// }}
 					>
-						<div
-							style={{
-								display: 'flex',
-								justifyContent: 'start',
-								alignItems: 'center',
-								flexDirection: 'row'
-							}}
-						>
-							{isEth(possibleToken.address[1]) && (
-								<img
-									style={{
-										maxHeight: '35px',
-										// width: '35px',
-										marginRight: '8px'
-									}}
-									src={
-										'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png'
-									}
-									alt=""
-								></img>
-							)}
-							{!isEth(possibleToken.address[1]) && (
-								<img
-									style={{
-										maxHeight: '35px',
-										// width: '35px',
-										marginRight: '8px'
-									}}
-									src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${ethers.utils.getAddress(
-										possibleToken.address[1]
-									)}/logo.png`}
-									alt={``}
-								></img>
-							)}
-							<p
-								style={{ fontSize: '18px' }}
-							>{`${possibleToken.symbol} (${possibleToken.name}) `}</p>
-						</div>
+						<TokenObject token={possibleToken}></TokenObject>
 					</MenuItem>
 				))}
 			</Select>

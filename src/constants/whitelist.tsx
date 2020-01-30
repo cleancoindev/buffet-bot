@@ -91,7 +91,7 @@ export const TTYPES = [
 			'Token',
 			'Future balance activating the condition',
 			'',
-			'Current Balance'
+			'Current Balance of selected address'
 		],
 		relevantInputData: [
 			RelevantInputData.none,
