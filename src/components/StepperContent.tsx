@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function StepperContent(props: StepperContentProps) {
-	const { icedTxState, activeStep } = props;
+	const { icedTxState, activeStep, findTokenBalance } = props;
 	const classes = useStyles();
 	const { active, chainId } = useWeb3React();
 	const networkId = chainId as ChainIds;
@@ -137,6 +137,7 @@ export default function StepperContent(props: StepperContentProps) {
 							/>
 							{conditionInputTypes.map((input, key) => (
 								<InputField
+									findTokenBalance={findTokenBalance}
 									condition={condition}
 									key={`Condition-${key}`}
 									index={key}
@@ -225,6 +226,7 @@ export default function StepperContent(props: StepperContentProps) {
 							/>
 							{actionInputTypes.map((input, key) => (
 								<InputField
+									findTokenBalance={findTokenBalance}
 									action={action}
 									index={key}
 									key={`Action-${key}`}

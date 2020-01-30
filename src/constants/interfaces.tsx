@@ -154,12 +154,14 @@ export interface MatchParams {
 }
 
 export interface StepperContentProps {
+	findTokenBalance: Function;
 	activeStep: number;
 	classes: Record<string, string>;
 	icedTxState: IcedTx;
 }
 
 export interface StepperProps {
+	findTokenBalance: Function;
 	// Stepper details
 	activeStep: number;
 	handleNext: (event: React.MouseEvent<HTMLButtonElement>) => void;

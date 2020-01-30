@@ -59,6 +59,7 @@ interface InputProps {
 	action?: ActionWhitelistData;
 	approveIndex: number;
 	relevantInputData: RelevantInputData;
+	findTokenBalance?: Function;
 }
 
 export default function LayoutTextFields(props: InputProps) {
@@ -74,7 +75,8 @@ export default function LayoutTextFields(props: InputProps) {
 		condition,
 		action,
 		approveIndex,
-		relevantInputData
+		relevantInputData,
+		findTokenBalance
 	} = props;
 	// Context
 
@@ -261,6 +263,7 @@ export default function LayoutTextFields(props: InputProps) {
 				return (
 					<div className={classes.form}>
 						<TokenSelect
+							findTokenBalance={findTokenBalance}
 							defaultTokenAddress={returnDefaultString()}
 							index={index}
 							conditionOrAction={conditionOrAction}

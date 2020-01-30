@@ -14,7 +14,10 @@ import { useIcedTxContext } from '../state/GlobalState';
 import {
 	findConditionById,
 	findActionById,
-	checkIfMobile
+	checkIfMobile,
+	getTokenList,
+	deepCloneTokenList,
+	fetchTokenBalance
 } from '../helpers/helpers';
 import {
 	SELECT_CONDITION,
@@ -32,7 +35,8 @@ import {
 	TxState,
 	ChainIds,
 	ConditionOrAction,
-	InputType
+	InputType,
+	RelevantInputData
 } from '../constants/interfaces';
 import { Web3Provider } from 'ethers/providers';
 import { useWeb3React } from '@web3-react/core';
@@ -58,6 +62,8 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 
 	// web3React context
 	const web3 = useWeb3React();
+
+	const networkId = web3.chainId as ChainIds;
 
 	web3.connector?.getProvider();
 
@@ -101,6 +107,63 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 			}
 		}
 	}, []);
+
+	interface Balances {
+		balance: string;
+		address: string;
+	}
+
+	const emptyBalancesArray: Array<Balances> = [];
+	const [tokenBalances, setTokenBalances] = React.useState(
+		emptyBalancesArray
+	);
+
+	useEffect(() => {
+		async function fetchTokenBalancesInEffect() {
+			let tokenList = getTokenList(
+				RelevantInputData.allWithEth,
+				networkId
+			);
+			const clonedList = deepCloneTokenList(tokenList, networkId);
+			let copyTokenBalances = [...tokenBalances];
+			const onMobile = checkIfMobile();
+			for (let index = 0; index < clonedList.length; index++) {
+				if (!onMobile) {
+					let balance = await fetchTokenBalance(
+						clonedList[index],
+						web3
+					);
+					if (balance !== '') {
+						copyTokenBalances.push({
+							balance: balance,
+							address: clonedList[index].address[networkId]
+						});
+						console.log(copyTokenBalances);
+						setTokenBalances(copyTokenBalances);
+					}
+				}
+			}
+			// console.log(copyTokenBalances);
+			// setTokenBalances(copyTokenBalances);
+		}
+		if (web3.active) {
+			console.log('start fetching');
+			fetchTokenBalancesInEffect();
+		}
+	}, [web3.active]);
+
+	const findTokenBalance = (selectedTokenAddress: string) => {
+		let returnBalance = '';
+		for (let i = 0; i < tokenBalances.length; i++) {
+			if (tokenBalances[i].address === selectedTokenAddress) {
+				console.log('found');
+				console.log(tokenBalances[i].balance);
+				returnBalance = tokenBalances[i].balance;
+				break;
+			}
+		}
+		return returnBalance;
+	};
 
 	// IF ICEDTXSTATE == 0 => Use from query string. If still zero, render Confiugrator
 
@@ -488,6 +551,7 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 					<React.Fragment>
 						<Hidden xsDown>
 							<Stepper
+								findTokenBalance={findTokenBalance}
 								preTxCheck={preTxCheck}
 								icedTxState={icedTxState}
 								steps={getSteps()}
@@ -502,6 +566,7 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 						</Hidden>
 						<Hidden smUp>
 							<MobileStepper
+								findTokenBalance={findTokenBalance}
 								preTxCheck={preTxCheck}
 								icedTxState={icedTxState}
 								steps={getSteps()}

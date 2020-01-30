@@ -40,10 +40,12 @@ import ERC20_ABI from '../../constants/abis/erc20.json';
 interface TokenObjectProps {
 	token: Token;
 	disabled: boolean;
+	currentToken: Token;
+	findTokenBalance?: Function;
 }
 
 export default function TokenSelect(props: TokenObjectProps) {
-	const { token, disabled } = props;
+	const { token, disabled, currentToken, findTokenBalance } = props;
 	const { account, active, library, chainId } = useWeb3React();
 
 	// In case network Id is not defined yet, use default
@@ -55,62 +57,80 @@ export default function TokenSelect(props: TokenObjectProps) {
 	const [balance, setBalance] = React.useState('');
 
 	useEffect(() => {
-		fetchTokenBalance(token);
-	}, [account]);
-
-	const fetchTokenBalance = async (tokenObject: Token) => {
-		// Dont diplay more mobile
-		if (checkIfMobile()) return '';
-		else {
+		if (findTokenBalance !== undefined) {
 			if (active) {
-				const signer = library.getSigner();
-				const erc20 = new ethers.Contract(
-					tokenObject.address[networkId],
-					JSON.stringify(ERC20_ABI),
-					signer
-				);
-				const tokenAddress = tokenObject.address[networkId];
-				if (isEth(tokenAddress)) {
-					try {
-						const balance = await library.getBalance(account);
-						let humanReadableBalance = convertWeiToHumanReadableForTokenAmount(
-							balance,
-							token.decimals
-						);
-						humanReadableBalance = parseFloat(
-							humanReadableBalance
-						).toFixed(4);
-						setBalance(humanReadableBalance);
-					} catch (error) {
-						setBalance('');
-					}
-				} else {
-					try {
-						const balance = await erc20.balanceOf(
-							account as string
-						);
-						if (!balance.eq(ethers.constants.Zero)) {
-							let humanReadableBalance = convertWeiToHumanReadableForTokenAmount(
-								balance,
-								token.decimals
-							);
-							humanReadableBalance = parseFloat(
-								humanReadableBalance
-							).toFixed(4);
-
-							setBalance(humanReadableBalance);
-						} else {
-							setBalance('');
-						}
-					} catch (error) {
-						setBalance('');
-					}
-				}
-			} else {
-				return '';
+				console.log('fetching token balance in Object');
+				const tokenBalance = findTokenBalance(token.address[networkId]);
+				setBalance(tokenBalance);
 			}
 		}
-	};
+	});
+
+	// useEffect(() => {
+	// 	fetchTokenBalance(token);
+	// 	console.log('fetch token balance');
+	// }, [active]);
+
+	// useEffect(() => {
+	// 	if (token.address[networkId] === currentToken.address[networkId]) {
+	// 		fetchTokenBalance(token);
+	// 		console.log(' ON REFRESH');
+	// 	}
+	// }, [currentToken.address[networkId]]);
+
+	// const fetchTokenBalance = async (tokenObject: Token) => {
+	// 	// Dont diplay more mobile
+	// 	if (checkIfMobile()) return '';
+	// 	else {
+	// 		if (active) {
+	// 			const signer = library.getSigner();
+	// 			const erc20 = new ethers.Contract(
+	// 				tokenObject.address[networkId],
+	// 				JSON.stringify(ERC20_ABI),
+	// 				signer
+	// 			);
+	// 			const tokenAddress = tokenObject.address[networkId];
+	// 			if (isEth(tokenAddress)) {
+	// 				try {
+	// 					const balance = await library.getBalance(account);
+	// 					let humanReadableBalance = convertWeiToHumanReadableForTokenAmount(
+	// 						balance,
+	// 						token.decimals
+	// 					);
+	// 					humanReadableBalance = parseFloat(
+	// 						humanReadableBalance
+	// 					).toFixed(4);
+	// 					setBalance(humanReadableBalance);
+	// 				} catch (error) {
+	// 					setBalance('');
+	// 				}
+	// 			} else {
+	// 				try {
+	// 					const balance = await erc20.balanceOf(
+	// 						account as string
+	// 					);
+	// 					if (!balance.eq(ethers.constants.Zero)) {
+	// 						let humanReadableBalance = convertWeiToHumanReadableForTokenAmount(
+	// 							balance,
+	// 							token.decimals
+	// 						);
+	// 						humanReadableBalance = parseFloat(
+	// 							humanReadableBalance
+	// 						).toFixed(4);
+
+	// 						setBalance(humanReadableBalance);
+	// 					} else {
+	// 						setBalance('');
+	// 					}
+	// 				} catch (error) {
+	// 					setBalance('');
+	// 				}
+	// 			}
+	// 		} else {
+	// 			return '';
+	// 		}
+	// 	}
+	// };
 
 	return (
 		<div

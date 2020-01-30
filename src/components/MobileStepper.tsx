@@ -29,7 +29,13 @@ const useStyles = makeStyles({
 export default function DotsMobileStepper(props: StepperProps) {
 	const classes = useStyles();
 	const theme = useTheme();
-	const { activeStep, handleNext, handleBack, steps } = props;
+	const {
+		activeStep,
+		handleNext,
+		handleBack,
+		steps,
+		findTokenBalance
+	} = props;
 	const { dispatch, icedTxState } = useIcedTxContext();
 	const { active, activate } = useWeb3React();
 
@@ -145,6 +151,7 @@ export default function DotsMobileStepper(props: StepperProps) {
 			/>
 			<div style={{ width: '100%' }}>
 				<StepperContent
+					findTokenBalance={findTokenBalance}
 					icedTxState={icedTxState}
 					classes={classes}
 					activeStep={activeStep}

@@ -96,7 +96,8 @@ export default function StepperParent(props: StepperProps) {
 		handleBack,
 		// modalOpen,
 		modalClickOpen,
-		preTxCheck
+		preTxCheck,
+		findTokenBalance
 	} = props;
 
 	const { dispatch } = useIcedTxContext();
@@ -135,6 +136,7 @@ export default function StepperParent(props: StepperProps) {
 						{/* Steps before last */}
 						{/* <Typography className={classes.instructions}> */}
 						<StepperContent
+							findTokenBalance={findTokenBalance}
 							icedTxState={icedTxState}
 							classes={classes}
 							activeStep={activeStep}

@@ -30,7 +30,9 @@ import {
 	getTokenByAddress,
 	getTokenList,
 	isEth,
-	convertWeiToHumanReadableForTokenAmount
+	convertWeiToHumanReadableForTokenAmount,
+	checkIfMobile,
+	deepCloneTokenList
 } from '../../helpers/helpers';
 import { useWeb3React } from '@web3-react/core';
 
@@ -105,6 +107,7 @@ interface TokenSelectProps
 	defaultTokenAddress: string;
 	disabled: boolean;
 	relevantInputData: RelevantInputData;
+	findTokenBalance?: Function;
 }
 
 export default function TokenSelect(props: TokenSelectProps) {
@@ -114,7 +117,8 @@ export default function TokenSelect(props: TokenSelectProps) {
 		index,
 		conditionOrAction,
 		disabled,
-		relevantInputData
+		relevantInputData,
+		findTokenBalance
 	} = props;
 	const { dispatch, icedTxState } = useIcedTxContext();
 	const { account, active, library, chainId } = useWeb3React();
@@ -125,13 +129,51 @@ export default function TokenSelect(props: TokenSelectProps) {
 		networkId = chainId as ChainIds;
 	}
 
+	interface Balances {
+		balance: string;
+		address: string;
+	}
+
+	const emptyBalancesArray: Array<Balances> = [];
+	const [tokenBalances, setTokenBalances] = React.useState(
+		emptyBalancesArray
+	);
+
 	// If action, dont display ETH
 	let tokenList = getTokenList(relevantInputData, networkId);
 
-	// if (conditionOrAction === ConditionOrAction.Condition) {
-	// 	tokenList.splice(0, 0, ETH);
-	// } else if ()
+	// Fetch token balances
+	// useEffect(() => {
+	// 	async function fetchTokenBalancesInEffect() {
+	// 		const clonedList = deepCloneTokenList(tokenList, networkId);
+	// 		let copyTokenBalances = [...tokenBalances];
+	// 		for (let index = 0; index < clonedList.length; index++) {
+	// 			let balance = await fetchTokenBalance(clonedList[index]);
+	// 			copyTokenBalances.push({
+	// 				balance: balance,
+	// 				address: clonedList[index].address[networkId]
+	// 			});
+	// 		}
+	// 		setTokenBalances(copyTokenBalances);
+	// 	}
+	// 	if (active) {
+	// 		console.log('start fetching');
+	// 		fetchTokenBalancesInEffect();
+	// 	}
+	// }, [active]);
 
+	// const findTokenBalance = (selectedTokenAddress: string) => {
+	// 	let returnBalance = '';
+	// 	for (let i = 0; i < tokenBalances.length; i++) {
+	// 		if (tokenBalances[i].address === selectedTokenAddress) {
+	// 			console.log('found');
+	// 			console.log(tokenBalances[i].balance);
+	// 			returnBalance = tokenBalances[i].balance;
+	// 			break;
+	// 		}
+	// 	}
+	// 	return returnBalance;
+	// };
 	// Pref
 	const [token, setToken] = React.useState<Token>(
 		getTokenByAddress(defaultTokenAddress, networkId, relevantInputData)
@@ -193,6 +235,7 @@ export default function TokenSelect(props: TokenSelectProps) {
 	const handleOpen = () => {
 		setOpen(true);
 	};
+
 	return (
 		<FormControl variant="outlined" className={classes.formControl}>
 			<InputLabel
@@ -228,8 +271,10 @@ export default function TokenSelect(props: TokenSelectProps) {
 						// }}
 					>
 						<TokenObject
+							findTokenBalance={findTokenBalance}
 							disabled={disabled}
 							token={possibleToken}
+							currentToken={token}
 						></TokenObject>
 					</MenuItem>
 				))}

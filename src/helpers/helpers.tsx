@@ -5,6 +5,7 @@ import {
 	ConditionOrAction
 } from '../constants/interfaces';
 import { KYBER_TOKEN_LIST, TOKEN_LIST } from '../constants/tokens';
+import ERC20_ABI from '../constants/abis/erc20.json';
 
 import {
 	DEFAULT_DATA_ACTION,
@@ -19,6 +20,7 @@ import {
 	InputType,
 	ChainIds
 } from '../constants/interfaces';
+import { Web3ReactContextInterface } from '@web3-react/core/dist/types';
 
 export function stringifyTimestamp(timestamp: string) {
 	let date = new Date(parseInt(timestamp) * 1000);
@@ -464,6 +466,64 @@ export const getEtherscanPrefix = (chainId: ChainIds): string => {
 
 		default:
 			return '';
+	}
+};
+
+// Fetch token balances
+export const fetchTokenBalance = async (
+	tokenObject: Token,
+	web3: Web3ReactContextInterface<any>
+) => {
+	// Dont diplay more mobile
+	const networkId = web3.chainId as ChainIds;
+
+	if (web3.active) {
+		const signer = web3.library.getSigner();
+		const erc20 = new ethers.Contract(
+			tokenObject.address[networkId],
+			JSON.stringify(ERC20_ABI),
+			signer
+		);
+		const tokenAddress = tokenObject.address[networkId];
+		if (isEth(tokenAddress)) {
+			try {
+				const balance = await web3.library.getBalance(web3.account);
+				if (balance.eq(ethers.constants.Zero)) return '';
+				else {
+					let humanReadableBalance = convertWeiToHumanReadableForTokenAmount(
+						balance,
+						tokenObject.decimals
+					);
+					humanReadableBalance = parseFloat(
+						humanReadableBalance
+					).toFixed(4);
+					return humanReadableBalance;
+				}
+			} catch (error) {
+				return '';
+			}
+		} else {
+			try {
+				const balance = await erc20.balanceOf(web3.account as string);
+				if (!balance.eq(ethers.constants.Zero)) {
+					let humanReadableBalance = convertWeiToHumanReadableForTokenAmount(
+						balance,
+						tokenObject.decimals
+					);
+					humanReadableBalance = parseFloat(
+						humanReadableBalance
+					).toFixed(4);
+
+					return humanReadableBalance;
+				} else {
+					return '';
+				}
+			} catch (error) {
+				return '';
+			}
+		}
+	} else {
+		return '';
 	}
 };
 
