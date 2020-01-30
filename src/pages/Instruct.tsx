@@ -28,7 +28,12 @@ import {
 	INPUT_ERROR
 } from '../constants/constants';
 import TransactionModal from '../components/Modal';
-import { TxState, ChainIds, ConditionOrAction } from '../constants/interfaces';
+import {
+	TxState,
+	ChainIds,
+	ConditionOrAction,
+	InputType
+} from '../constants/interfaces';
 import { Web3Provider } from 'ethers/providers';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
@@ -204,16 +209,6 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 			// console.log('Error');
 			dispatch({ type: OPEN_MODAL });
 		}
-
-		// @ DEV INCLUDE VALIDATION, ONLY ALLOW IF ALL INPUT FIELDS HAVE BEEN VALIDATED
-
-		// if (!icedTxState.error.isError) {
-		// 	setActiveStep(prevActiveStep => prevActiveStep + 1);
-		// } else {
-		// 	// Open Modal and show error
-		// 	// console.log('openModal');
-		// 	dispatch({ type: OPEN_MODAL });
-		// }
 	}
 
 	const handleBack = () => {
@@ -385,10 +380,24 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 						.then((result: string) => {
 							const proxyAddress = result;
 							// User has Proxy
-							// @DEV Make dynamic
-							const tokenAmount = ethers.utils.bigNumberify(
-								'10000000000000000'
-							);
+							// Fetch sell Token Amount
+							let tokenAmount = ethers.constants.One;
+							for (
+								let index = 0;
+								icedTxState.action.userInputs.length;
+								index++
+							) {
+								if (
+									icedTxState.action.userInputTypes[index] ===
+									InputType.TokenAmount
+								) {
+									tokenAmount = icedTxState.action.userInputs[
+										index
+									] as ethers.utils.BigNumber;
+									break;
+								}
+							}
+
 							// Get Erc20 contract
 							const signer = web3.library.getSigner();
 							const tokenAddress =
