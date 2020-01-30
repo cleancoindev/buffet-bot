@@ -180,19 +180,21 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				icedTxState.condition.id === 3 &&
 				conditionOrAction === ConditionOrAction.Condition
 			) {
-				// edit label
-				const sellSymbol = getTokenByAddress(
-					inputs[0] as string,
-					networkId,
-					relevantInputData
-				).symbol;
+				try {
+					// edit label
+					const sellSymbol = getTokenByAddress(
+						inputs[0] as string,
+						networkId,
+						relevantInputData
+					).symbol;
 
-				const buySymbol = getTokenByAddress(
-					inputs[2] as string,
-					networkId,
-					relevantInputData
-				).symbol;
-				updatedLabel = `${sellSymbol}/${buySymbol} ${label}`;
+					const buySymbol = getTokenByAddress(
+						inputs[2] as string,
+						networkId,
+						relevantInputData
+					).symbol;
+					updatedLabel = `${sellSymbol}/${buySymbol} ${label}`;
+				} catch (error) {}
 			}
 		}
 	}
