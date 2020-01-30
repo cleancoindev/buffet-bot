@@ -166,21 +166,34 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				conditionOrAction,
 				id
 			);
-			// If Kyber price COondition
-			//if ()
-			// edit label
-			const sellSymbol = getTokenByAddress(
-				inputs[0] as string,
-				networkId,
-				relevantInputData
-			).symbol;
+		}
+	}
 
-			const buySymbol = getTokenByAddress(
-				inputs[2] as string,
-				networkId,
-				relevantInputData
-			).symbol;
-			updatedLabel = `${sellSymbol}/${buySymbol} ${label}`;
+	// Label Conversion Kyber Price
+	// If Kyber price COondition
+	if (inputs[0] !== undefined) {
+		if (
+			inputType === InputType.Number ||
+			inputType === InputType.StatelessGetValue
+		) {
+			if (
+				icedTxState.condition.id === 3 &&
+				conditionOrAction === ConditionOrAction.Condition
+			) {
+				// edit label
+				const sellSymbol = getTokenByAddress(
+					inputs[0] as string,
+					networkId,
+					relevantInputData
+				).symbol;
+
+				const buySymbol = getTokenByAddress(
+					inputs[2] as string,
+					networkId,
+					relevantInputData
+				).symbol;
+				updatedLabel = `${sellSymbol}/${buySymbol} ${label}`;
+			}
 		}
 	}
 
