@@ -90,6 +90,7 @@ export interface ActionWhitelistData {
 	inputLabels: Array<string>;
 	userInputTypes: Array<InputType>;
 	getActionValueAbi: string;
+	getActionValueInput: ethers.utils.BigNumber;
 	userInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
 	relevantInputData: Array<RelevantInputData>;
 	approveIndex: number;
@@ -289,6 +290,7 @@ interface InputOk {
 
 interface UpdateGetValueInput {
 	type: typeof UPDATE_GET_VALUE_INPUT;
+	conditionOrAction: ConditionOrAction;
 	newGetValueInput: ethers.utils.BigNumber;
 }
 

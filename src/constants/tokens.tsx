@@ -165,7 +165,6 @@ export const KYBER_TOKEN_LIST = [
 ];
 
 export const KYBER_TOKEN_LIST_WITH_ETH = [
-	{ ...ETH },
 	{
 		address: {
 			1: '0x6b175474e89094c44da98b954eedeac495271d0f',
@@ -178,6 +177,7 @@ export const KYBER_TOKEN_LIST_WITH_ETH = [
 		decimals: 18,
 		max: '275'
 	},
+	{ ...ETH },
 	{
 		address: {
 			1: '0x6810e776880c02933d47db1b9fc05908e5386b96',

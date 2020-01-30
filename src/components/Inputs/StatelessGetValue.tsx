@@ -58,12 +58,16 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 	const { account, library } = useWeb3React();
 	const { icedTxState } = useIcedTxContext();
 
+	// icedTxState.condition.getConditionValueInput : icedTxState.action.getActionValueInput
+
 	const [getValueState, setGetValueState] = React.useState(
-		icedTxState.condition.getConditionValueInput
+		conditionOrAction === ConditionOrAction.Condition
+			? icedTxState.condition.getConditionValueInput
+			: icedTxState.action.getActionValueInput
 	);
 	// If globalState changes, call once
 	useEffect(() => {
-		if (!disabled && inputs[0] !== undefined) {
+		if (inputs[0] !== undefined) {
 			callGetValueAndSetState();
 		}
 	}, [icedTxState]);
@@ -72,7 +76,10 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 	// Params: Contract address | Contract Parameters
 	const callGetValue = async () => {
 		// Get abi
-		let newValue = icedTxState.condition.getConditionValueInput;
+		let newValue =
+			conditionOrAction === ConditionOrAction.Condition
+				? icedTxState.condition.getConditionValueInput
+				: icedTxState.action.getActionValueInput;
 		// WHen on summary page, return global state
 
 		if (disabled) return newValue;
@@ -181,25 +188,25 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 		}
 	}
 
-	if (!disabled) {
-		return (
-			<ReactNumberFormat
-				updateUserInput={updateUserInput}
-				label={label}
-				index={index}
-				inputType={inputType}
-				inputs={inputs}
-				defaultValue={getValueState}
-				disabled={true}
-				approveIndex={approveIndex}
-				conditionOrAction={conditionOrAction}
-				relevantInputData={relevantInputData}
-				key={`getValue-input-${disabled}-${conditionOrAction}-${index}`}
-			></ReactNumberFormat>
-		);
-	} else {
-		return <React.Fragment></React.Fragment>;
-	}
+	// if (!disabled) {
+	return (
+		<ReactNumberFormat
+			updateUserInput={updateUserInput}
+			label={label}
+			index={index}
+			inputType={inputType}
+			inputs={inputs}
+			defaultValue={getValueState}
+			disabled={true}
+			approveIndex={approveIndex}
+			conditionOrAction={conditionOrAction}
+			relevantInputData={relevantInputData}
+			key={`getValue-input-${conditionOrAction}-${index}`}
+		></ReactNumberFormat>
+	);
+	// } else {
+	// 	return <React.Fragment></React.Fragment>;
+	// }
 };
 
 export default StatelessGetValueInput;

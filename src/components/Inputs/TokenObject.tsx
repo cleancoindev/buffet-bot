@@ -37,71 +37,13 @@ import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import ERC20_ABI from '../../constants/abis/erc20.json';
 
-const useStyles = makeStyles((theme: Theme) =>
-	createStyles({
-		button: {
-			display: 'block',
-			fontSize: '18px'
-		},
-		formControl: {
-			fontSize: '18px',
-			// marginRight: '24px',
-			width: '100%',
-
-			'& .MuiOutlinedInput-root:hover': {
-				'& fieldset': {
-					borderColor: 'white'
-				}
-			},
-			'& .MuiOutlinedInput-root.Mui-disabled': {
-				'& fieldset': {
-					borderColor: '#72627b',
-					borderWidth: 1
-				}
-			},
-			'& .MuiOutlinedInput-root.Mui-disabled:hover': {
-				'& fieldset': {
-					borderColor: '#72627b'
-				}
-			}
-		},
-		select: {
-			fontSize: '18px',
-			'& fieldset': {
-				borderColor: COLOURS.salmon,
-				borderWidth: 1,
-				color: 'white',
-				'& .MuiOutlinedInput:hover': {
-					borderColor: 'white'
-				}
-			},
-			'& .MuiSelect-root': {
-				color: 'white'
-			},
-			'& .MuiOutlinedInput-notchedOutline': {
-				'&:hover': {
-					borderColor: 'white'
-				}
-			}
-		}
-		// listItem: {
-		// 	'li:after': {
-		// 		content: ' ',
-		// 		display: 'block',
-		// 		height: '1px',
-		// 		borderBottom: 'solid 1px red',
-		// 		width: '80%'
-		// 	}
-		// }
-	})
-);
-
 interface TokenObjectProps {
 	token: Token;
+	disabled: boolean;
 }
 
 export default function TokenSelect(props: TokenObjectProps) {
-	const { token } = props;
+	const { token, disabled } = props;
 	const { account, active, library, chainId } = useWeb3React();
 
 	// In case network Id is not defined yet, use default
@@ -110,13 +52,11 @@ export default function TokenSelect(props: TokenObjectProps) {
 		networkId = chainId as ChainIds;
 	}
 
-	const classes = useStyles();
-
 	const [balance, setBalance] = React.useState('');
 
 	useEffect(() => {
 		fetchTokenBalance(token);
-	}, []);
+	}, [account]);
 
 	const fetchTokenBalance = async (tokenObject: Token) => {
 		// Dont diplay more mobile
@@ -166,6 +106,8 @@ export default function TokenSelect(props: TokenObjectProps) {
 						setBalance('');
 					}
 				}
+			} else {
+				return '';
 			}
 		}
 	};
@@ -209,20 +151,22 @@ export default function TokenSelect(props: TokenObjectProps) {
 			<p
 				style={{ fontSize: '18px' }}
 			>{`${token.symbol} (${token.name})`}</p>
-			<div
-				style={{
-					display: 'flex',
-					flexDirection: 'row',
-					alignItems: 'center',
-					justifyContent: 'flex-end',
-					marginRight: 'auto',
-					width: '100%'
-				}}
-			>
-				<p style={{ fontSize: '18px', marginLeft: 'auto' }}>
-					{balance}
-				</p>
-			</div>
+			{!disabled && (
+				<div
+					style={{
+						display: 'flex',
+						flexDirection: 'row',
+						alignItems: 'center',
+						justifyContent: 'flex-end',
+						marginRight: 'auto',
+						width: '100%'
+					}}
+				>
+					<p style={{ fontSize: '18px', marginLeft: 'auto' }}>
+						{balance}
+					</p>
+				</div>
+			)}
 		</div>
 	);
 }

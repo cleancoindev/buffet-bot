@@ -76,6 +76,7 @@ export const DEFAULT_DATA_ACTION = {
 	params: EMPTY_PARAM_ARRAY, // [ ]
 	abi: '',
 	getActionValueAbi: '',
+	getActionValueInput: BIG_NUM_ZERO,
 	inputLabels: EMPTY_STRING_ARRAY, // [ ]
 	userInputTypes: EMPTY_USER_INPUT_TYPE_ARRAY, // [ ]
 	userInputs: EMPTY_USER_INPUT_ARRAY, // [ ]

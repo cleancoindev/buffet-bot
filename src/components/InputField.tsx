@@ -232,6 +232,7 @@ export default function LayoutTextFields(props: InputProps) {
 				const tokenList = getTokenList(relevantInputData, networkId);
 				let defaultToken = tokenList[0];
 				if (index !== 0) defaultToken = tokenList[1];
+
 				updateUserInput(index, defaultToken.address[networkId]);
 				return defaultToken.address[networkId];
 			case InputType.Date:
@@ -350,41 +351,28 @@ export default function LayoutTextFields(props: InputProps) {
 			case InputType.StatelessGetValue:
 				// callGetValueAndSetState();
 				// Only display in creation, not summary
-				if (!disabled) {
-					return (
-						<div className={classes.form}>
-							<StatelessGetValueInput
-								updateUserInput={updateUserInput}
-								label={label}
-								index={index}
-								inputType={inputType}
-								inputs={inputs}
-								disabled={disabled}
-								approveIndex={approveIndex}
-								conditionOrAction={conditionOrAction}
-								key={`getValue-input-${disabled}-${conditionOrAction}-${index}`}
-								condition={condition}
-								action={action}
-								relevantInputData={relevantInputData}
-							></StatelessGetValueInput>
-							{/* <ReactNumberFormat
-								updateUserInput={updateUserInput}
-								label={label}
-								index={index}
-								inputType={inputType}
-								inputs={inputs}
-								defaultValue={getValueState}
-								convertToWei
-								disabled={true}
-								approveIndex={approveIndex}
-								conditionOrAction={conditionOrAction}
-								key={`getValue-input-${disabled}-${conditionOrAction}-${index}`}
-							></ReactNumberFormat> */}
-						</div>
-					);
-				} else {
-					return <React.Fragment></React.Fragment>;
-				}
+				// if (!disabled) {
+				return (
+					<div className={classes.form}>
+						<StatelessGetValueInput
+							updateUserInput={updateUserInput}
+							label={label}
+							index={index}
+							inputType={inputType}
+							inputs={inputs}
+							disabled={disabled}
+							approveIndex={approveIndex}
+							conditionOrAction={conditionOrAction}
+							key={`getValue-input-${conditionOrAction}-${index}`}
+							condition={condition}
+							action={action}
+							relevantInputData={relevantInputData}
+						></StatelessGetValueInput>
+					</div>
+				);
+			// } else {
+			// 	return <React.Fragment></React.Fragment>;
+			// }
 			case InputType.Bool:
 				// Dont call when showing sumamry
 				if (!disabled) {

@@ -241,7 +241,8 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 					});
 					dispatch({
 						type: UPDATE_GET_VALUE_INPUT,
-						newGetValueInput: defaultValue
+						newGetValueInput: defaultValue,
+						conditionOrAction: conditionOrAction
 					});
 				} catch (error) {
 					// console.log(error);

@@ -227,7 +227,10 @@ export default function TokenSelect(props: TokenSelectProps) {
 						// 	color: 'white'
 						// }}
 					>
-						<TokenObject token={possibleToken}></TokenObject>
+						<TokenObject
+							disabled={disabled}
+							token={possibleToken}
+						></TokenObject>
 					</MenuItem>
 				))}
 			</Select>

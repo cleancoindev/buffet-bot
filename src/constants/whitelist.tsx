@@ -210,7 +210,8 @@ export const ATYPES = [
 		approveIndex: 0,
 		logo: '/images/ethereum_logo.png',
 		getActionValueAbi:
-			'function getUsersSendTokenBalance(address _user, address _userProxy, address _src, uint256, address) view returns (uint256)'
+			'function getUsersSendTokenBalance(address _user, address _userProxy, address _src, uint256, address) view returns (uint256)',
+		getActionValueInput: BIG_NUM_ZERO
 	},
 
 	{
@@ -266,7 +267,8 @@ export const ATYPES = [
 		approveIndex: 0,
 		logo: '/images/kyber_logo.png',
 		getActionValueAbi:
-			'function getUsersSendTokenBalance(address _user, address _userProxy, address _src, uint256, address) view returns (uint256)'
+			'function getUsersSendTokenBalance(address _user, address _userProxy, address _src, uint256, address) view returns (uint256)',
+		getActionValueInput: BIG_NUM_ZERO
 	},
 	{
 		id: 3,
@@ -321,7 +323,8 @@ export const ATYPES = [
 		approveIndex: 0,
 		logo: '/images/fulcrum_logo.png',
 		getActionValueAbi:
-			'function getUsersSendTokenBalance(address _user, address _userProxy, address _depositTokenAddress, uint256, address) view returns (uint256)'
+			'function getUsersSendTokenBalance(address _user, address _userProxy, address _depositTokenAddress, uint256, address) view returns (uint256)',
+		getActionValueInput: BIG_NUM_ZERO
 	},
 	{
 		id: 4,
@@ -365,7 +368,8 @@ export const ATYPES = [
 		approveIndex: 0,
 		logo: '/images/fulcrum_logo.png',
 		getActionValueAbi:
-			'function getUsersSendTokenBalance(address _user, address _userProxy, address _pTokenAddress, uint256, address) view returns (uint256)'
+			'function getUsersSendTokenBalance(address _user, address _userProxy, address _pTokenAddress, uint256, address) view returns (uint256)',
+		getActionValueInput: BIG_NUM_ZERO
 	}
 ];
 

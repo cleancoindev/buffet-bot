@@ -62,10 +62,18 @@ function updateUserInput(
 	return stateCopy;
 }
 
-function setConditionGetValue(state: IcedTx, newValue: ethers.utils.BigNumber) {
+function setConditionGetValue(
+	state: IcedTx,
+	newValue: ethers.utils.BigNumber,
+	conditionOrAction: ConditionOrAction
+) {
 	const stateCopy = { ...state };
 
-	stateCopy.condition.getConditionValueInput = newValue;
+	if (conditionOrAction === ConditionOrAction.Condition) {
+		stateCopy.condition.getConditionValueInput = newValue;
+	} else if (conditionOrAction === ConditionOrAction.Action) {
+		stateCopy.action.getActionValueInput = newValue;
+	}
 
 	return stateCopy;
 }
@@ -148,6 +156,10 @@ export const icedTxReducer = (state: IcedTx, action: Action) => {
 				txState: action.txState
 			};
 		case UPDATE_GET_VALUE_INPUT:
-			return setConditionGetValue(state, action.newGetValueInput);
+			return setConditionGetValue(
+				state,
+				action.newGetValueInput,
+				action.conditionOrAction
+			);
 	}
 };

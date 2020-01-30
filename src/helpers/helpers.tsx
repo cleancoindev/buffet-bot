@@ -411,6 +411,8 @@ export const deepCloneActions = () => {
 
 		const clonedRelevantInputData = [...data.relevantInputData];
 
+		const clonedGetActionValueInput = data.getActionValueInput;
+
 		// clone inputLabels
 		const clonedInputLabels: Array<string> = [];
 		data.inputLabels.forEach(inputLabel => {
@@ -440,7 +442,8 @@ export const deepCloneActions = () => {
 			approveIndex: clonedTokenIndex,
 			relevantInputData: clonedRelevantInputData,
 			logo: clonedLogo,
-			getActionValueAbi: clonedGetActionValueAbi
+			getActionValueAbi: clonedGetActionValueAbi,
+			getActionValueInput: clonedGetActionValueInput
 		});
 	});
 	return dataCopy;
