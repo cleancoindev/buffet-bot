@@ -140,8 +140,8 @@ export default function LoginButton() {
 			>
 				{account
 					? `${account.substring(0, 6)}...${account.substring(
-							37,
-							41
+							38,
+							42
 					  )}`
 					: 'Connected'}
 			</GelatoButton>

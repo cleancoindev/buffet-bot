@@ -324,7 +324,7 @@ export default function ButtonAppBar() {
 										? `${account.substring(
 												0,
 												6
-										  )}...${account.substring(37, 41)}`
+										  )}...${account.substring(38, 42)}`
 										: 'Connected'
 								}
 							/>

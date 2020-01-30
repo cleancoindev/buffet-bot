@@ -469,7 +469,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.displayGelatoWallet:
 				return {
-					title: `First, let's deploy your personal gelato bot!`,
+					title: `You don't have a gelato bot to instruct yet. Let's deploy a new one for you first!`,
 					progress: Progress.awaitingModalConfirm,
 					progressText: ``,
 					prepayment: false,
@@ -636,7 +636,7 @@ export default function TransactionCard(props: TxCardProps) {
 								// console.log('Change TxState to displayCreate');
 								dispatch({
 									type: UPDATE_TX_STATE,
-									txState: TxState.displayCreate
+									txState: TxState.postApprove
 								});
 								// WE SKIP THE WAITING FOR THE TX FOR APPROVE
 								// await tx.wait();
@@ -676,9 +676,26 @@ export default function TransactionCard(props: TxCardProps) {
 						});
 					}
 				};
+			case TxState.postApprove:
+				return {
+					title: `Great, now let's submit your instruction to your gelato bot`,
+					progress: Progress.finished,
+					progressText: `Submitted approval transaction`,
+					prepayment: false,
+					closeBtn: true,
+					btn: 'Continue',
+					btnFunc: () => {
+						// Change state back to display approve:
+						// console.log('Change TxState to displayApprove');
+						dispatch({
+							type: UPDATE_TX_STATE,
+							txState: TxState.displayCreate
+						});
+					}
+				};
 			case TxState.displayCreate:
 				return {
-					title: `Submit the instruction to your bot`,
+					title: `Submit the instruction to your gelato bot`,
 					progress: Progress.awaitingModalConfirm,
 					progressText: ``,
 					prepayment: true,
@@ -797,7 +814,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.postCreate:
 				return {
-					title: `Success: Instruction submitted!`,
+					title: `Success: Your gelato bot received your instruction`,
 					progress: Progress.finished,
 					progressText: `Transaction mined`,
 					prepayment: true,
@@ -1181,7 +1198,7 @@ export default function TransactionCard(props: TxCardProps) {
 									? `${account.substring(
 											0,
 											6
-									  )}...${account.substring(37, 41)}`
+									  )}...${account.substring(38, 42)}`
 									: 'No acount found'}
 							</h4>
 						</Grid>

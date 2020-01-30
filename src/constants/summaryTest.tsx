@@ -71,6 +71,7 @@ export const getConditionText = (
 					relevantInputData
 				).decimals
 			);
+			const lessOrMore = inputs[4];
 			let price = inputs[3] as ethers.utils.BigNumber;
 			if (price.eq(ethers.constants.MaxUint256)) {
 				price = ethers.constants.Zero;
@@ -92,25 +93,30 @@ export const getConditionText = (
 
 			const isOrAre = parseFloat(sellAmountHumanReadable) === 1.0;
 
-			const buySymbol = getTokenByAddress(
+			const sellSymbol = getTokenByAddress(
 				inputs[0] as string,
 				networkId,
 				relevantInputData
 			).symbol;
 
-			const sellSymbol = getTokenByAddress(
+			const buySymbol = getTokenByAddress(
 				inputs[2] as string,
 				networkId,
 				relevantInputData
 			).symbol;
 
-			const exchangeRate = `(1 ${buySymbol} = ${priceHumanReadable} ${sellSymbol})`;
+			let lessOrMoreText = '';
+			if (!price.eq(ethers.constants.Zero)) {
+				lessOrMoreText = lessOrMore ? 'or more' : 'or less';
+			}
 
-			return `${sellAmountHumanReadable} ${buySymbol} ${
+			const exchangeRate = `(1 ${sellSymbol} = ${priceHumanReadable} ${sellSymbol})`;
+
+			return `${sellAmountHumanReadable} ${sellSymbol} ${
 				isOrAre ? 'is' : 'are'
-			} worth ${expectedBuyAmount} ${sellSymbol} ${
+			} worth ${expectedBuyAmount} ${buySymbol} ${
 				isOrAre ? '' : exchangeRate
-			} on Kyber `;
+			} ${lessOrMoreText} on Kyber `;
 		}
 
 		default:

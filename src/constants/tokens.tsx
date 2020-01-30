@@ -414,6 +414,10 @@ export const TOKEN_LIST = [
 	},
 	{
 		name: RelevantInputData.all,
-		data: [...FULCRUM_LEVERAGE_TOKEN_LIST, ...KYBER_TOKEN_LIST_WITH_ETH]
+		data: [...KYBER_TOKEN_LIST, ...FULCRUM_LEVERAGE_TOKEN_LIST]
+	},
+	{
+		name: RelevantInputData.allWithEth,
+		data: [...KYBER_TOKEN_LIST_WITH_ETH, ...FULCRUM_LEVERAGE_TOKEN_LIST]
 	}
 ];

@@ -95,10 +95,10 @@ export const TTYPES = [
 		],
 		relevantInputData: [
 			RelevantInputData.none,
-			RelevantInputData.kyberTokenList,
-			RelevantInputData.kyberTokenList,
+			RelevantInputData.kyberTokenListWithEth,
+			RelevantInputData.kyberTokenListWithEth,
 			RelevantInputData.none,
-			RelevantInputData.kyberTokenList
+			RelevantInputData.kyberTokenListWithEth
 		],
 		userInputs: EMPTY_STRING_ARRAY,
 		logo: '/images/ethereum_logo.png'
@@ -148,12 +148,12 @@ export const TTYPES = [
 		],
 		userInputs: EMPTY_STRING_ARRAY,
 		relevantInputData: [
-			RelevantInputData.kyberTokenList,
-			RelevantInputData.kyberTokenList,
-			RelevantInputData.kyberTokenList,
-			RelevantInputData.kyberTokenList,
+			RelevantInputData.kyberTokenListWithEth,
+			RelevantInputData.kyberTokenListWithEth,
+			RelevantInputData.kyberTokenListWithEth,
+			RelevantInputData.kyberTokenListWithEth,
 			RelevantInputData.none,
-			RelevantInputData.kyberTokenList
+			RelevantInputData.kyberTokenListWithEth
 		],
 		logo: '/images/kyber_logo.png'
 	}
@@ -193,11 +193,11 @@ export const ATYPES = [
 			InputType.StatelessGetValue
 		],
 		relevantInputData: [
-			RelevantInputData.kyberTokenList,
-			RelevantInputData.kyberTokenList,
+			RelevantInputData.all,
+			RelevantInputData.all,
 			RelevantInputData.none,
 			//@DEV Send tokens will only work for Kyber Tokens
-			RelevantInputData.kyberTokenList
+			RelevantInputData.all
 		],
 		inputLabels: [
 			'Token to send',

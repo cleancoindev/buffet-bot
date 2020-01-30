@@ -144,7 +144,8 @@ export enum RelevantInputData {
 	kyberTokenList = 1,
 	kyberTokenListWithEth = 2,
 	fulcrumTokenList = 3,
-	all = 4
+	all = 4,
+	allWithEth = 5
 }
 
 export interface MatchParams {
@@ -193,17 +194,18 @@ export enum TxState {
 	postGelatoWallet = 7,
 	displayApprove = 8,
 	preApprove = 9,
-	displayCreate = 10,
-	preCreate = 11,
-	waitingCreate = 12,
-	postCreate = 13,
-	displayCancel = 14,
-	preCancel = 15,
-	waitingCancel = 16,
-	postCancel = 17,
-	cancelled = 18,
-	insufficientBalance = 19,
-	inputError = 20
+	postApprove = 10,
+	displayCreate = 11,
+	preCreate = 12,
+	waitingCreate = 13,
+	postCreate = 14,
+	displayCancel = 15,
+	preCancel = 16,
+	waitingCancel = 17,
+	postCancel = 18,
+	cancelled = 19,
+	insufficientBalance = 20,
+	inputError = 21
 }
 
 export type ChainIds = 1 | 3 | 4 | 42;

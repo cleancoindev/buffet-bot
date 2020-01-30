@@ -122,9 +122,9 @@ export default function TokenSelect(props: TokenSelectProps) {
 	// If action, dont display ETH
 	let tokenList = getTokenList(relevantInputData, networkId);
 
-	if (conditionOrAction === ConditionOrAction.Condition) {
-		tokenList.splice(0, 0, ETH);
-	}
+	// if (conditionOrAction === ConditionOrAction.Condition) {
+	// 	tokenList.splice(0, 0, ETH);
+	// } else if ()
 
 	// Pref
 	const [token, setToken] = React.useState<Token>(

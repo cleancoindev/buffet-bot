@@ -60,6 +60,7 @@ function NumberFormatCustom(props: NumberFormatCustomProps) {
 	return (
 		<NumberFormat
 			{...other}
+			// prefix={`ETH / KNC `}
 			getInputRef={inputRef}
 			onValueChange={values => {
 				onChange({
@@ -142,6 +143,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 	let initialValueString = '0';
 	// If token address is alraedy inputted, convert number using the tokens decimal field
 	// @DEV Only works if we set an approve Index
+	let updatedLabel = label;
 	if (inputs[approveIndex] !== undefined) {
 		initialValueBigInt = defaultValue;
 		const tokenAddress = inputs[approveIndex] as string;
@@ -164,6 +166,21 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 				conditionOrAction,
 				id
 			);
+			// If Kyber price COondition
+			//if ()
+			// edit label
+			const sellSymbol = getTokenByAddress(
+				inputs[0] as string,
+				networkId,
+				relevantInputData
+			).symbol;
+
+			const buySymbol = getTokenByAddress(
+				inputs[2] as string,
+				networkId,
+				relevantInputData
+			).symbol;
+			updatedLabel = `${sellSymbol}/${buySymbol} ${label}`;
 		}
 	}
 
@@ -348,7 +365,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 	return (
 		<TextField
 			className={classes.root}
-			label={label}
+			label={updatedLabel}
 			value={values.numberformat}
 			onChange={handleChange('numberformat')}
 			id={`formatted-numberformat-input-${conditionOrAction}-${index}`}

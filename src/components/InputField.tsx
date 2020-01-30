@@ -231,8 +231,7 @@ export default function LayoutTextFields(props: InputProps) {
 			case InputType.Token:
 				const tokenList = getTokenList(relevantInputData, networkId);
 				let defaultToken = tokenList[0];
-				if (index !== 0 && tokenList.length > 2)
-					defaultToken = tokenList[2];
+				if (index !== 0) defaultToken = tokenList[1];
 				updateUserInput(index, defaultToken.address[networkId]);
 				return defaultToken.address[networkId];
 			case InputType.Date:
