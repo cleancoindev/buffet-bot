@@ -103,15 +103,53 @@ export default function Help() {
 								id="panel1a-header"
 							>
 								<Typography className={classes.heading}>
-									2. What is gelato?
+									2. What is a gelato bot on a high level?
 								</Typography>
 							</ExpansionPanelSummary>
 							<ExpansionPanelDetails>
 								<Typography style={{ textAlign: 'left' }}>
-									Gelato is your personal Ethereum bot that
-									will execute and automate transactions on
-									your behalf, based on instructions and
-									allowances prescribed by you.
+									On a high level, a gelato bot is your
+									personal Ethereum bot that will execute
+									certain actions on your behalf, if and only
+									if certain conditions, that you can
+									predefine, are met. Example: If Price of
+									ETH/DAI on Kyber reaches 1 ETH = 500 DAI,
+									buy a leveraged ETH short position on
+									Fulcrum.
+								</Typography>
+							</ExpansionPanelDetails>
+						</ExpansionPanel>
+						<ExpansionPanel className={classes.paperRoot}>
+							<ExpansionPanelSummary
+								expandIcon={<ExpandMoreIcon />}
+								aria-controls="panel1a-content"
+								id="panel1a-header"
+							>
+								<Typography className={classes.heading}>
+									3. What is a gelato bot on a technical
+									level?
+								</Typography>
+							</ExpansionPanelSummary>
+							<ExpansionPanelDetails>
+								<Typography style={{ textAlign: 'left' }}>
+									A gelato bot is a proxy smart contract,
+									which will move funds on your behalf if
+									certain condition are met. This proxy smart
+									contract is only controlled by you. However,
+									it has an extra feature built-in, allowing
+									you to schedule transactions in advance
+									which will be initiated by 3rd parties
+									called "executors". Executors have no access
+									nor control of your funds, the only thing
+									they can do it initiate transactions, that
+									will be executed by your bot (your smart
+									contract proxy) at a future point in time.
+									These rules are encoded in the gelato core
+									protocol, that handles the creation of
+									proxies, submissions of instructions and
+									ensures secure executions. For more info,
+									see our github:
+									https://github.com/gelatodigital/gelato
 								</Typography>
 							</ExpansionPanelDetails>
 						</ExpansionPanel>
@@ -123,17 +161,17 @@ export default function Help() {
 								id="panel1a-header"
 							>
 								<Typography className={classes.heading}>
-									3. How do I get my gelato bot?
+									4. How do I create a gelato bot?
 								</Typography>
 							</ExpansionPanelSummary>
 							<ExpansionPanelDetails>
 								<Typography style={{ textAlign: 'left' }}>
-									All you need to do, in order to have your
-									own Ethereum bot available to you, is to
-									deploy it on gelato.finance. This is a
-									one-time thing you have to do. You will be
-									prompted to deploy your gelato bot at end of
-									creating your first instruction.
+									After selecting your first condition /
+									action pair (called instruction), you will
+									be asked to deploy your bot. This requires
+									sending a one-time Ethereum transaction.
+									After having your bot deployed, you can
+									start submitting instructions to it.
 								</Typography>
 							</ExpansionPanelDetails>
 						</ExpansionPanel>
@@ -145,28 +183,22 @@ export default function Help() {
 								id="panel1a-header"
 							>
 								<Typography className={classes.heading}>
-									4. What can I do with my gelato bot?
+									5. What can I do with my gelato bot?
 								</Typography>
 							</ExpansionPanelSummary>
 							<ExpansionPanelDetails>
 								<Typography style={{ textAlign: 'left' }}>
-									On the gelato.finance you can create
-									Instructions for your bot. These
+									You can give your bot instructions! These
 									Instructions consist of sets of two
 									components: Conditions and Actions. A
 									Condition specifies the thing that you want
 									your bot to keep monitoring. For example,
-									your account balance, blocktime, or the
-									ETH/DAI price on Kyber Network. An Action is
-									what your bot should do with funds from your
-									wallet if, and only if, your specified
-									Condition is satisfied. Say, for instance,
-									buy some ETH on Kyber, if the ETH-DAI price
-									dropped by 15%. Your bot will constantly
-									check the network for your Conditions, and
-									execute transactions, with your funds, in
-									accordance with the instructions outlined in
-									the action.
+									your account balance. An Action is what your
+									bot should do with funds from your wallet
+									if, and only if, your specified Condition is
+									satisfied. Say, for instance, buy some ETH
+									on Kyber, if my ETH balances is over 100ETH
+									(lucky you).
 								</Typography>
 							</ExpansionPanelDetails>
 						</ExpansionPanel>
@@ -177,7 +209,7 @@ export default function Help() {
 								id="panel1a-header"
 							>
 								<Typography className={classes.heading}>
-									5. Why doesn't my bot execute, even though
+									6. Why doesn't my bot execute, even though
 									the condition is fulfilled?
 								</Typography>
 							</ExpansionPanelSummary>
@@ -202,7 +234,7 @@ export default function Help() {
 								id="panel1a-header"
 							>
 								<Typography className={classes.heading}>
-									6. I got an execution failure, what should I
+									7. I got an execution failure, what should I
 									do?
 								</Typography>
 							</ExpansionPanelSummary>
@@ -219,7 +251,7 @@ export default function Help() {
 								id="panel1a-header"
 							>
 								<Typography className={classes.heading}>
-									7. Example 1: Time based token transfers
+									8. Example 1: Time based token transfers
 								</Typography>
 							</ExpansionPanelSummary>
 							<ExpansionPanelDetails>
@@ -248,7 +280,7 @@ export default function Help() {
 								id="panel1a-header"
 							>
 								<Typography className={classes.heading}>
-									8. Example 2: If ETH/DAI price drops, go
+									9. Example 2: If ETH/DAI price drops, go
 									leverage long on ETH
 								</Typography>
 							</ExpansionPanelSummary>
@@ -271,23 +303,39 @@ export default function Help() {
 								id="panel1a-header"
 							>
 								<Typography className={classes.heading}>
-									9. How long are the Instructions that I give
-									to my bot valid?
+									10. How long are the Instructions that I
+									give to my bot valid?
 								</Typography>
 							</ExpansionPanelSummary>
 							<ExpansionPanelDetails>
 								<Typography style={{ textAlign: 'left' }}>
 									At the moment, the maximum lifetime for your
 									Instructions is 60 Days. After that, they
-									expire. If you wish to cancel an Instruction
-									beforehand, you can do so on the gelato web
-									interface. Should you have paid any fees for
-									submitting the Instruction to your bot,
-									those fees will be refunded to your account
-									during your cancellation. If your
-									Instruction has expired, and you did not
-									cancel, any Instruction submission fees will
-									not be refunded to you.
+									expire. If your Instruction has expired, and
+									you did not cancel, any Instruction
+									submission fees will not be refunded to you.
+								</Typography>
+							</ExpansionPanelDetails>
+						</ExpansionPanel>
+						<ExpansionPanel className={classes.paperRoot}>
+							<ExpansionPanelSummary
+								expandIcon={<ExpandMoreIcon />}
+								aria-controls="panel1a-content"
+								id="panel1a-header"
+							>
+								<Typography className={classes.heading}>
+									11. How can I cancel my instructions?
+								</Typography>
+							</ExpansionPanelSummary>
+							<ExpansionPanelDetails>
+								<Typography style={{ textAlign: 'left' }}>
+									Just go to 'Your bot activity' by clicking
+									on your ethereum address in the top right
+									corner and click on the cancel field next to
+									your open instruction. Should you have paid
+									any fees for submitting the Instruction to
+									your bot, those fees will be refunded to
+									your account during your cancellation.
 								</Typography>
 							</ExpansionPanelDetails>
 						</ExpansionPanel>

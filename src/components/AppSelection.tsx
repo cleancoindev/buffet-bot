@@ -113,8 +113,6 @@ export default function AppSelection() {
 	// ON Mounting, set error to False
 
 	useEffect(() => {
-		console.log('In use effect');
-		console.log(icedTxState.error);
 		if (icedTxState.error.isError) {
 			console.log('Setting Error to false in AppSelection');
 			dispatch({
