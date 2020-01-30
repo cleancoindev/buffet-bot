@@ -89,7 +89,7 @@ export const TTYPES = [
 		inputLabels: [
 			'Address whose balance to monitor',
 			'Token',
-			'Future balance activating the condition',
+			'Balance activating the action',
 			'',
 			'Current Balance of selected address'
 		],
@@ -142,7 +142,7 @@ export const TTYPES = [
 			'Sell Token',
 			'Sell Volume',
 			'Buy Token',
-			'Price activating condition',
+			'Price activating the action',
 			'',
 			'Current Price'
 		],

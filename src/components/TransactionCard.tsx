@@ -1383,16 +1383,16 @@ export default function TransactionCard(props: TxCardProps) {
 							}}
 						>
 							<h4 style={{ margin: '0px' }}>
-								Your bot will monitor the{' '}
+								Your bot is now monitoring your specified{' '}
 								<span style={{ color: COLOURS.salmon }}>
 									{icedTxState.condition.title}
 								</span>{' '}
-								you specified and if the details of your
-								condition are fulfilled, it will{' '}
+								and, if the details of your condition are
+								fulfilled, it will
 								<span style={{ color: COLOURS.salmon }}>
 									{icedTxState.action.title}
 								</span>{' '}
-								on your behalf
+								on your behalf.
 							</h4>
 						</Grid>
 						<Grid
