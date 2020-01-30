@@ -1,26 +1,17 @@
-import { ATYPES, TTYPES, USER_WHITELIST } from '../constants/whitelist';
 import {
 	Token,
 	RelevantInputData,
-	ConditionOrAction,
-	Action,
-	TxState
+	ConditionOrAction
 } from '../constants/interfaces';
-import { KYBER_TOKEN_LIST, TOKEN_LIST } from '../constants/tokens';
 
 import {
-	DEFAULT_DATA_ACTION,
-	DEFAULT_DATA_TRIGGER,
 	ETH,
 	BIG_NUM_ONE,
 	BIG_NUM_ZERO,
-	TOKEN_TRANSFER_CEILING,
-	INPUT_ERROR,
-	INPUT_OK
+	TOKEN_TRANSFER_CEILING
 } from '../constants/constants';
-import { utils, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import {
-	Params,
 	ActionWhitelistData,
 	ConditionWhitelistData,
 	InputType,
@@ -80,6 +71,11 @@ export const userInputHasError = async (
 				let whitelisted = false;
 				if (web3.account !== undefined) {
 					whitelisted = userIsWhitelisted(web3.account as string);
+				} else {
+					return [
+						true,
+						`You have to be logged in to Metamask to continue`
+					];
 				}
 				// Only validate DAI celing for Actions
 				if (
@@ -118,6 +114,8 @@ export const userInputHasError = async (
 					true,
 					`${token.symbol} can only have ${token.decimals} decimals`
 				];
+			} else {
+				return [false, ``];
 			}
 		}
 		default:
@@ -376,7 +374,7 @@ const setDefaultAmountRestriction = (
 	);
 	// If sell amount is greater than ceiling => ERROR
 	if (inflatedSellVolume.gt(hardcap)) {
-		console.log('Setting error true in static Validation');
+		// console.log('Setting error true in static Validation');
 		// Error
 
 		return [
@@ -388,7 +386,7 @@ const setDefaultAmountRestriction = (
 			)} max. To gain a higher allowance, please contact us!`
 		];
 	} else {
-		console.log('Setting error false in static Validation');
+		// console.log('Setting error false in static Validation');
 		// All good
 		return [false, ''];
 	}

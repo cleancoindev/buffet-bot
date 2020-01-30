@@ -193,11 +193,11 @@ export const ATYPES = [
 			InputType.StatelessGetValue
 		],
 		relevantInputData: [
-			RelevantInputData.all,
-			RelevantInputData.all,
+			RelevantInputData.kyberTokenList,
+			RelevantInputData.kyberTokenList,
 			RelevantInputData.none,
 			//@DEV Send tokens will only work for Kyber Tokens
-			RelevantInputData.all
+			RelevantInputData.kyberTokenList
 		],
 		inputLabels: [
 			'Token to send',

@@ -163,42 +163,6 @@ export default function TokenSelect(props: TokenSelectProps) {
 
 	const [labelWidth, setLabelWidth] = React.useState(0);
 
-	useEffect(() => {
-		tokenList.forEach(token => {
-			fetchTokenBalance(token);
-		});
-	}, []);
-
-	const fetchTokenBalance = async (tokenObject: Token) => {
-		// Get Erc20 contract
-		if (active) {
-			const signer = library.getSigner();
-			const erc20 = new ethers.Contract(
-				tokenObject.address[networkId],
-				JSON.stringify(ERC20_ABI),
-				signer
-			);
-			const tokenAddress = tokenObject.address[networkId];
-			if (isEth(tokenAddress)) {
-				return 'ETH';
-			} else {
-				try {
-					const balance = await erc20.balanceOf(account as string);
-					console.log(balance.toString());
-					const humanReadableBalance = convertWeiToHumanReadableForTokenAmount(
-						balance,
-						token.decimals
-					);
-					console.log(humanReadableBalance);
-					return humanReadableBalance;
-				} catch (error) {
-					console.log(error);
-					return '0';
-				}
-			}
-		}
-	};
-
 	React.useEffect(() => {
 		setLabelWidth(inputLabel.current!.offsetWidth);
 		// Set state wih default token
@@ -229,11 +193,6 @@ export default function TokenSelect(props: TokenSelectProps) {
 	const handleOpen = () => {
 		setOpen(true);
 	};
-
-	/* <Button className={classes.button} onClick={handleOpen}>
-        Open the select
-      </Button> */
-
 	return (
 		<FormControl variant="outlined" className={classes.formControl}>
 			<InputLabel

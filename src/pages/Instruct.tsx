@@ -137,6 +137,7 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 
 					// If no error, continue
 					if (hasError) {
+						console.log(hasError);
 						// console.log(
 						// 	`${icedTxState.condition.inputLabels[index]} has error: `
 						// );
@@ -172,6 +173,7 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 					web3,
 					ConditionOrAction.Action
 				);
+				console.log(result);
 				if (result?.length === 2) {
 					const hasError = result[0] as boolean;
 					const errorText = result[1] as string;
