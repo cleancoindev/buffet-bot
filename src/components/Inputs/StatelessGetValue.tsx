@@ -72,6 +72,21 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 		}
 	}, [icedTxState]);
 
+	// On Summary page, refresh value every 5 seconds
+	useEffect(() => {
+		if (disabled) {
+			const intervalId = setInterval(() => {
+				console.log('refreshing getValue');
+				callGetValueAndSetState();
+			}, 30000);
+
+			// this will clear Timeout when component unmont like in willComponentUnmount
+
+			return () => clearInterval(intervalId);
+		}
+		// Clean up function
+	}, []);
+
 	// Func should call getValue() in smart contract and return the respective value in a disabled Text field
 	// Params: Contract address | Contract Parameters
 	const callGetValue = async () => {
@@ -82,7 +97,7 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 				: icedTxState.action.getActionValueInput;
 		// WHen on summary page, return global state
 
-		if (disabled) return newValue;
+		// if (disabled) return newValue;
 
 		if (active && account) {
 			let abi = '';
@@ -109,6 +124,7 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 						newValue = await conditionContract.getConditionValue(
 							...inputs
 						);
+						console.log(newValue);
 						// console.log(newValue.toString());
 						// console.log(inputs);
 						// console.log(newValue.toString());

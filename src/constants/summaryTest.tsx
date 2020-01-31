@@ -349,7 +349,7 @@ export const getActionResultText = (
 			}) tokens on Fulcrum`;
 		// Sell Leverage Tokens on Fulcrum
 		case 4:
-			return `Then your gelato bot sold ${convertWeiToHumanReadableForTokenAmount(
+			return `Your gelato bot sold ${convertWeiToHumanReadableForTokenAmount(
 				inputs[1] as ethers.utils.BigNumber,
 				getTokenByAddress(
 					inputs[0] as string,
