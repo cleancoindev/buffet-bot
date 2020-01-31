@@ -1392,8 +1392,8 @@ export default function TransactionCard(props: TxCardProps) {
 								<span style={{ color: COLOURS.salmon }}>
 									{icedTxState.condition.title}
 								</span>{' '}
-								and, if the details of your condition are
-								fulfilled, it will{' '}
+								and, if the details of your condition are met,
+								it will{' '}
 								<span style={{ color: COLOURS.salmon }}>
 									{icedTxState.action.title}
 								</span>{' '}
