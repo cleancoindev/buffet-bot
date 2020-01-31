@@ -215,7 +215,7 @@ export default function ButtonAppBar() {
 								marginRight: '8px'
 							}}
 						/> */}
-						<GelatoLogo></GelatoLogo>
+						{/* <GelatoLogo></GelatoLogo> */}
 
 						{/* <Typography
 							style={{ paddingBottom: '6px' }}
