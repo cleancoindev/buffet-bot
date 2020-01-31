@@ -487,16 +487,23 @@ export default function EnhancedTable() {
 	}
 
 	useEffect(() => {
-		fetchPastExecutionClaims();
+		let requestCancelled = false;
+		if (!requestCancelled) {
+			fetchPastExecutionClaims();
+		}
+
 		const intervalId = setInterval(() => {
 			fetchPastExecutionClaims();
 		}, 20000);
 
 		// this will clear Timeout when component unmont like in willComponentUnmount
 
-		return () => clearInterval(intervalId);
+		return () => {
+			clearInterval(intervalId);
+			requestCancelled = true;
+		};
 		// Clean up function
-	}, [renderCounter, web3.active]);
+	}, [renderCounter, web3.active, web3.account]);
 
 	// Cancel ExecutionClaim
 

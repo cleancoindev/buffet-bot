@@ -386,7 +386,8 @@ export default function TransactionCard(props: TxCardProps) {
 
 	// When Modal renders, set Prepayment value based on the selected action
 	useEffect(() => {
-		if (active) {
+		let requestCancelled = false;
+		if (active && !requestCancelled) {
 			// Only set prepayment amount if txState is equal displayCreate
 			if (txState === TxState.displayCreate) {
 				setPrepaymentAmount();
@@ -413,6 +414,10 @@ export default function TransactionCard(props: TxCardProps) {
 			}
 			setEtherscanPrefix(prefix);
 		}
+
+		return () => {
+			requestCancelled = true;
+		};
 	}, [active, txState]);
 
 	function returnModalContent(txState: TxState): ModalContent {

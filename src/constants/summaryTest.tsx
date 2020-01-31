@@ -23,7 +23,9 @@ export const getConditionText = (
 		case 1:
 			return `the following date has been reached: ${timestampToDate(
 				inputs[0] as number
-			)} `;
+			)
+				.toString()
+				.substring(0, 24)} `;
 
 		// Token Balance
 		case 2: {

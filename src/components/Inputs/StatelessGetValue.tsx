@@ -67,8 +67,14 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 	);
 	// If globalState changes, call once
 	useEffect(() => {
-		if (inputs[0] !== undefined) {
+		let requestCancelled = false;
+		if (inputs[0] !== undefined && !requestCancelled) {
 			callGetValueAndSetState();
+
+			// if component gets unmounted before async request is executed, abort controller
+			return () => {
+				requestCancelled = true;
+			};
 		}
 	}, [icedTxState]);
 
@@ -78,7 +84,7 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 			const intervalId = setInterval(() => {
 				console.log('refreshing getValue');
 				callGetValueAndSetState();
-			}, 30000);
+			}, 15000);
 
 			// this will clear Timeout when component unmont like in willComponentUnmount
 
@@ -124,7 +130,6 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 						newValue = await conditionContract.getConditionValue(
 							...inputs
 						);
-						console.log(newValue);
 						// console.log(newValue.toString());
 						// console.log(inputs);
 						// console.log(newValue.toString());

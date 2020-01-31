@@ -119,6 +119,7 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 	);
 
 	useEffect(() => {
+		let requestCancelled = false;
 		async function fetchTokenBalancesInEffect() {
 			let tokenList = getTokenList(
 				RelevantInputData.allWithEth,
@@ -133,7 +134,7 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 						clonedList[index],
 						web3
 					);
-					if (balance !== '') {
+					if (balance !== '' && !requestCancelled) {
 						copyTokenBalances.push({
 							balance: balance,
 							address: clonedList[index].address[networkId]
@@ -147,10 +148,14 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 			// setTokenBalances(copyTokenBalances);
 		}
 		if (web3.active) {
-			console.log('start fetching');
+			// console.log('start fetching');
 			fetchTokenBalancesInEffect();
 		}
-	}, [web3.active]);
+		return () => {
+			requestCancelled = true;
+			// console.log('Steop fetching');
+		};
+	}, [web3.active, web3.account]);
 
 	const findTokenBalance = (selectedTokenAddress: string) => {
 		let returnBalance = '';
@@ -524,15 +529,40 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 	};
 
 	useEffect(() => {
-		if (icedTxState.error.isError) {
+		let requestCancelled = false;
+		if (!requestCancelled) {
+			if (icedTxState.error.isError) {
+				dispatch({
+					type: UPDATE_TX_STATE,
+					txState: TxState.inputError
+				});
+			} else {
+				preTxCheck();
+			}
+		}
+		return () => {
+			requestCancelled = true;
+			// console.log('Steop fetching');
+		};
+	}, [icedTxState.txState, web3.active, activeStep]);
+
+	// If user changes accounts, refresh Tx State
+	useEffect(() => {
+		let requestCancelled = false;
+		console.log('Refreshing txState');
+		if (!requestCancelled) {
 			dispatch({
 				type: UPDATE_TX_STATE,
-				txState: TxState.inputError
+				txState: TxState.insufficientBalance
 			});
-		} else {
 			preTxCheck();
 		}
-	}, [icedTxState.txState, web3.active, activeStep, web3.account]);
+
+		return () => {
+			requestCancelled = true;
+			// console.log('Steop fetching');
+		};
+	}, [web3.account]);
 
 	// MODAL STUFF END
 

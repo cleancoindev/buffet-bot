@@ -67,7 +67,7 @@ export default function Help() {
 						component="h4"
 						gutterBottom
 						className={classes.header}
-						style={{ marginBottom: '32px' }}
+						style={{ marginBottom: '32px', paddingLeft: '24px' }}
 					>
 						FAQs
 					</Typography>

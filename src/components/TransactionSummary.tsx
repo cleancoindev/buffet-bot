@@ -334,7 +334,9 @@ export default function TransactionSummary(props: TxSummaryParams) {
 												parseInt(
 													pastTransaction?.expiryDate
 												)
-											)}`}
+											)
+												.toString()
+												.substring(0, 24)}`}
 										</p>
 										<div style={{}}>
 											<p

@@ -322,7 +322,7 @@ export default function AppSelection() {
 							marginTop: '40px'
 						}}
 					>
-						<div
+						{/* <div
 							style={{
 								textAlign: 'justify',
 								textAlignLast: 'center',
@@ -338,6 +338,24 @@ export default function AppSelection() {
 								{icedTxState.condition.title}{' '}
 							</span>
 							is activated
+						</div> */}
+						<div
+							style={{
+								textAlign: 'justify',
+								textAlignLast: 'center',
+								fontSize: '18px'
+							}}
+						>
+							Your gelato bot will be monitoring your specified{' '}
+							<span style={{ color: COLOURS.salmon }}>
+								{icedTxState.condition.title}
+							</span>{' '}
+							and, if the details of your condition are fulfilled,
+							it will{' '}
+							<span style={{ color: COLOURS.salmon }}>
+								{icedTxState.action.title}
+							</span>{' '}
+							on your behalf.
 						</div>
 						{/* <h2
 							style={{

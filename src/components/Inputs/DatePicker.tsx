@@ -123,7 +123,7 @@ const TextFieldWrap = (props: TextFieldWrapProps) => {
 					}}
 					variant="outlined"
 					onClick={() => setOpen(true)}
-					defaultValue={value}
+					defaultValue={`${value.toString().substring(0, 24)}`}
 					id="outlined-full-width"
 					label={label}
 					disabled={disabled}
@@ -176,6 +176,10 @@ export default function DateAndTimePicker(props: InputProps) {
 	const defaultDate = timestampToDate(defaultValue.toString());
 
 	const [selectedDate, handleDateChange] = useState(defaultDate);
+
+	const maxDate = new Date(
+		Date.now() + 1000 /*sec*/ * 60 /*min*/ * 60 /*hour*/ * 24 /*day*/ * 60
+	);
 
 	// @DEV DO we need that useEffect?
 	React.useEffect(() => {
@@ -233,6 +237,8 @@ export default function DateAndTimePicker(props: InputProps) {
 						style={{ width: '100%' }}
 						inputVariant="outlined"
 						showTodayButton
+						disablePast
+						maxDate={maxDate}
 						value={selectedDate}
 						onChange={handleChange}
 						TextFieldComponent={({
