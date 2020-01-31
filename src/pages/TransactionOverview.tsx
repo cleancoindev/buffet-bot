@@ -57,6 +57,8 @@ export default function TransactionOverview({
 	const pastTransaction =
 		icedTxState.pastTransactions[parseInt(transactionId.toString())];
 
+	console.log(icedTxState);
+	console.log(pastTransaction);
 	if (pastTransaction === undefined) {
 		history.push('/dashboard');
 		return <React.Fragment />;

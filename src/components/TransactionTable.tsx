@@ -377,12 +377,30 @@ export default function EnhancedTable() {
 	let history = useHistory();
 
 	// Eager Connect
-	const triedEager = useEagerConnect();
+	// const triedEager = useEagerConnect();
+	const [tried, setTried] = React.useState(false);
 
-	// useEffect(() => {
-	// 	web3.activate(injected);
-	// 	console.log('activating user');
-	// }, []);
+	// Stalionator code
+	useEffect(() => {
+		if (!web3.active) {
+			injected.isAuthorized().then((isAuthorized: boolean) => {
+				if (isAuthorized) {
+					web3.activate(injected, undefined, true).catch(() => {
+						setTried(true);
+					});
+				} else {
+					setTried(true);
+				}
+			});
+		}
+	}, []); // intentionally only running on mount (make sure it's only mounted once :))
+
+	// if the connection worked, wait until we get confirmation of that to flip the flag
+	useEffect(() => {
+		if (!tried && web3.active) {
+			setTried(true);
+		}
+	}, [tried, web3.active]);
 
 	const classes = useStyles();
 	const [order, setOrder] = React.useState<Order>('desc');
@@ -487,6 +505,7 @@ export default function EnhancedTable() {
 	}
 
 	useEffect(() => {
+		console.log('FETCHING TABLE');
 		let requestCancelled = false;
 		if (!requestCancelled) {
 			fetchPastExecutionClaims();

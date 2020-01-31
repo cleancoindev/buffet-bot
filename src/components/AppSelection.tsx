@@ -322,23 +322,6 @@ export default function AppSelection() {
 							marginTop: '40px'
 						}}
 					>
-						{/* <div
-							style={{
-								textAlign: 'justify',
-								textAlignLast: 'center',
-								fontSize: '18px'
-							}}
-						>
-							Your gelato bot will{' '}
-							<span style={{ color: '#E50078' }}>
-								{icedTxState.action.title}
-							</span>{' '}
-							on your behalf, when the condition{' '}
-							<span style={{ color: '#E50078' }}>
-								{icedTxState.condition.title}{' '}
-							</span>
-							is activated
-						</div> */}
 						<div
 							style={{
 								textAlign: 'justify',
@@ -356,23 +339,6 @@ export default function AppSelection() {
 							</span>{' '}
 							on your behalf
 						</div>
-						{/* <h2
-							style={{
-								textAlign: 'justify',,
-								fontSize: '18px'
-								textAlignLast: 'center'
-							}}
-						>
-							Your gelato bot will{' '}
-							<span style={{ color: '#E50078' }}>
-								{icedTxState.action.title}
-							</span>{' '}
-							on your behalf, when the condition{' '}
-							<span style={{ color: '#E50078' }}>
-								{icedTxState.condition.title}{' '}
-							</span>
-							is activated
-						</h2> */}
 					</Grid>
 					<Grid
 						container

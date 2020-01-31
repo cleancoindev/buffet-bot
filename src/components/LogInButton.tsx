@@ -122,14 +122,6 @@ export default function LoginButton() {
 		history.push('/');
 	};
 
-	// const logInLogOutMetamask = async () => {
-	// 	if (!active) {
-	// 		await activate(injected);
-	// 	} else {
-	// 	}
-	// };
-
-	// if (active && chainId === SELECTED_CHAIN_ID)
 	return (
 		<div>
 			<GelatoButton
