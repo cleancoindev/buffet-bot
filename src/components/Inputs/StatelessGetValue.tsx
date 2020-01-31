@@ -83,7 +83,6 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 	useEffect(() => {
 		if (disabled) {
 			const intervalId = setInterval(() => {
-				console.log('refreshing getValue');
 				callGetValueAndSetState();
 			}, 15000);
 
@@ -103,7 +102,6 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 				? icedTxState.condition.getConditionValueInput
 				: icedTxState.action.getActionValueInput;
 		// WHen on summary page, return global state
-		console.log(conditionOrAction);
 		// if (disabled) return newValue;
 
 		if (active && account) {
@@ -124,9 +122,6 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 						conditionAddress = condition.address[networkId];
 						abi = condition.getConditionValueAbi;
 					}
-					console.log(conditionAddress);
-
-					console.log(abi);
 
 					const conditionContract = new ethers.Contract(
 						conditionAddress,
@@ -139,36 +134,13 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 						newValue = await conditionContract.getConditionValue(
 							...inputs
 						);
-						// console.log(newValue.toString());
-						// console.log(inputs);
-						// console.log(newValue.toString());
-						// Convert fetched wei amount to human reable amount
 
 						// convert Value into human readable form
 						return newValue;
 					} catch (error) {
-						console.log(error);
-						console.log('fail 1');
+						// console.log(error);
 						newValue = BIG_NUM_ZERO;
 						return newValue;
-						// try {
-						// 	const web3ReactSigner = library.getSigner();
-						// 	const conditionContract2 = new ethers.Contract(
-						// 		conditionAddress,
-						// 		[abi],
-						// 		web3ReactSigner
-						// 	);
-						// 	newValue = await conditionContract2.getConditionValue(
-						// 		...inputs
-						// 	);
-						// 	console.log(newValue);
-						// 	return newValue;
-						// } catch (error) {
-						// 	console.log(error);
-						// 	console.log('fail 2');
-						// 	newValue = BIG_NUM_ZERO;
-						// 	return newValue;
-						// }
 					}
 				}
 				// IF it is an action
@@ -179,9 +151,6 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 						actionAddress = action.address[networkId];
 						abi = action.getActionValueAbi;
 					}
-					console.log(actionAddress);
-
-					console.log(abi);
 
 					const actionContract = new ethers.Contract(
 						actionAddress,
@@ -223,7 +192,7 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 				// console.log('token not in state yet');
 				// console.log(error);
 				newValue = BIG_NUM_ZERO;
-				console.log(error);
+				// console.log(error);
 				// console.log(3);
 				return newValue;
 			}
