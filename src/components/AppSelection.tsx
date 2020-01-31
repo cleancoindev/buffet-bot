@@ -346,16 +346,15 @@ export default function AppSelection() {
 								fontSize: '18px'
 							}}
 						>
-							Your gelato bot will be monitoring your specified{' '}
+							If your specified condition{' '}
 							<span style={{ color: COLOURS.salmon }}>
 								{icedTxState.condition.title}
 							</span>{' '}
-							and, if the details of your condition are fulfilled,
-							it will{' '}
+							is met, then your gelato bot will{' '}
 							<span style={{ color: COLOURS.salmon }}>
 								{icedTxState.action.title}
 							</span>{' '}
-							on your behalf.
+							on your behalf
 						</div>
 						{/* <h2
 							style={{

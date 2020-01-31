@@ -201,7 +201,7 @@ export default function StepperContent(props: StepperContentProps) {
 											fontSize: '18px'
 										}}
 									>
-										{`When your previous condition is fulfilled ${getActionText(
+										{`When your previous condition is met ${getActionText(
 											action.userInputs,
 											action.id,
 											networkId,

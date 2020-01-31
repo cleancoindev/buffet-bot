@@ -210,7 +210,7 @@ export default function Help() {
 							>
 								<Typography className={classes.heading}>
 									6. Why doesn't my bot execute, even though
-									the condition is fulfilled?
+									the condition is met?
 								</Typography>
 							</ExpansionPanelSummary>
 							<ExpansionPanelDetails>
