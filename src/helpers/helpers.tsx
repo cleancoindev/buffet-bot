@@ -10,7 +10,8 @@ import ERC20_ABI from '../constants/abis/erc20.json';
 import {
 	DEFAULT_DATA_ACTION,
 	DEFAULT_DATA_TRIGGER,
-	ETH
+	ETH,
+	BIG_NUM_ZERO
 } from '../constants/constants';
 import { utils, ethers } from 'ethers';
 import {
@@ -550,4 +551,137 @@ export const checkIfMobile = () => {
 		}
 	}
 	return hasTouchScreen;
+};
+
+export const getValueFromSmartContractCondition = async (
+	condition: ConditionWhitelistData,
+	active: boolean,
+	networkId: ChainIds,
+	account: string,
+	inputs: Array<string | number | ethers.utils.BigNumber | boolean>
+) => {
+	// Get abi
+	let newValue = BIG_NUM_ZERO;
+
+	// WHen on summary page, return global state
+	// if (disabled) return newValue;
+
+	if (active && account) {
+		// let abi = '';
+		// conditionOrAction === ConditionOrAction.Condition
+		// 	? (abi = icedTxState.condition.getConditionValueAbi)
+		// 	: (abi = icedTxState.action.getActionValueAbi);
+
+		try {
+			// Find token object by address
+			// const signer = library.getSigner();
+			const signer = ethers.getDefaultProvider();
+
+			let conditionAddress = '';
+			let abi = '';
+			conditionAddress = condition.address[networkId];
+			abi = condition.getConditionValueAbi;
+
+			const conditionContract = new ethers.Contract(
+				conditionAddress,
+				[abi],
+				signer
+			);
+
+			// get value
+			try {
+				newValue = await conditionContract.getConditionValue(...inputs);
+
+				// convert Value into human readable form
+				return newValue;
+			} catch (error) {
+				// console.log(error);
+				newValue = BIG_NUM_ZERO;
+				return newValue;
+			}
+		} catch (error) {
+			// console.log('token not in state yet');
+			// console.log(error);
+			newValue = BIG_NUM_ZERO;
+			// console.log(error);
+			// console.log(3);
+			return newValue;
+		}
+	} else {
+		// console.log('catch2');
+		newValue = BIG_NUM_ZERO;
+		// console.log(4);
+		return newValue;
+	}
+};
+
+export const getValueFromSmartContractAction = async (
+	action: ActionWhitelistData,
+	active: boolean,
+	networkId: ChainIds,
+	oldValue: ethers.utils.BigNumber,
+	account: string,
+	inputs: Array<string | number | ethers.utils.BigNumber | boolean>
+) => {
+	// Get abi
+	let newValue = oldValue;
+
+	// WHen on summary page, return global state
+	// if (disabled) return newValue;
+
+	if (active && account) {
+		// let abi = '';
+		// conditionOrAction === ConditionOrAction.Condition
+		// 	? (abi = icedTxState.condition.getConditionValueAbi)
+		// 	: (abi = icedTxState.action.getActionValueAbi);
+
+		try {
+			// Find token object by address
+			// const signer = library.getSigner();
+			const signer = ethers.getDefaultProvider();
+			let actionAddress = '';
+			let abi = '';
+			if (action) {
+				actionAddress = action.address[networkId];
+				abi = action.getActionValueAbi;
+			}
+
+			const actionContract = new ethers.Contract(
+				actionAddress,
+				[abi],
+				signer
+			);
+
+			try {
+				const copyUserInput = [...inputs];
+				copyUserInput.splice(0, 0, account);
+				// œDEV simply using account here, as proxy doesnt make a difference
+				copyUserInput.splice(1, 0, account);
+				newValue = await actionContract.getUsersSendTokenBalance(
+					...copyUserInput
+				);
+				// Convert fetched wei amount to human reable amount
+
+				// convert Value into human readable form
+				return newValue;
+			} catch (error) {
+				// console.log(error);
+				newValue = BIG_NUM_ZERO;
+				// console.log(2);
+				return newValue;
+			}
+		} catch (error) {
+			// console.log('token not in state yet');
+			// console.log(error);
+			newValue = BIG_NUM_ZERO;
+			// console.log(error);
+			// console.log(3);
+			return newValue;
+		}
+	} else {
+		// console.log('catch2');
+		newValue = BIG_NUM_ZERO;
+		// console.log(4);
+		return newValue;
+	}
 };

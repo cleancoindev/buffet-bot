@@ -170,7 +170,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 	}
 
 	// Label Conversion Kyber Price
-	// If Kyber price COondition
+	// If Kyber price Condition
 	if (inputs[0] !== undefined) {
 		if (
 			inputType === InputType.Number ||

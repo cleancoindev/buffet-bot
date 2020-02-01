@@ -177,17 +177,6 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 						return newValue;
 					}
 				}
-				//Instantiate contract
-
-				// try {
-				// 	newValue = await library.getBalance(account);
-				// 	// convert Value into human readable form
-				// 	return newValue;
-				// } catch (error) {
-				// 	newValue = BIG_NUM_ZERO;
-				// 	// console.log(1);
-				// 	return newValue;
-				// }
 			} catch (error) {
 				// console.log('token not in state yet');
 				// console.log(error);
