@@ -94,7 +94,7 @@ interface Data {
 	id: string;
 	condition: string;
 	action: string;
-	date: string;
+	date: number;
 	status: string;
 	view: number;
 	cancel: string;
@@ -104,7 +104,7 @@ function createData(
 	id: string,
 	condition: string,
 	action: string,
-	date: string,
+	date: number,
 	status: string,
 	view: number,
 	cancel: string
@@ -483,7 +483,7 @@ export default function EnhancedTable() {
 					counter.toString(),
 					condition.title,
 					action.title,
-					stringifyTimestamp(executionClaim.mintingDate),
+					executionClaim.mintingDate,
 					statusString,
 					index,
 					'CANCEL'
@@ -660,7 +660,9 @@ export default function EnhancedTable() {
 												{row.action}
 											</StyledTableCell>
 											<StyledTableCell align="left">
-												{row.date}
+												{stringifyTimestamp(
+													row.date.toString()
+												)}
 											</StyledTableCell>
 											<StyledTableCell align="left">
 												{row.status}

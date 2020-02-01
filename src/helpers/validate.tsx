@@ -131,6 +131,7 @@ export const validateLimitAmount = async (
 	relevantInputData: RelevantInputData
 ) => {
 	if (srcAmount === ethers.constants.Zero) return [false, ''];
+
 	// IF user is whitelisted, skip
 	// Get Kyber Price Condition
 	const signer = library.getSigner();
@@ -153,7 +154,7 @@ export const validateLimitAmount = async (
 			signer
 		);
 
-		// Get the price of one pToken denominated in the underylint
+		// Get the price of one pToken denominated in the underlying
 		// Note: For short tokens, this would be DAI
 		// For Long Tokens, this is whatever the underyling is, e.g. dETH Long 2x == ETH
 		// In case of Long Token, we need to also convert the e.g. ETH value into DAI price
@@ -179,7 +180,11 @@ export const validateLimitAmount = async (
 				);
 
 				// @ DEV Change later when introducing more underylings
-				const underylingAddress = ETH.address[1];
+				let underylingAddress = '';
+
+				if (token.name.includes('ETH')) {
+					underylingAddress = ETH.address[1];
+				}
 
 				const inputsForPrice = [
 					underylingAddress,

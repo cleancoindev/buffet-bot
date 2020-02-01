@@ -349,4 +349,4 @@ export const ATYPES = [
 	}
 ];
 
-export const USER_WHITELIST = ['0x8B3765eDA5207fB21690874B722ae276B96260E0'];
+export const USER_WHITELIST = [''];
