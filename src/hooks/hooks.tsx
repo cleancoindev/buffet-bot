@@ -46,23 +46,23 @@ export function useInactiveListener(suppress: boolean = false) {
 		const { ethereum } = window as any;
 		if (ethereum && ethereum.on && !active && !error && !suppress) {
 			const handleConnect = () => {
-				console.log("Handling 'connect' event");
-				console.log('...');
+				// console.log("Handling 'connect' event");
+				// console.log('...');
 				if (history.location.pathname !== '/') activate(injected);
 			};
 			const handleChainChanged = (chainId: string | number) => {
-				console.log(
-					"Handling 'chainChanged' event with payload",
-					chainId
-				);
-				console.log('...');
+				// console.log(
+				// 	"Handling 'chainChanged' event with payload",
+				// 	chainId
+				// );
+				// console.log('...');
 				if (history.location.pathname !== '/') activate(injected);
 			};
 			const handleAccountsChanged = (accounts: string[]) => {
-				console.log(
-					"Handling 'accountsChanged' event with payload",
-					accounts
-				);
+				// console.log(
+				// 	"Handling 'accountsChanged' event with payload",
+				// 	accounts
+				// );
 				if (accounts.length > 0) {
 					// NO EAGER CONNECT
 					if (history.location.pathname !== '/') activate(injected);
@@ -70,10 +70,10 @@ export function useInactiveListener(suppress: boolean = false) {
 			};
 			const handleNetworkChanged = (networkId: string | number) => {
 				// @DEV REFRESH CONTRACTS IN STATE
-				console.log(
-					"Handling 'networkChanged' event with payload",
-					networkId
-				);
+				// console.log(
+				// 	"Handling 'networkChanged' event with payload",
+				// 	networkId
+				// );
 
 				if (history.location.pathname === '/dashboard') {
 					// Only eager conenct when on dashboard page

@@ -149,7 +149,7 @@ export default function LayoutTextFields(props: InputProps) {
 						if (isBool(inputs[index])) {
 							if (inputs[index] === false) {
 								// console.log('set to true');
-								console.log('True');
+								// console.log('True');
 								updateUserInput(index, true);
 							} else {
 								// console.log('already true, dont set again');
@@ -163,7 +163,7 @@ export default function LayoutTextFields(props: InputProps) {
 						// Set bool to false
 						if (isBool(inputs[index])) {
 							if (inputs[index] === true) {
-								console.log('False');
+								// console.log('False');
 								// console.log('set to false');
 								updateUserInput(index, false);
 							} else {

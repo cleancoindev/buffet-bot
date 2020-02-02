@@ -139,7 +139,7 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 							balance: balance,
 							address: clonedList[index].address[networkId]
 						});
-						console.log(copyTokenBalances);
+						// console.log(copyTokenBalances);
 						setTokenBalances(copyTokenBalances);
 					}
 				}
