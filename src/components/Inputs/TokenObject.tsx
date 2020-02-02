@@ -171,7 +171,7 @@ export default function TokenSelect(props: TokenObjectProps) {
 			<p
 				style={{ fontSize: '18px' }}
 			>{`${token.symbol} (${token.name})`}</p>
-			{!disabled && (
+			{!disabled && !checkIfMobile() && (
 				<div
 					style={{
 						display: 'flex',
