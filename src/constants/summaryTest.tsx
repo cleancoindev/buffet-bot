@@ -93,9 +93,6 @@ export const getConditionText = (
 				parseFloat(sellAmountHumanReadable) *
 				parseFloat(priceHumanReadable);
 
-			console.log(sellAmountHumanReadable);
-			console.log(priceHumanReadable);
-
 			const isOrAre = parseFloat(sellAmountHumanReadable) === 1.0;
 
 			const sellSymbol = getTokenByAddress(

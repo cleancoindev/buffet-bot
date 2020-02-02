@@ -293,7 +293,7 @@ export const validateLimitAmount = async (
 				const kyberPrice = await conditionContract.getConditionValue(
 					...inputsForPrice
 				);
-				console.log(kyberPrice.toString());
+				// console.log(kyberPrice.toString());
 				const totalTransferVolume = kyberPrice
 					.mul(srcAmount)
 					.div(ethers.utils.parseUnits('1', token.decimals));
@@ -343,7 +343,7 @@ const compareUserInputToDaiMax = (
 		// console.log(TOKEN_TRANSFER_CEILING.toString());
 		// console.log('Is smaller than');
 		// console.log(totalTransferVolume.toString());
-		console.log('higher');
+		// console.log('higher');
 		const ceilingBN = TOKEN_TRANSFER_CEILING.mul(
 			ethers.utils.bigNumberify(inflationConstant)
 		).div(exchangeRate);
