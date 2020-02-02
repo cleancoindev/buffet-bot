@@ -51,6 +51,9 @@ import { TxState } from '../constants/interfaces';
 import GelatoLogo from './Logo/Logo';
 import LoginButton from './LogInButton';
 
+// Google Analytics
+import ReactGA from 'react-ga';
+
 const drawerWidth = 240;
 
 const BootstrapButtonDanger = withStyles({
@@ -158,6 +161,16 @@ export default function ButtonAppBar() {
 	const { account, active, activate, deactivate, chainId } = useWeb3React();
 	const { dispatch } = useIcedTxContext();
 
+	const trackingId = process.env.REACT_APP_GA; // Replace with your Google Analytics tracking ID
+	useEffect(() => {
+		if (active && trackingId) {
+			ReactGA.initialize(trackingId);
+			ReactGA.set({
+				userAddress: account
+			});
+		}
+	}, [active]);
+
 	// Web3 Logic
 
 	// Set default selected Condition, as header only gets mounted once
@@ -223,22 +236,7 @@ export default function ButtonAppBar() {
 						className={classes.menuButton}
 						onClick={linkBackToHome}
 					>
-						{/* <img
-							src={`${process.env.PUBLIC_URL}/images/gelato_logo.png`}
-							alt="logo"
-							style={{
-								width: '40px',
-								marginRight: '8px'
-							}}
-						/> */}
 						<GelatoLogo></GelatoLogo>
-
-						{/* <Typography
-							style={{ paddingBottom: '6px' }}
-							variant="h5"
-						>
-							gelato
-						</Typography> */}
 					</div>
 					{/* </Link> */}
 					<Hidden xsDown>

@@ -103,7 +103,7 @@ export default function Help() {
 								id="panel1a-header"
 							>
 								<Typography className={classes.heading}>
-									2. What is a gelato bot on a high level?
+									2. What is a gelato bot?
 								</Typography>
 							</ExpansionPanelSummary>
 							<ExpansionPanelDetails>
@@ -141,14 +141,14 @@ export default function Help() {
 									which will be initiated by 3rd parties
 									called "executors". Executors have no access
 									nor control of your funds, the only thing
-									they can do it initiate transactions, that
-									will be executed by your bot (your smart
-									contract proxy) at a future point in time.
-									These rules are encoded in the gelato core
-									protocol, that handles the creation of
-									proxies, submissions of instructions and
-									ensures secure executions. For more info,
-									see our github:
+									they can do is initiate transactions, that
+									will be executed by your smart contract
+									proxy at a future point in time. These rules
+									are encoded in the gelato core protocol,
+									that handles the creation of proxies,
+									submissions of instructions and ensures
+									secure executions. For more info, see our
+									github:
 									https://github.com/gelatodigital/gelato
 								</Typography>
 							</ExpansionPanelDetails>

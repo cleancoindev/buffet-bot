@@ -486,6 +486,7 @@ export const fetchTokenBalance = async (
 			signer
 		);
 		const tokenAddress = tokenObject.address[networkId];
+		const decimalConverter = 100000000;
 		if (isEth(tokenAddress)) {
 			try {
 				const balance = await web3.library.getBalance(web3.account);
@@ -495,9 +496,12 @@ export const fetchTokenBalance = async (
 						balance,
 						tokenObject.decimals
 					);
-					humanReadableBalance = parseFloat(
-						humanReadableBalance
-					).toFixed(4);
+					humanReadableBalance = (
+						Math.floor(
+							parseFloat(humanReadableBalance) * decimalConverter
+						) / decimalConverter
+					).toFixed(8);
+					// Math.floor(1.8959332 * 1000) / 1000 .toFixed(2)
 					return humanReadableBalance;
 				}
 			} catch (error) {
@@ -511,9 +515,11 @@ export const fetchTokenBalance = async (
 						balance,
 						tokenObject.decimals
 					);
-					humanReadableBalance = parseFloat(
-						humanReadableBalance
-					).toFixed(4);
+					humanReadableBalance = (
+						Math.floor(
+							parseFloat(humanReadableBalance) * decimalConverter
+						) / decimalConverter
+					).toFixed(8);
 
 					return humanReadableBalance;
 				} else {

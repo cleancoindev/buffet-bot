@@ -241,13 +241,20 @@ export const ATYPES = [
 		userInputTypes: [
 			InputType.Token,
 			InputType.TokenAmount,
-			InputType.Token
+			InputType.Token,
+			InputType.StatelessGetValue
 		],
-		inputLabels: ['Sell Token', 'Sell Amount', 'Buy Token'],
+		inputLabels: [
+			'Sell Token',
+			'Sell Amount',
+			'Buy Token',
+			'Current Sell Token Balance'
+		],
 		relevantInputData: [
 			RelevantInputData.kyberTokenList,
 			RelevantInputData.kyberTokenList,
-			RelevantInputData.kyberTokenListWithEth
+			RelevantInputData.kyberTokenListWithEth,
+			RelevantInputData.kyberTokenList
 		],
 		userInputs: EMPTY_STRING_ARRAY,
 		approveIndex: 0,
@@ -289,13 +296,20 @@ export const ATYPES = [
 		userInputTypes: [
 			InputType.Token,
 			InputType.TokenAmount,
-			InputType.Token
+			InputType.Token,
+			InputType.StatelessGetValue
 		],
-		inputLabels: ['Token to sell', 'Sell Amount', 'Leverage Token to buy'],
+		inputLabels: [
+			'Token to sell',
+			'Sell Amount',
+			'Leverage Token to buy',
+			'Your current sell token balance'
+		],
 		relevantInputData: [
 			RelevantInputData.kyberTokenList,
 			RelevantInputData.kyberTokenList,
-			RelevantInputData.fulcrumTokenList
+			RelevantInputData.fulcrumTokenList,
+			RelevantInputData.kyberTokenList
 		],
 
 		userInputs: EMPTY_STRING_ARRAY,
@@ -327,17 +341,20 @@ export const ATYPES = [
 		userInputTypes: [
 			InputType.Token,
 			InputType.TokenAmount,
-			InputType.Token
+			InputType.Token,
+			InputType.StatelessGetValue
 		],
 		inputLabels: [
 			'Leverage Token to sell',
 			'Sell amount of leverage Token',
-			'Token to receive back'
+			'Token to receive back',
+			'Your current Leverage Token Balance'
 		],
 		relevantInputData: [
 			RelevantInputData.fulcrumTokenList,
 			RelevantInputData.fulcrumTokenList,
-			RelevantInputData.kyberTokenList
+			RelevantInputData.kyberTokenList,
+			RelevantInputData.fulcrumTokenList
 		],
 
 		userInputs: EMPTY_STRING_ARRAY,
