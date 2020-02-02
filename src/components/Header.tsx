@@ -421,7 +421,7 @@ export default function ButtonAppBar() {
 						<ListItemIcon>
 							<InboxIcon />
 						</ListItemIcon>
-						<ListItemText primary={'How it works'} />
+						<ListItemText primary={'FAQ'} />
 					</ListItem>
 
 					{active && chainId === SELECTED_CHAIN_ID && (
