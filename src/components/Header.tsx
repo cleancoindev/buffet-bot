@@ -52,7 +52,7 @@ import GelatoLogo from './Logo/Logo';
 import LoginButton from './LogInButton';
 
 // Google Analytics
-import ReactGA from 'react-ga';
+// import ReactGA from 'react-ga';
 
 const drawerWidth = 240;
 
@@ -161,21 +161,22 @@ export default function ButtonAppBar() {
 	const { account, active, activate, deactivate, chainId } = useWeb3React();
 	const { dispatch } = useIcedTxContext();
 
-	const trackingId = process.env.REACT_APP_GA; // Replace with your Google Analytics tracking ID
-	useEffect(() => {
-		if (active && trackingId) {
-			ReactGA.initialize(trackingId);
-			ReactGA.set({
-				userAddress: account
-			});
-		}
-	}, [active]);
+	// const trackingId = process.env.REACT_APP_GA; // Replace with your Google Analytics tracking ID
+	// useEffect(() => {
+	// 	if (active && trackingId) {
+	// 		try {
+	// 			ReactGA.initialize(trackingId);
+	// 			ReactGA.set({
+	// 				userAddress: account
+	// 			});
+	// 		} catch (error) {}
+	// 	}
+	// }, [active]);
 
 	// Web3 Logic
 
 	// Set default selected Condition, as header only gets mounted once
 	useEffect(() => {
-		console.log('Mount header');
 		const functionIdCondition = DEFAULT_TRIGGER_ID;
 		dispatch({ type: SELECT_CONDITION, id: functionIdCondition });
 		const functionIdAction = DEFAULT_ACTION_ID;
@@ -420,7 +421,7 @@ export default function ButtonAppBar() {
 						<ListItemIcon>
 							<InboxIcon />
 						</ListItemIcon>
-						<ListItemText primary={'How it works'} />
+						<ListItemText primary={'FAQ'} />
 					</ListItem>
 
 					{active && chainId === SELECTED_CHAIN_ID && (

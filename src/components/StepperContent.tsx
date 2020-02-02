@@ -106,11 +106,12 @@ export default function StepperContent(props: StepperContentProps) {
 								</span>
 							</h2>
 							{active && condition.userInputs[0] !== undefined && (
-								<div style={{}}>
+								<div style={{ maxWidth: '100%' }}>
 									<p
 										style={{
 											textAlign: 'left',
-											fontSize: '18px'
+											fontSize: '18px',
+											overflowWrap: 'break-word'
 										}}
 									>
 										{`Your bot will execute your action if ${getConditionText(
@@ -194,11 +195,12 @@ export default function StepperContent(props: StepperContentProps) {
 								</span>{' '}
 							</h2>
 							{active && action.userInputs[0] !== undefined && (
-								<div style={{}}>
+								<div style={{ maxWidth: '100%' }}>
 									<p
 										style={{
 											textAlign: 'left',
-											fontSize: '18px'
+											fontSize: '18px',
+											overflowWrap: 'break-word'
 										}}
 									>
 										{`When your selected condition is met ${getActionText(

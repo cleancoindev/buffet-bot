@@ -19,6 +19,7 @@ import {
 } from '../constants/constants';
 import { MenuItem } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
+import { useWeb3React } from '@web3-react/core';
 
 interface AppDropdownProps {
 	data: Array<ConditionWhitelistData | ActionWhitelistData>;
@@ -56,6 +57,7 @@ export default function AppDropdown(props: AppDropdownProps) {
 	const { data, conditionOrAction /*updateConditionOrAction*/ } = props;
 	const { dispatch, icedTxState } = useIcedTxContext();
 	const classes = useStyles();
+	const { active } = useWeb3React();
 	const [state, setState] = React.useState('0');
 	// useEffect(() => {
 	// 	console.log('in here');
@@ -86,17 +88,15 @@ export default function AppDropdown(props: AppDropdownProps) {
 			state === '0'
 		) {
 			setState(icedTxState.action.id.toString());
+			// IF we refresh both action and condition global state to 0, also change local state to 0
+		} else if (
+			icedTxState.action.id === parseInt('0') &&
+			icedTxState.condition.id === parseInt('0') &&
+			state !== '0'
+		) {
+			setState('0');
 		}
-
-		// if (web3.active) {
-		// 	dispatch({ type: RESET_CONDITION });
-		// 	dispatch({ type: RESET_ACTION });
-		// 	dispatch({
-		// 		type: INPUT_OK,
-		// 		txState: TxState.displayInstallMetamask
-		// 	});
-		// }
-	}, []);
+	}, [active]);
 
 	useEffect(() => {
 		if (
@@ -104,7 +104,6 @@ export default function AppDropdown(props: AppDropdownProps) {
 			icedTxState.condition.id === parseInt(DEFAULT_TRIGGER_ID) &&
 			state === '0'
 		) {
-			console.log('setting default condition');
 			setState(DEFAULT_TRIGGER_ID);
 		}
 	}, [icedTxState.condition.id]);
@@ -115,7 +114,6 @@ export default function AppDropdown(props: AppDropdownProps) {
 			icedTxState.action.id === parseInt(DEFAULT_ACTION_ID) &&
 			state === '0'
 		) {
-			console.log('setting default action');
 			setState(DEFAULT_ACTION_ID);
 		}
 	}, [icedTxState.action.id]);
@@ -135,15 +133,6 @@ export default function AppDropdown(props: AppDropdownProps) {
 		setState(functionId);
 	};
 
-	// function getTitles(
-	// 	appList: Array<ConditionWhitelistData | ActionWhitelistData>
-	// ) {
-	// 	const appTitles = appList.map(item => item.title);
-	// 	return appTitles.filter(
-	// 		(item, index) => appTitles.indexOf(item) === index
-	// 	);
-	// }
-
 	const [open, setOpen] = React.useState(false);
 
 	const handleClose = () => {
@@ -153,15 +142,6 @@ export default function AppDropdown(props: AppDropdownProps) {
 	const handleOpen = () => {
 		setOpen(true);
 	};
-
-	/*
-	style={{
-					textOverflow: 'ellipsis',
-					whiteSpace: 'nowrap',
-					overflow: 'hidden'
-				}}
-
-	*/
 
 	return (
 		<FormControl

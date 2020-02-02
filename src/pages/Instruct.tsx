@@ -161,8 +161,6 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 		let returnBalance = '';
 		for (let i = 0; i < tokenBalances.length; i++) {
 			if (tokenBalances[i].address === selectedTokenAddress) {
-				console.log('found');
-				console.log(tokenBalances[i].balance);
 				returnBalance = tokenBalances[i].balance;
 				break;
 			}
@@ -205,7 +203,6 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 
 					// If no error, continue
 					if (hasError) {
-						console.log(hasError);
 						// console.log(
 						// 	`${icedTxState.condition.inputLabels[index]} has error: `
 						// );
@@ -241,7 +238,6 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 					web3,
 					ConditionOrAction.Action
 				);
-				console.log(result);
 				if (result?.length === 2) {
 					const hasError = result[0] as boolean;
 					const errorText = result[1] as string;
@@ -457,6 +453,7 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 								icedTxState.action.userInputs.length;
 								index++
 							) {
+								// Iterate until finding the first Token Amount
 								if (
 									icedTxState.action.userInputTypes[index] ===
 									InputType.TokenAmount
@@ -549,7 +546,6 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 	// If user changes accounts, refresh Tx State
 	useEffect(() => {
 		let requestCancelled = false;
-		console.log('Refreshing txState');
 		if (!requestCancelled) {
 			dispatch({
 				type: UPDATE_TX_STATE,

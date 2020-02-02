@@ -114,7 +114,6 @@ export default function AppSelection() {
 
 	useEffect(() => {
 		if (icedTxState.error.isError) {
-			console.log('Setting Error to false in AppSelection');
 			dispatch({
 				type: INPUT_OK,
 				txState: TxState.displayInstallMetamask
