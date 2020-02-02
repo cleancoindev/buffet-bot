@@ -100,7 +100,7 @@ export const convertWeiToHumanReadableForNumbersAndGetValue = (
 	id: number
 ): string => {
 	// If kyber price condition
-	if (conditionOrAction === ConditionOrAction.Condition && id === 2) {
+	if (conditionOrAction === ConditionOrAction.Condition && id === 3) {
 		return ethers.utils.formatUnits(weiAmount, 18);
 	}
 	return ethers.utils.formatUnits(weiAmount, token.decimals);
