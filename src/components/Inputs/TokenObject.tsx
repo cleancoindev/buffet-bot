@@ -59,78 +59,11 @@ export default function TokenSelect(props: TokenObjectProps) {
 	useEffect(() => {
 		if (findTokenBalance !== undefined) {
 			if (active) {
-				console.log('fetching token balance in Object');
 				const tokenBalance = findTokenBalance(token.address[networkId]);
 				setBalance(tokenBalance);
 			}
 		}
 	});
-
-	// useEffect(() => {
-	// 	fetchTokenBalance(token);
-	// 	console.log('fetch token balance');
-	// }, [active]);
-
-	// useEffect(() => {
-	// 	if (token.address[networkId] === currentToken.address[networkId]) {
-	// 		fetchTokenBalance(token);
-	// 		console.log(' ON REFRESH');
-	// 	}
-	// }, [currentToken.address[networkId]]);
-
-	// const fetchTokenBalance = async (tokenObject: Token) => {
-	// 	// Dont diplay more mobile
-	// 	if (checkIfMobile()) return '';
-	// 	else {
-	// 		if (active) {
-	// 			const signer = library.getSigner();
-	// 			const erc20 = new ethers.Contract(
-	// 				tokenObject.address[networkId],
-	// 				JSON.stringify(ERC20_ABI),
-	// 				signer
-	// 			);
-	// 			const tokenAddress = tokenObject.address[networkId];
-	// 			if (isEth(tokenAddress)) {
-	// 				try {
-	// 					const balance = await library.getBalance(account);
-	// 					let humanReadableBalance = convertWeiToHumanReadableForTokenAmount(
-	// 						balance,
-	// 						token.decimals
-	// 					);
-	// 					humanReadableBalance = parseFloat(
-	// 						humanReadableBalance
-	// 					).toFixed(4);
-	// 					setBalance(humanReadableBalance);
-	// 				} catch (error) {
-	// 					setBalance('');
-	// 				}
-	// 			} else {
-	// 				try {
-	// 					const balance = await erc20.balanceOf(
-	// 						account as string
-	// 					);
-	// 					if (!balance.eq(ethers.constants.Zero)) {
-	// 						let humanReadableBalance = convertWeiToHumanReadableForTokenAmount(
-	// 							balance,
-	// 							token.decimals
-	// 						);
-	// 						humanReadableBalance = parseFloat(
-	// 							humanReadableBalance
-	// 						).toFixed(4);
-
-	// 						setBalance(humanReadableBalance);
-	// 					} else {
-	// 						setBalance('');
-	// 					}
-	// 				} catch (error) {
-	// 					setBalance('');
-	// 				}
-	// 			}
-	// 		} else {
-	// 			return '';
-	// 		}
-	// 	}
-	// };
 
 	return (
 		<div

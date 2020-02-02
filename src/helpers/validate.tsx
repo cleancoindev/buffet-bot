@@ -8,7 +8,8 @@ import {
 	ETH,
 	BIG_NUM_ONE,
 	BIG_NUM_ZERO,
-	TOKEN_TRANSFER_CEILING
+	TOKEN_TRANSFER_CEILING,
+	TOKEN_TRANSFER_BOTTOM
 } from '../constants/constants';
 import { ethers } from 'ethers';
 import {
@@ -77,7 +78,7 @@ export const userInputHasError = async (
 						`You have to be logged in to Metamask to continue`
 					];
 				}
-				// Only validate DAI celing for Actions
+				// Only validate DAI celing for Actions AND if user is not whitelisted
 				if (
 					conditionOrAction === ConditionOrAction.Action &&
 					!whitelisted
@@ -196,44 +197,46 @@ export const validateLimitAmount = async (
 				const kyberPrice = await conditionContract.getConditionValue(
 					...inputsForPrice
 				);
-				// console.log(kyberPrice);
-				const ethPriceInDai = convertWeiToHumanReadableForTokenAmount(
-					kyberPrice,
-					18
-				);
+				// We get back expectedRate from Kyber => always 18 decimals
+				// const ethPriceInDai = convertWeiToHumanReadableForTokenAmount(
+				// 	kyberPrice,
+				// 	18
+				// );
 				// console.log(ethPriceInDai);
-				const howMuchPTokenIfLongIsWorthInDay =
-					parseFloat(ethPriceInDai) * parseFloat(underlyingPerPtoken);
+				// const howMuchPTokenIfLongIsWorthInDay =
+				// 	parseFloat(ethPriceInDai) * parseFloat(underlyingPerPtoken);
 
 				// Multiply the amount of underyling we receive per pToken by the amount of DAI we would get for that underyling
 				valueToBeComparedWithDai = kyberPrice
-					.div(ethers.constants.WeiPerEther)
+					.div(ethers.utils.parseUnits('1', token.decimals))
 					.mul(valueToBeComparedWithDai);
 
 				const totalDollarAmountUserWantsToTransfer = valueToBeComparedWithDai
 					.mul(srcAmount)
-					.div(ethers.constants.WeiPerEther);
+					.div(ethers.utils.parseUnits('1', token.decimals));
 
 				const result = compareUserInputToDaiMax(
 					totalDollarAmountUserWantsToTransfer,
 					valueToBeComparedWithDai,
 					token.address[networkId],
 					networkId,
-					relevantInputData
+					relevantInputData,
+					token.decimals
 				);
 
 				return result;
 			} else {
 				const totalDollarAmountUserWantsToTransfer = valueToBeComparedWithDai
 					.mul(srcAmount)
-					.div(ethers.constants.WeiPerEther);
+					.div(ethers.utils.parseUnits('1', token.decimals));
 
 				const result = compareUserInputToDaiMax(
 					totalDollarAmountUserWantsToTransfer,
 					valueToBeComparedWithDai,
 					token.address[networkId],
 					networkId,
-					relevantInputData
+					relevantInputData,
+					token.decimals
 				);
 
 				return result;
@@ -264,14 +267,15 @@ export const validateLimitAmount = async (
 			const price = ethers.constants.WeiPerEther;
 			const totalTransferVolume = price
 				.mul(srcAmount)
-				.div(ethers.constants.WeiPerEther);
+				.div(ethers.utils.parseUnits('1', token.decimals));
 
 			const result = compareUserInputToDaiMax(
 				totalTransferVolume,
 				price,
 				sellToken,
 				networkId,
-				relevantInputData
+				relevantInputData,
+				token.decimals
 			);
 
 			return result;
@@ -289,15 +293,18 @@ export const validateLimitAmount = async (
 				const kyberPrice = await conditionContract.getConditionValue(
 					...inputsForPrice
 				);
+				console.log(kyberPrice.toString());
 				const totalTransferVolume = kyberPrice
 					.mul(srcAmount)
-					.div(ethers.constants.WeiPerEther);
+					.div(ethers.utils.parseUnits('1', token.decimals));
+				// .div(ethers.constants.WeiPerEther);
 				const result = compareUserInputToDaiMax(
 					totalTransferVolume,
 					kyberPrice,
 					token.address[networkId],
 					networkId,
-					relevantInputData
+					relevantInputData,
+					token.decimals
 				);
 
 				return result;
@@ -322,19 +329,28 @@ const compareUserInputToDaiMax = (
 	exchangeRate: ethers.utils.BigNumber,
 	sellTokenAddress: string,
 	networkId: ChainIds,
-	relevantInputData: RelevantInputData
+	relevantInputData: RelevantInputData,
+	tokenDecimals: number
 ) => {
+	let inflationConstant = 10000000000;
+	if (tokenDecimals < 8) {
+		inflationConstant = 1000000;
+	}
+	// console.log(valueToBeComparedWithDaiCeiling.toString());
+	// console.log(TOKEN_TRANSFER_BOTTOM.toString());
 	// If the total Transfer volume is greater than the Token Transfer Ceiling, spit out error for unwhitelisted users and no error for whitelisted users
 	if (TOKEN_TRANSFER_CEILING.lt(valueToBeComparedWithDaiCeiling)) {
 		// console.log(TOKEN_TRANSFER_CEILING.toString());
 		// console.log('Is smaller than');
 		// console.log(totalTransferVolume.toString());
+		console.log('higher');
 		const ceilingBN = TOKEN_TRANSFER_CEILING.mul(
-			ethers.utils.bigNumberify('100000')
+			ethers.utils.bigNumberify(inflationConstant)
 		).div(exchangeRate);
 		// console.log(ceilingBN);
 		// console.log(ceilingBN.toString());
-		const ceilingFloat = parseFloat(ceilingBN.toString()) / 100000;
+		const ceilingFloat =
+			parseFloat(ceilingBN.toString()) / inflationConstant;
 		// .mul(ethers.utils.bigNumberify('100'))
 		// const ceilingFloat = (
 		// 	parseFloat(ceilingBN.toString()) / 100
@@ -348,6 +364,22 @@ const compareUserInputToDaiMax = (
 				networkId,
 				relevantInputData
 			)} max. To gain a higher allowance, please contact us!`
+		];
+		// If inputted value is lower than the Token Transfer Bottom, return error.
+	} else if (valueToBeComparedWithDaiCeiling.lt(TOKEN_TRANSFER_BOTTOM)) {
+		const bottomBN = TOKEN_TRANSFER_BOTTOM.mul(
+			ethers.utils.bigNumberify(inflationConstant)
+		).div(exchangeRate);
+		// console.log(ceilingBN);
+		// console.log(ceilingBN.toString());
+		const bottomFloat = parseFloat(bottomBN.toString()) / inflationConstant;
+		return [
+			true,
+			`This action requires an amount higher than ${bottomFloat} ${getTokenSymbol(
+				sellTokenAddress,
+				networkId,
+				relevantInputData
+			)}`
 		];
 	} else {
 		// console.log('Not in Err err');

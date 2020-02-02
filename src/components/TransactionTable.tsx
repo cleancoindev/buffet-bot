@@ -505,7 +505,6 @@ export default function EnhancedTable() {
 	}
 
 	useEffect(() => {
-		console.log('FETCHING TABLE');
 		let requestCancelled = false;
 		if (!requestCancelled) {
 			fetchPastExecutionClaims();
