@@ -334,7 +334,9 @@ export default function TransactionSummary(props: TxSummaryParams) {
 												parseInt(
 													pastTransaction?.expiryDate
 												)
-											)}`}
+											)
+												.toString()
+												.substring(0, 24)}`}
 										</p>
 										<div style={{}}>
 											<p
@@ -603,6 +605,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 					{conditionInputTypes.map((input, key) => (
 						<InputField
 							key={`Condition-${key}`}
+							condition={condition}
 							index={key}
 							inputType={input}
 							label={condition.inputLabels[key]}
@@ -656,6 +659,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 							index={key}
 							key={`Action-${key}`}
 							inputType={input}
+							action={action}
 							label={action.inputLabels[key]}
 							conditionOrAction={ConditionOrAction.Action}
 							inputs={actionInputs}

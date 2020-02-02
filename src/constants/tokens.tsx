@@ -86,7 +86,7 @@ export const KYBER_TOKEN_LIST = [
 			42: '0x0'
 		},
 		symbol: 'SAI',
-		name: 'SAI (Stablecoin)',
+		name: 'SAI Stablecoin',
 		decimals: 18,
 		max: '275'
 	},
@@ -102,18 +102,18 @@ export const KYBER_TOKEN_LIST = [
 	// 	decimals: 8
 	// },
 	//Harcoded: 0xc011a72400e58ecd99ee497cf89e3775d4bd732f
-	{
-		address: {
-			1: '0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F',
-			3: '0x0',
-			4: '0x0',
-			42: '0x0'
-		},
-		symbol: 'SNX',
-		name: 'Synthetix Network Token',
-		decimals: 18,
-		max: '240'
-	},
+	// {
+	// 	address: {
+	// 		1: '0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F',
+	// 		3: '0x0',
+	// 		4: '0x0',
+	// 		42: '0x0'
+	// 	},
+	// 	symbol: 'SNX',
+	// 	name: 'Synthetix Network Token',
+	// 	decimals: 18,
+	// 	max: '240'
+	// },
 
 	{
 		address: {
@@ -246,7 +246,7 @@ export const KYBER_TOKEN_LIST_WITH_ETH = [
 			42: '0x0'
 		},
 		symbol: 'SAI',
-		name: 'SAI (Stablecoin)',
+		name: 'SAI Stablecoin',
 		decimals: 18,
 		max: '275'
 	},
@@ -261,18 +261,18 @@ export const KYBER_TOKEN_LIST_WITH_ETH = [
 	// 	name: 'Salt',
 	// 	decimals: 8
 	// },
-	{
-		address: {
-			1: '0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F',
-			3: '0x0',
-			4: '0x0',
-			42: '0x0'
-		},
-		symbol: 'SNX',
-		name: 'Synthetix Network Token',
-		decimals: 18,
-		max: '240'
-	},
+	// {
+	// 	address: {
+	// 		1: '0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F',
+	// 		3: '0x0',
+	// 		4: '0x0',
+	// 		42: '0x0'
+	// 	},
+	// 	symbol: 'SNX',
+	// 	name: 'Synthetix Network Token',
+	// 	decimals: 18,
+	// 	max: '240'
+	// },
 
 	{
 		address: {

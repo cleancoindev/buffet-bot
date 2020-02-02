@@ -23,7 +23,11 @@ import {
 	SELECTED_NETWORK_NAME
 } from '../constants/constants';
 import { ethers } from 'ethers';
-import { getTokenByAddress, getTokenList } from '../helpers/helpers';
+import {
+	getTokenByAddress,
+	getTokenList,
+	getValueFromSmartContractCondition
+} from '../helpers/helpers';
 
 // Number formater
 import ReactNumberFormat from './Inputs/ReactNumberFormat';
@@ -90,10 +94,6 @@ export default function LayoutTextFields(props: InputProps) {
 		networkId = chainId as ChainIds;
 	}
 
-	const [getValueState, setGetValueState] = React.useState(
-		icedTxState.condition.getConditionValueInput
-	);
-
 	// updateUser Input
 	const updateConditionInputs = (index: number, value: any) => {
 		// Default Index => @DEV Restructure Dispatcher later
@@ -116,7 +116,7 @@ export default function LayoutTextFields(props: InputProps) {
 	const classes = useStyles();
 
 	// call at every new render
-	const deriveBool = () => {
+	const deriveBool = async () => {
 		if (inputs[0] !== undefined) {
 			if (inputs[index] !== undefined) {
 				if (conditionOrAction === ConditionOrAction.Condition) {
@@ -126,9 +126,20 @@ export default function LayoutTextFields(props: InputProps) {
 
 					// dependent parameter that determines if greater or smaller
 
-					// getConditionValueInput independent variable
-					const getConditionValueInput = icedTxState.condition
-						.getConditionValueInput as ethers.utils.BigNumber;
+					// Fetching the variable we compare the index value too
+					// OLD
+					// const getConditionValueInput = icedTxState.condition
+					// 	.getConditionValueInput as ethers.utils.BigNumber;
+
+					// NEW, direct from smart contract
+
+					const getConditionValueInput = await getValueFromSmartContractCondition(
+						icedTxState.condition,
+						active,
+						networkId,
+						account as string,
+						inputs
+					);
 
 					// Make comparison with bigNumbers
 
@@ -138,6 +149,7 @@ export default function LayoutTextFields(props: InputProps) {
 						if (isBool(inputs[index])) {
 							if (inputs[index] === false) {
 								// console.log('set to true');
+								console.log('True');
 								updateUserInput(index, true);
 							} else {
 								// console.log('already true, dont set again');
@@ -151,6 +163,7 @@ export default function LayoutTextFields(props: InputProps) {
 						// Set bool to false
 						if (isBool(inputs[index])) {
 							if (inputs[index] === true) {
+								console.log('False');
 								// console.log('set to false');
 								updateUserInput(index, false);
 							} else {

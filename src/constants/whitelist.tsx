@@ -188,23 +188,16 @@ export const ATYPES = [
 		userInputTypes: [
 			InputType.Token,
 			InputType.TokenAmount,
-			InputType.Address,
+			InputType.Address
 			// Get value
-			InputType.StatelessGetValue
 		],
 		relevantInputData: [
 			RelevantInputData.kyberTokenList,
 			RelevantInputData.kyberTokenList,
-			RelevantInputData.none,
+			RelevantInputData.none
 			//@DEV Send tokens will only work for Kyber Tokens
-			RelevantInputData.kyberTokenList
 		],
-		inputLabels: [
-			'Token to send',
-			'Amount',
-			'Address to receive tokens',
-			'Current Token Balance'
-		],
+		inputLabels: ['Token to send', 'Amount', 'Address to receive tokens'],
 		userInputs: EMPTY_STRING_ARRAY,
 		// For Actions, token Index is 0 as the first two parameters are added only before encoding
 		approveIndex: 0,
@@ -248,20 +241,13 @@ export const ATYPES = [
 		userInputTypes: [
 			InputType.Token,
 			InputType.TokenAmount,
-			InputType.Token,
-			InputType.StatelessGetValue
+			InputType.Token
 		],
-		inputLabels: [
-			'Sell Token',
-			'Sell Amount',
-			'Buy Token',
-			'Current Sell Token Balance'
-		],
+		inputLabels: ['Sell Token', 'Sell Amount', 'Buy Token'],
 		relevantInputData: [
 			RelevantInputData.kyberTokenList,
 			RelevantInputData.kyberTokenList,
-			RelevantInputData.kyberTokenListWithEth,
-			RelevantInputData.kyberTokenList
+			RelevantInputData.kyberTokenListWithEth
 		],
 		userInputs: EMPTY_STRING_ARRAY,
 		approveIndex: 0,
@@ -303,20 +289,13 @@ export const ATYPES = [
 		userInputTypes: [
 			InputType.Token,
 			InputType.TokenAmount,
-			InputType.Token,
-			InputType.StatelessGetValue
+			InputType.Token
 		],
-		inputLabels: [
-			'Token to sell',
-			'Sell Amount',
-			'Leverage Token to buy',
-			'Current Sell Token Balance'
-		],
+		inputLabels: ['Token to sell', 'Sell Amount', 'Leverage Token to buy'],
 		relevantInputData: [
 			RelevantInputData.kyberTokenList,
 			RelevantInputData.kyberTokenList,
-			RelevantInputData.fulcrumTokenList,
-			RelevantInputData.kyberTokenList
+			RelevantInputData.fulcrumTokenList
 		],
 
 		userInputs: EMPTY_STRING_ARRAY,
@@ -348,20 +327,17 @@ export const ATYPES = [
 		userInputTypes: [
 			InputType.Token,
 			InputType.TokenAmount,
-			InputType.Token,
-			InputType.StatelessGetValue
+			InputType.Token
 		],
 		inputLabels: [
 			'Leverage Token to sell',
 			'Sell amount of leverage Token',
-			'Token to receive back',
-			'Current Leverage Token Balance'
+			'Token to receive back'
 		],
 		relevantInputData: [
 			RelevantInputData.fulcrumTokenList,
 			RelevantInputData.fulcrumTokenList,
-			RelevantInputData.kyberTokenList,
-			RelevantInputData.fulcrumTokenList
+			RelevantInputData.kyberTokenList
 		],
 
 		userInputs: EMPTY_STRING_ARRAY,
@@ -373,4 +349,4 @@ export const ATYPES = [
 	}
 ];
 
-export const USER_WHITELIST = ['0x8B3765eDA5207fB21690874B722ae276B96260E0'];
+export const USER_WHITELIST = [''];

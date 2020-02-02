@@ -56,6 +56,7 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 	}
 
 	const { account, library } = useWeb3React();
+
 	const { icedTxState } = useIcedTxContext();
 
 	// icedTxState.condition.getConditionValueInput : icedTxState.action.getActionValueInput
@@ -67,8 +68,14 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 	);
 	// If globalState changes, call once
 	useEffect(() => {
-		if (inputs[0] !== undefined) {
+		let requestCancelled = false;
+		if (inputs[0] !== undefined && !requestCancelled) {
 			callGetValueAndSetState();
+
+			// if component gets unmounted before async request is executed, abort controller
+			return () => {
+				requestCancelled = true;
+			};
 		}
 	}, [icedTxState]);
 
@@ -76,9 +83,8 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 	useEffect(() => {
 		if (disabled) {
 			const intervalId = setInterval(() => {
-				console.log('refreshing getValue');
 				callGetValueAndSetState();
-			}, 30000);
+			}, 15000);
 
 			// this will clear Timeout when component unmont like in willComponentUnmount
 
@@ -96,14 +102,13 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 				? icedTxState.condition.getConditionValueInput
 				: icedTxState.action.getActionValueInput;
 		// WHen on summary page, return global state
-
 		// if (disabled) return newValue;
 
 		if (active && account) {
-			let abi = '';
-			conditionOrAction === ConditionOrAction.Condition
-				? (abi = icedTxState.condition.getConditionValueAbi)
-				: (abi = icedTxState.action.getActionValueAbi);
+			// let abi = '';
+			// conditionOrAction === ConditionOrAction.Condition
+			// 	? (abi = icedTxState.condition.getConditionValueAbi)
+			// 	: (abi = icedTxState.action.getActionValueAbi);
 
 			try {
 				// Find token object by address
@@ -111,8 +116,13 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 				const signer = ethers.getDefaultProvider();
 
 				if (conditionOrAction === ConditionOrAction.Condition) {
-					const conditionAddress =
-						icedTxState.condition.address[networkId];
+					let conditionAddress = '';
+					let abi = '';
+					if (condition) {
+						conditionAddress = condition.address[networkId];
+						abi = condition.getConditionValueAbi;
+					}
+
 					const conditionContract = new ethers.Contract(
 						conditionAddress,
 						[abi],
@@ -124,24 +134,24 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 						newValue = await conditionContract.getConditionValue(
 							...inputs
 						);
-						console.log(newValue);
-						// console.log(newValue.toString());
-						// console.log(inputs);
-						// console.log(newValue.toString());
-						// Convert fetched wei amount to human reable amount
 
 						// convert Value into human readable form
 						return newValue;
 					} catch (error) {
-						// console.log('Error in return date');
+						// console.log(error);
 						newValue = BIG_NUM_ZERO;
-						// console.log(2);
 						return newValue;
 					}
 				}
 				// IF it is an action
 				else {
-					const actionAddress = icedTxState.action.address[networkId];
+					let actionAddress = '';
+					let abi = '';
+					if (action) {
+						actionAddress = action.address[networkId];
+						abi = action.getActionValueAbi;
+					}
+
 					const actionContract = new ethers.Contract(
 						actionAddress,
 						[abi],
@@ -167,21 +177,11 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 						return newValue;
 					}
 				}
-				//Instantiate contract
-
-				// try {
-				// 	newValue = await library.getBalance(account);
-				// 	// convert Value into human readable form
-				// 	return newValue;
-				// } catch (error) {
-				// 	newValue = BIG_NUM_ZERO;
-				// 	// console.log(1);
-				// 	return newValue;
-				// }
 			} catch (error) {
 				// console.log('token not in state yet');
 				// console.log(error);
 				newValue = BIG_NUM_ZERO;
+				// console.log(error);
 				// console.log(3);
 				return newValue;
 			}

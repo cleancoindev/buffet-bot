@@ -94,7 +94,7 @@ interface Data {
 	id: string;
 	condition: string;
 	action: string;
-	date: string;
+	date: number;
 	status: string;
 	view: number;
 	cancel: string;
@@ -104,7 +104,7 @@ function createData(
 	id: string,
 	condition: string,
 	action: string,
-	date: string,
+	date: number,
 	status: string,
 	view: number,
 	cancel: string
@@ -377,12 +377,30 @@ export default function EnhancedTable() {
 	let history = useHistory();
 
 	// Eager Connect
-	const triedEager = useEagerConnect();
+	// const triedEager = useEagerConnect();
+	const [tried, setTried] = React.useState(false);
 
-	// useEffect(() => {
-	// 	web3.activate(injected);
-	// 	console.log('activating user');
-	// }, []);
+	// Stalionator code
+	useEffect(() => {
+		if (!web3.active) {
+			injected.isAuthorized().then((isAuthorized: boolean) => {
+				if (isAuthorized) {
+					web3.activate(injected, undefined, true).catch(() => {
+						setTried(true);
+					});
+				} else {
+					setTried(true);
+				}
+			});
+		}
+	}, []); // intentionally only running on mount (make sure it's only mounted once :))
+
+	// if the connection worked, wait until we get confirmation of that to flip the flag
+	useEffect(() => {
+		if (!tried && web3.active) {
+			setTried(true);
+		}
+	}, [tried, web3.active]);
 
 	const classes = useStyles();
 	const [order, setOrder] = React.useState<Order>('desc');
@@ -465,7 +483,7 @@ export default function EnhancedTable() {
 					counter.toString(),
 					condition.title,
 					action.title,
-					stringifyTimestamp(executionClaim.mintingDate),
+					executionClaim.mintingDate,
 					statusString,
 					index,
 					'CANCEL'
@@ -487,16 +505,24 @@ export default function EnhancedTable() {
 	}
 
 	useEffect(() => {
-		fetchPastExecutionClaims();
+		console.log('FETCHING TABLE');
+		let requestCancelled = false;
+		if (!requestCancelled) {
+			fetchPastExecutionClaims();
+		}
+
 		const intervalId = setInterval(() => {
 			fetchPastExecutionClaims();
 		}, 20000);
 
 		// this will clear Timeout when component unmont like in willComponentUnmount
 
-		return () => clearInterval(intervalId);
+		return () => {
+			clearInterval(intervalId);
+			requestCancelled = true;
+		};
 		// Clean up function
-	}, [renderCounter, web3.active]);
+	}, [renderCounter, web3.active, web3.account]);
 
 	// Cancel ExecutionClaim
 
@@ -634,7 +660,9 @@ export default function EnhancedTable() {
 												{row.action}
 											</StyledTableCell>
 											<StyledTableCell align="left">
-												{row.date}
+												{stringifyTimestamp(
+													row.date.toString()
+												)}
 											</StyledTableCell>
 											<StyledTableCell align="left">
 												{row.status}

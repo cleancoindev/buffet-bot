@@ -386,7 +386,8 @@ export default function TransactionCard(props: TxCardProps) {
 
 	// When Modal renders, set Prepayment value based on the selected action
 	useEffect(() => {
-		if (active) {
+		let requestCancelled = false;
+		if (active && !requestCancelled) {
 			// Only set prepayment amount if txState is equal displayCreate
 			if (txState === TxState.displayCreate) {
 				setPrepaymentAmount();
@@ -413,6 +414,10 @@ export default function TransactionCard(props: TxCardProps) {
 			}
 			setEtherscanPrefix(prefix);
 		}
+
+		return () => {
+			requestCancelled = true;
+		};
 	}, [active, txState]);
 
 	function returnModalContent(txState: TxState): ModalContent {
@@ -678,7 +683,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.postApprove:
 				return {
-					title: `Great, now let's submit your instruction to your gelato bot`,
+					title: `Great, now you can submit the instruction to your gelato bot`,
 					progress: Progress.finished,
 					progressText: `Submitted approval transaction`,
 					prepayment: false,
@@ -1387,8 +1392,8 @@ export default function TransactionCard(props: TxCardProps) {
 								<span style={{ color: COLOURS.salmon }}>
 									{icedTxState.condition.title}
 								</span>{' '}
-								and, if the details of your condition are
-								fulfilled, it will{' '}
+								and, if the details of your condition are met,
+								it will{' '}
 								<span style={{ color: COLOURS.salmon }}>
 									{icedTxState.action.title}
 								</span>{' '}
@@ -1471,7 +1476,7 @@ export default function TransactionCard(props: TxCardProps) {
 							}}
 							color="primary"
 							onClick={() => {
-								const queryString = `I%20just%20tasked%20my%20gelato%20bot%20to%20${icedTxState.action.title}%20on%20my%20behalf%20when%20my%20predefined%20${icedTxState.condition.title}%20condition%20gets%20activated - via @gelatofinance`;
+								const queryString = `I%20just%20tasked%20my%20gelato%20bot%20to%20${icedTxState.action.title}%20on%20my%20behalf%20when%20my%20instructed%20${icedTxState.condition.title}%20condition%20is%20met - via @gelatofinance`;
 								console.log(queryString);
 								const url = `https://twitter.com/intent/tweet?text=${queryString}`;
 								window.open(url, '_blank');

@@ -169,6 +169,22 @@ export default function ButtonAppBar() {
 		dispatch({ type: SELECT_ACTION, id: functionIdAction });
 	}, []);
 
+	const [tried, setTried] = React.useState(false);
+
+	useEffect(() => {
+		if (history.location.pathname === '/dashboard') {
+			injected.isAuthorized().then((isAuthorized: boolean) => {
+				if (isAuthorized) {
+					activate(injected, undefined, true).catch(() => {
+						setTried(true);
+					});
+				} else {
+					setTried(true);
+				}
+			});
+		}
+	}, []); // intentionally only running on mount (make sure it's only mounted once :))
+
 	// handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
 	// Only eager connect when in dashboard
 	// const triedEager = useEagerConnect();

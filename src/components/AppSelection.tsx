@@ -329,33 +329,16 @@ export default function AppSelection() {
 								fontSize: '18px'
 							}}
 						>
-							Your gelato bot will{' '}
-							<span style={{ color: '#E50078' }}>
+							If your specified condition{' '}
+							<span style={{ color: COLOURS.salmon }}>
+								{icedTxState.condition.title}
+							</span>{' '}
+							is met, then your gelato bot will{' '}
+							<span style={{ color: COLOURS.salmon }}>
 								{icedTxState.action.title}
 							</span>{' '}
-							on your behalf, when the condition{' '}
-							<span style={{ color: '#E50078' }}>
-								{icedTxState.condition.title}{' '}
-							</span>
-							is activated
+							on your behalf
 						</div>
-						{/* <h2
-							style={{
-								textAlign: 'justify',,
-								fontSize: '18px'
-								textAlignLast: 'center'
-							}}
-						>
-							Your gelato bot will{' '}
-							<span style={{ color: '#E50078' }}>
-								{icedTxState.action.title}
-							</span>{' '}
-							on your behalf, when the condition{' '}
-							<span style={{ color: '#E50078' }}>
-								{icedTxState.condition.title}{' '}
-							</span>
-							is activated
-						</h2> */}
 					</Grid>
 					<Grid
 						container
