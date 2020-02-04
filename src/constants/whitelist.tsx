@@ -188,16 +188,23 @@ export const ATYPES = [
 		userInputTypes: [
 			InputType.Token,
 			InputType.TokenAmount,
-			InputType.Address
+			InputType.Address,
+			InputType.StatelessGetValue
 			// Get value
 		],
 		relevantInputData: [
 			RelevantInputData.kyberTokenList,
 			RelevantInputData.kyberTokenList,
-			RelevantInputData.none
+			RelevantInputData.none,
+			RelevantInputData.kyberTokenList
 			//@DEV Send tokens will only work for Kyber Tokens
 		],
-		inputLabels: ['Token to send', 'Amount', 'Address to receive tokens'],
+		inputLabels: [
+			'Token to send',
+			'Amount',
+			'Address to receive tokens',
+			'Current token balance of address'
+		],
 		userInputs: EMPTY_STRING_ARRAY,
 		// For Actions, token Index is 0 as the first two parameters are added only before encoding
 		approveIndex: 0,
