@@ -295,14 +295,35 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
 
 	const { numSelected, renderCounter } = props;
 
+	const [currentCount, setCount] = React.useState(0);
+	const timer = () => setCount(currentCount + 1);
+
+	useEffect(() => {
+		if (currentCount === 3) {
+			setCount(0);
+		}
+		const id = setInterval(timer, 1000);
+		return () => clearInterval(id);
+	}, [currentCount]);
+
 	return (
 		<Toolbar style={{ alignItems: 'center', flexDirection: 'column' }}>
 			<Typography className={classes.title} variant="h6" id="tableTitle">
 				Your Bot Activity
 			</Typography>
-			{numSelected !== 0 && web3.active && renderCounter !== 5 && (
-				<CircularProgress size={16} style={{}} color={'primary'} />
-			)}
+			<div
+				className={classes.title}
+				style={{
+					fontSize: '16px',
+					marginTop: '8px',
+					marginBottom: '8px'
+				}}
+				id="tableSubTitle"
+			>
+				{currentCount === 0 && numSelected > 0 && web3.active && '.'}
+				{currentCount === 1 && numSelected > 0 && web3.active && '..'}
+				{currentCount === 2 && numSelected > 0 && web3.active && '...'}
+			</div>
 			{!web3.active && numSelected === 0 && (
 				<div
 					className={classes.title}
