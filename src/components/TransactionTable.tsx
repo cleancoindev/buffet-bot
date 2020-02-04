@@ -23,6 +23,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { useIcedTxContext } from '../state/GlobalState';
 import {
@@ -299,6 +300,9 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
 			<Typography className={classes.title} variant="h6" id="tableTitle">
 				Your Bot Activity
 			</Typography>
+			{numSelected !== 0 && web3.active && renderCounter !== 5 && (
+				<CircularProgress size={16} style={{}} color={'primary'} />
+			)}
 			{!web3.active && numSelected === 0 && (
 				<div
 					className={classes.title}

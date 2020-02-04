@@ -474,7 +474,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.displayGelatoWallet:
 				return {
-					title: `You don't have a gelato bot to instruct yet. Let's deploy a new one for you`,
+					title: `You don't have a gelato bot to instruct yet. First, let's deploy a new one for you`,
 					progress: Progress.awaitingModalConfirm,
 					progressText: ``,
 					prepayment: false,
@@ -666,7 +666,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.preApprove:
 				return {
-					title: `Please confirm the transaction in Metamask`,
+					title: `Please confirm the approval transaction in Metamask`,
 					progress: Progress.awaitingMetamaskConfirm,
 					progressText: `Waiting for confirmation`,
 					prepayment: false,
@@ -1188,6 +1188,7 @@ export default function TransactionCard(props: TxCardProps) {
 				)}
 				{txState !== TxState.cancelled &&
 					txState !== TxState.inputError &&
+					txState !== TxState.insufficientBalance &&
 					txState > TxState.displayLogIntoMetamask &&
 					txState !== TxState.displayWrongNetwork && (
 						<Grid
@@ -1292,6 +1293,7 @@ export default function TransactionCard(props: TxCardProps) {
 					txState !== TxState.cancelled &&
 					txState !== TxState.inputError &&
 					txState !== TxState.displayWrongNetwork &&
+					txState !== TxState.insufficientBalance &&
 					txState > TxState.displayLogIntoMetamask && (
 						<React.Fragment>
 							<Grid

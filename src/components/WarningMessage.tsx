@@ -45,7 +45,7 @@ export function WarningMessage() {
 				🚨
 			</span>{' '}
 			Caution! Alpha Version! Smart contracts are NOT audited. This is
-			experimental technology. Use at own risk!
+			experimental tech. Use at own risk!
 		</div>
 	);
 }
