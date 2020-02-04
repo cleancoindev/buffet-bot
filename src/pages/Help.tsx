@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function Help() {
+	const [defaultOpen, setDefaultOpen] = React.useState(true);
 	const classes = useStyles();
 	return (
 		<React.Fragment>
@@ -73,7 +74,13 @@ export default function Help() {
 					</Typography>
 					<div className={classes.root}>
 						{/* 1 */}
-						<ExpansionPanel className={classes.paperRoot}>
+						<ExpansionPanel
+							className={classes.paperRoot}
+							expanded={defaultOpen}
+							onClick={() => {
+								setDefaultOpen(!defaultOpen);
+							}}
+						>
 							<ExpansionPanelSummary
 								expandIcon={<ExpandMoreIcon />}
 								aria-controls="panel1a-content"
