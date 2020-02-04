@@ -73,6 +73,7 @@ export const getConditionText = (
 					relevantInputData
 				).decimals
 			);
+
 			const lessOrMore = inputs[4];
 			let price = inputs[3] as ethers.utils.BigNumber;
 			if (price.eq(ethers.constants.MaxUint256)) {

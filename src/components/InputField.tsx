@@ -215,12 +215,23 @@ export default function LayoutTextFields(props: InputProps) {
 					return defaultWeiAmountPerToken;
 				} else {
 					updateUserInput(index, BIG_NUM_ZERO);
+					console.log('Zero');
 					return BIG_NUM_ZERO;
 				}
 			}
 		}
 		// If new render, go in here
 		else {
+			// if (
+			// 	ConditionOrAction.Condition === conditionOrAction &&
+			// 	icedTxState.condition.id === 3
+			// ) {
+			// 	console.log('kyber price');
+			// 	updateUserInput(index, ethers.constants.WeiPerEther);
+			// 	return ethers.constants.WeiPerEther;
+			// } else {
+
+			// }
 			updateUserInput(index, BIG_NUM_ZERO);
 			return BIG_NUM_ZERO;
 		}
@@ -246,7 +257,15 @@ export default function LayoutTextFields(props: InputProps) {
 			case InputType.Token:
 				const tokenList = getTokenList(relevantInputData, networkId);
 				let defaultToken = tokenList[0];
-				if (index !== 0) defaultToken = tokenList[1];
+				if (
+					ConditionOrAction.Condition === conditionOrAction &&
+					icedTxState.condition.id === 3
+				) {
+					defaultToken = tokenList[1];
+					if (index !== 0) defaultToken = tokenList[0];
+				} else {
+					if (index !== 0) defaultToken = tokenList[1];
+				}
 
 				updateUserInput(index, defaultToken.address[networkId]);
 				return defaultToken.address[networkId];
