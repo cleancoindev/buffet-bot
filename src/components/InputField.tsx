@@ -222,18 +222,16 @@ export default function LayoutTextFields(props: InputProps) {
 		}
 		// If new render, go in here
 		else {
-			// if (
-			// 	ConditionOrAction.Condition === conditionOrAction &&
-			// 	icedTxState.condition.id === 3
-			// ) {
-			// 	console.log('kyber price');
-			// 	updateUserInput(index, ethers.constants.WeiPerEther);
-			// 	return ethers.constants.WeiPerEther;
-			// } else {
-
-			// }
-			updateUserInput(index, BIG_NUM_ZERO);
-			return BIG_NUM_ZERO;
+			if (
+				ConditionOrAction.Condition === conditionOrAction &&
+				icedTxState.condition.id === 3
+			) {
+				updateUserInput(index, ethers.constants.WeiPerEther);
+				return ethers.constants.WeiPerEther;
+			} else {
+				updateUserInput(index, BIG_NUM_ZERO);
+				return BIG_NUM_ZERO;
+			}
 		}
 	}
 

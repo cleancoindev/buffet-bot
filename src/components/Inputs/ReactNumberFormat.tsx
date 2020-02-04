@@ -141,13 +141,13 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 
 	let initialValueBigInt: ethers.utils.BigNumber = BIG_NUM_ZERO;
 	let initialValueString = '0';
-	// if (
-	// 	ConditionOrAction.Condition === conditionOrAction &&
-	// 	icedTxState.condition.id === 3
-	// ) {
-	// 	initialValueBigInt = ethers.constants.WeiPerEther;
-	// 	initialValueString = '1';
-	// }
+	if (
+		ConditionOrAction.Condition === conditionOrAction &&
+		icedTxState.condition.id === 3
+	) {
+		initialValueBigInt = ethers.constants.WeiPerEther;
+		initialValueString = '1';
+	}
 
 	// If token address is alraedy inputted, convert number using the tokens decimal field
 	// @DEV Only works if we set an approve Index
@@ -261,7 +261,6 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 
 	// When user selects different token, check wheather decimal number is different
 	useEffect(() => {
-		console.log('Check');
 		if (inputs[0] !== undefined) {
 			if (inputType === InputType.TokenAmount) {
 				try {
