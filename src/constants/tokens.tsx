@@ -115,18 +115,18 @@ export const KYBER_TOKEN_LIST = [
 	// 	max: '240'
 	// },
 
-	{
-		address: {
-			1: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-			3: '0x0',
-			4: '0x0',
-			42: '0x0'
-		},
-		symbol: 'USDT',
-		name: 'Tether',
-		decimals: 6,
-		max: '275'
-	},
+	// {
+	// 	address: {
+	// 		1: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+	// 		3: '0x0',
+	// 		4: '0x0',
+	// 		42: '0x0'
+	// 	},
+	// 	symbol: 'USDT',
+	// 	name: 'Tether',
+	// 	decimals: 6,
+	// 	max: '275'
+	// },
 	{
 		address: {
 			1: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
@@ -274,18 +274,18 @@ export const KYBER_TOKEN_LIST_WITH_ETH = [
 	// 	max: '240'
 	// },
 
-	{
-		address: {
-			1: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-			3: '0x0',
-			4: '0x0',
-			42: '0x0'
-		},
-		symbol: 'USDT',
-		name: 'Tether',
-		decimals: 6,
-		max: '275'
-	},
+	// {
+	// 	address: {
+	// 		1: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+	// 		3: '0x0',
+	// 		4: '0x0',
+	// 		42: '0x0'
+	// 	},
+	// 	symbol: 'USDT',
+	// 	name: 'Tether',
+	// 	decimals: 6,
+	// 	max: '275'
+	// },
 	{
 		address: {
 			1: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
