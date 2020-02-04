@@ -691,7 +691,7 @@ export default function TransactionCard(props: TxCardProps) {
 						icedTxState.action.relevantInputData[
 							icedTxState.action.approveIndex
 						]
-					)} on your behalf.`,
+					)} on your behalf`,
 					progress: Progress.finished,
 					progressText: `Submitted approval transaction`,
 					prepayment: false,
