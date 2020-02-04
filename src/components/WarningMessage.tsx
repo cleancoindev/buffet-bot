@@ -44,8 +44,8 @@ export function WarningMessage() {
 			<span role="img" aria-label="warning">
 				🚨
 			</span>{' '}
-			Caution! Alpha Version! Smart contracts are NOT audited. Use at own
-			risk!{' '}
+			Caution! Alpha Version! Smart contracts are NOT audited. This is
+			experimental technology. Use at own risk!
 		</div>
 	);
 }

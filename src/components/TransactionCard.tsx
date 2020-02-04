@@ -474,7 +474,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.displayGelatoWallet:
 				return {
-					title: `You don't have a gelato bot to instruct yet. Let's deploy a new one for you first!`,
+					title: `You don't have a gelato bot to instruct yet. Let's deploy a new one for you`,
 					progress: Progress.awaitingModalConfirm,
 					progressText: ``,
 					prepayment: false,
@@ -683,7 +683,15 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.postApprove:
 				return {
-					title: `Great, now you can submit the instruction to your gelato bot`,
+					title: `Success, you approved your bot to move ${getTokenSymbol(
+						icedTxState.action.userInputs[
+							icedTxState.action.approveIndex
+						].toString(),
+						networkId,
+						icedTxState.action.relevantInputData[
+							icedTxState.action.approveIndex
+						]
+					)} on your behalf.`,
 					progress: Progress.finished,
 					progressText: `Submitted approval transaction`,
 					prepayment: false,
