@@ -309,7 +309,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
 	return (
 		<Toolbar style={{ alignItems: 'center', flexDirection: 'column' }}>
 			<Typography className={classes.title} variant="h6" id="tableTitle">
-				Your Bot Activity
+				My Bot Activity
 			</Typography>
 			<div
 				className={classes.title}

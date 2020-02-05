@@ -241,12 +241,30 @@ export default function ButtonAppBar() {
 					</div>
 					{/* </Link> */}
 					<Hidden xsDown>
-						<BootstrapButton
+						{/* <BootstrapButton
 							style={{ border: 'none' }}
 							onClick={linkBackToHome}
 						>
 							New Instruction
-						</BootstrapButton>
+						</BootstrapButton> */}
+						{active && (
+							<BootstrapButton
+								style={{ border: 'none' }}
+								onClick={() => {
+									// IF we are already on dashboard, reload the page on click, otherwise change route
+									if (
+										history.location.pathname ===
+										'/dashboard'
+									) {
+										window.location.reload();
+									} else {
+										history.push('/dashboard');
+									}
+								}}
+							>
+								My Bot Activity
+							</BootstrapButton>
+						)}
 
 						{/* ################################ How it works Button*/}
 						<BootstrapButton

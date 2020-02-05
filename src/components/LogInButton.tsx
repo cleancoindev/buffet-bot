@@ -147,19 +147,18 @@ export default function LoginButton() {
 				<StyledMenuItem
 					onClick={() => {
 						// IF we are already on dashboard, reload the page on click, otherwise change route
-						if (history.location.pathname === '/dashboard') {
-							window.location.reload();
-						} else {
-							history.push('/dashboard');
-						}
+						linkBackToHome();
+						// if (history.location.pathname === '/dashboard') {
+						// 	window.location.reload();
+						// } else {
+						// 	history.push('/dashboard');
+						// }
 						handleClose();
 					}}
 				>
-					{/* <ListItemIcon> */}
 					<span style={{ minWidth: '56px' }}>🤖</span>
-					{/* <SendIcon fontSize="small" /> */}
-					{/* </ListItemIcon> */}
-					<ListItemText primary="Your Bot Activity" />
+
+					<ListItemText primary="New Instruction" />
 				</StyledMenuItem>
 				<StyledMenuItem
 					onClick={() => {
