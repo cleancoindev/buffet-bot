@@ -32,7 +32,7 @@ import WarningIcon from '@material-ui/icons/Warning';
 
 // Web3 React
 import { useEagerConnect, useInactiveListener } from '../hooks/hooks';
-import { injected } from '../constants/connectors';
+import { injected, walletConnect } from '../constants/connectors';
 import {
 	COLOURS,
 	SELECTED_CHAIN_ID,
@@ -46,10 +46,12 @@ import {
 	DEFAULT_ACTION_ID,
 	SELECT_ACTION
 } from '../constants/constants';
-import { useIcedTxContext } from '../state/GlobalState';
+import { useIcedTxContext, connectorsByName } from '../state/GlobalState';
 import { TxState } from '../constants/interfaces';
 import GelatoLogo from './Logo/Logo';
 import LoginButton from './LogInButton';
+import Web3ConnectButton from './Web3ConnectButton/Web3ConnectButton';
+import { AbstractConnector } from '@web3-react/abstract-connector';
 
 // Google Analytics
 // import ReactGA from 'react-ga';
@@ -185,8 +187,9 @@ export default function ButtonAppBar() {
 
 	const [tried, setTried] = React.useState(false);
 
+	/*
 	useEffect(() => {
-		if (history.location.pathname === '/dashboard') {
+		if (history.location.pathname === '/dashboard' && !active) {
 			injected.isAuthorized().then((isAuthorized: boolean) => {
 				if (isAuthorized) {
 					activate(injected, undefined, true).catch(() => {
@@ -198,17 +201,20 @@ export default function ButtonAppBar() {
 			});
 		}
 	}, []); // intentionally only running on mount (make sure it's only mounted once :))
+	*/
 
 	// handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
 	// Only eager connect when in dashboard
 	// const triedEager = useEagerConnect();
 
 	// handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
-	useInactiveListener();
+	// useInactiveListener();
 
-	const logInLogOutMetamask = async () => {
+	const logInWeb3 = async (connector: AbstractConnector) => {
 		if (!active) {
-			await activate(injected);
+			console.log(connectorsByName.WalletConnect);
+			// await activate(injected);
+			await activate(connector);
 		} else {
 		}
 	};
@@ -252,14 +258,15 @@ export default function ButtonAppBar() {
 								style={{ border: 'none' }}
 								onClick={() => {
 									// IF we are already on dashboard, reload the page on click, otherwise change route
-									if (
-										history.location.pathname ===
-										'/dashboard'
-									) {
-										window.location.reload();
-									} else {
-										history.push('/dashboard');
-									}
+									// Deprecated
+									// if (
+									// 	history.location.pathname ===
+									// 	'/dashboard'
+									// ) {
+									// 	window.location.reload();
+									// } else {
+									history.push('/dashboard');
+									// }
 								}}
 							>
 								My Bot Activity
@@ -302,13 +309,15 @@ export default function ButtonAppBar() {
 								{'Wrong Network'}
 							</BootstrapButtonDanger>
 						)}
+
 						{!active && (
-							<BootstrapButton
-								style={{ marginLeft: '16px' }}
-								onClick={logInLogOutMetamask}
-							>
-								{'Connect Metamask'}
-							</BootstrapButton>
+							<Web3ConnectButton></Web3ConnectButton>
+							// <BootstrapButton
+							// 	style={{ marginLeft: '16px' }}
+							// 	onClick={logInLogOutMetamask}
+							// >
+							// 	{'Connect Metamask'}
+							// </BootstrapButton>
 						)}
 						{/* ################################ Connect Button END*/}
 					</Hidden>
@@ -386,18 +395,36 @@ export default function ButtonAppBar() {
 						</ListItem>
 					)}
 					{!active && (
-						<ListItem
-							button
-							onClick={() => {
-								logInLogOutMetamask();
-								handleDrawerToggle();
-							}}
-						>
-							<ListItemIcon>
-								<InboxIcon />
-							</ListItemIcon>
-							<ListItemText primary={'Connect With Metamask'} />
-						</ListItem>
+						<React.Fragment>
+							<ListItem
+								button
+								onClick={() => {
+									logInWeb3(connectorsByName.Injected);
+									handleDrawerToggle();
+								}}
+							>
+								<ListItemIcon>
+									<InboxIcon />
+								</ListItemIcon>
+								<ListItemText
+									primary={'Connect With Metamask'}
+								/>
+							</ListItem>
+							<ListItem
+								button
+								onClick={() => {
+									logInWeb3(connectorsByName.WalletConnect);
+									handleDrawerToggle();
+								}}
+							>
+								<ListItemIcon>
+									<InboxIcon />
+								</ListItemIcon>
+								<ListItemText
+									primary={'Connect With Wallet Connect'}
+								/>
+							</ListItem>
+						</React.Fragment>
 					)}
 					{active && chainId === SELECTED_CHAIN_ID && (
 						<ListItem

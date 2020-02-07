@@ -401,6 +401,7 @@ export default function EnhancedTable() {
 	// Router Context
 	let history = useHistory();
 
+	/*
 	// Eager Connect
 	// const triedEager = useEagerConnect();
 	const [tried, setTried] = React.useState(false);
@@ -426,10 +427,10 @@ export default function EnhancedTable() {
 			setTried(true);
 		}
 	}, [tried, web3.active]);
+	*/
 
 	const classes = useStyles();
 	const [order, setOrder] = React.useState<Order>('desc');
-	// @ DEV CHANGED TO ID FROM CALORIES
 	const [orderBy, setOrderBy] = React.useState<keyof Data>('date');
 	const [selected, setSelected] = React.useState<string[]>([]);
 	const [page, setPage] = React.useState(0);

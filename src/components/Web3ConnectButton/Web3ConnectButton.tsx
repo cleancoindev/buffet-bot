@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 // Routing
 import { useHistory } from 'react-router-dom';
 import { useWeb3React } from '@web3-react/core';
-import { useIcedTxContext } from '../state/GlobalState';
+import { useIcedTxContext, connectorsByName } from '../../state/GlobalState';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Menu, { MenuProps } from '@material-ui/core/Menu';
@@ -17,6 +17,8 @@ import WarningIcon from '@material-ui/icons/Warning';
 
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
+import { ReactComponent as MetamaskLogo } from './metamask_logo.svg';
+
 import {
 	COLOURS,
 	SELECTED_CHAIN_ID,
@@ -27,10 +29,11 @@ import {
 	SELECT_CONDITION,
 	DEFAULT_TRIGGER_ID,
 	INPUT_OK
-} from '../constants/constants';
-import { TxState } from '../constants/interfaces';
+} from '../../constants/constants';
+import { TxState } from '../../constants/interfaces';
 
-import { injected } from '../constants/connectors';
+import { injected } from '../../constants/connectors';
+import { AbstractConnector } from '@web3-react/abstract-connector';
 
 const StyledMenu = withStyles({
 	paper: {
@@ -98,11 +101,13 @@ const GelatoButton = withStyles({
 // 	handleMobileMenuOpen: (event: React.MouseEvent<HTMLButtonElement>) => void;
 // }
 
-export default function LoginButton() {
+export default function Web3ConnectButton() {
 	const { account, active, activate, deactivate, chainId } = useWeb3React();
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const history = useHistory();
 	const { dispatch } = useIcedTxContext();
+
+	const { icedTxState } = useIcedTxContext();
 
 	const handleClick = (event: React.MouseEvent<HTMLElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -122,20 +127,29 @@ export default function LoginButton() {
 		history.push('/');
 	};
 
+	const checkIfMetamaskInstalled = () => {
+		console.log(icedTxState.txState);
+		let isInstalled = false;
+		icedTxState.txState !== TxState.displayInstallMetamask
+			? (isInstalled = true)
+			: (isInstalled = false);
+		console.log(isInstalled);
+		return isInstalled;
+	};
+
+	const handleConnect = async (connector: AbstractConnector) => {
+		await activate(connector);
+	};
+
 	return (
 		<div>
 			<GelatoButton
 				aria-controls="customized-menu"
 				aria-haspopup="true"
 				onClick={handleClick}
-				endIcon={<ArrowDropDownIcon />}
+				// endIcon={<ArrowDropDownIcon />}
 			>
-				{account
-					? `${account.substring(0, 6)}...${account.substring(
-							38,
-							42
-					  )}`
-					: 'Connected'}
+				{'Connect Wallet'}
 			</GelatoButton>
 			<StyledMenu
 				id="customized-menu"
@@ -144,36 +158,42 @@ export default function LoginButton() {
 				open={Boolean(anchorEl)}
 				onClose={handleClose}
 			>
-				{/* <StyledMenuItem
-					onClick={() => {
-						// IF we are already on dashboard, reload the page on click, otherwise change route
-						linkBackToHome();
-						// if (history.location.pathname === '/dashboard') {
-						// 	window.location.reload();
-						// } else {
-						// 	history.push('/dashboard');
-						// }
-						handleClose();
-					}}
-				>
-					<span style={{ minWidth: '56px' }}>🤖</span>
-
-					<ListItemText primary="New Instruction" />
-				</StyledMenuItem> */}
 				<StyledMenuItem
 					onClick={() => {
-						deactivate();
-						linkBackToHome();
-						handleClose();
+						if (checkIfMetamaskInstalled()) {
+							handleConnect(connectorsByName.Injected);
+						} else {
+							// Open modal to show please install Metamask
+							dispatch({
+								type: OPEN_MODAL
+							});
+						}
 					}}
-					style={{ minWidth: '160px' }}
 				>
-					<span style={{ minWidth: '56px' }}>👋</span>
+					{/* <span style={{ minWidth: '56px' }}>🤖</span> */}
+					<img
+						style={{ width: '24px', marginRight: '40px' }}
+						src="/images/metamask_logo.svg"
+					></img>
+					{/* <MetamaskLogo style={{ width: '56px' }}></MetamaskLogo> */}
+
+					<ListItemText primary="Metamask" />
+				</StyledMenuItem>
+				<StyledMenuItem
+					onClick={() => {
+						handleConnect(connectorsByName.WalletConnect);
+					}}
+				>
+					{/* <span style={{ minWidth: '56px' }}>👋</span> */}
+					<img
+						style={{ width: '24px', marginRight: '40px' }}
+						src="/images/wallet_connect_logo.svg"
+					></img>
 
 					{/* <ListItemIcon>
 						<DraftsIcon fontSize="small" />
 					</ListItemIcon> */}
-					<ListItemText primary="Log Out" />
+					<ListItemText primary="Wallet Connect" />
 				</StyledMenuItem>
 			</StyledMenu>
 		</div>

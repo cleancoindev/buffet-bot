@@ -14,6 +14,7 @@ import { useWeb3React } from '@web3-react/core';
 
 // Web3
 import { injected } from '../constants/connectors';
+import ConnectorModal from './ConnectorModal';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -104,6 +105,8 @@ export default function StepperParent(props: StepperProps) {
 
 	const { active, activate } = useWeb3React();
 
+	const [connectorModalOpen, setConnectorModalOpen] = React.useState(false);
+
 	return (
 		<div className={classes.root}>
 			<Stepper
@@ -184,12 +187,12 @@ export default function StepperParent(props: StepperProps) {
 										<Button
 											variant="contained"
 											color="primary"
-											onClick={async () => {
-												await activate(injected);
+											onClick={() => {
+												setConnectorModalOpen(true);
 											}}
 											className={classes.nextButton}
 										>
-											{'Log into Metamask'}
+											{'Log into Wallet'}
 										</Button>
 									)}
 								</React.Fragment>
@@ -198,6 +201,10 @@ export default function StepperParent(props: StepperProps) {
 					</div>
 				)}
 			</div>
+			<ConnectorModal
+				setModalOpen={setConnectorModalOpen}
+				modalOpen={connectorModalOpen}
+			></ConnectorModal>
 		</div>
 	);
 }

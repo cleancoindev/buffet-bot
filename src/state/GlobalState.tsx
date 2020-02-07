@@ -11,7 +11,7 @@ import { IcedTx, Action, TxState } from '../constants/interfaces';
 // Import Web3 React
 // Exposes following funcs: 1) getLibrary and 2) _useWeb3ReactManager
 import { Web3ReactProvider } from '@web3-react/core';
-import { AbstractConnectorInterface } from '@web3-react/types';
+import { AbstractConnector } from '@web3-react/abstract-connector';
 
 // Import ethers.js
 import { ethers } from 'ethers';
@@ -23,6 +23,7 @@ import {
 	DEFAULT_DATA_TRIGGER,
 	DEFAULT_PAST_TRANSACTIONS
 } from '../constants/constants';
+import { injected, walletConnect } from '../constants/connectors';
 
 // @DEV Make Deep Copies
 export const DEFAULT_ICED_TX = {
@@ -41,7 +42,7 @@ export const DEFAULT_ICED_TX = {
 // }
 
 // Instruct web3 Provider using ethers and web3react
-const getLibrary = (provider?: any, connector?: AbstractConnectorInterface) => {
+const getLibrary = (provider?: any) => {
 	const library = new ethers.providers.Web3Provider(provider);
 	// @DEV check what this does
 	library.pollingInterval = 8000;
@@ -55,6 +56,13 @@ const IcedTxContext = createContext({
 });
 
 export const useIcedTxContext = () => useContext(IcedTxContext);
+
+// Web3 Connect
+
+export const connectorsByName: { [name: string]: AbstractConnector } = {
+	Injected: injected,
+	WalletConnect: walletConnect
+};
 
 const GlobalStateProvider: React.FunctionComponent = ({ children }) => {
 	// useReduced instead of useState

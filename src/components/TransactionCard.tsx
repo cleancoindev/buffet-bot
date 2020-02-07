@@ -988,7 +988,7 @@ export default function TransactionCard(props: TxCardProps) {
 					btnFunc: () => {
 						// @ DEV Maybe make more efficient!
 						modalClose();
-						window.location.reload();
+						history.push('/dashboard');
 					}
 				};
 			case TxState.cancelled:

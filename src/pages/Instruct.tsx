@@ -334,27 +334,35 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 					// console.log('User on mobile');
 				}
 			case TxState.displayInstallMetamask:
-				// Web3 object is injected
-				if (typeof ethereum !== 'undefined') {
-					// Check if the object is injected by metamask
-					if (ethereum.isMetaMask) {
-						// Yes it is metamask
-						// console.log('Metamask is installed');
-						// Change txState to "Login with metamask"
-						// console.log('Change TxState to displayLogIntoMetamask');
-						dispatch({
-							type: UPDATE_TX_STATE,
-							txState: TxState.displayLogIntoMetamask
-						});
-					} else {
-						// No Metamask installed => Show install Metamask Modal
-						// console.log(
-						// 	'No Metamask is installed - Render Install metamask modal'
-						// 	// No need to change icedTx.txState
-						// );
-					}
+				// If already logged in via walletconnect, skip metamask check
+				if (web3.active) {
+					dispatch({
+						type: UPDATE_TX_STATE,
+						txState: TxState.displayWrongNetwork
+					});
 				} else {
-					// No ethereum provider => Still install metamask
+					// Web3 object is injected
+					if (typeof ethereum !== 'undefined') {
+						// Check if the object is injected by metamask
+						if (ethereum.isMetaMask) {
+							// Yes it is metamask
+							// console.log('Metamask is installed');
+							// Change txState to "Login with metamask"
+							// console.log('Change TxState to displayLogIntoMetamask');
+							dispatch({
+								type: UPDATE_TX_STATE,
+								txState: TxState.displayLogIntoMetamask
+							});
+						} else {
+							// No Metamask installed => Show install Metamask Modal
+							// console.log(
+							// 	'No Metamask is installed - Render Install metamask modal'
+							// 	// No need to change icedTx.txState
+							// );
+						}
+					} else {
+						// No ethereum provider => Still install metamask
+					}
 				}
 				break;
 
