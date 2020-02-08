@@ -128,12 +128,10 @@ export default function Web3ConnectButton() {
 	};
 
 	const checkIfMetamaskInstalled = () => {
-		console.log(icedTxState.txState);
 		let isInstalled = false;
 		icedTxState.txState !== TxState.displayInstallMetamask
 			? (isInstalled = true)
 			: (isInstalled = false);
-		console.log(isInstalled);
 		return isInstalled;
 	};
 

@@ -63,9 +63,15 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 	// web3React context
 	const web3 = useWeb3React();
 
+	// console.log(web3.connector);
+
 	const networkId = web3.chainId as ChainIds;
 
-	web3.connector?.getProvider();
+	// const getProv = async () => {
+	// 	const test = await web3.connector?.getProvider();
+	// 	console.log(test);
+	// };
+	// getProv();
 
 	// Returns true if wrong params were inputted in URL
 	const [notFound, setNotFound] = useState(false);

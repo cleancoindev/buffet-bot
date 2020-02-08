@@ -48,7 +48,8 @@ export function useInactiveListener(suppress: boolean = false) {
 			const handleConnect = () => {
 				// console.log("Handling 'connect' event");
 				// console.log('...');
-				if (history.location.pathname !== '/') activate(injected);
+				// if (history.location.pathname !== '/') activate(injected);
+				console.log('1');
 			};
 			const handleChainChanged = (chainId: string | number) => {
 				// console.log(
@@ -56,35 +57,44 @@ export function useInactiveListener(suppress: boolean = false) {
 				// 	chainId
 				// );
 				// console.log('...');
-				if (history.location.pathname !== '/') activate(injected);
+				// if (history.location.pathname !== '/') activate(injected);
+				console.log('2');
 			};
 			const handleAccountsChanged = (accounts: string[]) => {
-				// console.log(
-				// 	"Handling 'accountsChanged' event with payload",
-				// 	accounts
-				// );
-				if (accounts.length > 0) {
-					// NO EAGER CONNECT
-					if (history.location.pathname !== '/') activate(injected);
-				}
+				console.log(
+					"Handling 'accountsChanged' event with payload",
+					accounts
+				);
+				console.log('3');
+				// if (accounts.length > 0) {
+				// 	// NO EAGER CONNECT
+				// 	if (history.location.pathname !== '/') activate(injected);
+				// }
 			};
 			const handleNetworkChanged = (networkId: string | number) => {
 				// @DEV REFRESH CONTRACTS IN STATE
-				// console.log(
-				// 	"Handling 'networkChanged' event with payload",
-				// 	networkId
-				// );
+				console.log(
+					"Handling 'networkChanged' event with payload",
+					networkId
+				);
+				console.log('4');
 
-				if (history.location.pathname === '/dashboard') {
-					// Only eager conenct when on dashboard page
-					activate(injected);
-				}
+				// if (history.location.pathname === '/dashboard') {
+				// 	// Only eager conenct when on dashboard page
+				// 	activate(injected);
+				// }
+			};
+			const handleDissconnect = (networkId: string | number) => {
+				console.log('5');
+				console.log('Disconnect', networkId);
 			};
 
 			ethereum.on('connect', handleConnect);
 			ethereum.on('chainChanged', handleChainChanged);
 			ethereum.on('accountsChanged', handleAccountsChanged);
 			ethereum.on('networkChanged', handleNetworkChanged);
+			// Subscribe to session disconnection/close
+			ethereum.on('disconnect', handleDissconnect);
 
 			return () => {
 				if (ethereum.removeListener) {
@@ -98,6 +108,7 @@ export function useInactiveListener(suppress: boolean = false) {
 						'networkChanged',
 						handleNetworkChanged
 					);
+					ethereum.removeListener('disconnect', handleDissconnect);
 				}
 			};
 		}

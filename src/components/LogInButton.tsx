@@ -17,6 +17,8 @@ import WarningIcon from '@material-ui/icons/Warning';
 
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
+import { injected, walletConnect } from '../constants/connectors';
+
 import {
 	COLOURS,
 	SELECTED_CHAIN_ID,
@@ -29,8 +31,6 @@ import {
 	INPUT_OK
 } from '../constants/constants';
 import { TxState } from '../constants/interfaces';
-
-import { injected } from '../constants/connectors';
 
 const StyledMenu = withStyles({
 	paper: {
@@ -99,7 +99,14 @@ const GelatoButton = withStyles({
 // }
 
 export default function LoginButton() {
-	const { account, active, activate, deactivate, chainId } = useWeb3React();
+	const {
+		account,
+		active,
+		activate,
+		deactivate,
+		chainId,
+		connector
+	} = useWeb3React();
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const history = useHistory();
 	const { dispatch } = useIcedTxContext();
@@ -163,6 +170,9 @@ export default function LoginButton() {
 				<StyledMenuItem
 					onClick={() => {
 						deactivate();
+						if (walletConnect === connector) {
+							(connector as any).close();
+						}
 						linkBackToHome();
 						handleClose();
 					}}

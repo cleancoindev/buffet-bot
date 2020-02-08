@@ -542,7 +542,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.preGelatoWallet:
 				return {
-					title: `Please confirm the transaction in Metamask!`,
+					title: `Please confirm the transaction on your wallet!`,
 					progress: Progress.awaitingMetamaskConfirm,
 					progressText: `Waiting for confirmation`,
 					prepayment: false,
@@ -666,7 +666,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.preApprove:
 				return {
-					title: `Please confirm the approval transaction in Metamask`,
+					title: `Please confirm the approval transaction on your wallet`,
 					progress: Progress.awaitingMetamaskConfirm,
 					progressText: `Waiting for confirmation`,
 					prepayment: false,
@@ -803,7 +803,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.preCreate:
 				return {
-					title: `Please confirm the instruction submission in Metamask`,
+					title: `Please confirm the instruction submission on your wallet`,
 					progress: Progress.awaitingMetamaskConfirm,
 					progressText: `Waiting for confirmation`,
 					prepayment: true,
