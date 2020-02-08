@@ -11,7 +11,6 @@ import { IcedTx, Action, TxState } from '../constants/interfaces';
 // Import Web3 React
 // Exposes following funcs: 1) getLibrary and 2) _useWeb3ReactManager
 import { Web3ReactProvider } from '@web3-react/core';
-import { AbstractConnectorInterface } from '@web3-react/types';
 
 // Import ethers.js
 import { ethers } from 'ethers';
@@ -41,7 +40,7 @@ export const DEFAULT_ICED_TX = {
 // }
 
 // Instruct web3 Provider using ethers and web3react
-const getLibrary = (provider?: any, connector?: AbstractConnectorInterface) => {
+const getLibrary = (provider?: any) => {
 	const library = new ethers.providers.Web3Provider(provider);
 	// @DEV check what this does
 	library.pollingInterval = 8000;

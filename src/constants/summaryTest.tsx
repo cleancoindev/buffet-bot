@@ -113,7 +113,7 @@ export const getConditionText = (
 				lessOrMoreText = lessOrMore ? 'or more' : 'or less';
 			}
 
-			const exchangeRate = `(1 ${sellSymbol} = ${priceHumanReadable} ${sellSymbol})`;
+			const exchangeRate = `(1 ${sellSymbol} = ${priceHumanReadable} ${buySymbol})`;
 
 			return `${sellAmountHumanReadable} ${sellSymbol} ${
 				isOrAre ? 'is' : 'are'
