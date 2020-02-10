@@ -11,7 +11,6 @@ import { IcedTx, Action, TxState } from '../constants/interfaces';
 // Import Web3 React
 // Exposes following funcs: 1) getLibrary and 2) _useWeb3ReactManager
 import { Web3ReactProvider } from '@web3-react/core';
-import { AbstractConnector } from '@web3-react/abstract-connector';
 
 // Import ethers.js
 import { ethers } from 'ethers';
