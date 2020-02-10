@@ -103,7 +103,7 @@ export default function StepperParent(props: StepperProps) {
 
 	const { dispatch } = useIcedTxContext();
 
-	const { active, activate } = useWeb3React();
+	const { active } = useWeb3React();
 
 	const [connectorModalOpen, setConnectorModalOpen] = React.useState(false);
 

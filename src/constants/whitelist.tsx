@@ -1,5 +1,5 @@
 import { InputType, RelevantInputData } from './interfaces';
-import { ethers } from 'ethers';
+import { ethers, BigNumber } from 'ethers';
 
 const BIG_NUM_ZERO = ethers.constants.Zero;
 

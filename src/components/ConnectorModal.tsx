@@ -77,8 +77,14 @@ export default function ConnectorModal(props: ConnectorModalProps) {
 	};
 
 	const handleConnect = async (connector: AbstractConnector) => {
-		await activate(connector);
+		await activate(connector, (error: Error) => {
+			console.log(error);
+		});
 		modalClose();
+	};
+
+	const printProviderError = (error: Error) => {
+		console.log(error);
 	};
 
 	return (

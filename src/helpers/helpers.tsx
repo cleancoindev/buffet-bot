@@ -13,7 +13,7 @@ import {
 	ETH,
 	BIG_NUM_ZERO
 } from '../constants/constants';
-import { utils, ethers } from 'ethers';
+import { utils, ethers, BigNumber } from 'ethers';
 import {
 	Params,
 	ActionWhitelistData,
@@ -94,7 +94,7 @@ export function getTokenSymbol(
 
 // Returns String
 export const convertWeiToHumanReadableForNumbersAndGetValue = (
-	weiAmount: ethers.utils.BigNumber,
+	weiAmount: BigNumber,
 	token: Token,
 	conditionOrAction: ConditionOrAction,
 	id: number
@@ -107,7 +107,7 @@ export const convertWeiToHumanReadableForNumbersAndGetValue = (
 };
 
 export const convertWeiToHumanReadableForTokenAmount = (
-	weiAmount: ethers.utils.BigNumber,
+	weiAmount: BigNumber,
 	tokenDecimals: number
 ): string => {
 	return ethers.utils.formatUnits(weiAmount, tokenDecimals);
@@ -118,7 +118,7 @@ export const convertHumanReadableToWeiForNumbers = (
 	humanReadableAmount: string,
 	conditionOrAction: ConditionOrAction,
 	id: number
-): ethers.utils.BigNumber => {
+): BigNumber => {
 	// If kyber price condition
 	if (conditionOrAction === ConditionOrAction.Condition && id === 3) {
 		return ethers.utils.parseUnits(humanReadableAmount, 18);
@@ -213,7 +213,7 @@ export const getTokenList = (
 };
 
 export function encodeActionPayload(
-	userInput: Array<string | number | ethers.utils.BigNumber | boolean>,
+	userInput: Array<string | number | BigNumber | boolean>,
 	abi: string,
 	user: string,
 	userProxy: string
@@ -227,7 +227,12 @@ export function encodeActionPayload(
 	copyUserInput.splice(0, 0, user);
 	copyUserInput.splice(1, 0, userProxy);
 
-	const actionPayloadWithSelector = iFace.functions.action.encode(
+	// const actionPayloadWithSelector = iFace.functions.action.encode(
+	// 	copyUserInput
+	// );
+
+	const actionPayloadWithSelector = iFace.encodeFunctionData(
+		'action',
 		copyUserInput
 	);
 
@@ -235,12 +240,17 @@ export function encodeActionPayload(
 }
 
 export function encodeConditionPayload(
-	userInput: Array<string | number | ethers.utils.BigNumber | boolean>,
+	userInput: Array<string | number | BigNumber | boolean>,
 	abi: string
 ) {
 	const iFace = new utils.Interface([abi]);
 
-	const conditionPayloadWithSelector = iFace.functions.reached.encode(
+	// const conditionPayloadWithSelector = iFace.functions.reached.encode(
+	// 	userInput
+	// );
+
+	const conditionPayloadWithSelector = iFace.encodeFunctionData(
+		'reached',
 		userInput
 	);
 
@@ -564,7 +574,7 @@ export const getValueFromSmartContractCondition = async (
 	active: boolean,
 	networkId: ChainIds,
 	account: string,
-	inputs: Array<string | number | ethers.utils.BigNumber | boolean>
+	inputs: Array<string | number | BigNumber | boolean>
 ) => {
 	// Get abi
 	let newValue = BIG_NUM_ZERO;
@@ -625,9 +635,9 @@ export const getValueFromSmartContractAction = async (
 	action: ActionWhitelistData,
 	active: boolean,
 	networkId: ChainIds,
-	oldValue: ethers.utils.BigNumber,
+	oldValue: BigNumber,
 	account: string,
-	inputs: Array<string | number | ethers.utils.BigNumber | boolean>
+	inputs: Array<string | number | BigNumber | boolean>
 ) => {
 	// Get abi
 	let newValue = oldValue;

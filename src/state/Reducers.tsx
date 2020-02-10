@@ -26,7 +26,7 @@ import {
 	INPUT_OK,
 	UPDATE_GET_VALUE_INPUT
 } from '../constants/constants';
-import { ethers } from 'ethers';
+import { ethers, BigNumber } from 'ethers';
 
 function updateIcedTx(
 	state: IcedTx,
@@ -64,7 +64,7 @@ function updateUserInput(
 
 function setConditionGetValue(
 	state: IcedTx,
-	newValue: ethers.utils.BigNumber,
+	newValue: BigNumber,
 	conditionOrAction: ConditionOrAction
 ) {
 	const stateCopy = { ...state };

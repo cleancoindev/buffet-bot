@@ -34,7 +34,7 @@ import {
 } from '../../helpers/helpers';
 import { useWeb3React } from '@web3-react/core';
 
-import { ethers } from 'ethers';
+import { ethers, BigNumber } from 'ethers';
 import ERC20_ABI from '../../constants/abis/erc20.json';
 
 interface TokenObjectProps {

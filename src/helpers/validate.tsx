@@ -11,7 +11,7 @@ import {
 	TOKEN_TRANSFER_CEILING,
 	TOKEN_TRANSFER_BOTTOM
 } from '../constants/constants';
-import { ethers } from 'ethers';
+import { ethers, BigNumber } from 'ethers';
 import {
 	ActionWhitelistData,
 	ConditionWhitelistData,
@@ -29,7 +29,7 @@ import {
 
 export const userInputHasError = async (
 	label: string,
-	userInput: string | number | ethers.utils.BigNumber | boolean,
+	userInput: string | number | BigNumber | boolean,
 	inputType: InputType,
 	relevantInputData: RelevantInputData,
 	state: ConditionWhitelistData | ActionWhitelistData,
@@ -57,7 +57,7 @@ export const userInputHasError = async (
 			);
 
 			// 1. Check if value is correct decimal wise
-			const bigBumInput = userInput as ethers.utils.BigNumber;
+			const bigBumInput = userInput as BigNumber;
 			if (bigBumInput.gte(ethers.constants.MaxUint256)) {
 				// has error
 
@@ -84,7 +84,7 @@ export const userInputHasError = async (
 					!whitelisted
 				) {
 					const result = await validateLimitAmount(
-						userInput as ethers.utils.BigNumber,
+						userInput as BigNumber,
 						token,
 						web3.library,
 						networkId,
@@ -107,7 +107,7 @@ export const userInputHasError = async (
 			);
 
 			// 1. Check if value is correct decimal wise
-			const bigBumInput = userInput as ethers.utils.BigNumber;
+			const bigBumInput = userInput as BigNumber;
 			if (bigBumInput.gte(ethers.constants.MaxUint256)) {
 				// has error
 
@@ -125,7 +125,7 @@ export const userInputHasError = async (
 };
 
 export const validateLimitAmount = async (
-	srcAmount: ethers.utils.BigNumber,
+	srcAmount: BigNumber,
 	token: Token,
 	library: any,
 	networkId: ChainIds,
@@ -325,8 +325,8 @@ export const validateLimitAmount = async (
 };
 
 const compareUserInputToDaiMax = (
-	valueToBeComparedWithDaiCeiling: ethers.utils.BigNumber,
-	exchangeRate: ethers.utils.BigNumber,
+	valueToBeComparedWithDaiCeiling: BigNumber,
+	exchangeRate: BigNumber,
 	sellTokenAddress: string,
 	networkId: ChainIds,
 	relevantInputData: RelevantInputData,
@@ -345,13 +345,13 @@ const compareUserInputToDaiMax = (
 		// console.log(totalTransferVolume.toString());
 		// console.log('higher');
 		const ceilingBN = TOKEN_TRANSFER_CEILING.mul(
-			ethers.utils.bigNumberify(inflationConstant)
+			BigNumber.from(inflationConstant)
 		).div(exchangeRate);
 		// console.log(ceilingBN);
 		// console.log(ceilingBN.toString());
 		const ceilingFloat =
 			parseFloat(ceilingBN.toString()) / inflationConstant;
-		// .mul(ethers.utils.bigNumberify('100'))
+		// .mul(BigNumber.from('100'))
 		// const ceilingFloat = (
 		// 	parseFloat(ceilingBN.toString()) / 100
 		// ).toFixed(3);
@@ -368,7 +368,7 @@ const compareUserInputToDaiMax = (
 		// If inputted value is lower than the Token Transfer Bottom, return error.
 	} else if (valueToBeComparedWithDaiCeiling.lt(TOKEN_TRANSFER_BOTTOM)) {
 		const bottomBN = TOKEN_TRANSFER_BOTTOM.mul(
-			ethers.utils.bigNumberify(inflationConstant)
+			BigNumber.from(inflationConstant)
 		).div(exchangeRate);
 		// console.log(ceilingBN);
 		// console.log(ceilingBN.toString());
@@ -393,7 +393,7 @@ const compareUserInputToDaiMax = (
 
 const setDefaultAmountRestriction = (
 	token: Token,
-	sellAmount: ethers.utils.BigNumber,
+	sellAmount: BigNumber,
 	networkId: ChainIds,
 	relevantInputData: RelevantInputData
 ) => {
@@ -402,12 +402,12 @@ const setDefaultAmountRestriction = (
 	const tokenMaxFloat = parseFloat(token.max);
 	const tokenMaxInflated = tokenMaxFloat * parseFloat(inflationConstant);
 
-	const hardcap = ethers.utils
-		.bigNumberify(tokenMaxInflated.toString())
-		.mul(ethers.constants.WeiPerEther);
+	const hardcap = BigNumber.from(tokenMaxInflated.toString()).mul(
+		ethers.constants.WeiPerEther
+	);
 
 	const inflatedSellVolume = sellAmount.mul(
-		ethers.utils.bigNumberify(inflationConstant)
+		BigNumber.from(inflationConstant)
 	);
 	// If sell amount is greater than ceiling => ERROR
 	if (inflatedSellVolume.gt(hardcap)) {

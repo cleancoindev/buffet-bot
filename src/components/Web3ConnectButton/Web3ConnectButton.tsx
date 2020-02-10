@@ -136,7 +136,9 @@ export default function Web3ConnectButton() {
 	};
 
 	const handleConnect = async (connector: AbstractConnector) => {
-		await activate(connector);
+		await activate(connector, (error: Error) => {
+			console.log(error);
+		});
 	};
 
 	return (

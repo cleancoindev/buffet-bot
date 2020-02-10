@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 // Routing
 import { useHistory } from 'react-router-dom';
-import { useWeb3React } from '@web3-react/core';
+import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core';
 
 // Material UI
 import {
@@ -52,6 +52,16 @@ import GelatoLogo from './Logo/Logo';
 import LoginButton from './LogInButton';
 import Web3ConnectButton from './Web3ConnectButton/Web3ConnectButton';
 import { AbstractConnector } from '@web3-react/abstract-connector';
+
+import {
+	NoEthereumProviderError,
+	UserRejectedRequestError as UserRejectedRequestErrorInjected
+} from '@web3-react/injected-connector';
+
+import {
+	URI_AVAILABLE,
+	UserRejectedRequestError as UserRejectedRequestErrorWalletConnect
+} from '@web3-react/walletconnect-connector';
 
 // Google Analytics
 // import ReactGA from 'react-ga';
@@ -160,8 +170,24 @@ export default function ButtonAppBar() {
 		setMobileOpen(!mobileOpen);
 	};
 
-	const { account, active, activate, deactivate, chainId } = useWeb3React();
+	const {
+		account,
+		active,
+		activate,
+		deactivate,
+		chainId,
+		error,
+		library
+	} = useWeb3React();
+
 	const { dispatch } = useIcedTxContext();
+
+	// GGF add this
+	// provider.on( "error", (err: Error) => {
+	// 	console.error(err)
+	//   })
+
+	// If we have an error, log it
 
 	// const trackingId = process.env.REACT_APP_GA; // Replace with your Google Analytics tracking ID
 	// useEffect(() => {
@@ -185,6 +211,26 @@ export default function ButtonAppBar() {
 
 	const [tried, setTried] = React.useState(false);
 
+	// Catch Web3 React Errors
+	function getErrorMessage(error: Error) {
+		if (error instanceof NoEthereumProviderError) {
+			return 'No Ethereum browser extension detected, install MetaMask on desktop or visit from a dApp browser on mobile.';
+		} else if (error instanceof UnsupportedChainIdError) {
+			return "You're connected to an unsupported network.";
+		} else if (
+			error instanceof UserRejectedRequestErrorInjected ||
+			error instanceof UserRejectedRequestErrorWalletConnect
+			//   || error instanceof UserRejectedRequestErrorFrame
+		) {
+			return 'Please authorize this website to access your Ethereum account.';
+		} else {
+			console.error(error);
+			return 'An unknown error occurred. Check the console for more details.';
+		}
+	}
+
+	// Catch Web3 React Errors END
+
 	/*
 	useEffect(() => {
 		if (history.location.pathname === '/dashboard' && !active) {
@@ -199,6 +245,14 @@ export default function ButtonAppBar() {
 			});
 		}
 	}, []); // intentionally only running on mount (make sure it's only mounted once :))
+
+
+
+
+
+
+
+
 	*/
 
 	// handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already

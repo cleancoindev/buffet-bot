@@ -38,9 +38,8 @@ import {
 	InputType,
 	RelevantInputData
 } from '../constants/interfaces';
-import { Web3Provider } from 'ethers/providers';
 import { useWeb3React } from '@web3-react/core';
-import { ethers } from 'ethers';
+import { ethers, BigNumber } from 'ethers';
 
 import ERC20_ABI from '../constants/abis/erc20.json';
 
@@ -411,10 +410,10 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 				// User is already logged in => Change to insufficientBalance
 				web3.library
 					.getBalance(web3.account)
-					.then((result: ethers.utils.BigNumber) => {
+					.then((result: BigNumber) => {
 						const userBalance = result;
 						// $0.2
-						const hypotheticalMintingCosts = ethers.utils.bigNumberify(
+						const hypotheticalMintingCosts = BigNumber.from(
 							'1200000000000000'
 						);
 						// We make initial check that user has sufficient ETH, e.g. more than 0.01ETH => Balance greater than cost of minting
@@ -474,7 +473,7 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 								) {
 									tokenAmount = icedTxState.action.userInputs[
 										index
-									] as ethers.utils.BigNumber;
+									] as BigNumber;
 									break;
 								}
 							}
@@ -492,7 +491,7 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 							);
 							erc20
 								.allowance(web3.account, proxyAddress)
-								.then((result: ethers.utils.BigNumber) => {
+								.then((result: BigNumber) => {
 									const allowance = result;
 									// console.log('Allowance: ');
 									// console.log(allowance.toString());

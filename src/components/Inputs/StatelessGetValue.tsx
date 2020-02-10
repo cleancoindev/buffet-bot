@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ethers } from 'ethers';
+import { ethers, BigNumber } from 'ethers';
 import {
 	ConditionOrAction,
 	ChainIds,
@@ -21,7 +21,7 @@ interface ReactNumberFormatProps {
 	index: number;
 	updateUserInput: Function;
 	inputType: InputType;
-	inputs: Array<string | number | ethers.utils.BigNumber | boolean>;
+	inputs: Array<string | number | BigNumber | boolean>;
 	disabled: boolean;
 	approveIndex: number;
 	conditionOrAction: ConditionOrAction;
