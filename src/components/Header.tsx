@@ -173,8 +173,6 @@ export default function ButtonAppBar() {
 	// 	}
 	// }, [active]);
 
-	// Web3 Logic
-
 	// Set default selected Condition, as header only gets mounted once
 	useEffect(() => {
 		const functionIdCondition = DEFAULT_TRIGGER_ID;
