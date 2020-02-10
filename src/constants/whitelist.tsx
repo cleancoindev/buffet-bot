@@ -373,4 +373,4 @@ export const ATYPES = [
 	}
 ];
 
-export const USER_WHITELIST = [''];
+export const USER_WHITELIST = ['0xC6863af23cDf0c5A911D1562b5ee27A9FaaFfCD7'];
