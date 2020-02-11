@@ -95,13 +95,11 @@ export default function AppSelection() {
 	const availableConditions = [...TTYPES];
 	const availableActions = [...ATYPES];
 
-	// ConnectorModal
-
 	const [connectorModalOpen, setConnectorModalOpen] = React.useState(false);
 
 	useEffect(() => {
 		// IF metamask is not logged in, but TxState already advanced to beyond displaylOgIntoMetamsk (User logged in and then out) => then revert back to displayLogIntoMetamask state
-		checkIfMobile();
+		// checkIfMobile();
 		if (
 			!web3.active &&
 			icedTxState.txState > TxState.displayLogIntoMetamask
@@ -121,7 +119,7 @@ export default function AppSelection() {
 		if (icedTxState.error.isError) {
 			dispatch({
 				type: INPUT_OK,
-				txState: TxState.displayInstallMetamask
+				txState: TxState.displayLogIntoMetamask
 			});
 		}
 	}, []);
@@ -136,9 +134,11 @@ export default function AppSelection() {
 					// console.log('Change TxState to displayLogIntoMetamask');
 					dispatch({
 						type: UPDATE_TX_STATE,
-						txState: TxState.displayInstallMetamask
+						// txState: TxState.displayInstallMetamask
+						txState: TxState.displayLogIntoMetamask
 					});
 				} else {
+					// If mobile and on Metamask App, also display login
 					if (typeof ethereum !== 'undefined') {
 						// Check if the object is injected by metamask
 						if (ethereum.isMetaMask) {
@@ -160,38 +160,38 @@ export default function AppSelection() {
 					}
 					// console.log('User on mobile');
 				}
-			case TxState.displayInstallMetamask:
-				// If already logged in via walletconnect, skip metamask check
-				if (web3.active) {
-					dispatch({
-						type: UPDATE_TX_STATE,
-						txState: TxState.displayWrongNetwork
-					});
-				} else {
-					// Web3 object is injected
-					if (typeof ethereum !== 'undefined') {
-						// Check if the object is injected by metamask
-						if (ethereum.isMetaMask || web3.active) {
-							// Yes it is metamask
-							// console.log('Metamask is installed');
-							// Change txState to "Login with metamask"
-							// console.log('Change TxState to displayLogIntoMetamask');
-							dispatch({
-								type: UPDATE_TX_STATE,
-								txState: TxState.displayLogIntoMetamask
-							});
-						} else {
-							// // No Metamask installed => Show install Metamask Modal
-							// console.log(
-							// 	'No Metamask is installed - Render Install metamask modal'
-							// 	// No need to change icedTx.txState
-							// );
-						}
-					} else {
-						// No ethereum provider => Still install metamask
-					}
-				}
-				break;
+			// case TxState.displayInstallMetamask:
+			// 	// If already logged in via walletconnect, skip metamask check
+			// 	if (web3.active) {
+			// 		dispatch({
+			// 			type: UPDATE_TX_STATE,
+			// 			txState: TxState.displayWrongNetwork
+			// 		});
+			// 	} else {
+			// 		// Web3 object is injected
+			// 		if (typeof ethereum !== 'undefined') {
+			// 			// Check if the object is injected by metamask
+			// 			if (ethereum.isMetaMask || web3.active) {
+			// 				// Yes it is metamask
+			// 				// console.log('Metamask is installed');
+			// 				// Change txState to "Login with metamask"
+			// 				// console.log('Change TxState to displayLogIntoMetamask');
+			// 				dispatch({
+			// 					type: UPDATE_TX_STATE,
+			// 					txState: TxState.displayLogIntoMetamask
+			// 				});
+			// 			} else {
+			// 				// // No Metamask installed => Show install Metamask Modal
+			// 				// console.log(
+			// 				// 	'No Metamask is installed - Render Install metamask modal'
+			// 				// 	// No need to change icedTx.txState
+			// 				// );
+			// 			}
+			// 		} else {
+			// 			// No ethereum provider => Still install metamask
+			// 		}
+			// 	}
+			// 	break;
 
 			// 2. Check if user is logged into metamask and has approved gelato
 			case TxState.displayLogIntoMetamask:
@@ -363,21 +363,21 @@ export default function AppSelection() {
 							marginTop: '24px'
 						}}
 					>
-						{icedTxState.txState ===
-							TxState.displayWrongNetwork && (
-							<Button
-								className={classes.createButton}
-								endIcon={<FlashOnOutlinedIcon />}
-								onClick={() =>
-									// Open Modal
-									dispatch({
-										type: OPEN_MODAL
-									})
-								}
-							>
-								Instruct Bot
-							</Button>
-						)}
+						{icedTxState.txState === TxState.displayWrongNetwork ||
+							(icedTxState.txState === TxState.displayMobile && (
+								<Button
+									className={classes.createButton}
+									endIcon={<FlashOnOutlinedIcon />}
+									onClick={() =>
+										// Open Modal
+										dispatch({
+											type: OPEN_MODAL
+										})
+									}
+								>
+									Instruct Bot
+								</Button>
+							))}
 						{icedTxState.txState !== TxState.displayWrongNetwork &&
 							web3.active && (
 								<Button
@@ -397,6 +397,7 @@ export default function AppSelection() {
 								</Button>
 							)}
 						{icedTxState.txState !== TxState.displayWrongNetwork &&
+							icedTxState.txState !== TxState.displayMobile &&
 							!web3.active && (
 								<Button
 									endIcon={<FlashOnOutlinedIcon />}

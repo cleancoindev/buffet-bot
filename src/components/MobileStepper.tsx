@@ -10,6 +10,7 @@ import { useIcedTxContext } from '../state/GlobalState';
 import { OPEN_MODAL, COLOURS } from '../constants/constants';
 import { useWeb3React } from '@web3-react/core';
 import { injected } from '../constants/connectors';
+import ConnectorModal from './ConnectorModal';
 
 const useStyles = makeStyles({
 	root: {
@@ -37,7 +38,9 @@ export default function DotsMobileStepper(props: StepperProps) {
 		findTokenBalance
 	} = props;
 	const { dispatch, icedTxState } = useIcedTxContext();
-	const { active, activate } = useWeb3React();
+	const { active } = useWeb3React();
+
+	const [connectorModalOpen, setConnectorModalOpen] = React.useState(false);
 
 	const NextButton = () => {
 		if (activeStep === steps.length - 1) {
@@ -91,7 +94,8 @@ export default function DotsMobileStepper(props: StepperProps) {
 							color: 'white'
 						}}
 						onClick={async () => {
-							await activate(injected);
+							// await activate(injected);
+							setConnectorModalOpen(true);
 						}}
 						size="small"
 					>
@@ -157,6 +161,10 @@ export default function DotsMobileStepper(props: StepperProps) {
 					activeStep={activeStep}
 				></StepperContent>
 			</div>
+			<ConnectorModal
+				setModalOpen={setConnectorModalOpen}
+				modalOpen={connectorModalOpen}
+			></ConnectorModal>
 		</React.Fragment>
 	);
 }

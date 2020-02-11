@@ -1040,7 +1040,7 @@ export default function TransactionCard(props: TxCardProps) {
 
 						dispatch({
 							type: UPDATE_TX_STATE,
-							txState: TxState.displayInstallMetamask
+							txState: TxState.displayLogIntoMetamask
 						});
 					}
 				};
@@ -1523,7 +1523,6 @@ export default function TransactionCard(props: TxCardProps) {
 							color="primary"
 							onClick={() => {
 								const queryString = `I%20just%20tasked%20my%20gelato%20bot%20to%20${icedTxState.action.title}%20on%20my%20behalf%20when%20my%20instructed%20${icedTxState.condition.title}%20is%20met - via @gelatofinance 🍦`;
-								console.log(queryString);
 								const url = `https://twitter.com/intent/tweet?text=${queryString}`;
 								window.open(url, '_blank');
 							}}

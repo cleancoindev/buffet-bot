@@ -190,7 +190,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 			);
 			let event = iface.parseLog(log);
 			// @ DEV CHANGED IT HERE
-			console.log(event.args[5]);
+			// console.log(event.args[5]);
 			setSwapAmount(event.args[5]);
 			// console.log(event.values.receiveAmount);
 			// setSwapAmount(event.values.receiveAmount);

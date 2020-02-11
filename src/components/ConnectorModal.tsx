@@ -59,12 +59,10 @@ export default function ConnectorModal(props: ConnectorModalProps) {
 	const classes = useStyles();
 
 	const checkIfMetamaskInstalled = () => {
-		console.log(icedTxState.txState);
 		let isInstalled = false;
 		icedTxState.txState !== TxState.displayInstallMetamask
 			? (isInstalled = true)
 			: (isInstalled = false);
-		console.log(isInstalled);
 		return isInstalled;
 	};
 
@@ -81,10 +79,6 @@ export default function ConnectorModal(props: ConnectorModalProps) {
 			console.log(error);
 		});
 		modalClose();
-	};
-
-	const printProviderError = (error: Error) => {
-		console.log(error);
 	};
 
 	return (

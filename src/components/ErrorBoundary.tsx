@@ -94,7 +94,7 @@ export const ErrorMessage: React.FC<{ onReset: () => void }> = ({
 		dispatch({ type: RESET_ACTION });
 		dispatch({
 			type: INPUT_OK,
-			txState: TxState.displayInstallMetamask
+			txState: TxState.displayLogIntoMetamask
 		});
 		history.push('/');
 		window.location.reload();

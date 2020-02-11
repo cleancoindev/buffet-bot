@@ -216,7 +216,7 @@ export default function LayoutTextFields(props: InputProps) {
 					return defaultWeiAmountPerToken;
 				} else {
 					updateUserInput(index, BIG_NUM_ZERO);
-					console.log('Zero');
+					// console.log('Zero');
 					return BIG_NUM_ZERO;
 				}
 			}

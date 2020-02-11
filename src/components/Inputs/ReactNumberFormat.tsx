@@ -372,7 +372,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		if (displayError) {
 			dispatch({
 				type: INPUT_OK,
-				txState: TxState.displayInstallMetamask
+				txState: TxState.displayLogIntoMetamask
 			});
 			setDisplayError(false);
 		}

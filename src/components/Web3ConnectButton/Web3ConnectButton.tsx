@@ -122,17 +122,23 @@ export default function Web3ConnectButton() {
 		dispatch({ type: RESET_ACTION });
 		dispatch({
 			type: INPUT_OK,
-			txState: TxState.displayInstallMetamask
+			txState: TxState.displayLogIntoMetamask
 		});
 		history.push('/');
 	};
 
 	const checkIfMetamaskInstalled = () => {
-		let isInstalled = false;
-		icedTxState.txState !== TxState.displayInstallMetamask
-			? (isInstalled = true)
-			: (isInstalled = false);
-		return isInstalled;
+		const { ethereum } = window as any;
+		if (typeof ethereum !== 'undefined') {
+			// Check if the object is injected by metamask
+			if (ethereum.isMetaMask) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
 	};
 
 	const handleConnect = async (connector: AbstractConnector) => {
@@ -164,9 +170,7 @@ export default function Web3ConnectButton() {
 							handleConnect(connectorsByName.Injected);
 						} else {
 							// Open modal to show please install Metamask
-							dispatch({
-								type: OPEN_MODAL
-							});
+							window.open('https://metamask.io/', '_blank');
 						}
 					}}
 				>

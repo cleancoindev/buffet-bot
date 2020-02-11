@@ -124,7 +124,7 @@ export default function LoginButton() {
 		dispatch({ type: RESET_ACTION });
 		dispatch({
 			type: INPUT_OK,
-			txState: TxState.displayInstallMetamask
+			txState: TxState.displayLogIntoMetamask
 		});
 		history.push('/');
 	};

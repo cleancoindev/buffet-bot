@@ -92,7 +92,7 @@ export default function AddressInput(props: AddressInputProps) {
 		if (displayError) {
 			dispatch({
 				type: INPUT_OK,
-				txState: TxState.displayInstallMetamask
+				txState: TxState.displayLogIntoMetamask
 			});
 			setDisplayError(false);
 		}
