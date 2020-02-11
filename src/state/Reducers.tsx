@@ -16,7 +16,7 @@ import {
 	UPDATE_CONDITION_INPUTS,
 	RESET_ACTION,
 	UPDATE_TX_STATE,
-	DEFAULT_DATA_TRIGGER,
+	DEFAULT_DATA_CONDITION,
 	DEFAULT_DATA_ACTION,
 	UPDATE_PAST_TRANSACTIONS,
 	OPEN_MODAL,
@@ -81,7 +81,7 @@ function setConditionGetValue(
 function resetIcedTx(state: IcedTx, conditionOrAction: ConditionOrAction) {
 	const stateCopy = { ...state };
 	if (conditionOrAction === ConditionOrAction.Condition) {
-		stateCopy.condition = { ...DEFAULT_DATA_TRIGGER };
+		stateCopy.condition = { ...DEFAULT_DATA_CONDITION };
 	} else if (conditionOrAction === ConditionOrAction.Action) {
 		stateCopy.action = { ...DEFAULT_DATA_ACTION };
 	}

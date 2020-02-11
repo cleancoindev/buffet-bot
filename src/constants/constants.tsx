@@ -49,7 +49,7 @@ export const ETH = {
 export const SELECTED_CHAIN_ID = 1;
 export const SELECTED_NETWORK_NAME = 'Mainnet';
 
-export const DEFAULT_DATA_TRIGGER = {
+export const DEFAULT_DATA_CONDITION = {
 	id: 0,
 	app: '',
 	title: '',
@@ -65,7 +65,13 @@ export const DEFAULT_DATA_TRIGGER = {
 	boolIndex: 999,
 	relevantInputData: EMPTY_RELEVANT_INPUT_DATA_ARRAY,
 	logo:
-		'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png'
+		'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png',
+	deprecatedAddresses: {
+		1: [''],
+		3: [''],
+		4: [''],
+		42: ['']
+	}
 };
 
 export const DEFAULT_DATA_ACTION = {

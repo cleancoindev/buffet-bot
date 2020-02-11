@@ -997,7 +997,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.preCancel:
 				return {
-					title: `Please confirm the cancellation in Metamask`,
+					title: `Please confirm the cancellation in your wallet`,
 					progress: Progress.awaitingMetamaskConfirm,
 					progressText: `Waiting for confirmation`,
 					prepayment: true,

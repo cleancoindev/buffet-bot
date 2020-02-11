@@ -53,7 +53,13 @@ export const TTYPES = [
 		inputLabels: ['Pick a Date and Time'],
 		userInputs: EMPTY_STRING_ARRAY,
 		relevantInputData: [RelevantInputData.none],
-		logo: '/images/ethereum_logo.png'
+		logo: '/images/ethereum_logo.png',
+		deprecatedAddresses: {
+			1: [''],
+			3: [''],
+			4: [''],
+			42: ['']
+		}
 	},
 	{
 		id: 2,
@@ -101,7 +107,13 @@ export const TTYPES = [
 			RelevantInputData.kyberTokenListWithEth
 		],
 		userInputs: EMPTY_STRING_ARRAY,
-		logo: '/images/ethereum_logo.png'
+		logo: '/images/ethereum_logo.png',
+		deprecatedAddresses: {
+			1: [''],
+			3: [''],
+			4: [''],
+			42: ['']
+		}
 	},
 
 	// Use isGreater as bool
@@ -110,7 +122,7 @@ export const TTYPES = [
 		app: 'Kyber',
 		title: 'Price on Kyber',
 		address: {
-			1: '0xD8eBB69Dc566E86eA6e09A15EBe6Fd9c65c4A698',
+			1: '0x1a6074a167c346949a6839a20F8211b1480444a2',
 			3: '0x61Bd89De0912c5E07d03f2c533D29A8eB78dc925',
 			4: '',
 			42: '0x4c741109e77D579754AcA15753fa34FA02CBb154'
@@ -155,7 +167,13 @@ export const TTYPES = [
 			RelevantInputData.none,
 			RelevantInputData.kyberTokenListWithEth
 		],
-		logo: '/images/kyber_logo.png'
+		logo: '/images/kyber_logo.png',
+		deprecatedAddresses: {
+			1: ['0xD8eBB69Dc566E86eA6e09A15EBe6Fd9c65c4A698'],
+			3: [''],
+			4: [''],
+			42: ['']
+		}
 	}
 ];
 
