@@ -19,7 +19,7 @@ import { ethers, BigNumber } from 'ethers';
 import { icedTxReducer } from './Reducers';
 import {
 	DEFAULT_DATA_ACTION,
-	DEFAULT_DATA_TRIGGER,
+	DEFAULT_DATA_CONDITION,
 	DEFAULT_PAST_TRANSACTIONS
 } from '../constants/constants';
 import { injected, walletConnect } from '../constants/connectors';
@@ -27,7 +27,7 @@ import { AbstractConnector } from '@web3-react/abstract-connector';
 
 // @DEV Make Deep Copies
 export const DEFAULT_ICED_TX = {
-	condition: { ...DEFAULT_DATA_TRIGGER },
+	condition: { ...DEFAULT_DATA_CONDITION },
 	action: { ...DEFAULT_DATA_ACTION },
 	txState: TxState.displayMobile,
 	pastTransactions: { ...DEFAULT_PAST_TRANSACTIONS },

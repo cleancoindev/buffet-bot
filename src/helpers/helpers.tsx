@@ -2,14 +2,15 @@ import { ATYPES, TTYPES, USER_WHITELIST } from '../constants/whitelist';
 import {
 	Token,
 	RelevantInputData,
-	ConditionOrAction
+	ConditionOrAction,
+	DeprecatedAddresses
 } from '../constants/interfaces';
 import { KYBER_TOKEN_LIST, TOKEN_LIST } from '../constants/tokens';
 import ERC20_ABI from '../constants/abis/erc20.json';
 
 import {
 	DEFAULT_DATA_ACTION,
-	DEFAULT_DATA_TRIGGER,
+	DEFAULT_DATA_CONDITION,
 	ETH,
 	BIG_NUM_ZERO
 } from '../constants/constants';
@@ -29,7 +30,7 @@ export function stringifyTimestamp(timestamp: string) {
 }
 
 export function findConditionById(id: string) {
-	let returnData = { ...DEFAULT_DATA_TRIGGER };
+	let returnData = { ...DEFAULT_DATA_CONDITION };
 	const clonedConditions = deepCloneConditions();
 
 	clonedConditions.forEach(type => {
@@ -42,7 +43,7 @@ export function findConditionById(id: string) {
 }
 
 export function findConditionByAddress(address: string, networkId: ChainIds) {
-	let returnData = { ...DEFAULT_DATA_TRIGGER };
+	let returnData = { ...DEFAULT_DATA_CONDITION };
 
 	const clonedConditions = deepCloneConditions();
 
@@ -54,6 +55,33 @@ export function findConditionByAddress(address: string, networkId: ChainIds) {
 			returnData = type;
 		}
 	});
+	return returnData;
+}
+
+export function findDeprecatedCondition(address: string, networkId: ChainIds) {
+	let returnData = { ...DEFAULT_DATA_CONDITION };
+
+	const clonedConditions = deepCloneConditions();
+
+	for (let j = 0; j < clonedConditions.length; j++) {
+		const condition = clonedConditions[j];
+
+		const deprecatedAddresses = condition.deprecatedAddresses[networkId];
+
+		// console.log(condition.deprecatedAddresses);
+		for (let i = 0; i < deprecatedAddresses.length; i++) {
+			try {
+				if (
+					ethers.utils.getAddress(deprecatedAddresses[i]) ===
+					ethers.utils.getAddress(address)
+				) {
+					returnData = condition;
+					break;
+				}
+			} catch (error) {}
+		}
+	}
+
 	return returnData;
 }
 
@@ -349,6 +377,13 @@ export const deepCloneConditions = () => {
 		// empty user Input
 		const emptyUserInput: Array<string> = [];
 
+		const clonedDeprecatedAddresses: DeprecatedAddresses = {
+			1: [...data.deprecatedAddresses[1]],
+			3: [...data.deprecatedAddresses[3]],
+			4: [...data.deprecatedAddresses[4]],
+			42: [...data.deprecatedAddresses[42]]
+		};
+
 		// clone Logo
 		let clonedLogo = data.logo;
 
@@ -367,7 +402,8 @@ export const deepCloneConditions = () => {
 			getConditionValueAbi: clonedGetConditionValueAbi,
 			getConditionValueInput: clonedGetConditionValueInput,
 			boolIndex: clonedBoolIndex,
-			logo: clonedLogo
+			logo: clonedLogo,
+			deprecatedAddresses: clonedDeprecatedAddresses
 		});
 	});
 	return dataCopy;

@@ -62,6 +62,13 @@ export interface Addresses {
 	42: string;
 }
 
+export interface DeprecatedAddresses {
+	1: Array<string>;
+	3: Array<string>;
+	4: Array<string>;
+	42: Array<string>;
+}
+
 export interface ConditionWhitelistData {
 	id: number;
 	app: string;
@@ -78,6 +85,7 @@ export interface ConditionWhitelistData {
 	approveIndex: number;
 	boolIndex: number;
 	logo: string;
+	deprecatedAddresses: DeprecatedAddresses;
 }
 
 export interface ActionWhitelistData {

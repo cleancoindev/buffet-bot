@@ -29,7 +29,8 @@ import { useIcedTxContext } from '../state/GlobalState';
 import {
 	findConditionByAddress,
 	findActionByAddress,
-	stringifyTimestamp
+	stringifyTimestamp,
+	findDeprecatedCondition
 } from '../helpers/helpers';
 
 import {
@@ -490,10 +491,17 @@ export default function EnhancedTable() {
 			let counter = 0;
 			executionClaims.forEach((executionClaim: any, index: any) => {
 				// With address, find condition and action
-				const condition = findConditionByAddress(
+				let condition = findConditionByAddress(
 					executionClaim.condition,
 					web3.chainId as ChainIds
 				);
+
+				if (condition.id === 0) {
+					condition = findDeprecatedCondition(
+						executionClaim.condition,
+						web3.chainId as ChainIds
+					);
+				}
 
 				const action = findActionByAddress(
 					executionClaim.action,

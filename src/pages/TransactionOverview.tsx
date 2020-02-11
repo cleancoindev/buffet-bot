@@ -14,14 +14,15 @@ import {
 	findConditionByAddress,
 	findActionByAddress,
 	decodeConditionPayload,
-	decodeActionPayload
+	decodeActionPayload,
+	findDeprecatedCondition
 } from '../helpers/helpers';
 import { on } from 'cluster';
 import { render } from '@testing-library/react';
 import {
 	DEFAULT_PAST_TRANSACTIONS,
 	BOX,
-	DEFAULT_DATA_TRIGGER
+	DEFAULT_DATA_CONDITION
 } from '../constants/constants';
 import { useWeb3React } from '@web3-react/core';
 import { ChainIds, ConditionWhitelistData } from '../constants/interfaces';
@@ -65,10 +66,20 @@ export default function TransactionOverview({
 		// console.log(pastTransaction.condition);
 		// console.log(pastTransaction.action);
 
-		const condition = findConditionByAddress(
-			pastTransaction.condition,
-			web3.chainId as ChainIds
-		);
+		let condition = DEFAULT_DATA_CONDITION;
+		try {
+			condition = findConditionByAddress(
+				pastTransaction.condition,
+				web3.chainId as ChainIds
+			);
+			// No condition found, returned default condition
+			if (condition.id === 0) {
+				condition = findDeprecatedCondition(
+					pastTransaction.condition,
+					web3.chainId as ChainIds
+				);
+			}
+		} catch (error) {}
 
 		const action = findActionByAddress(
 			pastTransaction.action,
