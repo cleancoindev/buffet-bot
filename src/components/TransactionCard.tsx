@@ -531,9 +531,10 @@ export default function TransactionCard(props: TxCardProps) {
 									txState: TxState.postGelatoWallet
 								});
 							} catch (error) {
-								console.log(error);
+								// console.log(error);
 								// console.log('Change TxState to cancelled');
-								console.log(error.code);
+								// console.log(error.code);
+								//@DEV ONLY BUG RELATED TO WALLET CONNECT ARGENT APP, NOT IN GNOSIS SAFE
 								if (error.code === 'INVALID_ARGUMENT') {
 									dispatch({
 										type: UPDATE_TX_STATE,
@@ -801,8 +802,8 @@ export default function TransactionCard(props: TxCardProps) {
 									txState: TxState.postCreate
 								});
 							} catch (error) {
-								console.log(error);
-								console.log(error.code);
+								// console.log(error);
+								// console.log(error.code);
 								const errorValue =
 									'0x7d2476ab50663f025cff0be85655bcf355f62768615c0c478f3cd5293f807365';
 
@@ -973,10 +974,10 @@ export default function TransactionCard(props: TxCardProps) {
 									txState: TxState.postCancel
 								});
 							} catch (error) {
-								const errorValue =
-									'0x606834f57405380c4fb88d1f4850326ad3885f014bab3b568dfbf7a041eef738';
-								console.log(error);
-								console.log(error.code);
+								// const errorValue =
+								// 	'0x606834f57405380c4fb88d1f4850326ad3885f014bab3b568dfbf7a041eef738';
+								// console.log(error);
+								// console.log(error.code);
 								// Handle weird Wallet Connect Error
 								if (error.code === 'INVALID_ARGUMENT') {
 									dispatch({
@@ -1521,7 +1522,7 @@ export default function TransactionCard(props: TxCardProps) {
 							}}
 							color="primary"
 							onClick={() => {
-								const queryString = `I%20just%20tasked%20my%20gelato%20bot%20to%20${icedTxState.action.title}%20on%20my%20behalf%20when%20my%20instructed%20${icedTxState.condition.title}%20is%20met - via @gelatofinance`;
+								const queryString = `I%20just%20tasked%20my%20gelato%20bot%20to%20${icedTxState.action.title}%20on%20my%20behalf%20when%20my%20instructed%20${icedTxState.condition.title}%20is%20met - via @gelatofinance 🍦`;
 								console.log(queryString);
 								const url = `https://twitter.com/intent/tweet?text=${queryString}`;
 								window.open(url, '_blank');

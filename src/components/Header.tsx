@@ -264,7 +264,6 @@ export default function ButtonAppBar() {
 
 	const logInWeb3 = async (connector: AbstractConnector) => {
 		if (!active) {
-			console.log(connectorsByName.WalletConnect);
 			// await activate(injected);
 			await activate(connector);
 		} else {
