@@ -260,6 +260,7 @@ export default function ButtonAppBar() {
 	// const triedEager = useEagerConnect();
 
 	// handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
+
 	useInactiveListener();
 
 	const logInWeb3 = async (connector: AbstractConnector) => {

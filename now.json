@@ -1,0 +1,10 @@
+{
+	"env": {
+		"REACT_APP_INFURA_SECRET": "@react_app_infura_secret"
+	},
+	"build": {
+		"env": {
+			"REACT_APP_INFURA_SECRET": "@react_app_infura_secret"
+		}
+	}
+}
