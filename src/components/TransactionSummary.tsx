@@ -33,7 +33,7 @@ import {
 	COLOURS,
 	DEFAULT_PAST_TRANSACTIONS
 } from '../constants/constants';
-import { ethers } from 'ethers';
+import { ethers, BigNumber } from 'ethers';
 
 import LinkIcon from '@material-ui/icons/Link';
 import { getEtherscanPrefix } from '../helpers/helpers';
@@ -99,8 +99,8 @@ interface EthersLog2 {
 interface TxSummaryParams {
 	condition: ConditionWhitelistData;
 	action: ActionWhitelistData;
-	conditionInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
-	actionInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
+	conditionInputs: Array<string | number | BigNumber | boolean>;
+	actionInputs: Array<string | number | BigNumber | boolean>;
 	pastTransactionHash?: string;
 	pastTransaction?: PastTransaction;
 }
@@ -108,9 +108,7 @@ interface TxSummaryParams {
 export default function TransactionSummary(props: TxSummaryParams) {
 	const classes = useStyles();
 
-	const [swapAmount, setSwapAmount] = React.useState(
-		ethers.utils.bigNumberify('0')
-	);
+	const [swapAmount, setSwapAmount] = React.useState(BigNumber.from('0'));
 
 	const {
 		condition,
@@ -135,17 +133,17 @@ export default function TransactionSummary(props: TxSummaryParams) {
 	interface LogOneWay {
 		origin: string;
 		sendToken: string;
-		sendAmount: ethers.utils.BigNumber;
+		sendAmount: BigNumber;
 		destination: string;
 	}
 
 	interface LogTwoWay {
 		origin: string;
 		sendToken: string;
-		sendAmount: ethers.utils.BigNumber;
+		sendAmount: BigNumber;
 		destination: string;
 		receiveToken: string;
-		receiveAmount: ethers.utils.BigNumber;
+		receiveAmount: BigNumber;
 		receiver: string;
 	}
 
@@ -191,8 +189,11 @@ export default function TransactionSummary(props: TxSummaryParams) {
 					log.transactionHash === pastTransaction?.executionHash
 			);
 			let event = iface.parseLog(log);
+			// @ DEV CHANGED IT HERE
+			console.log(event.args[5]);
+			setSwapAmount(event.args[5]);
 			// console.log(event.values.receiveAmount);
-			setSwapAmount(event.values.receiveAmount);
+			// setSwapAmount(event.values.receiveAmount);
 		} catch (error) {
 			// console.log(error);
 		}

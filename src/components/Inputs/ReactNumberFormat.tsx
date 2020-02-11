@@ -26,7 +26,7 @@ import {
 	TxState,
 	Token
 } from '../../constants/interfaces';
-import { ethers } from 'ethers';
+import { ethers, BigNumber } from 'ethers';
 import {
 	getTokenByAddress,
 	convertWeiToHumanReadableForNumbersAndGetValue,
@@ -88,8 +88,8 @@ interface ReactNumberFormatProps {
 	index: number;
 	updateUserInput: Function;
 	inputType: InputType;
-	inputs: Array<string | number | ethers.utils.BigNumber | boolean>;
-	defaultValue: ethers.utils.BigNumber;
+	inputs: Array<string | number | BigNumber | boolean>;
+	defaultValue: BigNumber;
 	disabled: boolean;
 	approveIndex: number;
 	conditionOrAction: ConditionOrAction;
@@ -139,7 +139,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 		? (id = icedTxState.condition.id)
 		: (id = icedTxState.action.id);
 
-	let initialValueBigInt: ethers.utils.BigNumber = BIG_NUM_ZERO;
+	let initialValueBigInt: BigNumber = BIG_NUM_ZERO;
 	let initialValueString = '0';
 	if (
 		ConditionOrAction.Condition === conditionOrAction &&

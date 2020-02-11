@@ -14,7 +14,7 @@ import { createMuiTheme, TextField, FormControl } from '@material-ui/core';
 import { ThemeProvider, useTheme } from '@material-ui/styles';
 
 import { MuiPickersOverrides } from '@material-ui/pickers/typings/overrides';
-import { ethers } from 'ethers';
+import { ethers, BigNumber } from 'ethers';
 
 import '../../index.css';
 
@@ -32,7 +32,7 @@ interface InputProps {
 	label: string;
 	disabled: boolean;
 	// boolean missing
-	defaultValue: string | number | ethers.utils.BigNumber;
+	defaultValue: string | number | BigNumber;
 }
 
 const materialTheme = createMuiTheme({

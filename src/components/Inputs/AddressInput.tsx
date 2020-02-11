@@ -10,7 +10,7 @@ import {
 
 import { useIcedTxContext } from '../../state/GlobalState';
 import { INPUT_ERROR, INPUT_OK } from '../../constants/constants';
-import { ethers } from 'ethers';
+import { ethers, BigNumber } from 'ethers';
 
 import { useWeb3React } from '@web3-react/core';
 
@@ -19,7 +19,7 @@ interface AddressInputProps {
 	label: string;
 	index: number;
 	conditionOrAction: ConditionOrAction;
-	inputs: Array<string | number | ethers.utils.BigNumber | boolean>;
+	inputs: Array<string | number | BigNumber | boolean>;
 	app: string;
 	disabled: boolean;
 	condition?: ConditionWhitelistData;

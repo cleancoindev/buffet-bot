@@ -14,7 +14,7 @@ import {
 	INPUT_OK,
 	UPDATE_GET_VALUE_INPUT
 } from './constants';
-import { ethers } from 'ethers';
+import { ethers, BigNumber } from 'ethers';
 
 /* We need
 	address _selectedExecutor,
@@ -72,9 +72,9 @@ export interface ConditionWhitelistData {
 	inputLabels: Array<string>;
 	userInputTypes: Array<InputType>;
 	relevantInputData: Array<RelevantInputData>;
-	userInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
+	userInputs: Array<string | number | BigNumber | boolean>;
 	getConditionValueAbi: string;
-	getConditionValueInput: ethers.utils.BigNumber;
+	getConditionValueInput: BigNumber;
 	approveIndex: number;
 	boolIndex: number;
 	logo: string;
@@ -90,8 +90,8 @@ export interface ActionWhitelistData {
 	inputLabels: Array<string>;
 	userInputTypes: Array<InputType>;
 	getActionValueAbi: string;
-	getActionValueInput: ethers.utils.BigNumber;
-	userInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
+	getActionValueInput: BigNumber;
+	userInputs: Array<string | number | BigNumber | boolean>;
 	relevantInputData: Array<RelevantInputData>;
 	approveIndex: number;
 	logo: string;
@@ -293,7 +293,7 @@ interface InputOk {
 interface UpdateGetValueInput {
 	type: typeof UPDATE_GET_VALUE_INPUT;
 	conditionOrAction: ConditionOrAction;
-	newGetValueInput: ethers.utils.BigNumber;
+	newGetValueInput: BigNumber;
 }
 
 // export interface Action {

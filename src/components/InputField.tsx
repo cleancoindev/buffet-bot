@@ -22,7 +22,8 @@ import {
 	SELECTED_CHAIN_ID,
 	SELECTED_NETWORK_NAME
 } from '../constants/constants';
-import { ethers } from 'ethers';
+import { ethers, BigNumber } from 'ethers';
+
 import {
 	getTokenByAddress,
 	getTokenList,
@@ -56,7 +57,7 @@ interface InputProps {
 	label: string;
 	index: number;
 	conditionOrAction: ConditionOrAction;
-	inputs: Array<string | number | ethers.utils.BigNumber | boolean>;
+	inputs: Array<string | number | BigNumber | boolean>;
 	app: string;
 	disabled: boolean;
 	condition?: ConditionWhitelistData;
@@ -122,14 +123,14 @@ export default function LayoutTextFields(props: InputProps) {
 				if (conditionOrAction === ConditionOrAction.Condition) {
 					const shouldBeGreaterForTrue = inputs[
 						icedTxState.condition.boolIndex
-					] as ethers.utils.BigNumber;
+					] as BigNumber;
 
 					// dependent parameter that determines if greater or smaller
 
 					// Fetching the variable we compare the index value too
 					// OLD
 					// const getConditionValueInput = icedTxState.condition
-					// 	.getConditionValueInput as ethers.utils.BigNumber;
+					// 	.getConditionValueInput as BigNumber;
 
 					// NEW, direct from smart contract
 
@@ -189,7 +190,7 @@ export default function LayoutTextFields(props: InputProps) {
 	// DEFAULT 1
 	// If user already inputted values, prefill inputs from state, otherwise display the default values
 	// œDEV make default values specific for each condition and action, not global
-	function returnDefaultBigInt(): ethers.utils.BigNumber {
+	function returnDefaultBigInt(): BigNumber {
 		// If user has inputted something, go in here
 		if (inputs[0] !== undefined) {
 			if (inputs[index] !== undefined) {
@@ -197,7 +198,7 @@ export default function LayoutTextFields(props: InputProps) {
 				// if (isBigNumber(inputs[index])) {
 				// 	console.log('is big number');
 				// }
-				return inputs[index] as ethers.utils.BigNumber;
+				return inputs[index] as BigNumber;
 			} else {
 				// Check if the input of the token address is filled, if yes calculate the specific wei amount
 				if (inputs[approveIndex] !== undefined) {

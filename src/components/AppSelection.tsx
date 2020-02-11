@@ -46,6 +46,7 @@ import {
 } from '../constants/constants';
 import { useWeb3React } from '@web3-react/core';
 import { checkIfMobile } from '../helpers/helpers';
+import ConnectorModal from './ConnectorModal';
 
 const useStyles = makeStyles(theme => ({
 	box: {
@@ -93,6 +94,10 @@ export default function AppSelection() {
 
 	const availableConditions = [...TTYPES];
 	const availableActions = [...ATYPES];
+
+	// ConnectorModal
+
+	const [connectorModalOpen, setConnectorModalOpen] = React.useState(false);
 
 	useEffect(() => {
 		// IF metamask is not logged in, but TxState already advanced to beyond displaylOgIntoMetamsk (User logged in and then out) => then revert back to displayLogIntoMetamask state
@@ -156,27 +161,35 @@ export default function AppSelection() {
 					// console.log('User on mobile');
 				}
 			case TxState.displayInstallMetamask:
-				// Web3 object is injected
-				if (typeof ethereum !== 'undefined') {
-					// Check if the object is injected by metamask
-					if (ethereum.isMetaMask) {
-						// Yes it is metamask
-						// console.log('Metamask is installed');
-						// Change txState to "Login with metamask"
-						// console.log('Change TxState to displayLogIntoMetamask');
-						dispatch({
-							type: UPDATE_TX_STATE,
-							txState: TxState.displayLogIntoMetamask
-						});
-					} else {
-						// // No Metamask installed => Show install Metamask Modal
-						// console.log(
-						// 	'No Metamask is installed - Render Install metamask modal'
-						// 	// No need to change icedTx.txState
-						// );
-					}
+				// If already logged in via walletconnect, skip metamask check
+				if (web3.active) {
+					dispatch({
+						type: UPDATE_TX_STATE,
+						txState: TxState.displayWrongNetwork
+					});
 				} else {
-					// No ethereum provider => Still install metamask
+					// Web3 object is injected
+					if (typeof ethereum !== 'undefined') {
+						// Check if the object is injected by metamask
+						if (ethereum.isMetaMask || web3.active) {
+							// Yes it is metamask
+							// console.log('Metamask is installed');
+							// Change txState to "Login with metamask"
+							// console.log('Change TxState to displayLogIntoMetamask');
+							dispatch({
+								type: UPDATE_TX_STATE,
+								txState: TxState.displayLogIntoMetamask
+							});
+						} else {
+							// // No Metamask installed => Show install Metamask Modal
+							// console.log(
+							// 	'No Metamask is installed - Render Install metamask modal'
+							// 	// No need to change icedTx.txState
+							// );
+						}
+					} else {
+						// No ethereum provider => Still install metamask
+					}
 				}
 				break;
 
@@ -388,7 +401,8 @@ export default function AppSelection() {
 								<Button
 									endIcon={<FlashOnOutlinedIcon />}
 									onClick={() =>
-										dispatch({ type: OPEN_MODAL })
+										// dispatch({ type: OPEN_MODAL })
+										setConnectorModalOpen(true)
 									}
 									className={classes.createButton}
 								>
@@ -398,6 +412,10 @@ export default function AppSelection() {
 					</Grid>
 				</React.Fragment>
 			)}
+			<ConnectorModal
+				setModalOpen={setConnectorModalOpen}
+				modalOpen={connectorModalOpen}
+			></ConnectorModal>
 		</div>
 	);
 }

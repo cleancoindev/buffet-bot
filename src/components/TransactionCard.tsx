@@ -33,7 +33,7 @@ import { injected } from '../constants/connectors';
 
 import { useGelatoCore } from '../hooks/hooks';
 import { EXECUTOR_ADDRESS } from '../constants/whitelist';
-import { ethers } from 'ethers';
+import { ethers, BigNumber } from 'ethers';
 
 // Smart Contract ABIs
 import ERC20_ABI from '../constants/abis/erc20.json';
@@ -154,14 +154,14 @@ export default function TransactionCard(props: TxCardProps) {
 		}
 	};
 
-	function addGasBuffer(weiAmount: ethers.utils.BigNumber) {
-		return ethers.utils.bigNumberify('50000').add(weiAmount);
+	function addGasBuffer(weiAmount: BigNumber) {
+		return BigNumber.from('50000').add(weiAmount);
 	}
 
 	async function getGasEstimatePlusBuffer(
 		encodedCondition: string,
 		encodedAction: string,
-		prepaymentAmount: ethers.utils.BigNumber
+		prepaymentAmount: BigNumber
 	) {
 		// @DEV ADD TRY/CATCHS to all ETHEREUM TRANSACTIONS
 		const gasEstimate = await gelatoCore.estimate.mintExecutionClaim(
@@ -172,7 +172,7 @@ export default function TransactionCard(props: TxCardProps) {
 			encodedAction,
 			// @DEV make dynamic
 			{
-				value: ethers.utils.bigNumberify(prepaymentAmount.toString())
+				value: BigNumber.from(prepaymentAmount.toString())
 			}
 		);
 
@@ -187,9 +187,7 @@ export default function TransactionCard(props: TxCardProps) {
 
 		const gelatoGasPriceInWei = await getEthGasStationGasPrice();
 
-		let gasEstimatePlusBuffer: ethers.utils.BigNumber = ethers.utils.bigNumberify(
-			'1'
-		);
+		let gasEstimatePlusBuffer: BigNumber = BigNumber.from('1');
 
 		switch (icedTxState.txState) {
 			case TxState.displayGelatoWallet:
@@ -315,29 +313,35 @@ export default function TransactionCard(props: TxCardProps) {
 		return prepayment;
 	}
 
-	async function convertWeiToETHAndDollar(costs: ethers.utils.BigNumber) {
+	async function convertWeiToETHAndDollar(costs: BigNumber) {
 		// Calc ETH Amoutn e.g. 0.025 ETH
 		const ethAmount = ethers.utils.formatEther(costs);
 
+		// @DEV does not work with v.5 beta ethers
 		// Get EtherScan provider
-		let etherscanProvider = new ethers.providers.EtherscanProvider();
-
+		// let etherscanProvider = new ethers.providers.EtherscanProvider(
+		// 	'homestead'
+		// );
 		// Getting the current Ethereum price
 		let etherPrice = 0;
+
+		// etherPrice = await etherscanProvider.getEtherPrice();
+		// console.log(etherPrice);
+		// try {
+		// 	etherPrice = await etherscanProvider.getEtherPrice();
+		// 	console.log(etherPrice);
+		// } catch (error) {
+		// 	// console.log(error);
 		try {
-			etherPrice = await etherscanProvider.getEtherPrice();
+			const infuraEtherPriceResponse = await fetch(
+				'https://api.infura.io/v1/ticker/ethusd'
+			);
+			const infuraEtherPriceJson = await infuraEtherPriceResponse.json();
+			etherPrice = infuraEtherPriceJson.bid;
 		} catch (error) {
 			// console.log(error);
-			try {
-				const infuraEtherPriceResponse = await fetch(
-					'https://api.infura.io/v1/ticker/ethusd'
-				);
-				const infuraEtherPriceJson = await infuraEtherPriceResponse.json();
-				etherPrice = infuraEtherPriceJson.bid;
-			} catch (error) {
-				// console.log(error);
-			}
 		}
+		// }
 		const dollar =
 			parseFloat(ethAmount) * parseFloat(etherPrice.toString());
 
@@ -371,10 +375,9 @@ export default function TransactionCard(props: TxCardProps) {
 		);
 		const gasStationJson = await gasStationResponse.json();
 		const fastGasPrice = gasStationJson.fast;
-		const gelatoGasPriceInGwei = ethers.utils
-			.bigNumberify(fastGasPrice)
-			.div(ethers.utils.bigNumberify('10'))
-			.add(ethers.utils.bigNumberify('1'));
+		const gelatoGasPriceInGwei = BigNumber.from(fastGasPrice)
+			.div(BigNumber.from('10'))
+			.add(BigNumber.from('1'));
 
 		const gelatoGasPriceInWei = ethers.utils.parseUnits(
 			gelatoGasPriceInGwei.toString(),
@@ -530,10 +533,19 @@ export default function TransactionCard(props: TxCardProps) {
 							} catch (error) {
 								// console.log(error);
 								// console.log('Change TxState to cancelled');
-								dispatch({
-									type: UPDATE_TX_STATE,
-									txState: TxState.cancelled
-								});
+								// console.log(error.code);
+								//@DEV ONLY BUG RELATED TO WALLET CONNECT ARGENT APP, NOT IN GNOSIS SAFE
+								if (error.code === 'INVALID_ARGUMENT') {
+									dispatch({
+										type: UPDATE_TX_STATE,
+										txState: TxState.postGelatoWallet
+									});
+								} else {
+									dispatch({
+										type: UPDATE_TX_STATE,
+										txState: TxState.cancelled
+									});
+								}
 							}
 						} else {
 							// console.log('ERROR, undefined account');
@@ -542,7 +554,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.preGelatoWallet:
 				return {
-					title: `Please confirm the transaction in Metamask!`,
+					title: `Please confirm the transaction on your wallet!`,
 					progress: Progress.awaitingMetamaskConfirm,
 					progressText: `Waiting for confirmation`,
 					prepayment: false,
@@ -666,7 +678,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.preApprove:
 				return {
-					title: `Please confirm the approval transaction in Metamask`,
+					title: `Please confirm the approval transaction on your wallet`,
 					progress: Progress.awaitingMetamaskConfirm,
 					progressText: `Waiting for confirmation`,
 					prepayment: false,
@@ -791,11 +803,23 @@ export default function TransactionCard(props: TxCardProps) {
 								});
 							} catch (error) {
 								// console.log(error);
-								// console.log('Change TxState to cancelled');
-								dispatch({
-									type: UPDATE_TX_STATE,
-									txState: TxState.cancelled
-								});
+								// console.log(error.code);
+								const errorValue =
+									'0x7d2476ab50663f025cff0be85655bcf355f62768615c0c478f3cd5293f807365';
+
+								// Handle weird Wallet Connect Error
+								if (error.code === 'INVALID_ARGUMENT') {
+									dispatch({
+										type: UPDATE_TX_STATE,
+										txState: TxState.postCreate
+									});
+								} else {
+									// console.log('Change TxState to cancelled');
+									dispatch({
+										type: UPDATE_TX_STATE,
+										txState: TxState.cancelled
+									});
+								}
 							}
 						} else {
 						}
@@ -803,7 +827,7 @@ export default function TransactionCard(props: TxCardProps) {
 				};
 			case TxState.preCreate:
 				return {
-					title: `Please confirm the instruction submission in Metamask`,
+					title: `Please confirm the instruction submission on your wallet`,
 					progress: Progress.awaitingMetamaskConfirm,
 					progressText: `Waiting for confirmation`,
 					prepayment: true,
@@ -950,10 +974,22 @@ export default function TransactionCard(props: TxCardProps) {
 									txState: TxState.postCancel
 								});
 							} catch (error) {
-								dispatch({
-									type: UPDATE_TX_STATE,
-									txState: TxState.cancelled
-								});
+								// const errorValue =
+								// 	'0x606834f57405380c4fb88d1f4850326ad3885f014bab3b568dfbf7a041eef738';
+								// console.log(error);
+								// console.log(error.code);
+								// Handle weird Wallet Connect Error
+								if (error.code === 'INVALID_ARGUMENT') {
+									dispatch({
+										type: UPDATE_TX_STATE,
+										txState: TxState.postCancel
+									});
+								} else {
+									dispatch({
+										type: UPDATE_TX_STATE,
+										txState: TxState.cancelled
+									});
+								}
 							}
 						} else {
 						}
@@ -988,7 +1024,7 @@ export default function TransactionCard(props: TxCardProps) {
 					btnFunc: () => {
 						// @ DEV Maybe make more efficient!
 						modalClose();
-						window.location.reload();
+						history.push('/dashboard');
 					}
 				};
 			case TxState.cancelled:
@@ -1486,7 +1522,7 @@ export default function TransactionCard(props: TxCardProps) {
 							}}
 							color="primary"
 							onClick={() => {
-								const queryString = `I%20just%20tasked%20my%20gelato%20bot%20to%20${icedTxState.action.title}%20on%20my%20behalf%20when%20my%20instructed%20${icedTxState.condition.title}%20condition%20is%20met - via @gelatofinance`;
+								const queryString = `I%20just%20tasked%20my%20gelato%20bot%20to%20${icedTxState.action.title}%20on%20my%20behalf%20when%20my%20instructed%20${icedTxState.condition.title}%20is%20met - via @gelatofinance 🍦`;
 								console.log(queryString);
 								const url = `https://twitter.com/intent/tweet?text=${queryString}`;
 								window.open(url, '_blank');
