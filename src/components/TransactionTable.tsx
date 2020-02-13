@@ -45,6 +45,8 @@ import { ChainIds } from '../constants/interfaces';
 import { getStatusText } from '../constants/summaryTest';
 
 import { injected } from '../constants/connectors';
+import { GelatoButton } from './Button';
+import { Hidden } from '@material-ui/core';
 
 function desc<T>(a: T, b: T, orderBy: keyof T) {
 	if (b[orderBy] < a[orderBy]) {
@@ -308,10 +310,48 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
 	}, [currentCount]);
 
 	return (
-		<Toolbar style={{ alignItems: 'center', flexDirection: 'column' }}>
+		<Toolbar
+			style={{
+				alignItems: 'center',
+				flexDirection: 'column',
+				padding: '0px'
+			}}
+		>
+			{/* <Hidden xsDown>
+				<div
+					style={{
+						display: 'flex',
+						flexDirection: 'row',
+						alignItems: 'center',
+						justifyContent: 'space-between',
+						width: '100%'
+					}}
+				>
+					<div
+						style={{
+							width: '40%'
+							// background: 'white',
+							// height: '20px'
+						}}
+					></div>
+					<Typography
+						className={classes.title}
+						variant="h6"
+						id="tableTitle"
+						style={{ width: '20%' }}
+					>
+						My Bot Activity
+					</Typography>
+					<div style={{ width: '40%' }}>
+						<GelatoButton>New Instruction</GelatoButton>
+					</div>
+				</div>
+			</Hidden>
+			<Hidden smUp> */}
 			<Typography className={classes.title} variant="h6" id="tableTitle">
 				My Bot Activity
 			</Typography>
+			{/* </Hidden> */}
 			<div
 				className={classes.title}
 				style={{
