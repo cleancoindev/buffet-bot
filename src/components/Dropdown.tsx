@@ -55,10 +55,15 @@ export default function AppDropdown(props: AppDropdownProps) {
 		}
 	});
 	const { data, conditionOrAction /*updateConditionOrAction*/ } = props;
+	if (conditionOrAction === ConditionOrAction.Action) {
+		data.splice(2, 1);
+		data.splice(2, 1);
+	}
 	const { dispatch, icedTxState } = useIcedTxContext();
 	const classes = useStyles();
 	const { active } = useWeb3React();
 	const [state, setState] = React.useState('0');
+
 	// useEffect(() => {
 	// 	console.log('in here');
 	// 	setState('0');
