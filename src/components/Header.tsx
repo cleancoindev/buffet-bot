@@ -305,25 +305,41 @@ export default function ButtonAppBar() {
 						>
 							New Instruction
 						</BootstrapButton> */}
-						{active && (
-							<BootstrapButton
-								style={{ border: 'none' }}
-								onClick={() => {
-									// IF we are already on dashboard, reload the page on click, otherwise change route
-									// Deprecated
-									// if (
-									// 	history.location.pathname ===
-									// 	'/dashboard'
-									// ) {
-									// 	window.location.reload();
-									// } else {
-									history.push('/dashboard');
-									// }
-								}}
-							>
-								My Bot Activity
-							</BootstrapButton>
-						)}
+						{active &&
+							!history.location.pathname.includes(
+								'dashboard'
+							) && (
+								<BootstrapButton
+									style={{ border: 'none' }}
+									onClick={() => {
+										// IF we are already on dashboard, reload the page on click, otherwise change route
+										// Deprecated
+										// if (
+										// 	history.location.pathname ===
+										// 	'/dashboard'
+										// ) {
+										// 	window.location.reload();
+										// } else {
+										history.push('/dashboard');
+										// }
+									}}
+								>
+									My Bot Activity
+								</BootstrapButton>
+							)}
+						{active &&
+							history.location.pathname.includes('dashboard') && (
+								<BootstrapButton
+									style={{ border: 'none' }}
+									onClick={() => {
+										dispatch({ type: RESET_CONDITION });
+										dispatch({ type: RESET_ACTION });
+										history.push('/');
+									}}
+								>
+									New Instruction
+								</BootstrapButton>
+							)}
 
 						{/* ################################ How it works Button*/}
 						<BootstrapButton
