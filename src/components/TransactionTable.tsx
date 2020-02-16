@@ -207,7 +207,11 @@ const StyledTableRow = withStyles((theme: Theme) =>
 	})
 )(TableRow);
 
-export async function callGraphApi(graphName: string, account: string) {
+export async function callGraphApi(
+	graphName: string,
+	account: string,
+	skipNum: number
+) {
 	try {
 		const response = await fetch(
 			`https://api.thegraph.com/subgraphs/name/gelatodigital/${graphName}`,
@@ -217,7 +221,7 @@ export async function callGraphApi(graphName: string, account: string) {
 				body: JSON.stringify({
 					query: `{
 						users (where: {address:"${account}"}) {
-							executionClaims (first: 100, orderBy: mintingDate, orderDirection: desc) {
+							executionClaims (first: 100, skip: ${skipNum}, orderBy: mintingDate, orderDirection: desc) {
 							id
 							executionClaimId
 							selectedExecutor
@@ -528,9 +532,22 @@ export default function EnhancedTable() {
 
 	async function fetchPastExecutionClaims() {
 		try {
-			const json = await callGraphApi(graphName, account);
-			console.log(json);
+			const json = await callGraphApi(graphName, account, 0);
 			const executionClaims = json.data.users[0].executionClaims;
+
+			let numberOfExecutionClaims = executionClaims.length;
+
+			let skipNum = 100;
+			while (numberOfExecutionClaims >= 100) {
+				const json2 = await callGraphApi(graphName, account, skipNum);
+
+				const executionClaims2 = json2.data.users[0].executionClaims;
+				executionClaims2.forEach((executionClaim: any) => {
+					executionClaims.push(executionClaim);
+				});
+				numberOfExecutionClaims = executionClaims2.length;
+				skipNum += 100;
+			}
 
 			let newRows: Array<Data> = [];
 

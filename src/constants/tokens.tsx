@@ -1,6 +1,19 @@
 import { RelevantInputData } from './interfaces';
 import { ETH } from './constants';
 
+const BAT = {
+	address: {
+		1: '0x0d8775f648430679a709e98d2b0cb6250d2887ef',
+		3: '0x0',
+		4: '0x0',
+		42: '0x0'
+	},
+	symbol: 'BAT',
+	name: 'Basic Attention Token',
+	decimals: 18,
+	max: '1018'
+};
+
 // export enum TokenList {
 //     KyberTokenList = 0
 // }
@@ -41,6 +54,7 @@ export const KYBER_TOKEN_LIST = [
 	// 	name: 'Decentraland',
 	// 	decimals: 18
 	// },
+	{ ...BAT },
 	{
 		address: {
 			1: '0xdd974d5c2e2928dea5f71b9825b8b646686bd200',
@@ -190,17 +204,7 @@ export const KYBER_TOKEN_LIST_WITH_ETH = [
 	// 	decimals: 18,
 	// 	max: '21'
 	// },
-	// {
-	// 	address: {
-	// 		1: '0x0f5d2fb29fb7d3cfee444a200298f468908cc942',
-	// 		3: '0x0',
-	// 		4: '0x0',
-	// 		42: '0xcb78b457c1F79a06091EAe744aA81dc75Ecb1183'
-	// 	},
-	// 	symbol: 'MANA',
-	// 	name: 'Decentraland',
-	// 	decimals: 18
-	// },
+	{ ...BAT },
 	{
 		address: {
 			1: '0xdd974d5c2e2928dea5f71b9825b8b646686bd200',
