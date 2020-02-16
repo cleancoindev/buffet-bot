@@ -14,6 +14,45 @@ const BAT = {
 	max: '1018'
 };
 
+export const WBTC = {
+	address: {
+		1: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
+		3: '0x0',
+		4: '0x0',
+		42: ''
+	},
+	symbol: 'WBTC',
+	name: 'Wrapped Bitcoin',
+	decimals: 8,
+	max: '0.25'
+};
+
+export const LINK = {
+	address: {
+		1: '0x514910771af9ca656af840dff83e8264ecf986ca',
+		3: '0x0',
+		4: '0x0',
+		42: '0x0'
+	},
+	symbol: 'LINK',
+	name: 'ChainLink',
+	decimals: 18,
+	max: '105'
+};
+
+export const KNC = {
+	address: {
+		1: '0xdd974d5c2e2928dea5f71b9825b8b646686bd200',
+		3: '0x0',
+		4: '0x0',
+		42: '0xad67cB4d63C9da94AcA37fDF2761AaDF780ff4a2'
+	},
+	symbol: 'KNC',
+	name: 'Kyber Network',
+	decimals: 18,
+	max: '1000'
+};
+
 // export enum TokenList {
 //     KyberTokenList = 0
 // }
@@ -56,29 +95,11 @@ export const KYBER_TOKEN_LIST = [
 	// },
 	{ ...BAT },
 	{
-		address: {
-			1: '0xdd974d5c2e2928dea5f71b9825b8b646686bd200',
-			3: '0x0',
-			4: '0x0',
-			42: '0xad67cB4d63C9da94AcA37fDF2761AaDF780ff4a2'
-		},
-		symbol: 'KNC',
-		name: 'Kyber Network',
-		decimals: 18,
-		max: '1000'
+		...KNC
 	},
 
 	{
-		address: {
-			1: '0x514910771af9ca656af840dff83e8264ecf986ca',
-			3: '0x0',
-			4: '0x0',
-			42: '0x0'
-		},
-		symbol: 'LINK',
-		name: 'ChainLink',
-		decimals: 18,
-		max: '105'
+		...LINK
 	},
 	{
 		address: {
@@ -153,6 +174,7 @@ export const KYBER_TOKEN_LIST = [
 		decimals: 6,
 		max: '275'
 	},
+	{ ...WBTC },
 	{
 		address: {
 			1: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
@@ -206,29 +228,11 @@ export const KYBER_TOKEN_LIST_WITH_ETH = [
 	// },
 	{ ...BAT },
 	{
-		address: {
-			1: '0xdd974d5c2e2928dea5f71b9825b8b646686bd200',
-			3: '0x0',
-			4: '0x0',
-			42: '0xad67cB4d63C9da94AcA37fDF2761AaDF780ff4a2'
-		},
-		symbol: 'KNC',
-		name: 'Kyber Network',
-		decimals: 18,
-		max: '1000'
+		...KNC
 	},
 
 	{
-		address: {
-			1: '0x514910771af9ca656af840dff83e8264ecf986ca',
-			3: '0x0',
-			4: '0x0',
-			42: '0x0'
-		},
-		symbol: 'LINK',
-		name: 'ChainLink',
-		decimals: 18,
-		max: '105'
+		...LINK
 	},
 	{
 		address: {
@@ -302,6 +306,7 @@ export const KYBER_TOKEN_LIST_WITH_ETH = [
 		decimals: 6,
 		max: '275'
 	},
+	{ ...WBTC },
 	{
 		address: {
 			1: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
