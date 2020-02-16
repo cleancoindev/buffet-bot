@@ -30,7 +30,9 @@ import {
 	findConditionByAddress,
 	findActionByAddress,
 	stringifyTimestamp,
-	findDeprecatedCondition
+	findDeprecatedCondition,
+	decodeActionPayload,
+	getTokenByAddress
 } from '../helpers/helpers';
 
 import {
@@ -41,12 +43,17 @@ import {
 } from '../constants/constants';
 import { useWeb3React } from '@web3-react/core';
 import { useGelatoCore } from '../hooks/hooks';
-import { ChainIds } from '../constants/interfaces';
+import {
+	ChainIds,
+	ActionWhitelistData,
+	RelevantInputData
+} from '../constants/interfaces';
 import { getStatusText } from '../constants/summaryTest';
 
 import { injected } from '../constants/connectors';
 import { GelatoButton } from './Button';
 import { Hidden } from '@material-ui/core';
+import { ethers } from 'ethers';
 
 function desc<T>(a: T, b: T, orderBy: keyof T) {
 	if (b[orderBy] < a[orderBy]) {
@@ -210,7 +217,7 @@ export async function callGraphApi(graphName: string, account: string) {
 				body: JSON.stringify({
 					query: `{
 						users (where: {address:"${account}"}) {
-							executionClaims (orderBy:mintingDate) {
+							executionClaims (first: 100, orderBy: mintingDate, orderDirection: desc) {
 							id
 							executionClaimId
 							selectedExecutor
@@ -439,8 +446,12 @@ export default function EnhancedTable() {
 	} = useIcedTxContext();
 	const web3 = useWeb3React();
 
+	const networkId = web3.chainId as ChainIds;
+
 	// Router Context
 	let history = useHistory();
+
+	const gelatoCore = useGelatoCore();
 
 	/*
 	// Eager Connect
@@ -518,6 +529,7 @@ export default function EnhancedTable() {
 	async function fetchPastExecutionClaims() {
 		try {
 			const json = await callGraphApi(graphName, account);
+			console.log(json);
 			const executionClaims = json.data.users[0].executionClaims;
 
 			let newRows: Array<Data> = [];
@@ -564,6 +576,9 @@ export default function EnhancedTable() {
 				);
 				newRows.push(newData);
 				counter = counter + 1;
+				// callCanExecute(executionClaim);
+				// if (statusString === 'open')
+				// 	callActionConditionsOk(executionClaim);
 
 				// Date when the claim was created
 			});
@@ -577,6 +592,129 @@ export default function EnhancedTable() {
 			if (renderCounter < 5) setRenderCounter(renderCounter + 1);
 		}
 	}
+
+	/*
+	function canExecute(
+        uint256 _executionClaimId,
+        address _user,
+        IGelatoUserProxy _userProxy,
+        IGelatoCondition _condition,
+        bytes calldata _conditionPayloadWithSelector,
+        IGelatoAction _action,
+        bytes calldata _actionPayloadWithSelector,
+        uint256[3] calldata _conditionGasActionGasMinExecutionGas,
+        uint256 _executionClaimExpiryDate,
+        uint256 _mintingDeposit
+
+	*/
+
+	const callActionConditionsOk = async (executionClaim: any) => {
+		const action = findActionByAddress(executionClaim.action, networkId);
+		// TEST => CALL CAN EXECUTE
+		// 'function action(address _user, address _userProxy, address _src, uint256 _srcAmount, address _beneficiary)'
+		const regex = /action/;
+		// const actionConditionsOkAbi =
+		// 	action.abi.replace(regex, 'actionConditionsCheck') +
+		// 	' view returns (string)';
+
+		const actionConditionsOkAbi =
+			'function actionConditionsCheck(bytes _actionPayloadWithSelector) view returns (string)';
+
+		const signer = web3.library.getSigner();
+		// console.log(action.address[networkId]);
+		// console.log(actionConditionsOkAbi);
+		const actionContract = new ethers.Contract(
+			action.address[networkId],
+			[actionConditionsOkAbi],
+			signer
+		);
+
+		// console.log(account);
+		// console.log(executionClaim.proxyAddress);
+		// console.log(...actionInputs);
+		try {
+			const actionConditionsOkValue = await actionContract.actionConditionsCheck(
+				executionClaim.actionPayload
+			);
+			// console.log(actionConditionsOkValue);
+		} catch (error) {
+			// console.log(error);
+		}
+
+		// Check MarketLoquidity for pToken
+		/* function marketLiquidityForToken()
+			public
+			view
+			returns (uint256);
+		*/
+
+		const actionInputs = decodeActionPayload(
+			executionClaim.actionPayload,
+			action.params
+		);
+
+		const pTokenAddress = actionInputs[2];
+		const pTokenAbi = [
+			'function marketLiquidityForLoan() view returns (uint256)',
+			'function loanTokenDecimals() view returns (uint256)',
+			'function loanTokenAddress() view returns (address)',
+			'function tradeTokenAddress() view returns (address)',
+			'function getMaxDepositAmount() view returns (uint256)'
+		];
+
+		const pTokenContract = new ethers.Contract(
+			pTokenAddress,
+			pTokenAbi,
+			signer
+		);
+
+		try {
+			const pTokenReturnValue = await pTokenContract.marketLiquidityForLoan();
+
+			const pTokenLoanTokenDecimals = await pTokenContract.loanTokenDecimals();
+
+			const pTokenLoanTokenAddress = await pTokenContract.loanTokenAddress();
+
+			const pTokenTradeTokenAddress = await pTokenContract.tradeTokenAddress();
+
+			const maxDepositAmount = await pTokenContract.getMaxDepositAmount();
+
+			const loanToken = getTokenByAddress(
+				pTokenLoanTokenAddress,
+				networkId,
+				RelevantInputData.kyberTokenList
+			);
+			const pToken = getTokenByAddress(
+				pTokenAddress,
+				networkId,
+				RelevantInputData.fulcrumTokenList
+			);
+
+			const tradeToken = getTokenByAddress(
+				pTokenTradeTokenAddress,
+				networkId,
+				RelevantInputData.all
+			);
+			console.log(`LoanToken:`);
+			console.log(loanToken.name);
+			console.log(`pToken:`);
+			console.log(pToken.name);
+			console.log(`TradeToken:`);
+			console.log(tradeToken.name);
+			console.log('Loan Token Decimals');
+			console.log(pTokenLoanTokenDecimals.toString());
+			console.log('Max Loan Value');
+			console.log(pTokenReturnValue.toString());
+			console.log('Max Deposit Amount');
+			console.log(maxDepositAmount.toString());
+
+			console.log(`################`);
+			console.log(`################`);
+			console.log(`################`);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	useEffect(() => {
 		let requestCancelled = false;
@@ -754,16 +892,11 @@ export default function EnhancedTable() {
 														cursor: 'pointer'
 													}}
 												>
-													{/* <Button
-																onClick={showDetails}
-																value={'test'}
-															> */}
 													<VisibilityIcon
 														// color="primary"
 														fontSize={'small'}
+														color="primary"
 													></VisibilityIcon>
-													{/* </Button> */}
-													{/* {row.view} */}
 												</div>
 											</StyledTableCell>
 											<StyledTableCell align="left">
@@ -786,13 +919,12 @@ export default function EnhancedTable() {
 																	'center',
 																alignItems:
 																	'center',
-																// marginRight: '20px',
 																cursor:
 																	'pointer'
 															}}
 														>
 															<CancelIcon
-																// color="primary"
+																color="primary"
 																fontSize={
 																	'small'
 																}
