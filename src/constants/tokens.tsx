@@ -1,6 +1,58 @@
 import { RelevantInputData } from './interfaces';
 import { ETH } from './constants';
 
+const BAT = {
+	address: {
+		1: '0x0d8775f648430679a709e98d2b0cb6250d2887ef',
+		3: '0x0',
+		4: '0x0',
+		42: '0x0'
+	},
+	symbol: 'BAT',
+	name: 'Basic Attention Token',
+	decimals: 18,
+	max: '1018'
+};
+
+export const WBTC = {
+	address: {
+		1: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
+		3: '0x0',
+		4: '0x0',
+		42: ''
+	},
+	symbol: 'WBTC',
+	name: 'Wrapped Bitcoin',
+	decimals: 8,
+	max: '0.25'
+};
+
+export const LINK = {
+	address: {
+		1: '0x514910771af9ca656af840dff83e8264ecf986ca',
+		3: '0x0',
+		4: '0x0',
+		42: '0x0'
+	},
+	symbol: 'LINK',
+	name: 'ChainLink',
+	decimals: 18,
+	max: '105'
+};
+
+export const KNC = {
+	address: {
+		1: '0xdd974d5c2e2928dea5f71b9825b8b646686bd200',
+		3: '0x0',
+		4: '0x0',
+		42: '0xad67cB4d63C9da94AcA37fDF2761AaDF780ff4a2'
+	},
+	symbol: 'KNC',
+	name: 'Kyber Network',
+	decimals: 18,
+	max: '1000'
+};
+
 // export enum TokenList {
 //     KyberTokenList = 0
 // }
@@ -41,30 +93,13 @@ export const KYBER_TOKEN_LIST = [
 	// 	name: 'Decentraland',
 	// 	decimals: 18
 	// },
+	{ ...BAT },
 	{
-		address: {
-			1: '0xdd974d5c2e2928dea5f71b9825b8b646686bd200',
-			3: '0x0',
-			4: '0x0',
-			42: '0xad67cB4d63C9da94AcA37fDF2761AaDF780ff4a2'
-		},
-		symbol: 'KNC',
-		name: 'Kyber Network',
-		decimals: 18,
-		max: '1000'
+		...KNC
 	},
 
 	{
-		address: {
-			1: '0x514910771af9ca656af840dff83e8264ecf986ca',
-			3: '0x0',
-			4: '0x0',
-			42: '0x0'
-		},
-		symbol: 'LINK',
-		name: 'ChainLink',
-		decimals: 18,
-		max: '105'
+		...LINK
 	},
 	{
 		address: {
@@ -139,6 +174,7 @@ export const KYBER_TOKEN_LIST = [
 		decimals: 6,
 		max: '275'
 	},
+	{ ...WBTC },
 	{
 		address: {
 			1: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
@@ -190,41 +226,13 @@ export const KYBER_TOKEN_LIST_WITH_ETH = [
 	// 	decimals: 18,
 	// 	max: '21'
 	// },
-	// {
-	// 	address: {
-	// 		1: '0x0f5d2fb29fb7d3cfee444a200298f468908cc942',
-	// 		3: '0x0',
-	// 		4: '0x0',
-	// 		42: '0xcb78b457c1F79a06091EAe744aA81dc75Ecb1183'
-	// 	},
-	// 	symbol: 'MANA',
-	// 	name: 'Decentraland',
-	// 	decimals: 18
-	// },
+	{ ...BAT },
 	{
-		address: {
-			1: '0xdd974d5c2e2928dea5f71b9825b8b646686bd200',
-			3: '0x0',
-			4: '0x0',
-			42: '0xad67cB4d63C9da94AcA37fDF2761AaDF780ff4a2'
-		},
-		symbol: 'KNC',
-		name: 'Kyber Network',
-		decimals: 18,
-		max: '1000'
+		...KNC
 	},
 
 	{
-		address: {
-			1: '0x514910771af9ca656af840dff83e8264ecf986ca',
-			3: '0x0',
-			4: '0x0',
-			42: '0x0'
-		},
-		symbol: 'LINK',
-		name: 'ChainLink',
-		decimals: 18,
-		max: '105'
+		...LINK
 	},
 	{
 		address: {
@@ -298,6 +306,7 @@ export const KYBER_TOKEN_LIST_WITH_ETH = [
 		decimals: 6,
 		max: '275'
 	},
+	{ ...WBTC },
 	{
 		address: {
 			1: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
