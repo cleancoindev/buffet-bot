@@ -19,7 +19,7 @@ import {
 	INPUT_CSS,
 	BIG_NUM_ZERO,
 	BIG_NUM_ONE,
-	SELECTED_CHAIN_ID,
+	DEFAULT_CHAIN_ID,
 	SELECTED_NETWORK_NAME
 } from '../constants/constants';
 import { ethers, BigNumber } from 'ethers';
@@ -90,7 +90,7 @@ export default function LayoutTextFields(props: InputProps) {
 	const { active, account, library, chainId } = useWeb3React();
 
 	// In case network Id is not defined yet, use default
-	let networkId: ChainIds = SELECTED_CHAIN_ID;
+	let networkId: ChainIds = DEFAULT_CHAIN_ID;
 	if (chainId !== undefined) {
 		networkId = chainId as ChainIds;
 	}

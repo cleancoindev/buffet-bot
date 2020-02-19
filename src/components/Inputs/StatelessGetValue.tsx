@@ -11,7 +11,7 @@ import {
 } from '../../constants/interfaces';
 import { useStyles } from '@material-ui/pickers/views/Calendar/SlideTransition';
 import { useWeb3React } from '@web3-react/core';
-import { SELECTED_CHAIN_ID, BIG_NUM_ZERO } from '../../constants/constants';
+import { DEFAULT_CHAIN_ID, BIG_NUM_ZERO } from '../../constants/constants';
 import ReactNumberFormat from './ReactNumberFormat';
 import { useIcedTxContext } from '../../state/GlobalState';
 import { getTokenByAddress, encodeActionPayload } from '../../helpers/helpers';
@@ -50,7 +50,7 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 	const { chainId, active } = useWeb3React();
 
 	// In case network Id is not defined yet, use default
-	let networkId: ChainIds = SELECTED_CHAIN_ID;
+	let networkId: ChainIds = DEFAULT_CHAIN_ID;
 	if (chainId !== undefined) {
 		networkId = chainId as ChainIds;
 	}
@@ -113,7 +113,8 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 			try {
 				// Find token object by address
 				// const signer = library.getSigner();
-				const signer = ethers.getDefaultProvider();
+				// const signer = ethers.getDefaultProvider();
+				const signer = library.getSigner();
 
 				if (conditionOrAction === ConditionOrAction.Condition) {
 					let conditionAddress = '';
@@ -134,11 +135,12 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 						newValue = await conditionContract.getConditionValue(
 							...inputs
 						);
+						console.log(newValue);
 
 						// convert Value into human readable form
 						return newValue;
 					} catch (error) {
-						// console.log(error);
+						console.log(error);
 						newValue = BIG_NUM_ZERO;
 						return newValue;
 					}
@@ -151,7 +153,6 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 						actionAddress = action.address[networkId];
 						abi = action.getActionValueAbi;
 					}
-
 					const actionContract = new ethers.Contract(
 						actionAddress,
 						[abi],
@@ -163,6 +164,7 @@ const StatelessGetValueInput = (props: ReactNumberFormatProps) => {
 						copyUserInput.splice(0, 0, account);
 						// œDEV simply using account here, as proxy doesnt make a difference
 						copyUserInput.splice(1, 0, account);
+
 						newValue = await actionContract.getUsersSendTokenBalance(
 							...copyUserInput
 						);

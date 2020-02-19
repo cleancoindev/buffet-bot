@@ -21,9 +21,6 @@ import { ReactComponent as MetamaskLogo } from './metamask_logo.svg';
 
 import {
 	COLOURS,
-	SELECTED_CHAIN_ID,
-	UPDATE_TX_STATE,
-	OPEN_MODAL,
 	RESET_CONDITION,
 	RESET_ACTION,
 	SELECT_CONDITION,
@@ -202,7 +199,4 @@ export default function Web3ConnectButton() {
 			</StyledMenu>
 		</div>
 	);
-	// else if (active && chainId !== SELECTED_CHAIN_ID)
-	// 	return <ButtonWhenWrongNetwork></ButtonWhenWrongNetwork>;
-	// else return <ButtonToLogIn></ButtonToLogIn>;
 }

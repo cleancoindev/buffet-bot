@@ -46,8 +46,11 @@ export const ETH = {
 	max: '1.53'
 };
 
-export const SELECTED_CHAIN_ID = 1;
-export const SELECTED_NETWORK_NAME = 'Mainnet';
+// export const DEFAULT_CHAIN_ID = 1;
+// export const SELECTED_NETWORK_NAME = 'Mainnet';
+export const POSSIBLE_CHAIN_IDS = [1, 42];
+export const DEFAULT_CHAIN_ID = 42;
+export const SELECTED_NETWORK_NAME = 'Kovan';
 
 export const DEFAULT_DATA_CONDITION = {
 	id: 0,

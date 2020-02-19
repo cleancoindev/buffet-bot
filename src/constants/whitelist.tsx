@@ -16,14 +16,16 @@ export const GELATO_CORE_ADDRESS = {
 	1: '0x4E2Ca0093028C8401C93AaCcCaF59288CA6fb728',
 	3: '0x563700A8A6740C8a474DF8F289716afDc30ED07a',
 	4: '0x501aF774Eb578203CC34E7171273124A93706C06',
-	42: '0x2b4Bd5d0df60aaE4D68B5a4e315be0bdf72cf765'
+	// old 0x2b4Bd5d0df60aaE4D68B5a4e315be0bdf72cf765
+	42: '0x7752D2b2B243659251EdD5e85281A1Fa08337F93'
 };
 
 export const EXECUTOR_ADDRESS = {
 	1: '0x4B7363b8a7DaB76ff73dFbA00801bdDcE699F3A2',
 	3: '0x203AdbbA2402a36C202F207caA8ce81f1A4c7a72',
 	4: '0x203AdbbA2402a36C202F207caA8ce81f1A4c7a72',
-	42: '0x203AdbbA2402a36C202F207caA8ce81f1A4c7a72'
+	// old 0x203AdbbA2402a36C202F207caA8ce81f1A4c7a72
+	42: '0x4d671CD743027fB5Af1b2D2a3ccbafA97b5B1B80'
 };
 
 // NOTES
@@ -186,8 +188,10 @@ export const ATYPES = [
 		address: {
 			1: '0x24b7b219E903d11489227c5Bed0718D90C03eBc2',
 			3: '0x8FdAf109e391C304939CF64C9B9912b320AdfE56',
-			4: '',
-			42: '0x99cB92f9f853918773de899EBCd942f50f9A6ABb'
+			4: '0x0',
+			42: '0x9E52246Ba11C21676712D4A651305B7d44F31B29'
+			// 0x99cB92f9f853918773de899EBCd942f50f9A6ABb
+			// 0x24b7b219E903d11489227c5Bed0718D90C03eBc2
 		},
 		/*
 		IERC20 _src,
@@ -202,7 +206,7 @@ export const ATYPES = [
 			{ type: 'address', name: '_beneficiary' }
 		],
 		abi:
-			'function action(address _user, address _userProxy, address _src, uint256 _srcAmount, address _beneficiary)',
+			'function action(address _user, address _userGnosisSafeProxy, address _sendToken, uint256, address)',
 		userInputTypes: [
 			InputType.Token,
 			InputType.TokenAmount,
@@ -240,7 +244,8 @@ export const ATYPES = [
 			1: '0xF829B506c378AaD11dB7Efe8d626cc7d0e015CBA',
 			3: '0x67f647bDF012A718d5F9bD9C7bEd6e5a2023ccC6',
 			4: '',
-			42: '0xE5656d2dAAbF6a94F7B05315735D33193246289a'
+			42: '0xF829B506c378AaD11dB7Efe8d626cc7d0e015CBA'
+			//0xE5656d2dAAbF6a94F7B05315735D33193246289a
 		},
 		/*
 		 // Standard Action Params

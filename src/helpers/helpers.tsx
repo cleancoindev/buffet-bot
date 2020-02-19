@@ -1,4 +1,9 @@
-import { ATYPES, TTYPES, USER_WHITELIST } from '../constants/whitelist';
+import {
+	ATYPES,
+	TTYPES,
+	USER_WHITELIST,
+	GELATO_CORE_ADDRESS
+} from '../constants/whitelist';
 import {
 	Token,
 	RelevantInputData,
@@ -736,4 +741,75 @@ export const getValueFromSmartContractAction = async (
 		// console.log(4);
 		return newValue;
 	}
+};
+
+export const getNetworkName = (chainId: ChainIds) => {
+	let prefix = '';
+	switch (chainId) {
+		case 1:
+			prefix = 'Mainnet';
+			break;
+		case 3:
+			prefix = 'Ropsten';
+			break;
+		case 4:
+			prefix = 'Rinkeby';
+			break;
+		case 42:
+			prefix = 'Kovan';
+			break;
+		default:
+			prefix = '';
+			break;
+	}
+	return prefix;
+};
+
+export const getWhitelistGelatoOnSafePayload = (
+	account: string,
+	networkId: ChainIds
+) => {
+	const gnosisSafeMasterCopy = '0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F';
+
+	// Step 2: Calculcate initializer payload
+
+	const setupAbi = [
+		'function setup(address[] _owners, uint256 _threshold, address to, bytes data, address fallbackHandler, address paymentToken, uint256 payment, address payable paymentReceiver) external'
+	];
+
+	const safeOwners = [account];
+	const signatureThreshold = 1;
+
+	// Whitelist GelatoCore as module script
+	const addressTo = '0xf53f625aDE4d53905081cC390845a5f9C2EC137a';
+
+	const whitelistGelatoCoreScriptAbi = [
+		'function whitelist(address _gelatoCore)'
+	];
+
+	const iFaceSetupModule = new ethers.utils.Interface(
+		whitelistGelatoCoreScriptAbi
+	);
+	const setupModulesPayload = iFaceSetupModule.encodeFunctionData(
+		'whitelist',
+		[GELATO_CORE_ADDRESS[networkId]]
+	);
+
+	const fallbackHandler = ethers.constants.AddressZero;
+	const paymentToken = ethers.constants.AddressZero;
+	const payment = ethers.constants.Zero;
+	const paymentReceiver = ethers.constants.AddressZero;
+
+	const iFaceSetup = new ethers.utils.Interface(setupAbi);
+	const setupPayload = iFaceSetup.encodeFunctionData('setup', [
+		safeOwners,
+		signatureThreshold,
+		addressTo,
+		setupModulesPayload,
+		fallbackHandler,
+		paymentToken,
+		payment,
+		paymentReceiver
+	]);
+	return [gnosisSafeMasterCopy, setupPayload];
 };

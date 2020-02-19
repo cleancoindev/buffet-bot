@@ -35,7 +35,7 @@ import { useEagerConnect, useInactiveListener } from '../hooks/hooks';
 import { injected, walletConnect } from '../constants/connectors';
 import {
 	COLOURS,
-	SELECTED_CHAIN_ID,
+	DEFAULT_CHAIN_ID,
 	UPDATE_TX_STATE,
 	OPEN_MODAL,
 	RESET_CONDITION,
@@ -44,10 +44,11 @@ import {
 	DEFAULT_TRIGGER_ID,
 	INPUT_OK,
 	DEFAULT_ACTION_ID,
-	SELECT_ACTION
+	SELECT_ACTION,
+	POSSIBLE_CHAIN_IDS
 } from '../constants/constants';
 import { useIcedTxContext, connectorsByName } from '../state/GlobalState';
-import { TxState } from '../constants/interfaces';
+import { TxState, ChainIds } from '../constants/interfaces';
 import GelatoLogo from './Logo/Logo';
 import LoginButton from './LogInButton';
 import Web3ConnectButton from './Web3ConnectButton/Web3ConnectButton';
@@ -180,6 +181,11 @@ export default function ButtonAppBar() {
 		library
 	} = useWeb3React();
 
+	let networkId = DEFAULT_CHAIN_ID;
+	if (chainId !== undefined) {
+		networkId = chainId as ChainIds;
+	}
+
 	const { dispatch } = useIcedTxContext();
 
 	// GGF add this
@@ -257,7 +263,7 @@ export default function ButtonAppBar() {
 
 	// handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
 	// Only eager connect when in dashboard
-	// const triedEager = useEagerConnect();
+	const triedEager = useEagerConnect();
 
 	// handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
 
@@ -356,10 +362,10 @@ export default function ButtonAppBar() {
 
 						{/* ################################ Connect Button*/}
 
-						{active && chainId === SELECTED_CHAIN_ID && (
+						{active && POSSIBLE_CHAIN_IDS.includes(networkId) && (
 							<LoginButton></LoginButton>
 						)}
-						{active && chainId !== SELECTED_CHAIN_ID && (
+						{active && !POSSIBLE_CHAIN_IDS.includes(networkId) && (
 							<BootstrapButtonDanger
 								startIcon={<WarningIcon />}
 								onClick={() => {
@@ -422,7 +428,7 @@ export default function ButtonAppBar() {
 				</div>
 				<Divider />
 				<List style={{ color: 'white' }}>
-					{active && chainId === SELECTED_CHAIN_ID && (
+					{active && POSSIBLE_CHAIN_IDS.includes(networkId) && (
 						<ListItem>
 							<ListItemIcon>
 								<InboxIcon />
@@ -440,7 +446,7 @@ export default function ButtonAppBar() {
 							/>
 						</ListItem>
 					)}
-					{active && chainId !== SELECTED_CHAIN_ID && (
+					{active && !POSSIBLE_CHAIN_IDS.includes(networkId) && (
 						<ListItem
 							button
 							onClick={() => {
@@ -494,7 +500,7 @@ export default function ButtonAppBar() {
 							</ListItem>
 						</React.Fragment>
 					)}
-					{active && chainId === SELECTED_CHAIN_ID && (
+					{active && POSSIBLE_CHAIN_IDS.includes(networkId) && (
 						<ListItem
 							button
 							onClick={() => {
@@ -537,7 +543,7 @@ export default function ButtonAppBar() {
 						<ListItemText primary={'FAQ'} />
 					</ListItem>
 
-					{active && chainId === SELECTED_CHAIN_ID && (
+					{active && POSSIBLE_CHAIN_IDS.includes(networkId) && (
 						<ListItem
 							button
 							onClick={() => {

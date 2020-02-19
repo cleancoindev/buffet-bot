@@ -12,7 +12,7 @@ import {
 	BIG_NUM_ONE,
 	INPUT_ERROR,
 	INPUT_OK,
-	SELECTED_CHAIN_ID,
+	DEFAULT_CHAIN_ID,
 	TOKEN_TRANSFER_CEILING,
 	COLOURS,
 	ETH
@@ -128,7 +128,7 @@ export default function ReactNumberFormat(props: ReactNumberFormatProps) {
 	});
 
 	// In case network Id is not defined yet, use default
-	let networkId: ChainIds = SELECTED_CHAIN_ID;
+	let networkId: ChainIds = DEFAULT_CHAIN_ID;
 	if (chainId !== undefined) {
 		networkId = chainId as ChainIds;
 	}

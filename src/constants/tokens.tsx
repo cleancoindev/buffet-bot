@@ -19,7 +19,7 @@ export const WBTC = {
 		1: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
 		3: '0x0',
 		4: '0x0',
-		42: ''
+		42: '0x0'
 	},
 	symbol: 'WBTC',
 	name: 'Wrapped Bitcoin',

@@ -24,7 +24,7 @@ import {
 	INPUT_CSS,
 	COLOURS,
 	ETH,
-	SELECTED_CHAIN_ID
+	DEFAULT_CHAIN_ID
 } from '../../constants/constants';
 import {
 	getTokenByAddress,
@@ -124,7 +124,7 @@ export default function TokenSelect(props: TokenSelectProps) {
 	const { account, active, library, chainId } = useWeb3React();
 
 	// In case network Id is not defined yet, use default
-	let networkId: ChainIds = SELECTED_CHAIN_ID;
+	let networkId: ChainIds = DEFAULT_CHAIN_ID;
 	if (chainId !== undefined) {
 		networkId = chainId as ChainIds;
 	}

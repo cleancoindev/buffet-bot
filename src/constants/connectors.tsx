@@ -26,7 +26,8 @@ export const defaultNetwork = 1;
 
 export const walletConnect = new WalletConnectConnector({
 	rpc: {
-		1: RPC_URLS[1] /*, 3: RPC_URLS[3], 4: RPC_URLS[4], 42: RPC_URLS[42] */
+		// 1: RPC_URLS[1],
+		42: RPC_URLS[42] /*, 3: RPC_URLS[3], 4: RPC_URLS[4],  */
 	},
 	bridge: 'https://bridge.walletconnect.org',
 	qrcode: true,

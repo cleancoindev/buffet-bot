@@ -247,6 +247,7 @@ export async function callGraphApi(
 		const json = await response.json();
 		return json;
 	} catch (error) {
+		// console.log(error);
 		// console.log('No data returned');
 	}
 }
@@ -522,7 +523,8 @@ export default function EnhancedTable() {
 
 			break;
 		case 42:
-			graphName = 'gelato-kovan';
+			// graphName = 'gelato-kovan';
+			graphName = 'gelato-safe-feb';
 
 			break;
 		default:

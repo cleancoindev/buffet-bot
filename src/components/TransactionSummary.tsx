@@ -159,7 +159,7 @@ export default function TransactionSummary(props: TxSummaryParams) {
 		// console.log(transactionByHash);
 		const startBlock = transactionByHash.blockNumber;
 		const endBlock = startBlock + 1;
-		const proxyAddress = await gelatoCore.proxyByUser(account);
+		const proxyAddress = await gelatoCore.gnosisSafeProxyByUser(account);
 		// const abi = [
 		// 	'event LogOneWay(address origin, address sendToken, uint256 sendAmount, address destination)'
 		// ];

@@ -39,10 +39,10 @@ import {
 	COLOURS,
 	BOX,
 	UPDATE_TX_STATE,
-	SELECTED_CHAIN_ID,
 	OPEN_MODAL,
 	CLOSE_MODAL,
-	INPUT_OK
+	INPUT_OK,
+	POSSIBLE_CHAIN_IDS
 } from '../constants/constants';
 import { useWeb3React } from '@web3-react/core';
 import { checkIfMobile } from '../helpers/helpers';
@@ -199,7 +199,9 @@ export default function AppSelection() {
 				if (web3.active) {
 					// Check if the object is injected by metamask
 					// console.log('Change TxState to displayWrongNetwork');
-					if ((web3.chainId as ChainIds) !== SELECTED_CHAIN_ID) {
+					if (
+						!POSSIBLE_CHAIN_IDS.includes(web3.chainId as ChainIds)
+					) {
 						// No Metamask installed => Show install Metamask Modal
 						dispatch({
 							type: UPDATE_TX_STATE,
@@ -217,7 +219,7 @@ export default function AppSelection() {
 			// 3. Check if user is connected to the correct network
 			case TxState.displayWrongNetwork:
 				// User is already logged in => Change to insufficientBalance
-				if (web3.chainId === SELECTED_CHAIN_ID) {
+				if (POSSIBLE_CHAIN_IDS.includes(web3.chainId as ChainIds)) {
 					// console.log('Change TxState to insufficientBalance');
 					dispatch({
 						type: UPDATE_TX_STATE,

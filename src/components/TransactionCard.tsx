@@ -24,7 +24,8 @@ import {
 import {
 	getTokenSymbol,
 	encodeActionPayload,
-	encodeConditionPayload
+	encodeConditionPayload,
+	getWhitelistGelatoOnSafePayload
 } from '../helpers/helpers';
 
 // Web3 React
@@ -32,7 +33,7 @@ import { useWeb3React } from '@web3-react/core';
 import { injected } from '../constants/connectors';
 
 import { useGelatoCore } from '../hooks/hooks';
-import { EXECUTOR_ADDRESS } from '../constants/whitelist';
+import { EXECUTOR_ADDRESS, GELATO_CORE_ADDRESS } from '../constants/whitelist';
 import { ethers, BigNumber } from 'ethers';
 
 // Smart Contract ABIs
@@ -191,12 +192,26 @@ export default function TransactionCard(props: TxCardProps) {
 
 		switch (icedTxState.txState) {
 			case TxState.displayGelatoWallet:
-				const gasEstimate = await gelatoCore.estimate.createUserProxy();
+				// const gasEstimate = await gelatoCore.estimate.createUserProxy();
+				const [
+					gnosisSafeMasterCopy,
+					setupPayload
+				] = getWhitelistGelatoOnSafePayload(
+					account as string,
+					networkId
+				);
+
+				const gasEstimate = await gelatoCore.estimate.createGnosisSafeProxy(
+					gnosisSafeMasterCopy,
+					setupPayload
+				);
 				gasEstimatePlusBuffer = addGasBuffer(gasEstimate);
 				break;
 			case TxState.displayApprove:
 				// console.log('in here');
-				const proxyAddress = await gelatoCore.proxyByUser(account);
+				const proxyAddress = await gelatoCore.gnosisSafeProxyByUser(
+					account
+				);
 
 				// Get Erc20 contract
 				const signer = library.getSigner();
@@ -227,7 +242,9 @@ export default function TransactionCard(props: TxCardProps) {
 				}
 
 			case TxState.displayCreate:
-				const userProxy = await gelatoCore.proxyByUser(account);
+				const userProxy = await gelatoCore.gnosisSafeProxyByUser(
+					account
+				);
 				const {
 					encodedCondition,
 					encodedAction
@@ -495,7 +512,28 @@ export default function TransactionCard(props: TxCardProps) {
 						if (account !== undefined && account !== null) {
 							const gelatoGasPriceInWei = await getEthGasStationGasPrice();
 
-							const gasEstimate = await gelatoCore.estimate.createUserProxy();
+							// TO CREATE A GNOSIS PROXY FOR THE USER
+							// ==> User => GelatoCore (createGnsoisSafeProxy) => GnosisProxyFactory (createProxy) => New Gnosis Safe Proxy (setup) => Internal call (setupModules) => GelatoWhitelistModule script (whitelist) => Gnosis Safe Proxy (enableModule)
+
+							// function createGnosisSafeProxyWithNonce(address _mastercopy, bytes calldata _initializer, uint256 _saltNonce)
+
+							// Step 1: Get mastercopy addreess
+							const [
+								gnosisSafeMasterCopy,
+								setupPayload
+							] = getWhitelistGelatoOnSafePayload(
+								account,
+								networkId
+							);
+
+							// Inititalizer Data
+
+							// First Encoding
+
+							const gasEstimate = await gelatoCore.estimate.createGnosisSafeProxy(
+								gnosisSafeMasterCopy,
+								setupPayload
+							);
 
 							const gasEstimatePlusBuffer = addGasBuffer(
 								gasEstimate
@@ -508,8 +546,12 @@ export default function TransactionCard(props: TxCardProps) {
 								// The price (in wei) per unit of gas
 								gasPrice: gelatoGasPriceInWei
 							};
+							// MA Proxy
+							// 0x59D9E056462C6b4f96E508907A6386C0d7755f72
 							try {
-								const tx = await gelatoCore.createUserProxy(
+								const tx = await gelatoCore.createGnosisSafeProxy(
+									gnosisSafeMasterCopy,
+									setupPayload,
 									overrides
 								);
 
@@ -605,7 +647,7 @@ export default function TransactionCard(props: TxCardProps) {
 							type: UPDATE_TX_STATE,
 							txState: TxState.preApprove
 						});
-						const proxyAddress = await gelatoCore.proxyByUser(
+						const proxyAddress = await gelatoCore.gnosisSafeProxyByUser(
 							account
 						);
 
@@ -733,7 +775,7 @@ export default function TransactionCard(props: TxCardProps) {
 							type: UPDATE_TX_STATE,
 							txState: TxState.preCreate
 						});
-						const proxyAddress = await gelatoCore.proxyByUser(
+						const proxyAddress = await gelatoCore.gnosisSafeProxyByUser(
 							account
 						);
 						// User has Proxy

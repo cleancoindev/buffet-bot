@@ -21,16 +21,18 @@ import { injected, walletConnect } from '../constants/connectors';
 
 import {
 	COLOURS,
-	SELECTED_CHAIN_ID,
+	DEFAULT_CHAIN_ID,
 	UPDATE_TX_STATE,
 	OPEN_MODAL,
 	RESET_CONDITION,
 	RESET_ACTION,
 	SELECT_CONDITION,
 	DEFAULT_TRIGGER_ID,
-	INPUT_OK
+	INPUT_OK,
+	POSSIBLE_CHAIN_IDS
 } from '../constants/constants';
-import { TxState } from '../constants/interfaces';
+import { TxState, ChainIds } from '../constants/interfaces';
+import { getNetworkName } from '../helpers/helpers';
 
 const StyledMenu = withStyles({
 	paper: {
@@ -129,6 +131,20 @@ export default function LoginButton() {
 		history.push('/');
 	};
 
+	const displayAccountText = () => {
+		if (POSSIBLE_CHAIN_IDS.includes(chainId as ChainIds) && chainId !== 1) {
+			return account
+				? `${account.substring(0, 6)}... (${getNetworkName(
+						chainId as ChainIds
+				  )})`
+				: 'Rinkeby Testnet';
+		} else {
+			return account
+				? `${account.substring(0, 6)}...${account.substring(38, 42)}`
+				: 'Connected';
+		}
+	};
+
 	return (
 		<div>
 			<GelatoButton
@@ -137,12 +153,7 @@ export default function LoginButton() {
 				onClick={handleClick}
 				endIcon={<ArrowDropDownIcon />}
 			>
-				{account
-					? `${account.substring(0, 6)}...${account.substring(
-							38,
-							42
-					  )}`
-					: 'Connected'}
+				{displayAccountText()}
 			</GelatoButton>
 			<StyledMenu
 				id="customized-menu"
@@ -188,7 +199,4 @@ export default function LoginButton() {
 			</StyledMenu>
 		</div>
 	);
-	// else if (active && chainId !== SELECTED_CHAIN_ID)
-	// 	return <ButtonWhenWrongNetwork></ButtonWhenWrongNetwork>;
-	// else return <ButtonToLogIn></ButtonToLogIn>;
 }

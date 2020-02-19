@@ -25,10 +25,11 @@ import {
 	UPDATE_TX_STATE,
 	OPEN_MODAL,
 	CLOSE_MODAL,
-	SELECTED_CHAIN_ID,
+	DEFAULT_CHAIN_ID,
 	BOX,
 	INPUT_OK,
-	INPUT_ERROR
+	INPUT_ERROR,
+	POSSIBLE_CHAIN_IDS
 } from '../constants/constants';
 import TransactionModal from '../components/Modal';
 import {
@@ -391,7 +392,7 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 			// 3. Check if user is connected to the correct network
 			case TxState.displayWrongNetwork:
 				// User is already logged in => Change to insufficientBalance
-				if (web3.chainId === SELECTED_CHAIN_ID) {
+				if (POSSIBLE_CHAIN_IDS.includes(web3.chainId as ChainIds)) {
 					// Check if the object is injected by metamask
 					// console.log('Change TxState to insufficientBalance');
 					dispatch({
@@ -436,17 +437,19 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 			case TxState.displayGelatoWallet:
 				// User is already logged in => Change to insufficientBalance
 				// console.log('Checking if user is registered');
-				gelatoCore.isUser(web3.account).then((result: boolean) => {
-					const isUser = result;
-					// User has Proxy
-					if (isUser) {
-						// console.log('Change TxState to displayApprove');
-						dispatch({
-							type: UPDATE_TX_STATE,
-							txState: TxState.displayApprove
-						});
-					}
-				});
+				gelatoCore
+					.isRegisteredUser(web3.account)
+					.then((result: boolean) => {
+						const isUser = result;
+						// User has Proxy
+						if (isUser) {
+							// console.log('Change TxState to displayApprove');
+							dispatch({
+								type: UPDATE_TX_STATE,
+								txState: TxState.displayApprove
+							});
+						}
+					});
 
 				// let proxyAddress = await gelatoCore.useProxyOfUser(context.account)
 				break;
@@ -455,7 +458,7 @@ export default function Instruct({ match }: RouteComponentProps<Params>) {
 				if (activeStep === 2) {
 					// User is already logged in => Change to insufficientBalance
 					gelatoCore
-						.proxyByUser(web3.account)
+						.gnosisSafeProxyByUser(web3.account)
 						.then((result: string) => {
 							const proxyAddress = result;
 							// User has Proxy
