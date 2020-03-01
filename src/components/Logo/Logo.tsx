@@ -1,25 +1,24 @@
-import React from 'react';
-import { ReactComponent as Logo } from './gelato_logo.svg';
-// Logo Text
-import { ReactComponent as GelatoLogoWord } from './gelato_logo_word.svg';
+import React from "react";
+
 const GelatoLogo = () => (
 	<React.Fragment>
 		<div
 			style={{
-				width: '35px',
-				marginRight: '16px'
+				width: "35px",
+				marginRight: "48px"
 			}}
 		>
 			{/* Logo is an actual React component */}
-			<Logo />
+			<img style={{ width: "75px" }} src="/images/buffet_bot.png" />
 		</div>
 		<div
 			style={{
-				width: '80px'
+				width: "80px",
+				fontSize: "24px"
 			}}
 		>
 			{/* Logo is an actual React component */}
-			<GelatoLogoWord></GelatoLogoWord>
+			<p>BuffetBot</p>
 		</div>
 	</React.Fragment>
 );

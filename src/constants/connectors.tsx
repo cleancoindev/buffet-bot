@@ -1,6 +1,6 @@
 // Web3 react
-import { InjectedConnector } from '@web3-react/injected-connector';
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
+import { InjectedConnector } from "@web3-react/injected-connector";
+import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 
 // Web3
 
@@ -18,7 +18,7 @@ const RPC_URLS: { [chainId: number]: string } = {
 };
 // Wallet connect
 
-export const defaultNetwork = 1;
+export const defaultNetwork = 42;
 
 // const Infura = new NetworkOnlyConnector({
 //   providerURL: supportedNetworkURLs[3]
@@ -29,7 +29,7 @@ export const walletConnect = new WalletConnectConnector({
 		// 1: RPC_URLS[1],
 		42: RPC_URLS[42] /*, 3: RPC_URLS[3], 4: RPC_URLS[4],  */
 	},
-	bridge: 'https://bridge.walletconnect.org',
+	bridge: "https://bridge.walletconnect.org",
 	qrcode: true,
 	pollingInterval: POLLING_INTERVAL
 });

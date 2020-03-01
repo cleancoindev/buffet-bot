@@ -3,10 +3,10 @@
 		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "executor",
-				"type": "address"
+				"indexed": false,
+				"internalType": "address[2]",
+				"name": "selectedProviderAndExecutor",
+				"type": "address[2]"
 			},
 			{
 				"indexed": true,
@@ -17,26 +17,20 @@
 			{
 				"indexed": true,
 				"internalType": "address",
-				"name": "user",
+				"name": "userProxy",
 				"type": "address"
 			},
 			{
 				"indexed": false,
-				"internalType": "contract IGelatoCondition",
-				"name": "condition",
-				"type": "address"
+				"internalType": "address[2]",
+				"name": "conditionAndAction",
+				"type": "address[2]"
 			},
 			{
 				"indexed": false,
-				"internalType": "enum IGelatoCore.CanExecuteResult",
+				"internalType": "string",
 				"name": "canExecuteResult",
-				"type": "uint8"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint8",
-				"name": "reason",
-				"type": "uint8"
+				"type": "string"
 			}
 		],
 		"name": "LogCanExecuteFailed",
@@ -46,10 +40,10 @@
 		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "executor",
-				"type": "address"
+				"indexed": false,
+				"internalType": "address[2]",
+				"name": "selectedProviderAndExecutor",
+				"type": "address[2]"
 			},
 			{
 				"indexed": true,
@@ -60,26 +54,20 @@
 			{
 				"indexed": true,
 				"internalType": "address",
-				"name": "user",
+				"name": "userProxy",
 				"type": "address"
 			},
 			{
 				"indexed": false,
-				"internalType": "contract IGelatoCondition",
-				"name": "condition",
-				"type": "address"
+				"internalType": "address[2]",
+				"name": "conditionAndAction",
+				"type": "address[2]"
 			},
 			{
 				"indexed": false,
-				"internalType": "enum IGelatoCore.CanExecuteResult",
+				"internalType": "string",
 				"name": "canExecuteResult",
-				"type": "uint8"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint8",
-				"name": "reason",
-				"type": "uint8"
+				"type": "string"
 			}
 		],
 		"name": "LogCanExecuteSuccess",
@@ -89,8 +77,46 @@
 		"anonymous": false,
 		"inputs": [
 			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "oldOracle",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "newOracle",
+				"type": "address"
+			}
+		],
+		"name": "LogChangeOracle",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "oldRegulator",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "newRegulator",
+				"type": "address"
+			}
+		],
+		"name": "LogChangeRegulator",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
 				"indexed": true,
-				"internalType": "address payable",
+				"internalType": "address",
 				"name": "executor",
 				"type": "address"
 			}
@@ -102,6 +128,12 @@
 		"anonymous": false,
 		"inputs": [
 			{
+				"indexed": false,
+				"internalType": "address[2]",
+				"name": "selectedProviderAndExecutor",
+				"type": "address[2]"
+			},
+			{
 				"indexed": true,
 				"internalType": "uint256",
 				"name": "executionClaimId",
@@ -110,11 +142,11 @@
 			{
 				"indexed": true,
 				"internalType": "address",
-				"name": "user",
+				"name": "userProxy",
 				"type": "address"
 			},
 			{
-				"indexed": true,
+				"indexed": false,
 				"internalType": "address",
 				"name": "cancelor",
 				"type": "address"
@@ -133,10 +165,10 @@
 		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "selectedExecutor",
-				"type": "address"
+				"indexed": false,
+				"internalType": "address[2]",
+				"name": "selectedProviderAndExecutor",
+				"type": "address[2]"
 			},
 			{
 				"indexed": true,
@@ -147,55 +179,31 @@
 			{
 				"indexed": true,
 				"internalType": "address",
-				"name": "user",
+				"name": "userProxy",
 				"type": "address"
 			},
 			{
 				"indexed": false,
-				"internalType": "contract IGnosisSafe",
-				"name": "gnosisSafeProxy",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "contract IGelatoCondition",
-				"name": "condition",
-				"type": "address"
+				"internalType": "address[2]",
+				"name": "conditionAndAction",
+				"type": "address[2]"
 			},
 			{
 				"indexed": false,
 				"internalType": "bytes",
-				"name": "conditionPayloadWithSelector",
+				"name": "conditionPayload",
 				"type": "bytes"
-			},
-			{
-				"indexed": false,
-				"internalType": "contract IGelatoAction",
-				"name": "action",
-				"type": "address"
 			},
 			{
 				"indexed": false,
 				"internalType": "bytes",
-				"name": "actionPayloadWithSelector",
+				"name": "actionPayload",
 				"type": "bytes"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256[3]",
-				"name": "conditionGasActionTotalGasMinExecutionGas",
-				"type": "uint256[3]"
 			},
 			{
 				"indexed": false,
 				"internalType": "uint256",
 				"name": "executionClaimExpiryDate",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "mintingDeposit",
 				"type": "uint256"
 			}
 		],
@@ -206,7 +214,13 @@
 		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": true,
+				"indexed": false,
+				"internalType": "address[2]",
+				"name": "selectedProviderAndExecutor",
+				"type": "address[2]"
+			},
+			{
+				"indexed": false,
 				"internalType": "address",
 				"name": "executor",
 				"type": "address"
@@ -219,21 +233,15 @@
 			},
 			{
 				"indexed": true,
-				"internalType": "address payable",
-				"name": "user",
+				"internalType": "address",
+				"name": "userProxy",
 				"type": "address"
 			},
 			{
 				"indexed": false,
-				"internalType": "contract IGelatoCondition",
-				"name": "condition",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "contract IGelatoAction",
-				"name": "action",
-				"type": "address"
+				"internalType": "address[2]",
+				"name": "conditionAndAction",
+				"type": "address[2]"
 			},
 			{
 				"indexed": false,
@@ -257,11 +265,17 @@
 			{
 				"indexed": true,
 				"internalType": "address",
-				"name": "gnosisSafeProxy",
+				"name": "gelatoUserProxy",
 				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "userProxyFunding",
+				"type": "uint256"
 			}
 		],
-		"name": "LogGnosisSafeProxyUserCreation",
+		"name": "LogGelatoUserProxyCreation",
 		"type": "event"
 	},
 	{
@@ -269,15 +283,72 @@
 		"inputs": [
 			{
 				"indexed": true,
-				"internalType": "address payable",
-				"name": "executor",
+				"internalType": "address",
+				"name": "provider",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "action",
+				"type": "address"
+			}
+		],
+		"name": "LogProvideAction",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "provider",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "condition",
+				"type": "address"
+			}
+		],
+		"name": "LogProvideCondition",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "provider",
 				"type": "address"
 			},
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "executorPrice",
+				"name": "previousProviderFunding",
 				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "newProviderFunding",
+				"type": "uint256"
+			}
+		],
+		"name": "LogProvideFunds",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "executor",
+				"type": "address"
 			},
 			{
 				"indexed": false,
@@ -295,13 +366,13 @@
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "executorClaimLifespan",
+				"name": "previousLifespan",
 				"type": "uint256"
 			},
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "newExecutorClaimLifespan",
+				"name": "newLifespan",
 				"type": "uint256"
 			}
 		],
@@ -314,17 +385,17 @@
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "executorPrice",
+				"name": "oldGasPrice",
 				"type": "uint256"
 			},
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "newExecutorPrice",
+				"name": "newGasPrice",
 				"type": "uint256"
 			}
 		],
-		"name": "LogSetExecutorPrice",
+		"name": "LogSetGelatoGasPrice",
 		"type": "event"
 	},
 	{
@@ -333,17 +404,17 @@
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "gelatoCoreExecGasOverhead",
+				"name": "oldLimit",
 				"type": "uint256"
 			},
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "_newGasOverhead",
+				"name": "newLimit",
 				"type": "uint256"
 			}
 		],
-		"name": "LogSetGelatoCoreExecGasOverhead",
+		"name": "LogSetGelatoGasPriceLimit",
 		"type": "event"
 	},
 	{
@@ -351,44 +422,12 @@
 		"inputs": [
 			{
 				"indexed": false,
-				"internalType": "uint256",
-				"name": "minExecutionClaimLifespan",
-				"type": "uint256"
+				"internalType": "address[2]",
+				"name": "selectedProviderAndExecutor",
+				"type": "address[2]"
 			},
 			{
 				"indexed": false,
-				"internalType": "uint256",
-				"name": "newMinExecutionClaimLifespan",
-				"type": "uint256"
-			}
-		],
-		"name": "LogSetMinExecutionClaimLifespan",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "userProxyExecGasOverhead",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "_newGasOverhead",
-				"type": "uint256"
-			}
-		],
-		"name": "LogSetUserProxyExecGasOverhead",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
 				"internalType": "address",
 				"name": "executor",
 				"type": "address"
@@ -402,41 +441,80 @@
 			{
 				"indexed": true,
 				"internalType": "address",
-				"name": "user",
+				"name": "userProxy",
 				"type": "address"
 			},
 			{
 				"indexed": false,
-				"internalType": "contract IGelatoCondition",
-				"name": "condition",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "contract IGelatoAction",
-				"name": "action",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "gasPriceUsed",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "executionCostEstimate",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "executorReward",
-				"type": "uint256"
+				"internalType": "address[2]",
+				"name": "conditionAndAction",
+				"type": "address[2]"
 			}
 		],
 		"name": "LogSuccessfulExecution",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "provider",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "action",
+				"type": "address"
+			}
+		],
+		"name": "LogUnprovideAction",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "provider",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "condition",
+				"type": "address"
+			}
+		],
+		"name": "LogUnprovideCondition",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "provider",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "previousProviderFunding",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "newProviderFunding",
+				"type": "uint256"
+			}
+		],
+		"name": "LogUnprovideFunds",
 		"type": "event"
 	},
 	{
@@ -459,69 +537,13 @@
 		"type": "event"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_executionClaimId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "_user",
-				"type": "address"
-			},
-			{
-				"internalType": "contract IGnosisSafe",
-				"name": "_userGnosisSafeProxy",
-				"type": "address"
-			},
-			{
-				"internalType": "contract IGelatoCondition",
-				"name": "_condition",
-				"type": "address"
-			},
-			{
-				"internalType": "bytes",
-				"name": "_conditionPayloadWithSelector",
-				"type": "bytes"
-			},
-			{
-				"internalType": "contract IGelatoAction",
-				"name": "_action",
-				"type": "address"
-			},
-			{
-				"internalType": "bytes",
-				"name": "_actionPayloadWithSelector",
-				"type": "bytes"
-			},
-			{
-				"internalType": "uint256[3]",
-				"name": "_conditionGasActionGasMinExecutionGas",
-				"type": "uint256[3]"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_executionClaimExpiryDate",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_mintingDeposit",
-				"type": "uint256"
-			}
-		],
-		"name": "canExecute",
+		"inputs": [],
+		"name": "MAXGAS",
 		"outputs": [
 			{
-				"internalType": "enum IGelatoCore.CanExecuteResult",
+				"internalType": "uint256",
 				"name": "",
-				"type": "uint8"
-			},
-			{
-				"internalType": "uint8",
-				"name": "reason",
-				"type": "uint8"
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -530,9 +552,9 @@
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "_selectedExecutor",
-				"type": "address"
+				"internalType": "address[2]",
+				"name": "_selectedProviderAndExecutor",
+				"type": "address[2]"
 			},
 			{
 				"internalType": "uint256",
@@ -541,51 +563,106 @@
 			},
 			{
 				"internalType": "address",
-				"name": "_user",
+				"name": "_userProxy",
 				"type": "address"
 			},
 			{
-				"internalType": "contract IGnosisSafe",
-				"name": "_userGnosisSafeProxy",
-				"type": "address"
-			},
-			{
-				"internalType": "contract IGelatoCondition",
-				"name": "_condition",
-				"type": "address"
+				"internalType": "address[2]",
+				"name": "_conditionAndAction",
+				"type": "address[2]"
 			},
 			{
 				"internalType": "bytes",
-				"name": "_conditionPayloadWithSelector",
+				"name": "_conditionPayload",
 				"type": "bytes"
-			},
-			{
-				"internalType": "contract IGelatoAction",
-				"name": "_action",
-				"type": "address"
 			},
 			{
 				"internalType": "bytes",
-				"name": "_actionPayloadWithSelector",
+				"name": "_actionPayload",
 				"type": "bytes"
-			},
-			{
-				"internalType": "uint256[3]",
-				"name": "_conditionGasActionGasMinExecutionGas",
-				"type": "uint256[3]"
 			},
 			{
 				"internalType": "uint256",
 				"name": "_executionClaimExpiryDate",
 				"type": "uint256"
+			}
+		],
+		"name": "canExecute",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "canExecuteResult",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address[2]",
+				"name": "_selectedProviderAndExecutor",
+				"type": "address[2]"
 			},
 			{
 				"internalType": "uint256",
-				"name": "_mintingDeposit",
+				"name": "_executionClaimId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "_userProxy",
+				"type": "address"
+			},
+			{
+				"internalType": "address[2]",
+				"name": "_conditionAndAction",
+				"type": "address[2]"
+			},
+			{
+				"internalType": "bytes",
+				"name": "_conditionPayload",
+				"type": "bytes"
+			},
+			{
+				"internalType": "bytes",
+				"name": "_actionPayload",
+				"type": "bytes"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_executionClaimExpiryDate",
 				"type": "uint256"
 			}
 		],
 		"name": "cancelExecutionClaim",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_newOracle",
+				"type": "address"
+			}
+		],
+		"name": "changeOracle",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_newRegulator",
+				"type": "address"
+			}
+		],
+		"name": "changeRegulator",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -603,15 +680,15 @@
 				"type": "bytes"
 			}
 		],
-		"name": "createGnosisSafeProxy",
+		"name": "createGelatoUserProxy",
 		"outputs": [
 			{
-				"internalType": "contract IGnosisSafe",
-				"name": "proxy",
+				"internalType": "address",
+				"name": "userProxy",
 				"type": "address"
 			}
 		],
-		"stateMutability": "nonpayable",
+		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
@@ -632,15 +709,28 @@
 				"type": "uint256"
 			}
 		],
-		"name": "createGnosisSafeProxyWithNonce",
+		"name": "createTwoGelatoUserProxy",
 		"outputs": [
 			{
-				"internalType": "contract IGnosisSafe",
-				"name": "proxy",
+				"internalType": "address",
+				"name": "userProxy",
 				"type": "address"
 			}
 		],
-		"stateMutability": "nonpayable",
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "currentExecutionClaimId",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "_value",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -653,53 +743,38 @@
 	{
 		"inputs": [
 			{
+				"internalType": "address[2]",
+				"name": "_selectedProviderAndExecutor",
+				"type": "address[2]"
+			},
+			{
 				"internalType": "uint256",
 				"name": "_executionClaimId",
 				"type": "uint256"
 			},
 			{
 				"internalType": "address",
-				"name": "_user",
+				"name": "_userProxy",
 				"type": "address"
 			},
 			{
-				"internalType": "contract IGnosisSafe",
-				"name": "_userGnosisSafeProxy",
-				"type": "address"
-			},
-			{
-				"internalType": "contract IGelatoCondition",
-				"name": "_condition",
-				"type": "address"
+				"internalType": "address[2]",
+				"name": "_conditionAndAction",
+				"type": "address[2]"
 			},
 			{
 				"internalType": "bytes",
-				"name": "_conditionPayloadWithSelector",
+				"name": "_conditionPayload",
 				"type": "bytes"
-			},
-			{
-				"internalType": "contract IGelatoAction",
-				"name": "_action",
-				"type": "address"
 			},
 			{
 				"internalType": "bytes",
-				"name": "_actionPayloadWithSelector",
+				"name": "_actionPayload",
 				"type": "bytes"
-			},
-			{
-				"internalType": "uint256[3]",
-				"name": "_conditionGasActionGasMinExecutionGas",
-				"type": "uint256[3]"
 			},
 			{
 				"internalType": "uint256",
 				"name": "_executionClaimExpiryDate",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_mintingDeposit",
 				"type": "uint256"
 			}
 		],
@@ -766,216 +841,8 @@
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "executorPrice",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_executionClaimId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "_user",
-				"type": "address"
-			},
-			{
-				"internalType": "contract IGnosisSafe",
-				"name": "_userGnosisSafeProxy",
-				"type": "address"
-			},
-			{
-				"internalType": "contract IGelatoCondition",
-				"name": "_condition",
-				"type": "address"
-			},
-			{
-				"internalType": "bytes",
-				"name": "_conditionPayloadWithSelector",
-				"type": "bytes"
-			},
-			{
-				"internalType": "contract IGelatoAction",
-				"name": "_action",
-				"type": "address"
-			},
-			{
-				"internalType": "bytes",
-				"name": "_actionPayloadWithSelector",
-				"type": "bytes"
-			},
-			{
-				"internalType": "uint256[3]",
-				"name": "_conditionGasActionGasMinExecutionGas",
-				"type": "uint256[3]"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_executionClaimExpiryDate",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_mintingDeposit",
-				"type": "uint256"
-			}
-		],
-		"name": "gasTestCanExecute",
-		"outputs": [
-			{
-				"internalType": "enum IGelatoCore.CanExecuteResult",
-				"name": "canExecuteResult",
-				"type": "uint8"
-			},
-			{
-				"internalType": "uint8",
-				"name": "reason",
-				"type": "uint8"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "contract IGelatoCondition",
-				"name": "_condition",
-				"type": "address"
-			},
-			{
-				"internalType": "bytes",
-				"name": "_conditionPayloadWithSelector",
-				"type": "bytes"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_conditionGas",
-				"type": "uint256"
-			}
-		],
-		"name": "gasTestConditionCheck",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "conditionReached",
-				"type": "bool"
-			},
-			{
-				"internalType": "uint8",
-				"name": "reason",
-				"type": "uint8"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_executionClaimId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "_user",
-				"type": "address"
-			},
-			{
-				"internalType": "contract IGnosisSafe",
-				"name": "_userGnosisSafeProxy",
-				"type": "address"
-			},
-			{
-				"internalType": "contract IGelatoCondition",
-				"name": "_condition",
-				"type": "address"
-			},
-			{
-				"internalType": "bytes",
-				"name": "_conditionPayloadWithSelector",
-				"type": "bytes"
-			},
-			{
-				"internalType": "contract IGelatoAction",
-				"name": "_action",
-				"type": "address"
-			},
-			{
-				"internalType": "bytes",
-				"name": "_actionPayloadWithSelector",
-				"type": "bytes"
-			},
-			{
-				"internalType": "uint256[3]",
-				"name": "_conditionGasActionGasMinExecutionGas",
-				"type": "uint256[3]"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_executionClaimExpiryDate",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_mintingDeposit",
-				"type": "uint256"
-			}
-		],
-		"name": "gasTestExecute",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "contract IGnosisSafe",
-				"name": "_userGnosisSafeProxy",
-				"type": "address"
-			},
-			{
-				"internalType": "contract IGelatoAction",
-				"name": "_action",
-				"type": "address"
-			},
-			{
-				"internalType": "bytes",
-				"name": "_actionPayloadWithSelector",
-				"type": "bytes"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_executionGas",
-				"type": "uint256"
-			}
-		],
-		"name": "gasTestGnosisSafeExecuteFromModule",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [],
-		"name": "gelatoCoreExecGasOverhead",
+		"name": "gelatoGasPrice",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -988,103 +855,12 @@
 	},
 	{
 		"inputs": [],
-		"name": "getCurrentExecutionClaimId",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "currentId",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_conditionGas",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_actionGas",
-				"type": "uint256"
-			}
-		],
-		"name": "getMinExecutionGas",
+		"name": "gelatoGasPriceLimit",
 		"outputs": [
 			{
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
-			}
-		],
-		"stateMutability": "pure",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_selectedExecutor",
-				"type": "address"
-			},
-			{
-				"internalType": "contract IGelatoCondition",
-				"name": "_condition",
-				"type": "address"
-			},
-			{
-				"internalType": "contract IGelatoAction",
-				"name": "_action",
-				"type": "address"
-			}
-		],
-		"name": "getMintingDepositPayable",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "mintingDepositPayable",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_executionClaimId",
-				"type": "uint256"
-			}
-		],
-		"name": "getUserWithExecutionClaimId",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "gnosisSafeProxyByExecutionClaimId",
-		"outputs": [
-			{
-				"internalType": "contract IGnosisSafe",
-				"name": "",
-				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -1098,10 +874,10 @@
 				"type": "address"
 			}
 		],
-		"name": "gnosisSafeProxyByUser",
+		"name": "gelatoProxyByUser",
 		"outputs": [
 			{
-				"internalType": "contract IGnosisSafe",
+				"internalType": "address",
 				"name": "",
 				"type": "address"
 			}
@@ -1112,12 +888,56 @@
 	{
 		"inputs": [
 			{
-				"internalType": "contract IGnosisSafe",
-				"name": "_gnosisSafeProxy",
+				"internalType": "address",
+				"name": "_mastercopy",
+				"type": "address"
+			},
+			{
+				"internalType": "bytes",
+				"name": "_initializer",
+				"type": "bytes"
+			},
+			{
+				"internalType": "address[2]",
+				"name": "_selectedProviderAndExecutor",
+				"type": "address[2]"
+			},
+			{
+				"internalType": "address[2]",
+				"name": "_conditionAndAction",
+				"type": "address[2]"
+			},
+			{
+				"internalType": "bytes",
+				"name": "_conditionPayload",
+				"type": "bytes"
+			},
+			{
+				"internalType": "bytes",
+				"name": "_actionPayload",
+				"type": "bytes"
+			}
+		],
+		"name": "init",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "userProxy",
 				"type": "address"
 			}
 		],
-		"name": "isRegisteredGnosisSafeProxy",
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_user",
+				"type": "address"
+			}
+		],
+		"name": "isGelatoProxyUser",
 		"outputs": [
 			{
 				"internalType": "bool",
@@ -1132,11 +952,11 @@
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "_user",
+				"name": "userPoxy",
 				"type": "address"
 			}
 		],
-		"name": "isRegisteredUser",
+		"name": "isGelatoUserProxy",
 		"outputs": [
 			{
 				"internalType": "bool",
@@ -1148,13 +968,24 @@
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "minExecutionClaimLifespan",
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "isProvidedAction",
 		"outputs": [
 			{
-				"internalType": "uint256",
+				"internalType": "bool",
 				"name": "",
-				"type": "uint256"
+				"type": "bool"
 			}
 		],
 		"stateMutability": "view",
@@ -1164,51 +995,105 @@
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "_selectedExecutor",
+				"name": "",
 				"type": "address"
 			},
 			{
-				"internalType": "contract IGelatoCondition",
-				"name": "_condition",
+				"internalType": "address",
+				"name": "",
 				"type": "address"
+			}
+		],
+		"name": "isProvidedCondition",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_provider",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_gasPrice",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_gasDemand",
+				"type": "uint256"
+			}
+		],
+		"name": "isProviderLiquid",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address[2]",
+				"name": "_selectedProviderAndExecutor",
+				"type": "address[2]"
+			},
+			{
+				"internalType": "address[2]",
+				"name": "_conditionAndAction",
+				"type": "address[2]"
 			},
 			{
 				"internalType": "bytes",
-				"name": "_conditionPayloadWithSelector",
+				"name": "_conditionPayload",
 				"type": "bytes"
 			},
 			{
-				"internalType": "contract IGelatoAction",
-				"name": "_action",
-				"type": "address"
-			},
-			{
 				"internalType": "bytes",
-				"name": "_actionPayloadWithSelector",
+				"name": "_actionPayload",
 				"type": "bytes"
 			}
 		],
 		"name": "mintExecutionClaim",
 		"outputs": [],
-		"stateMutability": "payable",
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "registerAsGnosisSafeProxy",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
+		"name": "oracle",
+		"outputs": [
 			{
-				"internalType": "contract IGnosisSafe",
-				"name": "_gnosisSafeProxy",
+				"internalType": "address",
+				"name": "",
 				"type": "address"
 			}
 		],
-		"name": "registerAsGnosisSafeProxyUser",
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_action",
+				"type": "address"
+			}
+		],
+		"name": "provideAction",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -1216,10 +1101,50 @@
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "_condition",
+				"type": "address"
+			}
+		],
+		"name": "provideCondition",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_provider",
+				"type": "address"
+			}
+		],
+		"name": "provideFunds",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "providerFunds",
+		"outputs": [
+			{
 				"internalType": "uint256",
-				"name": "_executorPrice",
+				"name": "",
 				"type": "uint256"
-			},
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
 			{
 				"internalType": "uint256",
 				"name": "_executorClaimLifespan",
@@ -1229,6 +1154,19 @@
 		"name": "registerExecutor",
 		"outputs": [],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "regulator",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -1248,26 +1186,65 @@
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "_newExecutorGasPrice",
+				"name": "_newGasPrice",
 				"type": "uint256"
 			}
 		],
-		"name": "setExecutorPrice",
+		"name": "setGelatoGasPrice",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "totalExecutionGasOverhead",
-		"outputs": [
+		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "",
+				"name": "_newLimit",
 				"type": "uint256"
 			}
 		],
-		"stateMutability": "view",
+		"name": "setGelatoGasPriceLimit",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_action",
+				"type": "address"
+			}
+		],
+		"name": "unprovideAction",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_condition",
+				"type": "address"
+			}
+		],
+		"name": "unprovideCondition",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_withdrawAmount",
+				"type": "uint256"
+			}
+		],
+		"name": "unprovideFunds",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -1278,7 +1255,7 @@
 				"type": "address"
 			}
 		],
-		"name": "userByGnosisSafeProxy",
+		"name": "userByGelatoProxy",
 		"outputs": [
 			{
 				"internalType": "address",
@@ -1290,20 +1267,32 @@
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "userProxyExecGasOverhead",
-		"outputs": [
+		"inputs": [
 			{
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
 			}
 		],
+		"name": "userProxyByExecutionClaimId",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
 		"stateMutability": "view",
 		"type": "function"
 	},
 	{
-		"inputs": [],
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_withdrawAmount",
+				"type": "uint256"
+			}
+		],
 		"name": "withdrawExecutorBalance",
 		"outputs": [],
 		"stateMutability": "nonpayable",

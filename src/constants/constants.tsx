@@ -1,6 +1,6 @@
-import { InputType, Params, RelevantInputData } from './interfaces';
-import { ethers, BigNumber } from 'ethers';
-import { EXECUTOR_ADDRESS } from './whitelist';
+import { InputType, Params, RelevantInputData } from "./interfaces";
+import { ethers, BigNumber } from "ethers";
+import { EXECUTOR_ADDRESS } from "./whitelist";
 
 export const EMPTY_USER_INPUT_ARRAY: Array<
 	string | number | BigNumber | boolean
@@ -17,49 +17,49 @@ export const BIG_NUM_ONE = ethers.constants.One;
 export const MAX_BIG_NUM = BigNumber.from(10).pow(BigNumber.from(50));
 
 // Currently: $275
-export const TOKEN_TRANSFER_CEILING = ethers.utils.parseUnits('275', 18);
+export const TOKEN_TRANSFER_CEILING = ethers.utils.parseUnits("275", 18);
 // Currently: $2
-export const TOKEN_TRANSFER_BOTTOM = ethers.utils.parseUnits('2', 18);
+export const TOKEN_TRANSFER_BOTTOM = ethers.utils.parseUnits("2", 18);
 
 export const COLOURS = {
-	salmon: '#E91E63',
-	salmon60: '#E91E6399',
-	salmon50: '#E91E6380',
-	pink: '#E50078'
+	salmon: "#E91E63",
+	salmon60: "#E91E6399",
+	salmon50: "#E91E6380",
+	pink: "#E50078"
 };
 
 export const BOX = {
 	border: `1.5px solid ${COLOURS.salmon}`,
-	borderRadius: '1px 1px 1px 1px'
+	borderRadius: "1px 1px 1px 1px"
 };
 
 export const ETH = {
 	address: {
-		1: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-		3: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-		4: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-		42: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
+		1: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+		3: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+		4: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+		42: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
 	},
-	symbol: 'ETH',
-	name: 'Ether',
+	symbol: "ETH",
+	name: "Ether",
 	decimals: 18,
-	max: '1.53'
+	max: "1.53"
 };
 
 // export const DEFAULT_CHAIN_ID = 1;
 // export const SELECTED_NETWORK_NAME = 'Mainnet';
 export const POSSIBLE_CHAIN_IDS = [1, 42];
 export const DEFAULT_CHAIN_ID = 42;
-export const SELECTED_NETWORK_NAME = 'Kovan';
+export const SELECTED_NETWORK_NAME = "Kovan";
 
 export const DEFAULT_DATA_CONDITION = {
 	id: 0,
-	app: '',
-	title: '',
-	address: { 1: '', 3: '', 4: '', 42: '' },
+	app: "",
+	title: "",
+	address: { 1: "", 3: "", 4: "", 42: "" },
 	params: EMPTY_PARAM_ARRAY, // [ ]
-	abi: '',
-	getConditionValueAbi: '',
+	abi: "",
+	getConditionValueAbi: "",
 	getConditionValueInput: BIG_NUM_ZERO,
 	approveIndex: 999,
 	inputLabels: EMPTY_STRING_ARRAY, // [ ]
@@ -68,23 +68,23 @@ export const DEFAULT_DATA_CONDITION = {
 	boolIndex: 999,
 	relevantInputData: EMPTY_RELEVANT_INPUT_DATA_ARRAY,
 	logo:
-		'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png',
+		"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png",
 	deprecatedAddresses: {
-		1: [''],
-		3: [''],
-		4: [''],
-		42: ['']
+		1: [""],
+		3: [""],
+		4: [""],
+		42: [""]
 	}
 };
 
 export const DEFAULT_DATA_ACTION = {
 	id: 0,
-	app: '',
-	title: '',
-	address: { 1: '', 3: '', 4: '', 42: '' },
+	app: "",
+	title: "",
+	address: { 1: "", 3: "", 4: "", 42: "" },
 	params: EMPTY_PARAM_ARRAY, // [ ]
-	abi: '',
-	getActionValueAbi: '',
+	abi: "",
+	getActionValueAbi: "",
 	getActionValueInput: BIG_NUM_ZERO,
 	inputLabels: EMPTY_STRING_ARRAY, // [ ]
 	userInputTypes: EMPTY_USER_INPUT_TYPE_ARRAY, // [ ]
@@ -92,87 +92,16 @@ export const DEFAULT_DATA_ACTION = {
 	approveIndex: 999, // 999 means no approval in action
 	relevantInputData: EMPTY_RELEVANT_INPUT_DATA_ARRAY,
 	logo:
-		'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png'
+		"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png"
 };
-
-// ID that determines which condition to render by default at initial render of root
-export const DEFAULT_TRIGGER_ID = '3';
-export const DEFAULT_ACTION_ID = '2';
-
-/*
-Interface
-
-	selectedExecutor: string;
-	id: string;
-	userProxy: string;
-	condition: string;
-	conditionPayload: string;
-	action: string;
-	actionPayload: string;
-	conditionGasActionTotalGasMinExecutionGas: number;
-	expiryDate: string;
-	prepayment: string;
-	// Graph specific values
-	mintingDate: string;
-	executionDate?: string;
-	status: string;
-}
-
-*/
-
-export const DEFAULT_PAST_TRANSACTIONS = [
-	{
-		selectedExecutor: EXECUTOR_ADDRESS[3],
-		id: '0x1',
-		executionClaimId: '0',
-		proxyAddress: '0x0',
-		condition: '0x1',
-		conditionPayload: '0x030949304934009413094309320493049039049204',
-		action: '0x5',
-		actionPayload: '0x030949304934009413094309320493049039049204',
-		expiryDate: '1',
-		prepayment: '1009032030020',
-		mintingDate: '1576759372',
-		status: 'open',
-		conditionGasActionTotalGasMinExecutionGas: [0, 1, 2],
-		executionHash: ''
-	}
-	// {
-	// 	id: '0',
-	// 	conditionAddress: '0x2',
-	// 	actionAddress: '0x4',
-	// 	conditionPayload: '0x030949304934009413094309320493049039049204',
-	// 	actionPayload: '0x030949304934009413094309320493049039049204',
-	// 	expiryDate: '12353434312',
-	// 	prepayment: '1009032030020',
-	// 	timestamp: '1576759372',
-	// 	status: 'executed'
-	// }
-];
-
-// ACTIONS
-export const RESET_CONDITION = 'RESET_CONDITION';
-export const RESET_ACTION = 'RESET_ACTION';
-export const UPDATE_ACTION_INPUTS = 'UPDATE_ACTION_INPUTS';
-export const UPDATE_CONDITION_INPUTS = 'UPDATE_CONDITION_INPUTS';
-export const SELECT_CONDITION = 'SELECT_CONDITION';
-export const SELECT_ACTION = 'SELECT_ACTION';
-export const UPDATE_TX_STATE = 'UPDATE_TX_STATE';
-export const UPDATE_PAST_TRANSACTIONS = 'UPDATE_PAST_TRANSACTIONS';
-export const OPEN_MODAL = 'OPEN_MODAL';
-export const CLOSE_MODAL = 'CLOSE_MODAL';
-export const CANCEL_EXECUTION_CLAIM = 'CANCEL_EXECUTION_CLAIM';
-export const INPUT_ERROR = 'INPUT_ERROR';
-export const INPUT_OK = 'INPUT_OK';
-export const UPDATE_GET_VALUE_INPUT = 'UPDATE_GET_VALUE_INPUT';
 
 export const INPUT_CSS = {
 	root: {
-		width: '100%',
-		'& input:valid + fieldset': {
+		width: "100%",
+		"& input:valid + fieldset": {
 			borderColor: COLOURS.salmon,
 			borderWidth: 1,
-			fontSize: '18px'
+			fontSize: "18px"
 		},
 		// '& input:invalid + fieldset': {
 		// 	borderColor: 'red',
@@ -183,32 +112,32 @@ export const INPUT_CSS = {
 		// 	padding: '4px !important', // override inline-style
 		// 	borderColor: 'green'
 		// },
-		'& .MuiOutlinedInput-root': {
-			color: 'white',
-			fontSize: '18px',
+		"& .MuiOutlinedInput-root": {
+			color: "white",
+			fontSize: "18px",
 			// '& fieldset': {
 			// 	borderColor: 'red'
 			// },
-			'&:hover fieldset': {
-				borderColor: 'white'
+			"&:hover fieldset": {
+				borderColor: "white"
 			}
 			// '&.Mui-focused fieldset': {
 			// 	borderColor: COLOURS.salmon
 			// }
 		},
-		'& .MuiOutlinedInput-root.Mui-disabled': {
-			fontSize: '18px',
-			'& fieldset': {
-				borderColor: '#72627b',
+		"& .MuiOutlinedInput-root.Mui-disabled": {
+			fontSize: "18px",
+			"& fieldset": {
+				borderColor: "#72627b",
 				borderWidth: 1
 			},
-			'&:hover fieldset': {
-				borderColor: '#72627b'
+			"&:hover fieldset": {
+				borderColor: "#72627b"
 			}
 		},
-		'& .MuiFormLabel-root': {
-			fontSize: '18px',
-			color: 'white !important'
+		"& .MuiFormLabel-root": {
+			fontSize: "18px",
+			color: "white !important"
 		}
 	}
 };

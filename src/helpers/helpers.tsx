@@ -3,31 +3,27 @@ import {
 	TTYPES,
 	USER_WHITELIST,
 	GELATO_CORE_ADDRESS
-} from '../constants/whitelist';
+} from "../constants/whitelist";
 import {
 	Token,
 	RelevantInputData,
 	ConditionOrAction,
 	DeprecatedAddresses
-} from '../constants/interfaces';
-import { KYBER_TOKEN_LIST, TOKEN_LIST } from '../constants/tokens';
-import ERC20_ABI from '../constants/abis/erc20.json';
+} from "../constants/interfaces";
 
 import {
 	DEFAULT_DATA_ACTION,
 	DEFAULT_DATA_CONDITION,
-	ETH,
-	BIG_NUM_ZERO
-} from '../constants/constants';
-import { utils, ethers, BigNumber } from 'ethers';
+	ETH
+} from "../constants/constants";
+import { utils, ethers, BigNumber } from "ethers";
 import {
 	Params,
 	ActionWhitelistData,
 	ConditionWhitelistData,
 	InputType,
 	ChainIds
-} from '../constants/interfaces';
-import { Web3ReactContextInterface } from '@web3-react/core/dist/types';
+} from "../constants/interfaces";
 
 export function stringifyTimestamp(timestamp: string) {
 	let date = new Date(parseInt(timestamp) * 1000);
@@ -90,6 +86,90 @@ export function findDeprecatedCondition(address: string, networkId: ChainIds) {
 	return returnData;
 }
 
+export const deepCloneActions = () => {
+	const dataCopy: Array<ActionWhitelistData> = [];
+	ATYPES.forEach(data => {
+		// clone Id
+		const clonedId = data.id;
+
+		// clone app
+		const clonedApp = data.app;
+
+		// clone title
+		const clonedTitle = data.title;
+
+		// clone address
+		const clonedAddress = { ...data.address };
+
+		// clone params
+		const clonedParams: Array<Params> = [];
+		// data.params.map(param => {
+		// 	const clonedParam = { param };
+		// 	clonedParams.push(clonedParam);
+		// });
+
+		// clone abi
+		const clonedAbi = data.abi;
+
+		// clone abi
+		const clonedGetActionValueAbi = data.getActionValueAbi;
+
+		// clone userInputTypes
+		const clonedUserInputTypes: Array<InputType> = [];
+		data.userInputTypes.forEach(userInputType => {
+			const clonedUserInputType = userInputType;
+			clonedUserInputTypes.push(clonedUserInputType);
+		});
+
+		const clonedRelevantInputData = [...data.relevantInputData];
+
+		const clonedGetActionValueInput = data.getActionValueInput;
+
+		// clone inputLabels
+		const clonedInputLabels: Array<string> = [];
+		data.inputLabels.forEach(inputLabel => {
+			const clonedInputLabel = inputLabel;
+			clonedInputLabels.push(clonedInputLabel);
+		});
+
+		// empty user Input
+		const emptyUserInput: Array<string> = [];
+
+		// empty user Input
+		const clonedTokenIndex = data.approveIndex;
+
+		// clone Logo
+		let clonedLogo = data.logo;
+
+		// Clone deprecated addresses
+		const clonedDeprecatedAddresses: DeprecatedAddresses = {
+			1: [...data.deprecatedAddresses[1]],
+			3: [...data.deprecatedAddresses[3]],
+			4: [...data.deprecatedAddresses[4]],
+			42: [...data.deprecatedAddresses[42]]
+		};
+
+		dataCopy.push({
+			id: clonedId,
+			app: clonedApp,
+			title: clonedTitle,
+			address: clonedAddress,
+			params: clonedParams,
+			abi: clonedAbi,
+			userInputTypes: clonedUserInputTypes,
+			inputLabels: clonedInputLabels,
+			userInputs: emptyUserInput,
+			approveIndex: clonedTokenIndex,
+			relevantInputData: clonedRelevantInputData,
+			logo: clonedLogo,
+			getActionValueAbi: clonedGetActionValueAbi,
+			getActionValueInput: clonedGetActionValueInput,
+			deprecatedAddresses: clonedDeprecatedAddresses
+		});
+	});
+	return dataCopy;
+};
+
 export function findActionById(id: string) {
 	let returnData = { ...DEFAULT_DATA_ACTION };
 	const clonedActions = deepCloneActions();
@@ -113,16 +193,6 @@ export function findActionByAddress(address: string, networkId: ChainIds) {
 		}
 	});
 	return returnData;
-}
-// @DEV Potenital bug in returning error string
-export function getTokenSymbol(
-	address: string,
-	networkId: ChainIds,
-	relevantInputData: RelevantInputData
-) {
-	const tokenList = getTokenList(relevantInputData, networkId);
-	const token = tokenList.find(token => token.address[networkId] === address);
-	return token === undefined ? 'ERROR Get Token Symbol' : token.symbol;
 }
 
 // Returns String
@@ -156,7 +226,7 @@ export const convertHumanReadableToWeiForNumbers = (
 	if (conditionOrAction === ConditionOrAction.Condition && id === 3) {
 		return ethers.utils.parseUnits(humanReadableAmount, 18);
 	} else {
-		throw Error('Number used for something other than Kyber Price');
+		throw Error("Number used for something other than Kyber Price");
 		// return ethers.utils.parseUnits(humanReadableAmount, token.decimals);
 	}
 };
@@ -180,29 +250,6 @@ export const userIsWhitelisted = (user: string) => {
 };
 
 // @DEV Potenital bug in returning error string
-export function getTokenByAddress(
-	address: string,
-	networkId: ChainIds,
-	relevantInputData: RelevantInputData
-) {
-	if (isEth(address)) {
-		return ETH;
-	}
-	const tokenList = getTokenList(relevantInputData, networkId);
-	// console.log(tokenList);
-	// console.log(relevantInputData);
-	const token = tokenList.find(
-		token =>
-			ethers.utils.getAddress(token.address[networkId]) ===
-			ethers.utils.getAddress(address)
-	);
-
-	if (token === undefined) {
-		throw Error(`Could not find Token with address ${address}`);
-	} else {
-		return token;
-	}
-}
 
 export const deepCloneTokenList = (
 	tokenList: Array<Token>,
@@ -210,7 +257,7 @@ export const deepCloneTokenList = (
 ) => {
 	const tokenListCopy: Array<Token> = [];
 	tokenList.forEach(token => {
-		if (token.address[networkId] !== '0x0') {
+		if (token.address[networkId] !== "0x0") {
 			let copyAddress = { ...token.address };
 			let copySymbol = token.symbol;
 			let copyName = token.name;
@@ -229,44 +276,53 @@ export const deepCloneTokenList = (
 	return tokenListCopy;
 };
 
-export const getTokenList = (
-	relevantInputData: RelevantInputData,
-	networkId: ChainIds
-): Array<Token> => {
-	let tokenListCopy: Array<Token> = [...KYBER_TOKEN_LIST];
-	TOKEN_LIST.forEach(list => {
-		if (list.name === relevantInputData) {
-			tokenListCopy = list.data;
-		}
-
-		// throw Error(`Could not find tokenList with relevantInputData: ${relevantInputData}`);
-	});
-	// console.log(tokenListCopy);
-	return deepCloneTokenList(tokenListCopy, networkId);
-};
-
 export function encodeActionPayload(
 	userInput: Array<string | number | BigNumber | boolean>,
 	abi: string,
-	user: string,
-	userProxy: string
+	userProxy: string,
+	user: string
 ) {
 	const iFace = new utils.Interface([abi]);
 	//@DEV CHANGE UINT inputs into BigNumbers
 
 	// Insert user address into userInput Array at index 0
 	// Make copy to not change global userInput variable
-	const copyUserInput = [...userInput];
-	copyUserInput.splice(0, 0, user);
-	copyUserInput.splice(1, 0, userProxy);
+	// const copyUserInput = [...userInput];
+	// copyUserInput.splice(0, 0, user);
+	// copyUserInput.splice(1, 0, userProxy);
 
 	// const actionPayloadWithSelector = iFace.functions.action.encode(
 	// 	copyUserInput
 	// );
 
 	const actionPayloadWithSelector = iFace.encodeFunctionData(
-		'action',
-		copyUserInput
+		"action",
+		userInput
+	);
+
+	return actionPayloadWithSelector;
+}
+
+export function encodeActionPayloadTwo(
+	userInput: Array<string | number | BigNumber | boolean>,
+	abi: string
+) {
+	const iFace = new utils.Interface([abi]);
+	//@DEV CHANGE UINT inputs into BigNumbers
+
+	// Insert user address into userInput Array at index 0
+	// Make copy to not change global userInput variable
+	// const copyUserInput = [...userInput];
+	// copyUserInput.splice(0, 0, user);
+	// copyUserInput.splice(1, 0, userProxy);
+
+	// const actionPayloadWithSelector = iFace.functions.action.encode(
+	// 	copyUserInput
+	// );
+
+	const actionPayloadWithSelector = iFace.encodeFunctionData(
+		"action",
+		userInput
 	);
 
 	return actionPayloadWithSelector;
@@ -283,7 +339,7 @@ export function encodeConditionPayload(
 	// );
 
 	const conditionPayloadWithSelector = iFace.encodeFunctionData(
-		'reached',
+		"reached",
 		userInput
 	);
 
@@ -351,7 +407,7 @@ export const deepCloneConditions = () => {
 		const clonedAbi = data.abi;
 
 		// clone getConditionValueAbi
-		let clonedGetConditionValueAbi = '';
+		let clonedGetConditionValueAbi = "";
 		clonedGetConditionValueAbi = data.getConditionValueAbi;
 
 		// clone boolIndex:
@@ -417,9 +473,8 @@ export const deepCloneConditions = () => {
 export const isEth = (address: string) => {
 	let isEther: boolean;
 	// @DEV using 1 for ETH as address is same anyways
-	if (address !== '0x0') {
-		ethers.utils.getAddress(ETH.address[1]) ===
-		ethers.utils.getAddress(address)
+	if (address !== "0x0") {
+		ethers.utils.getAddress(ETH.address[1]) === ethers.utils.getAddress(address)
 			? (isEther = true)
 			: (isEther = false);
 		return isEther;
@@ -428,371 +483,58 @@ export const isEth = (address: string) => {
 	}
 };
 
-export const deepCloneActions = () => {
-	const dataCopy: Array<ActionWhitelistData> = [];
-	ATYPES.forEach(data => {
-		// clone Id
-		const clonedId = data.id;
-
-		// clone app
-		const clonedApp = data.app;
-
-		// clone title
-		const clonedTitle = data.title;
-
-		// clone address
-		const clonedAddress = { ...data.address };
-
-		// clone params
-		const clonedParams: Array<Params> = [];
-		data.params.map(param => {
-			const clonedParam = { ...param };
-			clonedParams.push(clonedParam);
-		});
-
-		// clone abi
-		const clonedAbi = data.abi;
-
-		// clone abi
-		const clonedGetActionValueAbi = data.getActionValueAbi;
-
-		// clone userInputTypes
-		const clonedUserInputTypes: Array<InputType> = [];
-		data.userInputTypes.forEach(userInputType => {
-			const clonedUserInputType = userInputType;
-			clonedUserInputTypes.push(clonedUserInputType);
-		});
-
-		const clonedRelevantInputData = [...data.relevantInputData];
-
-		const clonedGetActionValueInput = data.getActionValueInput;
-
-		// clone inputLabels
-		const clonedInputLabels: Array<string> = [];
-		data.inputLabels.forEach(inputLabel => {
-			const clonedInputLabel = inputLabel;
-			clonedInputLabels.push(clonedInputLabel);
-		});
-
-		// empty user Input
-		const emptyUserInput: Array<string> = [];
-
-		// empty user Input
-		const clonedTokenIndex = data.approveIndex;
-
-		// clone Logo
-		let clonedLogo = data.logo;
-
-		dataCopy.push({
-			id: clonedId,
-			app: clonedApp,
-			title: clonedTitle,
-			address: clonedAddress,
-			params: clonedParams,
-			abi: clonedAbi,
-			userInputTypes: clonedUserInputTypes,
-			inputLabels: clonedInputLabels,
-			userInputs: emptyUserInput,
-			approveIndex: clonedTokenIndex,
-			relevantInputData: clonedRelevantInputData,
-			logo: clonedLogo,
-			getActionValueAbi: clonedGetActionValueAbi,
-			getActionValueInput: clonedGetActionValueInput
-		});
-	});
-	return dataCopy;
-};
-
-export const getEtherscanPrefix = (chainId: ChainIds): string => {
-	switch (chainId) {
-		case 1:
-			return '';
-		case 3:
-			return 'ropsten.';
-
-		case 4:
-			return 'rinkeby.';
-
-		case 42:
-			return 'kovan.';
-
-		default:
-			return '';
-	}
-};
-
-// Fetch token balances
-export const fetchTokenBalance = async (
-	tokenObject: Token,
-	web3: Web3ReactContextInterface<any>
-) => {
-	// Dont diplay more mobile
-	const networkId = web3.chainId as ChainIds;
-
-	if (web3.active) {
-		const signer = web3.library.getSigner();
-		const erc20 = new ethers.Contract(
-			tokenObject.address[networkId],
-			JSON.stringify(ERC20_ABI),
-			signer
-		);
-		const tokenAddress = tokenObject.address[networkId];
-		const decimalConverter = 100000000;
-		if (isEth(tokenAddress)) {
-			try {
-				const balance = await web3.library.getBalance(web3.account);
-				if (balance.eq(ethers.constants.Zero)) return '';
-				else {
-					let humanReadableBalance = convertWeiToHumanReadableForTokenAmount(
-						balance,
-						tokenObject.decimals
-					);
-					humanReadableBalance = (
-						Math.floor(
-							parseFloat(humanReadableBalance) * decimalConverter
-						) / decimalConverter
-					).toFixed(8);
-					// Math.floor(1.8959332 * 1000) / 1000 .toFixed(2)
-					return humanReadableBalance;
-				}
-			} catch (error) {
-				return '';
-			}
-		} else {
-			try {
-				const balance = await erc20.balanceOf(web3.account as string);
-				if (!balance.eq(ethers.constants.Zero)) {
-					let humanReadableBalance = convertWeiToHumanReadableForTokenAmount(
-						balance,
-						tokenObject.decimals
-					);
-					humanReadableBalance = (
-						Math.floor(
-							parseFloat(humanReadableBalance) * decimalConverter
-						) / decimalConverter
-					).toFixed(8);
-
-					return humanReadableBalance;
-				} else {
-					return '';
-				}
-			} catch (error) {
-				return '';
-			}
-		}
-	} else {
-		return '';
-	}
-};
-
-export const checkIfMobile = () => {
-	let userAgent = navigator.userAgent;
-	let msMaxTouchPoints = navigator.msMaxTouchPoints;
-	let hasTouchScreen = false;
-	if ('maxTouchPoints' in navigator) {
-		hasTouchScreen = navigator.maxTouchPoints > 0;
-	} else if ('msMaxTouchPoints' in navigator) {
-		hasTouchScreen = msMaxTouchPoints > 0;
-	} else {
-		var mQ = window.matchMedia && matchMedia('(pointer:coarse)');
-		if (mQ && mQ.media === '(pointer:coarse)') {
-			hasTouchScreen = !!mQ.matches;
-		} else if ('orientation' in window) {
-			hasTouchScreen = true; // deprecated, but good fallback
-		} else {
-			// Only as a last resort, fall back to user agent sniffing
-			let UA = userAgent;
-			hasTouchScreen =
-				/\b(BlackBerry|webOS|iPhone|IEMobile)\b/i.test(UA) ||
-				/\b(Android|Windows Phone|iPad|iPod)\b/i.test(UA);
-		}
-	}
-	return hasTouchScreen;
-};
-
-export const getValueFromSmartContractCondition = async (
-	condition: ConditionWhitelistData,
-	active: boolean,
-	networkId: ChainIds,
-	account: string,
-	inputs: Array<string | number | BigNumber | boolean>
-) => {
-	// Get abi
-	let newValue = BIG_NUM_ZERO;
-
-	// WHen on summary page, return global state
-	// if (disabled) return newValue;
-
-	if (active && account) {
-		// let abi = '';
-		// conditionOrAction === ConditionOrAction.Condition
-		// 	? (abi = icedTxState.condition.getConditionValueAbi)
-		// 	: (abi = icedTxState.action.getActionValueAbi);
-
-		try {
-			// Find token object by address
-			// const signer = library.getSigner();
-			const signer = ethers.getDefaultProvider();
-
-			let conditionAddress = '';
-			let abi = '';
-			conditionAddress = condition.address[networkId];
-			abi = condition.getConditionValueAbi;
-
-			const conditionContract = new ethers.Contract(
-				conditionAddress,
-				[abi],
-				signer
-			);
-
-			// get value
-			try {
-				newValue = await conditionContract.getConditionValue(...inputs);
-
-				// convert Value into human readable form
-				return newValue;
-			} catch (error) {
-				// console.log(error);
-				newValue = BIG_NUM_ZERO;
-				return newValue;
-			}
-		} catch (error) {
-			// console.log('token not in state yet');
-			// console.log(error);
-			newValue = BIG_NUM_ZERO;
-			// console.log(error);
-			// console.log(3);
-			return newValue;
-		}
-	} else {
-		// console.log('catch2');
-		newValue = BIG_NUM_ZERO;
-		// console.log(4);
-		return newValue;
-	}
-};
-
-export const getValueFromSmartContractAction = async (
-	action: ActionWhitelistData,
-	active: boolean,
-	networkId: ChainIds,
-	oldValue: BigNumber,
-	account: string,
-	inputs: Array<string | number | BigNumber | boolean>
-) => {
-	// Get abi
-	let newValue = oldValue;
-
-	// WHen on summary page, return global state
-	// if (disabled) return newValue;
-
-	if (active && account) {
-		// let abi = '';
-		// conditionOrAction === ConditionOrAction.Condition
-		// 	? (abi = icedTxState.condition.getConditionValueAbi)
-		// 	: (abi = icedTxState.action.getActionValueAbi);
-
-		try {
-			// Find token object by address
-			// const signer = library.getSigner();
-			const signer = ethers.getDefaultProvider();
-			let actionAddress = '';
-			let abi = '';
-			if (action) {
-				actionAddress = action.address[networkId];
-				abi = action.getActionValueAbi;
-			}
-
-			const actionContract = new ethers.Contract(
-				actionAddress,
-				[abi],
-				signer
-			);
-
-			try {
-				const copyUserInput = [...inputs];
-				copyUserInput.splice(0, 0, account);
-				// œDEV simply using account here, as proxy doesnt make a difference
-				copyUserInput.splice(1, 0, account);
-				newValue = await actionContract.getUsersSendTokenBalance(
-					...copyUserInput
-				);
-				// Convert fetched wei amount to human reable amount
-
-				// convert Value into human readable form
-				return newValue;
-			} catch (error) {
-				// console.log(error);
-				newValue = BIG_NUM_ZERO;
-				// console.log(2);
-				return newValue;
-			}
-		} catch (error) {
-			// console.log('token not in state yet');
-			// console.log(error);
-			newValue = BIG_NUM_ZERO;
-			// console.log(error);
-			// console.log(3);
-			return newValue;
-		}
-	} else {
-		// console.log('catch2');
-		newValue = BIG_NUM_ZERO;
-		// console.log(4);
-		return newValue;
-	}
-};
-
-export const getNetworkName = (chainId: ChainIds) => {
-	let prefix = '';
-	switch (chainId) {
-		case 1:
-			prefix = 'Mainnet';
-			break;
-		case 3:
-			prefix = 'Ropsten';
-			break;
-		case 4:
-			prefix = 'Rinkeby';
-			break;
-		case 42:
-			prefix = 'Kovan';
-			break;
-		default:
-			prefix = '';
-			break;
-	}
-	return prefix;
-};
-
 export const getWhitelistGelatoOnSafePayload = (
 	account: string,
 	networkId: ChainIds
 ) => {
-	const gnosisSafeMasterCopy = '0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F';
+	const gnosisSafeMasterCopy = "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F";
 
 	// Step 2: Calculcate initializer payload
 
 	const setupAbi = [
-		'function setup(address[] _owners, uint256 _threshold, address to, bytes data, address fallbackHandler, address paymentToken, uint256 payment, address payable paymentReceiver) external'
+		"function setup(address[] _owners, uint256 _threshold, address to, bytes data, address fallbackHandler, address paymentToken, uint256 payment, address payable paymentReceiver) external"
 	];
 
 	const safeOwners = [account];
 	const signatureThreshold = 1;
 
 	// Whitelist GelatoCore as module script
-	const addressTo = '0xf53f625aDE4d53905081cC390845a5f9C2EC137a';
+	const addressTo = "0x34A53927cA6927e41b18d8f23B53bBC81cC844f3";
 
-	const whitelistGelatoCoreScriptAbi = [
-		'function whitelist(address _gelatoCore)'
+	// const whitelistGelatoCoreScriptAbi = [
+	// 	'function whitelist(address _gelatoCore)'
+	// ];
+
+	const enableModuleAndMint = [
+		"function enableModuleAndMint(address _gelatoCore, address[2] _selectedProviderAndExecutor, address[2] _conditionAndAction, bytes _conditionPayloadWithSelector, bytes _actionPayloadWithSelector)"
 	];
 
-	const iFaceSetupModule = new ethers.utils.Interface(
-		whitelistGelatoCoreScriptAbi
-	);
+	const selectedProviderAndExecutor = [
+		"0x7015763d0a8F04263633106DE7a8F33B2334E51e",
+		"0x4d671CD743027fB5Af1b2D2a3ccbafA97b5B1B80"
+	];
+
+	const conditionAndAction = [
+		"0x4131A080145F39424cdeb4645bA673b53570CAB3",
+		"0x8FEb96c37AAFE8980176D70Ac39dAf10b4121e8E"
+	];
+
+	const condition = findConditionById("4");
+	const action = findActionById("10");
+
+	const conditionPayload = encodeConditionPayload([50], condition.abi);
+	const actionPayload = encodeActionPayloadTwo([], action.abi);
+
+	const iFaceSetupModule = new ethers.utils.Interface(enableModuleAndMint);
 	const setupModulesPayload = iFaceSetupModule.encodeFunctionData(
-		'whitelist',
-		[GELATO_CORE_ADDRESS[networkId]]
+		"enableModuleAndMint",
+		[
+			GELATO_CORE_ADDRESS[networkId],
+			selectedProviderAndExecutor,
+			conditionAndAction,
+			conditionPayload,
+			actionPayload
+		]
 	);
 
 	const fallbackHandler = ethers.constants.AddressZero;
@@ -801,7 +543,7 @@ export const getWhitelistGelatoOnSafePayload = (
 	const paymentReceiver = ethers.constants.AddressZero;
 
 	const iFaceSetup = new ethers.utils.Interface(setupAbi);
-	const setupPayload = iFaceSetup.encodeFunctionData('setup', [
+	const setupPayload = iFaceSetup.encodeFunctionData("setup", [
 		safeOwners,
 		signatureThreshold,
 		addressTo,
@@ -812,4 +554,100 @@ export const getWhitelistGelatoOnSafePayload = (
 		paymentReceiver
 	]);
 	return [gnosisSafeMasterCopy, setupPayload];
+};
+
+export const getWhitelistGelatoOnSafePayloadOld = (
+	account: string,
+	networkId: ChainIds
+) => {
+	const gnosisSafeMasterCopy = "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F";
+
+	// Step 2: Calculcate initializer payload
+
+	const setupAbi = [
+		"function setup(address[] _owners, uint256 _threshold, address to, bytes data, address fallbackHandler, address paymentToken, uint256 payment, address payable paymentReceiver) external"
+	];
+
+	const safeOwners = [account];
+	const signatureThreshold = 1;
+
+	// Whitelist GelatoCore as module script
+	const addressTo = "0xf53f625aDE4d53905081cC390845a5f9C2EC137a";
+
+	const whitelistGelatoCoreScriptAbi = [
+		"function whitelist(address _gelatoCore)"
+	];
+
+	const iFaceSetupModule = new ethers.utils.Interface(
+		whitelistGelatoCoreScriptAbi
+	);
+	const setupModulesPayload = iFaceSetupModule.encodeFunctionData("whitelist", [
+		GELATO_CORE_ADDRESS[networkId]
+	]);
+
+	const fallbackHandler = ethers.constants.AddressZero;
+	const paymentToken = ethers.constants.AddressZero;
+	const payment = ethers.constants.Zero;
+	const paymentReceiver = ethers.constants.AddressZero;
+
+	const iFaceSetup = new ethers.utils.Interface(setupAbi);
+	const setupPayload = iFaceSetup.encodeFunctionData("setup", [
+		safeOwners,
+		signatureThreshold,
+		addressTo,
+		setupModulesPayload,
+		fallbackHandler,
+		paymentToken,
+		payment,
+		paymentReceiver
+	]);
+	return [gnosisSafeMasterCopy, setupPayload];
+};
+
+export const calculateUniswapPrice = async (
+	signer: any,
+	sellToken: string,
+	ethAmount: BigNumber
+) => {
+	const uniswapFactoryAbi = [
+		"function getExchange(address token) view returns (address exchange)"
+	];
+
+	const uniswapExchangeAbi = [
+		"function getTokenToEthInputPrice(uint256 tokens_sold) view returns (uint256 eth_bought)",
+		"function getEthToTokenInputPrice(uint256 eth_sold) view returns (uint256 tokens_bought)"
+	];
+
+	const uniswapFactoryAddress = "0xc0a47dFe034B400B47bDaD5FecDa2621de6c4d95";
+	const uniswapFactoryAddressKovan =
+		"0xD3E51Ef092B2845f10401a0159B2B96e8B6c3D30";
+
+	const uniswapFactory = new ethers.Contract(
+		uniswapFactoryAddressKovan,
+		uniswapFactoryAbi,
+		signer
+	);
+
+	let uniswapExchangeAddress = ethers.constants.AddressZero;
+	try {
+		uniswapExchangeAddress = await uniswapFactory.getExchange(sellToken);
+
+		const uniswapExchange = new ethers.Contract(
+			uniswapExchangeAddress,
+			uniswapExchangeAbi,
+			signer
+		);
+
+		let daiAmount = ethers.constants.Zero;
+		try {
+			daiAmount = await uniswapExchange.getEthToTokenInputPrice(ethAmount);
+			return BigNumber.from(daiAmount);
+		} catch (error) {
+			console.log(error);
+			return ethers.constants.Zero;
+		}
+	} catch (error) {
+		console.log("nope");
+		return ethers.constants.Zero;
+	}
 };

@@ -1,6 +1,5 @@
 html {
-	background-color: #000000;
-	background-image: url('./images/slash-it.png');
+	background-color: #ffffff;
 	font-size: 15px;
 	/* background-image: url('./images/stardust.png'); */
 	/* background-image: url('./images/stardust.png') bottom center; */
@@ -10,7 +9,7 @@ body {
 	height: 100%;
 	margin: 0;
 	/* font-family: 'Ubuntu Mono', monospace; */
-	font-family: 'Ubuntu Mono', monospace;
+	font-family: "Ubuntu Mono", monospace;
 
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
@@ -24,13 +23,13 @@ body {
 
 .App {
 	/* height: 100vh; */
-	/* background: #000000; */
-	background-color: #000000;
-	background-image: url('./images/slash-it.png');
+	/* background: #ffffff; */
+	background-color: #ffffff;
+	/* background-image: url("./images/slash-it.png"); */
 	/* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
 	/* font-family: 'Ubuntu Mono', monospace; */
-	font-family: 'Ubuntu Mono', monospace;
-	color: #fff;
+	font-family: "Ubuntu Mono", monospace;
+	color: #000000;
 	/* new */
 	position: relative;
 }
@@ -84,13 +83,13 @@ body {
 .datepickerWrapper * {
 	border-color: #e91e63 !important;
 	border-width: 1px !important;
-	font-family: 'Ubuntu Mono', monospace !important;
+	font-family: "Ubuntu Mono", monospace !important;
 }
 
 .datepickerWrapperDisabled * {
 	border-color: #72627b !important;
 	border-width: 1px !important;
-	font-family: 'Ubuntu Mono', monospace !important;
+	font-family: "Ubuntu Mono", monospace !important;
 }
 
 .datepicker > * {

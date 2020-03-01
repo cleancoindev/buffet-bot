@@ -1,20 +1,4 @@
-import {
-	SELECT_CONDITION,
-	SELECT_ACTION,
-	UPDATE_CONDITION_INPUTS,
-	RESET_CONDITION,
-	RESET_ACTION,
-	UPDATE_ACTION_INPUTS,
-	UPDATE_TX_STATE,
-	UPDATE_PAST_TRANSACTIONS,
-	OPEN_MODAL,
-	CLOSE_MODAL,
-	CANCEL_EXECUTION_CLAIM,
-	INPUT_ERROR,
-	INPUT_OK,
-	UPDATE_GET_VALUE_INPUT
-} from './constants';
-import { ethers, BigNumber } from 'ethers';
+import { ethers, BigNumber } from "ethers";
 
 /* We need
 	address _selectedExecutor,
@@ -103,6 +87,7 @@ export interface ActionWhitelistData {
 	relevantInputData: Array<RelevantInputData>;
 	approveIndex: number;
 	logo: string;
+	deprecatedAddresses: DeprecatedAddresses;
 }
 
 export interface UserSelection {
@@ -222,108 +207,3 @@ export enum TxState {
 export type ChainIds = 1 | 3 | 4 | 42;
 
 // Action interfaces
-
-interface SelectAction {
-	// UPDATE_ACTION
-	type: typeof SELECT_ACTION;
-	// Id of Action
-	id: string;
-}
-
-interface SelectCondition {
-	// UPDATE_ACTION
-	type: typeof SELECT_CONDITION;
-	// Id of Action
-	id: string;
-}
-
-interface UpdateConditionInputs {
-	// UPDATE_ACTION
-	type: typeof UPDATE_CONDITION_INPUTS;
-	// Id of Action
-	index: number;
-	value: any;
-}
-
-interface UpdateActionInputs {
-	// UPDATE_ACTION
-	type: typeof UPDATE_ACTION_INPUTS;
-	// Id of Action
-	index: number;
-	value: any;
-}
-
-interface ResetCondition {
-	// UPDATE_ACTION
-	type: typeof RESET_CONDITION;
-}
-
-interface ResetAction {
-	// UPDATE_ACTION
-	type: typeof RESET_ACTION;
-}
-
-interface UpdateTxState {
-	type: typeof UPDATE_TX_STATE;
-	txState: TxState;
-}
-
-interface UpdatePastTransactions {
-	type: typeof UPDATE_PAST_TRANSACTIONS;
-	pastTransactions: Array<PastTransaction>;
-}
-
-interface OpenModal {
-	type: typeof OPEN_MODAL;
-}
-
-interface CloseModal {
-	type: typeof CLOSE_MODAL;
-}
-
-interface UpdateSelectedTx {
-	type: typeof CANCEL_EXECUTION_CLAIM;
-	pastTransactionId: string;
-}
-
-interface InputError {
-	type: typeof INPUT_ERROR;
-	msg: string;
-	origin: number;
-	txState: TxState;
-}
-
-interface InputOk {
-	type: typeof INPUT_OK;
-	txState: TxState;
-}
-
-interface UpdateGetValueInput {
-	type: typeof UPDATE_GET_VALUE_INPUT;
-	conditionOrAction: ConditionOrAction;
-	newGetValueInput: BigNumber;
-}
-
-// export interface Action {
-// 	type: string;
-// 	conditionOrAction: ConditionOrAction;
-// 	id: string;
-// 	index: number;
-// 	value: string | number;
-// }
-
-export type Action =
-	| ResetCondition
-	| ResetAction
-	| UpdateActionInputs
-	| UpdateConditionInputs
-	| SelectCondition
-	| SelectAction
-	| UpdateTxState
-	| UpdatePastTransactions
-	| OpenModal
-	| CloseModal
-	| UpdateSelectedTx
-	| InputError
-	| InputOk
-	| UpdateGetValueInput;

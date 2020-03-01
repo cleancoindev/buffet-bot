@@ -1,5 +1,5 @@
 {
-	"name": "gelato-finance-ui2",
+	"name": "buffet-bot",
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
@@ -15,6 +15,7 @@
 		"@types/react": "^16.9.16",
 		"@types/react-dom": "^16.9.4",
 		"@types/react-router-dom": "^5.1.3",
+		"@types/recharts": "^1.8.6",
 		"@web3-react/abstract-connector": "^6.0.7",
 		"@web3-react/core": "^6.0.7",
 		"@web3-react/injected-connector": "^6.0.7",
@@ -28,6 +29,7 @@
 		"react-number-format": "^4.3.1",
 		"react-router-dom": "^5.1.2",
 		"react-scripts": "3.3.0",
+		"recharts": "^2.0.0-beta.1",
 		"typescript": "^3.7.3"
 	},
 	"devDependencies": {
