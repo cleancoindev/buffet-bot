@@ -48,18 +48,6 @@ function App() {
 					<div className="App">
 						<div className="container">
 							<Header></Header>
-							{/* <WarningMessage></WarningMessage> */}
-							{/* <Typography
-								style={{
-									textAlign: 'center',
-									marginTop: '48px'
-								}}
-								variant="h5"
-								component="h5"
-								gutterBottom
-							>
-								Give your gelato bot new instructions
-							</Typography> */}
 							<Container
 								className={"sub-container"}
 								style={{

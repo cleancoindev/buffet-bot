@@ -55,7 +55,7 @@ export const TTYPES = [
 		getConditionValueInput: BIG_NUM_ZERO,
 		inputLabels: ["Sell Token"],
 		userInputs: EMPTY_STRING_ARRAY,
-		relevantInputData: [RelevantInputData.kyberTokenListWithEth],
+		relevantInputData: [RelevantInputData.nones],
 		logo: "/images/kyber_logo.png",
 		deprecatedAddresses: {
 			1: [""],

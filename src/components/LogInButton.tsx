@@ -19,7 +19,7 @@ import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import { injected, walletConnect } from "../constants/connectors";
 
 import { COLOURS, POSSIBLE_CHAIN_IDS } from "../constants/constants";
-import { TxState, ChainIds } from "../constants/interfaces";
+import { ChainIds } from "../constants/interfaces";
 
 const StyledMenu = withStyles({
 	paper: {

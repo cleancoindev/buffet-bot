@@ -38,7 +38,7 @@ import {
 	POSSIBLE_CHAIN_IDS
 } from "../constants/constants";
 import { connectorsByName } from "../state/GlobalState";
-import { TxState, ChainIds } from "../constants/interfaces";
+import { ChainIds } from "../constants/interfaces";
 import GelatoLogo from "./Logo/Logo";
 import LoginButton from "./LogInButton";
 import Web3ConnectButton from "./Web3ConnectButton/Web3ConnectButton";
