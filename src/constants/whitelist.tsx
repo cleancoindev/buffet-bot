@@ -55,7 +55,7 @@ export const TTYPES = [
 		getConditionValueInput: BIG_NUM_ZERO,
 		inputLabels: ["Sell Token"],
 		userInputs: EMPTY_STRING_ARRAY,
-		relevantInputData: [RelevantInputData.nones],
+		relevantInputData: [RelevantInputData.none],
 		logo: "/images/kyber_logo.png",
 		deprecatedAddresses: {
 			1: [""],
@@ -77,7 +77,7 @@ export const ATYPES = [
 			1: "0x0",
 			3: "0x0",
 			4: "0x0",
-			42: "0x40B3ec3abD5F109AfCAF0F707DD67aAD67ee529b"
+			42: "0x52DfF1E40D080f65aC7A7ed06D00EC73A4182E47"
 		},
 		params: [],
 		abi: "function action()",
