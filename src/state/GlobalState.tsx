@@ -1,6 +1,5 @@
 import React from "react";
 // Import Interfaces
-import { TxState } from "../constants/interfaces";
 
 // Import Web3 React
 // Exposes following funcs: 1) getLibrary and 2) _useWeb3ReactManager
