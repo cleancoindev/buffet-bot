@@ -5,7 +5,7 @@ import { injected } from "../constants/connectors";
 import { ChainIds } from "../constants/interfaces";
 import { GELATO_CORE_ADDRESS } from "../constants/whitelist";
 
-import { ethers, BigNumber } from "ethers";
+import { ethers } from "ethers";
 
 import GELATO_CORE_ABI from "../constants/abis/gelatoCore.json";
 import GELATO_CORE_SAFE_ABI from "../constants/abis/gelatoCoreSafe.json";

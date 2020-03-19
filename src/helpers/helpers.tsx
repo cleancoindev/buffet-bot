@@ -16,7 +16,7 @@ import {
 	DEFAULT_DATA_CONDITION,
 	ETH
 } from "../constants/constants";
-import { utils, ethers, BigNumber } from "ethers";
+import { utils, ethers } from "ethers";
 import {
 	Params,
 	ActionWhitelistData,
@@ -197,7 +197,7 @@ export function findActionByAddress(address: string, networkId: ChainIds) {
 
 // Returns String
 export const convertWeiToHumanReadableForNumbersAndGetValue = (
-	weiAmount: BigNumber,
+	weiAmount: ethers.utils.BigNumber,
 	token: Token,
 	conditionOrAction: ConditionOrAction,
 	id: number
@@ -210,7 +210,7 @@ export const convertWeiToHumanReadableForNumbersAndGetValue = (
 };
 
 export const convertWeiToHumanReadableForTokenAmount = (
-	weiAmount: BigNumber,
+	weiAmount: ethers.utils.BigNumber,
 	tokenDecimals: number
 ): string => {
 	return ethers.utils.formatUnits(weiAmount, tokenDecimals);
@@ -221,7 +221,7 @@ export const convertHumanReadableToWeiForNumbers = (
 	humanReadableAmount: string,
 	conditionOrAction: ConditionOrAction,
 	id: number
-): BigNumber => {
+): ethers.utils.BigNumber => {
 	// If kyber price condition
 	if (conditionOrAction === ConditionOrAction.Condition && id === 3) {
 		return ethers.utils.parseUnits(humanReadableAmount, 18);
@@ -277,7 +277,7 @@ export const deepCloneTokenList = (
 };
 
 export function encodeActionPayload(
-	userInput: Array<string | number | BigNumber | boolean>,
+	userInput: Array<string | number | ethers.utils.BigNumber | boolean>,
 	abi: string,
 	userProxy: string,
 	user: string
@@ -295,16 +295,18 @@ export function encodeActionPayload(
 	// 	copyUserInput
 	// );
 
-	const actionPayloadWithSelector = iFace.encodeFunctionData(
-		"action",
-		userInput
-	);
+	const actionPayloadWithSelector = "test"
+
+	// const actionPayloadWithSelector = iFace.encodeFunctionData(
+	// 	"action",
+	// 	userInput
+	// );
 
 	return actionPayloadWithSelector;
 }
 
 export function encodeActionPayloadTwo(
-	userInput: Array<string | number | BigNumber | boolean>,
+	userInput: Array<string | number | ethers.utils.BigNumber | boolean>,
 	abi: string
 ) {
 	const iFace = new utils.Interface([abi]);
@@ -320,16 +322,17 @@ export function encodeActionPayloadTwo(
 	// 	copyUserInput
 	// );
 
-	const actionPayloadWithSelector = iFace.encodeFunctionData(
-		"action",
-		userInput
-	);
+	// const actionPayloadWithSelector = iFace.encodeFunctionData(
+	// 	"action",
+	// 	userInput
+	// );
+	const actionPayloadWithSelector = "test"
 
 	return actionPayloadWithSelector;
 }
 
 export function encodeConditionPayload(
-	userInput: Array<string | number | BigNumber | boolean>,
+	userInput: Array<string | number | ethers.utils.BigNumber | boolean>,
 	abi: string
 ) {
 	const iFace = new utils.Interface([abi]);
@@ -338,10 +341,12 @@ export function encodeConditionPayload(
 	// 	userInput
 	// );
 
-	const conditionPayloadWithSelector = iFace.encodeFunctionData(
-		"reached",
-		userInput
-	);
+	// const conditionPayloadWithSelector = iFace.encodeFunctionData(
+	// 	"reached",
+	// 	userInput
+	// );
+
+	const conditionPayloadWithSelector = "test"
 
 	return conditionPayloadWithSelector;
 }
@@ -526,16 +531,18 @@ export const getWhitelistGelatoOnSafePayload = (
 	const actionPayload = encodeActionPayloadTwo([], action.abi);
 
 	const iFaceSetupModule = new ethers.utils.Interface(enableModuleAndMint);
-	const setupModulesPayload = iFaceSetupModule.encodeFunctionData(
-		"enableModuleAndMint",
-		[
-			GELATO_CORE_ADDRESS[networkId],
-			selectedProviderAndExecutor,
-			conditionAndAction,
-			conditionPayload,
-			actionPayload
-		]
-	);
+	const setupModulesPayload = "test"
+
+	// = iFaceSetupModule.encodeFunctionData(
+	// 	"enableModuleAndMint",
+	// 	[
+	// 		GELATO_CORE_ADDRESS[networkId],
+	// 		selectedProviderAndExecutor,
+	// 		conditionAndAction,
+	// 		conditionPayload,
+	// 		actionPayload
+	// 	]
+	// );
 
 	const fallbackHandler = ethers.constants.AddressZero;
 	const paymentToken = ethers.constants.AddressZero;
@@ -543,16 +550,18 @@ export const getWhitelistGelatoOnSafePayload = (
 	const paymentReceiver = ethers.constants.AddressZero;
 
 	const iFaceSetup = new ethers.utils.Interface(setupAbi);
-	const setupPayload = iFaceSetup.encodeFunctionData("setup", [
-		safeOwners,
-		signatureThreshold,
-		addressTo,
-		setupModulesPayload,
-		fallbackHandler,
-		paymentToken,
-		payment,
-		paymentReceiver
-	]);
+	const setupPayload  = "test"
+
+	// = iFaceSetup.encodeFunctionData("setup", [
+	// 	safeOwners,
+	// 	signatureThreshold,
+	// 	addressTo,
+	// 	setupModulesPayload,
+	// 	fallbackHandler,
+	// 	paymentToken,
+	// 	payment,
+	// 	paymentReceiver
+	// ]);
 	return [gnosisSafeMasterCopy, setupPayload];
 };
 
@@ -581,9 +590,11 @@ export const getWhitelistGelatoOnSafePayloadOld = (
 	const iFaceSetupModule = new ethers.utils.Interface(
 		whitelistGelatoCoreScriptAbi
 	);
-	const setupModulesPayload = iFaceSetupModule.encodeFunctionData("whitelist", [
-		GELATO_CORE_ADDRESS[networkId]
-	]);
+	const setupModulesPayload = "test"
+
+	// = iFaceSetupModule.encodeFunctionData("whitelist", [
+	// 	GELATO_CORE_ADDRESS[networkId]
+	// ]);
 
 	const fallbackHandler = ethers.constants.AddressZero;
 	const paymentToken = ethers.constants.AddressZero;
@@ -591,23 +602,25 @@ export const getWhitelistGelatoOnSafePayloadOld = (
 	const paymentReceiver = ethers.constants.AddressZero;
 
 	const iFaceSetup = new ethers.utils.Interface(setupAbi);
-	const setupPayload = iFaceSetup.encodeFunctionData("setup", [
-		safeOwners,
-		signatureThreshold,
-		addressTo,
-		setupModulesPayload,
-		fallbackHandler,
-		paymentToken,
-		payment,
-		paymentReceiver
-	]);
+
+	const setupPayload = "test"
+	// const setupPayload = iFaceSetup.encodeFunctionData("setup", [
+	// 	safeOwners,
+	// 	signatureThreshold,
+	// 	addressTo,
+	// 	setupModulesPayload,
+	// 	fallbackHandler,
+	// 	paymentToken,
+	// 	payment,
+	// 	paymentReceiver
+	// ]);
 	return [gnosisSafeMasterCopy, setupPayload];
 };
 
 export const calculateUniswapPrice = async (
 	signer: any,
 	sellToken: string,
-	ethAmount: BigNumber
+	ethAmount: ethers.utils.BigNumber
 ) => {
 	const uniswapFactoryAbi = [
 		"function getExchange(address token) view returns (address exchange)"
@@ -641,7 +654,7 @@ export const calculateUniswapPrice = async (
 		let daiAmount = ethers.constants.Zero;
 		try {
 			daiAmount = await uniswapExchange.getEthToTokenInputPrice(ethAmount);
-			return BigNumber.from(daiAmount);
+			return ethers.utils.bigNumberify(daiAmount);
 		} catch (error) {
 			console.log(error);
 			return ethers.constants.Zero;

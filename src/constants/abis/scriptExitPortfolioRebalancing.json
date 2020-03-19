@@ -1,0 +1,152 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [],
+    "name": "LogExit",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "error",
+        "type": "string"
+      }
+    ],
+    "name": "LogFailure",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "origin",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "sendToken",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "sendAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "destination",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "receiveToken",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "receiveAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "receiver",
+        "type": "address"
+      }
+    ],
+    "name": "LogTwoWay",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "exchangeToken",
+    "outputs": [
+      {
+        "internalType": "contract IERC20",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address payable",
+        "name": "_withdrawAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address[2]",
+        "name": "_selectedProviderAndExecutor",
+        "type": "address[2]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_executionClaimId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address[2]",
+        "name": "_conditionAndAction",
+        "type": "address[2]"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_conditionPayload",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_actionPayload",
+        "type": "bytes"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_executionClaimExpiryDate",
+        "type": "uint256"
+      }
+    ],
+    "name": "exitRebalancingPortfolio",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "gelatoCore",
+    "outputs": [
+      {
+        "internalType": "contract IGelatoCore",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "uniswapFactory",
+    "outputs": [
+      {
+        "internalType": "contract IUniswapFactory",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

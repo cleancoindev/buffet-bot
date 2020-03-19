@@ -1,4 +1,4 @@
-import { ethers, BigNumber } from "ethers";
+import { ethers } from "ethers";
 
 export interface Params {
 	type: string;
@@ -29,9 +29,9 @@ export interface ConditionWhitelistData {
 	inputLabels: Array<string>;
 	userInputTypes: Array<InputType>;
 	relevantInputData: Array<RelevantInputData>;
-	userInputs: Array<string | number | BigNumber | boolean>;
+	userInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
 	getConditionValueAbi: string;
-	getConditionValueInput: BigNumber;
+	getConditionValueInput: ethers.utils.BigNumber;
 	approveIndex: number;
 	boolIndex: number;
 	logo: string;
@@ -48,8 +48,8 @@ export interface ActionWhitelistData {
 	inputLabels: Array<string>;
 	userInputTypes: Array<InputType>;
 	getActionValueAbi: string;
-	getActionValueInput: BigNumber;
-	userInputs: Array<string | number | BigNumber | boolean>;
+	getActionValueInput: ethers.utils.BigNumber;
+	userInputs: Array<string | number | ethers.utils.BigNumber | boolean>;
 	relevantInputData: Array<RelevantInputData>;
 	approveIndex: number;
 	logo: string;

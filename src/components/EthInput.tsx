@@ -4,7 +4,7 @@ import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import { DEFAULT_CHAIN_ID, COLOURS } from "../constants/constants";
 import { ChainIds } from "../constants/interfaces";
-import { ethers, BigNumber } from "ethers";
+import { ethers } from "ethers";
 import { convertWeiToHumanReadableForTokenAmount } from "../helpers/helpers";
 import { useWeb3React } from "@web3-react/core";
 
@@ -96,7 +96,7 @@ interface State {
 interface ReactNumberFormatProps {
 	ethNum: Function;
 	userIsInvested: boolean;
-	defaultValue: BigNumber;
+	defaultValue: ethers.utils.BigNumber;
 }
 
 export default function EthInput(props: ReactNumberFormatProps) {

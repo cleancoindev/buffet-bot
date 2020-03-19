@@ -1,5 +1,5 @@
 import { InputType, RelevantInputData } from "./interfaces";
-import { ethers, BigNumber } from "ethers";
+import { ethers } from "ethers";
 
 const BIG_NUM_ZERO = ethers.constants.Zero;
 
@@ -17,7 +17,7 @@ export const GELATO_CORE_ADDRESS = {
 	3: "0x563700A8A6740C8a474DF8F289716afDc30ED07a",
 	4: "0x501aF774Eb578203CC34E7171273124A93706C06",
 	// old 0x2b4Bd5d0df60aaE4D68B5a4e315be0bdf72cf765
-	42: "0x45F205Eb29310B6Fb92893d938Cc1738001210e8"
+	42: "0x4e4f3d95CC4920f1D6e8fb433a9Feed3C8f3CC31"
 };
 
 export const EXECUTOR_ADDRESS = {
@@ -25,8 +25,76 @@ export const EXECUTOR_ADDRESS = {
 	3: "0x203AdbbA2402a36C202F207caA8ce81f1A4c7a72",
 	4: "0x203AdbbA2402a36C202F207caA8ce81f1A4c7a72",
 	// old 0x203AdbbA2402a36C202F207caA8ce81f1A4c7a72
-	42: "0x4d671CD743027fB5Af1b2D2a3ccbafA97b5B1B80"
+	42: "0x99E69499973484a96639f4Fb17893BC96000b3b8"
 };
+
+export const SCRIPT_ENTER_PORTFOLIO_REBALANCING = {
+	1: "0x0",
+	3: "0x0",
+	4: "0x0",
+	42: "0x882E8963F45B7bC1E817B6Dca43916ca343b92F9"
+};
+
+export const SCRIPT_EXIT_PORTFOLIO_REBALANCING = {
+	1: "0x0",
+	3: "0x0",
+	4: "0x0",
+	42: "0xc5006243ac1AbF38f0536272408B1F6E3f96933d"
+};
+
+
+export const SELECTED_PROVIDER_AND_EXECUTOR = {
+	1: [
+		"0x0",
+		"0x0"
+	],
+	3: [
+		"0x0",
+		"0x0"
+	],
+	4: [
+		"0x0",
+		"0x0"
+	],
+	42: [
+		"0x518eAa8f962246bCe2FA49329Fe998B66d67cbf8",
+		"0x99E69499973484a96639f4Fb17893BC96000b3b8"
+	]
+}
+
+export const CONDITION_AND_ACTION = {
+	1: [
+		"0x0",
+		"0x0"
+	],
+	3: [
+		"0x0",
+		"0x0"
+	],
+	4: [
+		"0x0",
+		"0x0"
+	],
+	42: [
+		"0xf5aF30e4022698314e07514CE649fa7f45Cc8F87",
+		"0x6199B69Fa71BDA8865CF0226ab464cE596ee10c0"
+	]
+}
+
+
+export const EXECUTION_CLAIM_EXPIRY_DATE = 0
+
+export const MASTERCOPY = "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F"
+
+export const PAYABLE_FACTORY = {
+	1: "0x0",
+	3: "0x0",
+	4: "0x0",
+	// old 0x203AdbbA2402a36C202F207caA8ce81f1A4c7a72
+	42: "0x877928dB2405A4C2d400F787b56258923464f586"
+}
+
+
 
 // NOTES
 
@@ -72,7 +140,7 @@ export const ATYPES = [
 	{
 		id: 10,
 		app: "Greed",
-		title: "Sell Leverage Tokens on Fulcrum",
+		title: "ActionRebalancePortfolio",
 		address: {
 			1: "0x0",
 			3: "0x0",

@@ -6,7 +6,7 @@ import React from "react";
 import { Web3ReactProvider } from "@web3-react/core";
 
 // Import ethers.js
-import { ethers, BigNumber } from "ethers";
+import { ethers } from "ethers";
 
 // import reducer function
 

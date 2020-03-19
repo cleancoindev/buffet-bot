@@ -1,9 +1,9 @@
 import { InputType, Params, RelevantInputData } from "./interfaces";
-import { ethers, BigNumber } from "ethers";
+import { ethers } from "ethers";
 import { EXECUTOR_ADDRESS } from "./whitelist";
 
 export const EMPTY_USER_INPUT_ARRAY: Array<
-	string | number | BigNumber | boolean
+	string | number | ethers.utils.BigNumber | boolean
 > = [];
 export const EMPTY_USER_INPUT_TYPE_ARRAY: Array<InputType> = [];
 
@@ -14,7 +14,7 @@ export const EMPTY_RELEVANT_INPUT_DATA_ARRAY: Array<RelevantInputData> = [];
 export const BIG_NUM_ZERO = ethers.constants.Zero;
 export const BIG_NUM_ONE = ethers.constants.One;
 
-export const MAX_BIG_NUM = BigNumber.from(10).pow(BigNumber.from(50));
+export const MAX_BIG_NUM = ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(50));
 
 // Currently: $275
 export const TOKEN_TRANSFER_CEILING = ethers.utils.parseUnits("275", 18);
