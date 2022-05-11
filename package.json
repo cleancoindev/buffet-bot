@@ -12,7 +12,7 @@
 		"@testing-library/user-event": "^7.1.2",
 		"@types/contract-proxy-kit": "^1.0.1",
 		"@types/jest": "^24.0.23",
-		"@types/node": "^12.12.14",
+		"@types/node": "^12.20.48",
 		"@types/react": "^16.9.16",
 		"@types/react-dom": "^16.9.4",
 		"@types/react-router-dom": "^5.1.3",
